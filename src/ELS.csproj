@@ -87,7 +87,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>rem powershell -File "$(SolutionDir)..\utils\buildscript.ps1" -address 127.0.0.1 -port 30120 -password lovely -projectName $(ProjectName) -sourceDir "$(TargetDir)\" -filess $(TargetFileName),__resource.lua,server.lua
+    <PostBuildEvent>powershell -File "$(SolutionDir)..\utils\buildscript.ps1" -serverRootFolder %25USERPROFILE%25\Desktop\cfx-server -address 127.0.0.1 -port 30120 -password lovely -projectName $(ProjectName) -sourceDir "$(TargetDir)\" -files $(TargetFileName),__resource.lua,server.lua 
 rem "$(SolutionDir)utils\icecon_windows_amd64.exe" -c "restart els" 127.0.0.1:30120 lovely
 </PostBuildEvent>
   </PropertyGroup>
