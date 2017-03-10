@@ -4,17 +4,35 @@
     [String]$password = "lovely",
     [Parameter (Mandatory=$true)] [string]$projectName,
     [Parameter (Mandatory=$true)] [System.IO.DirectoryInfo] $serverRootFolder,
-    [Parameter (Mandatory=$true)] [string] $sourceDir,
-    [String] $files
-
+    [Parameter (Mandatory=$true)] [string] $sourceDir
+    
 )
+function getClientScripts ($kj) {
+    
+$lfiles = @()
+for($k=0;$k -lt $kj.count;$k++){
+[System.Text.RegularExpressions.MatchCollection] $h = [regex]::Matches($kj[$k],'(?m)^client_script\s''(.*)''')
+    foreach($j in $h ){
+    for($i=0;$i -lt $j.Groups.Count;$i++){
+        if($i -ne 0){
+            $lfiles+=$j.Groups.Item($i).Value
+        }
+    }
+}
+}
+$lfiles+="__resource.lua"
+return $lfiles
+}
 $y = New-Object -TypeName System.IO.DirectoryInfo -ArgumentList "$sourceDir"
+$__resourceLua = [System.IO.Path]::Combine($y.FullName,'__resource.lua')
 $h = New-Object -TypeName System.IO.DirectoryInfo -ArgumentList ([System.IO.Path]::Combine($serverRootFolder.FullName,"resources","$projectName\"))
-$h.FullName
- 
+
+$files=getClientScripts(Get-Content $__resourceLua)
+$files
 if($h.Exists.Equals($false)){
     $h.Create()
 }
-foreach ($file in $files.Split(',')){
+foreach ($file in $files){
+$file
     [System.IO.File]::Copy([System.IO.Path]::Combine($y.FullName,$file),[System.IO.Path]::Combine($h.FullName,$file),$true)
 }
