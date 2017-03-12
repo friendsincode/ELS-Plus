@@ -9,6 +9,9 @@ using ELS.Sirens.Tones;
 
 namespace ELS
 {
+    /// <summary>
+    /// Has diffrent tones
+    /// </summary>
     public class Siren
     {
         private readonly SirenTypes _sirenTypes;
@@ -16,27 +19,30 @@ namespace ELS
         //private List<Tone> tones = new List<Tone>(5);//0=horn
         private struct tones
         {
-            public static Tone horn;
+            public Tone horn;
         }
+        tones _tones;
         public Siren(Vehicle vehicle)
         {
             _vehicle = vehicle;
-            tones.horn = new Tone("SIRENS_AIRHORN", _vehicle);
+            _tones = new tones();
+            _tones.horn = new Tone("SIRENS_AIRHORN", _vehicle);
         }
 
         public void ticker()
         {
-            if (Game.IsControlJustPressed(0, Control.MpTextChatTeam) || Game.IsControlJustPressed(1, Control.FrontendAccept))
+            if (Game.IsControlJustPressed(0, Control.MpTextChatTeam)&&Game.CurrentInputMode==InputMode.MouseAndKeyboard)
             {
                 Game.DisableControlThisFrame(0, Control.MpTextChatTeam);
                 Game.DisableControlThisFrame(2, Control.ScriptPadDown);
-                tones.horn.SetState(true);
+                _tones.horn.SetState(true);
             }
-            if (Game.IsControlJustReleased(0, Control.MpTextChatTeam) || Game.CurrentInputMode == InputMode.GamePad && (Game.IsControlJustReleased(2, Control.ScriptPadDown)))
+            if ((Game.IsControlJustReleased(0, Control.MpTextChatTeam) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) 
+                ||  (Game.IsControlJustReleased(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad ))
             {
                 Game.DisableControlThisFrame(0, Control.MpTextChatTeam);
                 Game.DisableControlThisFrame(2, Control.ScriptPadDown);
-                tones.horn.SetState(false);
+                _tones.horn.SetState(false);
             }
         }
         

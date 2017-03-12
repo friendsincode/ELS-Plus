@@ -26,22 +26,13 @@ namespace ELS
                 CitizenFX.Core.UI.Screen.ShowNotification("wanted level");
                 LocalPlayer.WantedLevel = 0;
             }
-            if (!LocalPlayer.Character.IsInVehicle() && Game.IsControlJustReleased(0, Control.MultiplayerInfo))
-            {
-                await World.CreateVehicle(new Model(VehicleHash.Police4),
-                    LocalPlayer.Character.GetOffsetPosition(new Vector3(1, 0, 0)));
-            }
             if (LocalPlayer.Character.IsGettingIntoAVehicle)
             {
-                if (_sirenManager.HasEls(LocalPlayer.Character.VehicleTryingToEnter))
-                {
-                    return;
-                }
-                _sirenManager.AddSiren(LocalPlayer.Character.VehicleTryingToEnter);
+                 _sirenManager.SetCurrentSiren(LocalPlayer.Character.VehicleTryingToEnter);
             }
             if (LocalPlayer.Character.IsInVehicle())
             {
-                _sirenManager.SetCurrentSiren(LocalPlayer.Character.CurrentVehicle);
+                //_sirenManager.SetCurrentSiren(LocalPlayer.Character.CurrentVehicle);
                 _sirenManager.runtick();
             }
             //if (Game.IsControlJustReleased(0, Control.NextCamera))

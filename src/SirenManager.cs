@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
@@ -11,55 +12,62 @@ namespace ELS
 {
     class SirenManager
     {
+        /// <summary>
+        /// Siren that LocalPlayer can manage
+        /// </summary>
         private Siren currentSiren;
         private List<Siren> _sirens;
         public SirenManager()
         {
-            _sirens= new List<Siren>();
+            _sirens = new List<Siren>();
         }
 
         public void AddSiren(Vehicle vehicle)
         {
-            foreach (var siren in _sirens)
-            {
-                if (siren._vehicle == vehicle)
-                {
-                    return;
-                }
-            }
             _sirens.Add(new Siren(vehicle));
         }
 
         public void SetCurrentSiren(Vehicle vehicle)
         {
-            foreach (Siren siren in _sirens)
+            if (!HasEls(vehicle))
             {
-                if (siren._vehicle == vehicle)
+                AddSiren(vehicle);
+                Debug.WriteLine("added new siren");
+            }
+            else
+            {
+                foreach (Siren siren in _sirens)
                 {
-                    currentSiren = siren;
+                    if (siren._vehicle.Handle == vehicle.Handle)
+                    {
+                        Debug.WriteLine("added existing siren");
+                        currentSiren = siren;
+                    }
                 }
             }
+            
+
         }
         public bool HasEls(Vehicle vehicle)
         {
             var result = false;
             foreach (Siren siren in _sirens)
             {
-                if (siren._vehicle == vehicle) result = true;
+                if (siren._vehicle.Handle == vehicle.Handle) result = true;
             }
             return result;
         }
 
         public void runtick()
         {
-            
+            currentSiren.ticker();
         }
         public void UpdateSirens(Vehicle vehicle)
         {
             Siren lsiren;
             foreach (Siren siren in _sirens)
             {
-                if (siren._vehicle==vehicle)
+                if (siren._vehicle == vehicle)
                 {
                     lsiren = siren;
                     break;
