@@ -7,11 +7,26 @@
     [Parameter (Mandatory=$true)] [string] $sourceDir
     
 )
+function getServerScripts ($kj) {
+    
+$lfiles = @()
+for($k=0;$k -lt $kj.count;$k++){
+[System.Text.RegularExpressions.MatchCollection] $h = [regex]::Matches($kj[$k],'(?m)server_script\s''(.*)''')
+	foreach($j in $h ){
+    for($i=0;$i -lt $j.Groups.Count;$i++){
+        if($i -ne 0){
+            $lfiles+=$j.Groups.Item($i).Value
+        }
+    }
+}
+}
+return $lfiles
+}
 function getClientScripts ($kj) {
     
 $lfiles = @()
 for($k=0;$k -lt $kj.count;$k++){
-[System.Text.RegularExpressions.MatchCollection] $h = [regex]::Matches($kj[$k],'(?m)^client_script\s''(.*)''')
+[System.Text.RegularExpressions.MatchCollection] $h = [regex]::Matches($kj[$k],'(?m)client_script\s''(.*)''')
     foreach($j in $h ){
     for($i=0;$i -lt $j.Groups.Count;$i++){
         if($i -ne 0){
@@ -20,15 +35,16 @@ for($k=0;$k -lt $kj.count;$k++){
     }
 }
 }
-$lfiles+="__resource.lua"
 return $lfiles
 }
+$jj=[System.Diagnostics.FileVersionInfo]::GetVersionInfo($projectName).ProductName
 $y = New-Object -TypeName System.IO.DirectoryInfo -ArgumentList "$sourceDir"
 $__resourceLua = [System.IO.Path]::Combine($y.FullName,'__resource.lua')
-$h = New-Object -TypeName System.IO.DirectoryInfo -ArgumentList ([System.IO.Path]::Combine($serverRootFolder.FullName,"resources","$projectName\"))
+$h = New-Object -TypeName System.IO.DirectoryInfo -ArgumentList ([System.IO.Path]::Combine($serverRootFolder.FullName,"resources","$jj\"))
 
-$files=getClientScripts(Get-Content $__resourceLua)
-$files
+$files+=@(getClientScripts(Get-Content $__resourceLua))
+$files+=@(getServerScripts(Get-Content $__resourceLua))
+$files+=@('__resource.lua')
 if($h.Exists.Equals($false)){
     $h.Create()
 }
