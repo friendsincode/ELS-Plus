@@ -17,6 +17,7 @@ namespace ELS
         /// </summary>
         private Siren currentSiren;
         private List<Siren> _sirens;
+        public event LocalPlayerSirenStateChangedHandler LocalPlayerSirenChangedEvent;
         public SirenManager()
         {
             _sirens = new List<Siren>();
@@ -62,8 +63,9 @@ namespace ELS
         {
             currentSiren.ticker();
         }
-        public void UpdateSirens(Vehicle vehicle)
+        public void UpdateSirens(int NetID)
         {
+            Vehicle vehicle = Function.Call<Vehicle>(Hash.NET_TO_VEH,NetID);
             Siren lsiren;
             foreach (Siren siren in _sirens)
             {
@@ -78,5 +80,8 @@ namespace ELS
         {
             return Function.Call<Entity>(Hash.NETWORK_GET_ENTITY_FROM_NETWORK_ID, netid);
         }
+
     }
+
+    delegate void LocalPlayerSirenStateChangedHandler();
 }

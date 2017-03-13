@@ -5,6 +5,8 @@ using CitizenFX.Core;
 using CitizenFX.Core.UI;
 using ELS.Sirens;
 using Control = CitizenFX.Core.Control;
+using CitizenFX.Core.Native;
+using System;
 
 namespace ELS
 {
@@ -12,9 +14,14 @@ namespace ELS
     {
         private SirenManager _sirenManager;
         public EventHandlerDictionary EventHandlerDictionary => EventHandlers;
+        private FileLoader _FileLoader;
         public ELS()
         {
+            _FileLoader = new FileLoader(this);
             _sirenManager = new SirenManager();
+            EventHandlers["onClientResourceStart"] += new Action<string>(_FileLoader.RunLoadeer);
+            this.EventHandlers["ELS:SirenUpdated"] += new Action<int>(_sirenManager.UpdateSirens);
+
             Tick += Class1_Tick;
         }
 
@@ -28,11 +35,14 @@ namespace ELS
             }
             if (LocalPlayer.Character.IsGettingIntoAVehicle)
             {
-                 _sirenManager.SetCurrentSiren(LocalPlayer.Character.VehicleTryingToEnter);
+                if (LocalPlayer.Character.VehicleTryingToEnter != null)
+                {
+                    _sirenManager.SetCurrentSiren(LocalPlayer.Character.VehicleTryingToEnter);
+                }
             }
             if (LocalPlayer.Character.IsInVehicle())
             {
-                //_sirenManager.SetCurrentSiren(LocalPlayer.Character.CurrentVehicle);
+                Screen.ShowNotification(Function.Call<int>(Hash.VEH_TO_NET, LocalPlayer.Character.CurrentVehicle).ToString());
                 _sirenManager.runtick();
             }
             //if (Game.IsControlJustReleased(0, Control.NextCamera))

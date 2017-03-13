@@ -16,10 +16,15 @@ namespace ELS
     {
         private readonly SirenTypes _sirenTypes;
         public readonly Vehicle _vehicle;
-        //private List<Tone> tones = new List<Tone>(5);//0=horn
-        private struct tones
+        struct tones
         {
+            public delegate void SateChangedHandler(EventArgs sender);
+            public event SateChangedHandler ToneStateUpdated;
             public Tone horn;
+            public Tone tone1;
+            public Tone tone2;
+            public Tone tone3;
+            public Tone tone4;
         }
         tones _tones;
         public Siren(Vehicle vehicle)
@@ -27,7 +32,14 @@ namespace ELS
             _vehicle = vehicle;
             _tones = new tones();
             _tones.horn = new Tone("SIRENS_AIRHORN", _vehicle);
+            _tones.tone1 = new Tone("", _vehicle);
+            _tones.tone2 = new Tone("", _vehicle);
+            _tones.tone3 = new Tone("", _vehicle);
+            _tones.tone4 = new Tone("", _vehicle);
+            _tones.horn.ToneStateUpdated += (EventArgs sender) => { };
+            _tones.tone2.ToneStateUpdated += (EventArgs sender) => { };
         }
+        
 
         public void ticker()
         {
