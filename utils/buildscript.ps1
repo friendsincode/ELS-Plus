@@ -5,50 +5,75 @@
     [Parameter (Mandatory=$true)] [string]$projectName,
     [Parameter (Mandatory=$true)] [System.IO.DirectoryInfo] $serverRootFolder,
     [Parameter (Mandatory=$true)] [string] $sourceDir
-    
+
 )
-function getServerScripts ($kj) {
-    
-$lfiles = @()
-for($k=0;$k -lt $kj.count;$k++){
-[System.Text.RegularExpressions.MatchCollection] $h = [regex]::Matches($kj[$k],'(?m)server_script\s''(.*)''')
-	foreach($j in $h ){
-    for($i=0;$i -lt $j.Groups.Count;$i++){
-        if($i -ne 0){
-            $lfiles+=$j.Groups.Item($i).Value
+function getResourceFiles ($kj) {
+    $lfiles = @()
+    for($k=0;$k -lt $kj.count;$k++){
+        [System.Text.RegularExpressions.MatchCollection] $h = [regex]::Matches($kj[$k],'object_entry\(''(.*)''\)')
+        foreach($j in $h ){
+            for($i=0;$i -lt $j.Groups.Count;$i++){
+                if($i -ne 0){
+                    [System.IO.FileInfo] $tfile = $j.Groups.Item($i).Value
+                    $lfiles+=$tfile
+                }
+            }
         }
     }
+    $lfiles
+    return $lfiles
 }
-}
-return $lfiles
+function getServerScripts ($kj) {
+
+    $lfiles = @()
+    for($k=0;$k -lt $kj.count;$k++){
+        [System.Text.RegularExpressions.MatchCollection] $h = [regex]::Matches($kj[$k],'(?m)server_script\s''(.*)''')
+        foreach($j in $h ){
+            for($i=0;$i -lt $j.Groups.Count;$i++){
+                if($i -ne 0){
+                    [System.IO.FileInfo] $tfile = $j.Groups.Item($i).Value
+                    $lfiles+=$tfile
+                }
+            }
+        }
+    }
+    return $lfiles
 }
 function getClientScripts ($kj) {
-    
-$lfiles = @()
-for($k=0;$k -lt $kj.count;$k++){
-[System.Text.RegularExpressions.MatchCollection] $h = [regex]::Matches($kj[$k],'(?m)client_script\s''(.*)''')
-    foreach($j in $h ){
-    for($i=0;$i -lt $j.Groups.Count;$i++){
-        if($i -ne 0){
-            $lfiles+=$j.Groups.Item($i).Value
+
+    $lfiles = @()
+    for($k=0;$k -lt $kj.count;$k++){
+        [System.Text.RegularExpressions.MatchCollection] $h = [regex]::Matches($kj[$k],'(?m)client_script\s''(.*)''')
+        foreach($j in $h ){
+            for($i=0;$i -lt $j.Groups.Count;$i++){
+                if($i -ne 0){
+                [System.IO.FileInfo] $tfile = $j.Groups.Item($i).Value
+                    $lfiles+=$tfile
+                }
+            }
         }
     }
-}
-}
-return $lfiles
+    return $lfiles
 }
 $jj=[System.Diagnostics.FileVersionInfo]::GetVersionInfo($projectName).ProductName
-$y = New-Object -TypeName System.IO.DirectoryInfo -ArgumentList "$sourceDir"
+$sourceDir = New-Object -TypeName System.IO.DirectoryInfo -ArgumentList "$sourceDir"
 $__resourceLua = [System.IO.Path]::Combine($y.FullName,'__resource.lua')
-$h = New-Object -TypeName System.IO.DirectoryInfo -ArgumentList ([System.IO.Path]::Combine($serverRootFolder.FullName,"resources","$jj\"))
+$targetDir = New-Object -TypeName System.IO.DirectoryInfo -ArgumentList ([System.IO.Path]::Combine($serverRootFolder.FullName,"resources","$jj\"))
 
 $files+=@(getClientScripts(Get-Content $__resourceLua))
 $files+=@(getServerScripts(Get-Content $__resourceLua))
+$files+=@(getResourceFiles(Get-Content $__resourceLua))
 $files+=@('__resource.lua')
-if($h.Exists.Equals($false)){
-    $h.Create()
+if($targetDir.Exists.Equals($false)){
+    $targetDir.Create()
 }
-foreach ($file in $files){
-$file
-    [System.IO.File]::Copy([System.IO.Path]::Combine($y.FullName,$file),[System.IO.Path]::Combine($h.FullName,$file),$true)
+foreach ( $file in $files){
+    ([System.IO.FileInfo]$file).Directory
+    $oldpath=[System.IO.Path]::Combine($sourceDir.FullName,$file)
+    $newpath=[System.IO.Path]::Combine($targetDir.FullName,$file)
+    ([System.IO.FileInfo]$newpath).Directory
+    if(([System.IO.FileInfo]$newpath).Directory.Exists -eq $false){
+        ([System.IO.DirectoryInfo]$newpath).Create()
+    }
+    [System.IO.File]::Copy($oldpath,$newpath,$true)
 }
