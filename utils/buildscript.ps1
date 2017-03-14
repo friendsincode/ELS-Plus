@@ -69,11 +69,11 @@ if($targetDir.Exists.Equals($false)){
 }
 foreach ( $file in $files){
     ([System.IO.FileInfo]$file).Directory
-    $oldpath=[System.IO.Path]::[System.io.Path]::GetFullPath(Combine($sourceDir.FullName,$file))
+    $oldpath=[System.io.Path]::GetFullPath([System.IO.Path]::Combine($sourceDir.FullName,$file))
     $newpath=[System.io.Path]::GetFullPath([System.IO.Path]::Combine($targetDir.FullName,$file))
     ([System.IO.FileInfo]$newpath).Directory
     if(([System.IO.FileInfo]$newpath).Directory.Exists -eq $false){
-        ([System.IO.DirectoryInfo]$newpath).Create()
+        ([System.IO.FileInfo]$newpath).Directory.Create()
     }
     [System.IO.File]::Copy($oldpath,$newpath,$true)
 }

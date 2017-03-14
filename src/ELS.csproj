@@ -56,9 +56,6 @@
     <Reference Include="CitizenFX.Core">
       <HintPath>..\libs\CitizenFX.Core.dll</HintPath>
     </Reference>
-    <Reference Include="INIFileParser.net">
-      <HintPath>..\..\..\..\Desktop\cfx-server\resources\ELS-for-FiveM\INIFileParser.net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -91,7 +88,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\libs\ini-parser\src\IniFileParser\INIFileParser.csproj">
+      <Project>{5e46dcf4-c473-4171-9f9b-f3910b5ec407}</Project>
+      <Name>INIFileParser</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>powershell -File "$(SolutionDir)..\utils\buildscript.ps1" -serverRootFolder %25USERPROFILE%25\Desktop\cfx-server -address 127.0.0.1 -port 30120 -password lovely -projectName "$(TargetPath)" -sourceDir "$(TargetDir)\"
