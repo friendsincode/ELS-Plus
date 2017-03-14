@@ -17,6 +17,7 @@ namespace ELS
         private FileLoader _FileLoader;
         public ELS()
         {
+            
             _FileLoader = new FileLoader(this);
             _sirenManager = new SirenManager();
             EventHandlers["onClientResourceStart"] += new Action<string>(_FileLoader.RunLoadeer);

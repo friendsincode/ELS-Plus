@@ -56,12 +56,14 @@
     <Reference Include="CitizenFX.Core">
       <HintPath>..\libs\CitizenFX.Core.dll</HintPath>
     </Reference>
+    <Reference Include="INIFileParser.net">
+      <HintPath>..\..\..\..\Desktop\cfx-server\resources\ELS-for-FiveM\INIFileParser.net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
@@ -78,6 +80,10 @@
     <Compile Include="SirenManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="extra-files\ELS.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="server.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

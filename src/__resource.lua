@@ -1,10 +1,11 @@
 client_script 'ELS-for-FiveM.net.dll'
+client_script 'INIFileParser.net.dll'
 server_script 'server.lua'
 local function object_entry(data)
-	--dependency 'object-loader'
-
+	local file =''
+	for w in data:gmatch(".*/(.*)") do file=w end
 	files(data)
-	settings(data)
+	ELSFM(data)
 end
 
-object_entry('settings.xml')
+object_entry('extra-files/ELS.ini')
