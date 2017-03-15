@@ -1,0 +1,5 @@
+C:\Users\ejbev\Documents\GitHub\ELS-FiveM\libs\SharpConfig-master\SharpConfig\bin\Debug\SharpConfig.net.dll
+C:\Users\ejbev\Documents\GitHub\ELS-FiveM\libs\SharpConfig-master\SharpConfig\bin\Debug\SharpConfig.net.pdb
+C:\Users\ejbev\Documents\GitHub\ELS-FiveM\libs\SharpConfig-master\SharpConfig\obj\Debug\net20\SharpConfig.net.dll
+C:\Users\ejbev\Documents\GitHub\ELS-FiveM\libs\SharpConfig-master\SharpConfig\obj\Debug\net20\SharpConfig.net.pdb
+C:\Users\ejbev\Documents\GitHub\ELS-FiveM\libs\SharpConfig-master\SharpConfig\obj\Debug\net20\SharpConfig.csprojResolveAssemblyReference.cache
