@@ -74,8 +74,8 @@
     <Compile Include="ELS.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoteEventManager.cs" />
     <Compile Include="Sirens\Siren.cs" />
-    <Compile Include="Sirens\SirenTypes.cs" />
     <Compile Include="Sirens\StateControl.cs" />
     <Compile Include="Sirens\Tones\Tone.cs" />
     <Compile Include="SirenManager.cs" />

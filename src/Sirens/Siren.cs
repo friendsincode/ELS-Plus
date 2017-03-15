@@ -7,19 +7,20 @@ using CitizenFX.Core.Native;
 using ELS.Sirens;
 using ELS.Sirens.Tones;
 
-namespace ELS
+namespace ELS.Sirens
 {
+    public delegate void StateChangedHandler(Tone tone);
+
     /// <summary>
     /// Has diffrent tones
     /// </summary>
     public class Siren
     {
-        private readonly SirenTypes _sirenTypes;
         public readonly Vehicle _vehicle;
+        public event StateChangedHandler Statechanged;
+
         struct tones
         {
-            public delegate void SateChangedHandler(EventArgs sender);
-            public event SateChangedHandler ToneStateUpdated;
             public Tone horn;
             public Tone tone1;
             public Tone tone2;
@@ -36,11 +37,7 @@ namespace ELS
             _tones.tone2 = new Tone("", _vehicle);
             _tones.tone3 = new Tone("", _vehicle);
             _tones.tone4 = new Tone("", _vehicle);
-            _tones.horn.ToneStateUpdated += (EventArgs sender) => { };
-            _tones.tone2.ToneStateUpdated += (EventArgs sender) => { };
         }
-        
-
         public void ticker()
         {
             if (Game.IsControlJustPressed(0, Control.MpTextChatTeam)&&Game.CurrentInputMode==InputMode.MouseAndKeyboard)
@@ -48,6 +45,7 @@ namespace ELS
                 Game.DisableControlThisFrame(0, Control.MpTextChatTeam);
                 Game.DisableControlThisFrame(2, Control.ScriptPadDown);
                 _tones.horn.SetState(true);
+                Statechanged(_tones.horn);
             }
             if ((Game.IsControlJustReleased(0, Control.MpTextChatTeam) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) 
                 ||  (Game.IsControlJustReleased(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad ))
@@ -55,6 +53,7 @@ namespace ELS
                 Game.DisableControlThisFrame(0, Control.MpTextChatTeam);
                 Game.DisableControlThisFrame(2, Control.ScriptPadDown);
                 _tones.horn.SetState(false);
+                Statechanged(_tones.horn);
             }
         }
         

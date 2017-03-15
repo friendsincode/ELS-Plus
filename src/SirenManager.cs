@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using ELS.Sirens;
 
 namespace ELS
 {
@@ -17,7 +18,6 @@ namespace ELS
         /// </summary>
         private Siren currentSiren;
         private List<Siren> _sirens;
-        public event LocalPlayerSirenStateChangedHandler LocalPlayerSirenChangedEvent;
         public SirenManager()
         {
             FileLoader.OnSettingsLoaded += FileLoader_OnSettingsLoaded;
@@ -26,13 +26,22 @@ namespace ELS
 
         private void FileLoader_OnSettingsLoaded(configuration.SettingsType.Type type, string Data)
         {
-            var u = SharpConfig.Configuration.LoadFromString(Data);
-            var t = u["GENERAL"]["MaxActiveVehs"].IntValue;
-            if (_sirens != null){
-                _sirens.Capacity = t;
-                Debug.WriteLine($"INI Value:{t}\n" +
-                    $"varible capicity: {_sirens.Capacity}");
+            switch (type)
+            {
+                case configuration.SettingsType.Type.GLOBAL:
+                    var u = SharpConfig.Configuration.LoadFromString(Data);
+                    var t = u["GENERAL"]["MaxActiveVehs"].IntValue;
+                    if (_sirens != null)
+                    {
+                        _sirens.Capacity = t;
+                        Debug.WriteLine($"INI Value:{t}\n" +
+                            $"varible capicity: {_sirens.Capacity}");
+                    }
+                    break;
+                case configuration.SettingsType.Type.LIGHTING:
+                    break;
             }
+
         }
 
         public void AddSiren(Vehicle vehicle)
@@ -48,6 +57,8 @@ namespace ELS
 #if DEBUG
                 Debug.WriteLine("added new siren");
 #endif
+                SetCurrentSiren(vehicle);
+
             }
             else
             {
@@ -60,11 +71,18 @@ namespace ELS
 #endif
                         currentSiren = siren;
                     }
+                    currentSiren.Statechanged += CurrentSiren_Statechanged;
                 }
             }
-            
+
 
         }
+
+        private void CurrentSiren_Statechanged(Sirens.Tones.Tone tone)
+        {
+            RemoteEventManager.SendEvent(RemoteEventManager.MessageTypes.SirenUpdate, tone);
+        }
+
         public bool HasEls(Vehicle vehicle)
         {
             var result = false;
@@ -81,7 +99,7 @@ namespace ELS
         }
         public void UpdateSirens(int NetID)
         {
-            Vehicle vehicle = Function.Call<Vehicle>(Hash.NET_TO_VEH,NetID);
+            Vehicle vehicle = Function.Call<Vehicle>(Hash.NET_TO_VEH, NetID);
             Siren lsiren;
             foreach (Siren siren in _sirens)
             {
@@ -92,11 +110,6 @@ namespace ELS
                 }
             }
         }
-        public Entity Nettoint(int netid)
-        {
-            return Function.Call<Entity>(Hash.NETWORK_GET_ENTITY_FROM_NETWORK_ID, netid);
-        }
-
     }
 
     delegate void LocalPlayerSirenStateChangedHandler();

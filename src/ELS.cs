@@ -21,8 +21,7 @@ namespace ELS
             _FileLoader = new FileLoader(this);
             _sirenManager = new SirenManager();
             EventHandlers["onClientResourceStart"] += new Action<string>(_FileLoader.RunLoadeer);
-            this.EventHandlers["ELS:SirenUpdated"] += new Action<int>(_sirenManager.UpdateSirens);
-
+            EventHandlers["ELS:SirenUpdated"] += new Action<int>(_sirenManager.UpdateSirens);
             Tick += Class1_Tick;
         }
 

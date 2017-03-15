@@ -8,10 +8,9 @@ using CitizenFX.Core.Native;
 
 namespace ELS.Sirens.Tones
 {
-    class Tone
+    public class Tone
     {
-        public delegate void SateChangedHandler(EventArgs sender);
-        public event SateChangedHandler ToneStateUpdated;
+        
         private readonly string _file;
         private int soundId = Function.Call<int>(Hash.GET_SOUND_ID);
         private Entity _entity;
