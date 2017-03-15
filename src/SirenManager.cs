@@ -20,7 +20,19 @@ namespace ELS
         public event LocalPlayerSirenStateChangedHandler LocalPlayerSirenChangedEvent;
         public SirenManager()
         {
+            FileLoader.OnSettingsLoaded += FileLoader_OnSettingsLoaded;
             _sirens = new List<Siren>();
+        }
+
+        private void FileLoader_OnSettingsLoaded(configuration.SettingsType.Type type, string Data)
+        {
+            var u = SharpConfig.Configuration.LoadFromString(Data);
+            var t = u["GENERAL"]["MaxActiveVehs"].IntValue;
+            if (_sirens != null){
+                _sirens.Capacity = t;
+                Debug.WriteLine($"INI Value:{t}\n" +
+                    $"varible capicity: {_sirens.Capacity}");
+            }
         }
 
         public void AddSiren(Vehicle vehicle)
@@ -33,7 +45,9 @@ namespace ELS
             if (!HasEls(vehicle))
             {
                 AddSiren(vehicle);
+#if DEBUG
                 Debug.WriteLine("added new siren");
+#endif
             }
             else
             {
@@ -41,7 +55,9 @@ namespace ELS
                 {
                     if (siren._vehicle.Handle == vehicle.Handle)
                     {
+#if DEBUG
                         Debug.WriteLine("added existing siren");
+#endif
                         currentSiren = siren;
                     }
                 }

@@ -11,6 +11,8 @@ namespace ELS
     class FileLoader
     {
         ELS _baseScript;
+        public delegate void SettingsLoadedHandler(configuration.SettingsType.Type type, String Data);
+        public static event SettingsLoadedHandler OnSettingsLoaded;
         public FileLoader(ELS h)
         {
             _baseScript = h;
@@ -22,15 +24,14 @@ namespace ELS
             for (int i = 0; i < num; i++)
             {
                 var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "ELSFM", i);
-                Debug.WriteLine(filename);
-                if (filename.Equals("Resources\\ELS.ini"))
+                var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
+                if (filename.Equals("extra-files/ELS.ini"))
                 {
-                    Debug.WriteLine($"Debug: name:{name} filename:{filename}");
-                    var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
-                    Debug.WriteLine(filename);
-                    Debug.WriteLine(data);
-                    var parser = new IniParser.Parser.IniDataParser();
-                    var j = parser.Parse(data);
+                    OnSettingsLoaded(configuration.SettingsType.Type.LIGHTING, data);
+                }
+                if (filename.Equals("extra-files/ELS.xml", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    OnSettingsLoaded(configuration.SettingsType.Type.LIGHTING,data);
                 }
             }
         }

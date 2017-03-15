@@ -59,13 +59,17 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.net, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\System.Xml.net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="configuration\global.cs" />
+    <Compile Include="configuration\SettingsType.cs" />
     <Compile Include="DecorManager.cs" />
     <Compile Include="ELS.cs" />
     <Compile Include="FileLoader.cs" />
@@ -89,15 +93,20 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\libs\ini-parser\src\IniFileParser\INIFileParser.csproj">
-      <Project>{5e46dcf4-c473-4171-9f9b-f3910b5ec407}</Project>
-      <Name>INIFileParser</Name>
+    <Content Include="extra-files\ELS.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libs\SharpConfig-master\SharpConfig\SharpConfig.csproj">
+      <Project>{47435426-6569-4208-868e-25c0519f1f0f}</Project>
+      <Name>SharpConfig</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>powershell -File "$(SolutionDir)..\utils\buildscript.ps1" -serverRootFolder %25USERPROFILE%25\Desktop\cfx-server -address 127.0.0.1 -port 30120 -password lovely -projectName "$(TargetPath)" -sourceDir "$(TargetDir)\"
-rem "$(SolutionDir)utils\icecon_windows_amd64.exe" -c "restart els" 127.0.0.1:30120 lovely
+"$(SolutionDir)\..\utils\icecon_windows_amd64.exe" -c "restart ELS-for-FiveM" 127.0.0.1:30120 lovely
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
