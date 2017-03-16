@@ -17,7 +17,7 @@ namespace ELS.Sirens
     class Siren
     {
         public readonly Vehicle _vehicle;
-
+        configuration.ControlConfiguration.ELSControls keybindings = new configuration.ControlConfiguration.ELSControls();
         struct tones
         {
             public Tone horn;
@@ -39,6 +39,7 @@ namespace ELS.Sirens
                 _tones.tone2 = new Tone("", _vehicle);
                 _tones.tone3 = new Tone("", _vehicle);
                 _tones.tone4 = new Tone("", _vehicle);
+                updateLocalRemoteSiren();
             }
             else
             {
@@ -59,7 +60,7 @@ namespace ELS.Sirens
         public void ticker()
         {
             if (Game.IsControlJustPressed(0, Control.MpTextChatTeam)&&Game.CurrentInputMode==InputMode.MouseAndKeyboard)
-            {
+            { 
                 Game.DisableControlThisFrame(0, Control.MpTextChatTeam);
                 Game.DisableControlThisFrame(2, Control.ScriptPadDown);
                 _tones.horn.SetState(true);
@@ -84,7 +85,8 @@ namespace ELS.Sirens
 
         internal void updateLocalRemoteSiren()
         {
-            throw new NotImplementedException();
+            var state = EntityDecoration.Get<bool>(this._vehicle, "HornState");
+            _tones.horn.SetState(state);
         }
     }
 }

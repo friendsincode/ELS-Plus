@@ -8,4 +8,3 @@ local function object_entry(data)
 end
 
 object_entry('extra-files/ELS.ini')
-object_entry('extra-files/ELS.xml')

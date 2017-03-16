@@ -27,11 +27,11 @@ namespace ELS
                 var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
                 if (filename.Equals("extra-files/ELS.ini"))
                 {
-                    OnSettingsLoaded(configuration.SettingsType.Type.GLOBAL, data);
+                    OnSettingsLoaded?.Invoke(configuration.SettingsType.Type.GLOBAL, data);
                 }
                 if (filename.Equals("extra-files/ELS.xml", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    OnSettingsLoaded(configuration.SettingsType.Type.LIGHTING,data);
+                    OnSettingsLoaded?.Invoke(configuration.SettingsType.Type.LIGHTING,data);
                 }
             }
         }

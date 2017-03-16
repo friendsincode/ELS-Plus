@@ -51,7 +51,7 @@ namespace ELS
 
         public void SetCurrentSiren(Vehicle vehicle)
         {
-            if (!HasEls(vehicle))
+            if (!vehicleIsRegisteredLocaly(vehicle))
             {
                 AddSiren(vehicle);
 #if DEBUG
@@ -76,17 +76,6 @@ namespace ELS
 
         }
 
-        private bool HasEls(Vehicle vehicle)
-        {
-            EntityDecoration.ExistOn(vehicle, "HasELS");
-            var result = false;
-            foreach (Siren siren in _sirens)
-            {
-                if (siren._vehicle.Handle == vehicle.Handle) result = true;
-            }
-            return result;
-        }
-
         public void runtick()
         {
             currentSiren.ticker();
@@ -106,7 +95,7 @@ namespace ELS
         public void UpdateSirens(int NetID)
         {
             Vehicle vehicle = Function.Call<Vehicle>(Hash.NET_TO_VEH, NetID);
-            if (vehicleIsRegisteredLocaly(vehicle)&&HasEls(vehicle))
+            if (vehicleIsRegisteredLocaly(vehicle))
             {
                 foreach (Siren siren in _sirens)
                 {

@@ -13,11 +13,11 @@ namespace ELS
     public class ELS : BaseScript
     {
         private SirenManager _sirenManager;
-        public EventHandlerDictionary EventHandlerDictionary => EventHandlers;
         private FileLoader _FileLoader;
+        private configuration.ControlConfiguration controlConfiguration;
         public ELS()
         {
-            
+            controlConfiguration = new configuration.ControlConfiguration();
             _FileLoader = new FileLoader(this);
             _sirenManager = new SirenManager();
             EventHandlers["onClientResourceStart"] += new Action<string>(_FileLoader.RunLoadeer);
