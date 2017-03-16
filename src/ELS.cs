@@ -30,7 +30,7 @@ namespace ELS
 
             if (LocalPlayer.WantedLevel > 0)
             {
-                CitizenFX.Core.UI.Screen.ShowNotification("wanted level");
+                Screen.ShowNotification("wanted level");
                 LocalPlayer.WantedLevel = 0;
             }
             if (LocalPlayer.Character.IsGettingIntoAVehicle)

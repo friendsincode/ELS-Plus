@@ -14,10 +14,9 @@ namespace ELS.Sirens
     /// <summary>
     /// Has diffrent tones
     /// </summary>
-    public class Siren
+    class Siren
     {
         public readonly Vehicle _vehicle;
-        public event StateChangedHandler Statechanged;
 
         struct tones
         {
@@ -30,13 +29,32 @@ namespace ELS.Sirens
         tones _tones;
         public Siren(Vehicle vehicle)
         {
-            _vehicle = vehicle;
-            _tones = new tones();
-            _tones.horn = new Tone("SIRENS_AIRHORN", _vehicle);
-            _tones.tone1 = new Tone("", _vehicle);
-            _tones.tone2 = new Tone("", _vehicle);
-            _tones.tone3 = new Tone("", _vehicle);
-            _tones.tone4 = new Tone("", _vehicle);
+            if (EntityDecoration.ExistOn(vehicle, "HasELS"))
+            {
+                _vehicle = vehicle;
+                _tones = new tones();
+                _tones.horn = new Tone("SIRENS_AIRHORN", _vehicle);
+
+                _tones.tone1 = new Tone("", _vehicle,EntityDecoration.Get<bool>(_vehicle, "HornState"));
+                _tones.tone2 = new Tone("", _vehicle);
+                _tones.tone3 = new Tone("", _vehicle);
+                _tones.tone4 = new Tone("", _vehicle);
+            }
+            else
+            {
+                _vehicle = vehicle;
+                _tones = new tones();
+                EntityDecoration.RegisterProperty("HasELS", DecorationType.Bool);
+                EntityDecoration.Set(_vehicle, "HasELS",true);
+                _tones.horn = new Tone("SIRENS_AIRHORN", _vehicle);
+                EntityDecoration.RegisterProperty("HornState", DecorationType.Bool);
+
+                _tones.tone1 = new Tone("", _vehicle);
+                _tones.tone2 = new Tone("", _vehicle);
+                _tones.tone3 = new Tone("", _vehicle);
+                _tones.tone4 = new Tone("", _vehicle);
+            }
+           
         }
         public void ticker()
         {
@@ -45,17 +63,28 @@ namespace ELS.Sirens
                 Game.DisableControlThisFrame(0, Control.MpTextChatTeam);
                 Game.DisableControlThisFrame(2, Control.ScriptPadDown);
                 _tones.horn.SetState(true);
-                Statechanged(_tones.horn);
+                Debug.WriteLine("set decoration");
+                EntityDecoration.Set(_vehicle, "HornState", true);
+                Debug.WriteLine("set decoration");
+                RemoteEventManager.SendEvent(RemoteEventManager.MessageTypes.SirenUpdate, _vehicle);
             }
+
             if ((Game.IsControlJustReleased(0, Control.MpTextChatTeam) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) 
                 ||  (Game.IsControlJustReleased(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad ))
             {
                 Game.DisableControlThisFrame(0, Control.MpTextChatTeam);
                 Game.DisableControlThisFrame(2, Control.ScriptPadDown);
                 _tones.horn.SetState(false);
-                Statechanged(_tones.horn);
+                Debug.WriteLine("set decoration");
+                EntityDecoration.Set(_vehicle, "HornState", false);
+                Debug.WriteLine("set decoration");
+                RemoteEventManager.SendEvent(RemoteEventManager.MessageTypes.SirenUpdate, _vehicle);
             }
         }
-        
+
+        internal void updateLocalRemoteSiren()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

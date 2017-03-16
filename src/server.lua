@@ -1,4 +1,5 @@
 RegisterServerEvent("sirenStateChanged")
+RegisterServerEvent("ELS")
 AddEventHandler("sirenStateChanged",function (vehnetId,netSoundid,propertyName,state)
 	--print(netId .. propertyName .. state)
 	TriggerClientEvent("sirenStateChanged",-1,vehnetId,netSoundid,propertyName,state)
@@ -8,3 +9,7 @@ AddEventHandler("sirenStateChanged",function (vehnetId,netSoundid,propertyName,s
 		print(x .. " "  .. y)
 	end
 end)
+AddEventHandler("ELS",function(type,netId)
+	print(type.toString())
+    print("source " .. source .. " " .. type.toString() .. " " .. netId )
+	end)

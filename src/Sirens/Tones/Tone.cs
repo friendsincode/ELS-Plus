@@ -20,6 +20,13 @@ namespace ELS.Sirens.Tones
             _file = file;
         }
 
+        public Tone(string file, Entity entity,bool state)
+        {
+            _entity = entity;
+            _file = file;
+            SetState(state);
+        }
+
         public void SetState( bool state)
         {
 

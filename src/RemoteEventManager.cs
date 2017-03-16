@@ -1,4 +1,6 @@
-﻿using ELS.Sirens.Tones;
+﻿using CitizenFX.Core;
+using CitizenFX.Core.Native;
+using ELS.Sirens.Tones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +23,11 @@ namespace ELS
         }
         public delegate void RemoteMessageRecievedHandler();
         public static event RemoteMessageRecievedHandler RemoteMessageRecieved;
-        public static void SendEvent(MessageTypes type,Tone tone)
+        public static void SendEvent(MessageTypes type,Vehicle vehicle)
         {
-            TriggerServerEvent("ELS",type,tone);
+            var netID = Function.Call<int>(Hash.VEH_TO_NET, vehicle);
+
+            BaseScript.TriggerServerEvent("ELS",type,netID);
         }
     }
 }

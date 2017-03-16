@@ -44,7 +44,7 @@ namespace ELS
 
         }
 
-        public void AddSiren(Vehicle vehicle)
+        private void AddSiren(Vehicle vehicle)
         {
             _sirens.Add(new Siren(vehicle));
         }
@@ -58,7 +58,6 @@ namespace ELS
                 Debug.WriteLine("added new siren");
 #endif
                 SetCurrentSiren(vehicle);
-
             }
             else
             {
@@ -71,20 +70,15 @@ namespace ELS
 #endif
                         currentSiren = siren;
                     }
-                    currentSiren.Statechanged += CurrentSiren_Statechanged;
                 }
             }
 
 
         }
 
-        private void CurrentSiren_Statechanged(Sirens.Tones.Tone tone)
+        private bool HasEls(Vehicle vehicle)
         {
-            RemoteEventManager.SendEvent(RemoteEventManager.MessageTypes.SirenUpdate, tone);
-        }
-
-        public bool HasEls(Vehicle vehicle)
-        {
+            EntityDecoration.ExistOn(vehicle, "HasELS");
             var result = false;
             foreach (Siren siren in _sirens)
             {
@@ -97,20 +91,36 @@ namespace ELS
         {
             currentSiren.ticker();
         }
-        public void UpdateSirens(int NetID)
+        private bool vehicleIsRegisteredLocaly(Vehicle vehicle)
         {
-            Vehicle vehicle = Function.Call<Vehicle>(Hash.NET_TO_VEH, NetID);
-            Siren lsiren;
+            bool vehicleIsRegisteredLocaly = false;
             foreach (Siren siren in _sirens)
             {
                 if (siren._vehicle == vehicle)
                 {
-                    lsiren = siren;
-                    break;
+                    vehicleIsRegisteredLocaly = true;
                 }
             }
+            return vehicleIsRegisteredLocaly;
         }
+        public void UpdateSirens(int NetID)
+        {
+            Vehicle vehicle = Function.Call<Vehicle>(Hash.NET_TO_VEH, NetID);
+            if (vehicleIsRegisteredLocaly(vehicle)&&HasEls(vehicle))
+            {
+                foreach (Siren siren in _sirens)
+                {
+                    if (siren._vehicle == vehicle)
+                    {
+                        siren.updateLocalRemoteSiren();
+                    }
+                }
+            }
+            else
+            {
+                AddSiren(vehicle);
+            }
+        } 
     }
 
-    delegate void LocalPlayerSirenStateChangedHandler();
 }
