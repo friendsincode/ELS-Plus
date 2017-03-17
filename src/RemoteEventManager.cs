@@ -25,9 +25,10 @@ namespace ELS
         public static event RemoteMessageRecievedHandler RemoteMessageRecieved;
         public static void SendEvent(MessageTypes type,Vehicle vehicle)
         {
-            var netID = Function.Call<int>(Hash.VEH_TO_NET, vehicle);
-
-            BaseScript.TriggerServerEvent("ELS",type,netID);
+            var netID = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);
+            var ped = vehicle.GetPedOnSeat(VehicleSeat.Driver);
+            BaseScript.TriggerServerEvent("ELS",type,Game.Player.ServerId);
+            //BaseScript.TriggerServerEvent("ELS", type, netID);
         }
     }
 }

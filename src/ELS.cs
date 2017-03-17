@@ -42,7 +42,7 @@ namespace ELS
             }
             if (LocalPlayer.Character.IsInVehicle())
             {
-                Screen.ShowNotification(Function.Call<int>(Hash.VEH_TO_NET, LocalPlayer.Character.CurrentVehicle).ToString());
+                Screen.ShowNotification(Function.Call<int>(Hash.NETWORK_GET_NETWORK_ID_FROM_ENTITY, LocalPlayer.Character.CurrentVehicle.Handle).ToString());
                 _sirenManager.runtick();
             }
             //if (Game.IsControlJustReleased(0, Control.NextCamera))

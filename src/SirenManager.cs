@@ -94,7 +94,9 @@ namespace ELS
         }
         public void UpdateSirens(int NetID)
         {
-            Vehicle vehicle = Function.Call<Vehicle>(Hash.NET_TO_VEH, NetID);
+            var y = new PlayerList()[NetID];
+           
+            Vehicle vehicle = y.Character.CurrentVehicle;
             if (vehicleIsRegisteredLocaly(vehicle))
             {
                 foreach (Siren siren in _sirens)
