@@ -25,6 +25,7 @@ namespace ELS
             EventHandlers["ELS:SirenUpdated"] += new Action<int>(_sirenManager.UpdateSirens);
             EventHandlers["onClientResourceStop"] += new Action(() => {
                 isStopped = true;
+                _sirenManager.CleanUp();
             });
             Tick += Class1_Tick;
         }

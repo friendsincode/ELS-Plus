@@ -58,6 +58,16 @@ namespace ELS.Siren
             }
            
         }
+        public void CleanUP()
+        {
+            _tones.horn.CleanUp();
+            _tones.tone1.CleanUp();
+            _tones.tone2.CleanUp();
+            _tones.tone3.CleanUp();
+            _tones.tone4.CleanUp();
+            EntityDecoration.Set(_vehicle, "HornState", false);
+            
+        }
         public void ticker()
         {
             Function.Call(Hash.SET_HORN_ENABLED, _vehicle, false);

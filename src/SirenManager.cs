@@ -44,10 +44,19 @@ namespace ELS
 
         }
 
-        private void AddSiren(Vehicle vehicle)
+        internal void CleanUp()
         {
+            foreach(var siren in _sirens)
+            {
+                siren.CleanUP();
+            }
+        }
+
+        private void AddSiren(Vehicle vehicle)
+        {if (ELS.isStopped) return;
             _sirens.Add(new Siren.Siren(vehicle));
         }
+
 
         public void SetCurrentSiren(Vehicle vehicle)
         {
@@ -80,6 +89,7 @@ namespace ELS
         {
             currentSiren.ticker();
         }
+
         private bool vehicleIsRegisteredLocaly(Vehicle vehicle)
         {
             bool vehicleIsRegisteredLocaly = false;
@@ -92,8 +102,10 @@ namespace ELS
             }
             return vehicleIsRegisteredLocaly;
         }
+
         public void UpdateSirens(int NetID)
         {
+            if (ELS.isStopped) return;
             var y = new PlayerList()[NetID];
            
             Vehicle vehicle = y.Character.CurrentVehicle;
