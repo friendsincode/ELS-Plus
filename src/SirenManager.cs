@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
-using ELS.Sirens;
+using ELS.Siren;
 
 namespace ELS
 {
@@ -16,12 +16,12 @@ namespace ELS
         /// <summary>
         /// Siren that LocalPlayer can manage
         /// </summary>
-        private Siren currentSiren;
-        private List<Siren> _sirens;
+        private Siren.Siren currentSiren;
+        private List<Siren.Siren> _sirens;
         public SirenManager()
         {
             FileLoader.OnSettingsLoaded += FileLoader_OnSettingsLoaded;
-            _sirens = new List<Siren>();
+            _sirens = new List<Siren.Siren>();
         }
 
         private void FileLoader_OnSettingsLoaded(configuration.SettingsType.Type type, string Data)
@@ -46,7 +46,7 @@ namespace ELS
 
         private void AddSiren(Vehicle vehicle)
         {
-            _sirens.Add(new Siren(vehicle));
+            _sirens.Add(new Siren.Siren(vehicle));
         }
 
         public void SetCurrentSiren(Vehicle vehicle)
@@ -61,7 +61,7 @@ namespace ELS
             }
             else
             {
-                foreach (Siren siren in _sirens)
+                foreach (Siren.Siren siren in _sirens)
                 {
                     if (siren._vehicle.Handle == vehicle.Handle)
                     {
@@ -83,7 +83,7 @@ namespace ELS
         private bool vehicleIsRegisteredLocaly(Vehicle vehicle)
         {
             bool vehicleIsRegisteredLocaly = false;
-            foreach (Siren siren in _sirens)
+            foreach (Siren.Siren siren in _sirens)
             {
                 if (siren._vehicle == vehicle)
                 {
@@ -99,7 +99,7 @@ namespace ELS
             Vehicle vehicle = y.Character.CurrentVehicle;
             if (vehicleIsRegisteredLocaly(vehicle))
             {
-                foreach (Siren siren in _sirens)
+                foreach (Siren.Siren siren in _sirens)
                 {
                     if (siren._vehicle == vehicle)
                     {

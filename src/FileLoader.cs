@@ -19,6 +19,7 @@ namespace ELS
         }
         public void RunLoadeer(string name)
         {
+            if (ELS.isStopped) return;
             int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "ELSFM");
             Debug.WriteLine(num.ToString() + " " + name);
             for (int i = 0; i < num; i++)

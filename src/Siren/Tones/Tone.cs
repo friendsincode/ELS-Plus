@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
 
-namespace ELS.Sirens.Tones
+namespace ELS.Siren.Tones
 {
     public class Tone
     {

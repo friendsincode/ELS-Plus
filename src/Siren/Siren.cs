@@ -4,10 +4,10 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
-using ELS.Sirens;
-using ELS.Sirens.Tones;
+using ELS.Siren;
+using ELS.Siren.Tones;
 
-namespace ELS.Sirens
+namespace ELS.Siren
 {
     public delegate void StateChangedHandler(Tone tone);
 
@@ -16,6 +16,7 @@ namespace ELS.Sirens
     /// </summary>
     class Siren
     {
+        private configuration.ControlConfiguration.ELSControls keyBinding;
         public readonly Vehicle _vehicle;
         configuration.ControlConfiguration.ELSControls keybindings = new configuration.ControlConfiguration.ELSControls();
         struct tones
@@ -59,26 +60,25 @@ namespace ELS.Sirens
         }
         public void ticker()
         {
-            if (Game.IsControlJustPressed(0, Control.MpTextChatTeam)&&Game.CurrentInputMode==InputMode.MouseAndKeyboard)
-            { 
-                Game.DisableControlThisFrame(0, Control.MpTextChatTeam);
+            Function.Call(Hash.SET_HORN_ENABLED, _vehicle, false);
+            if (Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) &&Game.CurrentInputMode==InputMode.MouseAndKeyboard)
+            {
+                Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn);
                 Game.DisableControlThisFrame(2, Control.ScriptPadDown);
                 _tones.horn.SetState(true);
                 Debug.WriteLine("set decoration");
                 EntityDecoration.Set(_vehicle, "HornState", true);
-                Debug.WriteLine("set decoration");
                 RemoteEventManager.SendEvent(RemoteEventManager.MessageTypes.SirenUpdate, _vehicle);
             }
 
-            if ((Game.IsControlJustReleased(0, Control.MpTextChatTeam) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) 
+            if ((Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) 
                 ||  (Game.IsControlJustReleased(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad ))
             {
-                Game.DisableControlThisFrame(0, Control.MpTextChatTeam);
+                Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn);
                 Game.DisableControlThisFrame(2, Control.ScriptPadDown);
                 _tones.horn.SetState(false);
                 Debug.WriteLine("set decoration");
                 EntityDecoration.Set(_vehicle, "HornState", false);
-                Debug.WriteLine("set decoration");
                 RemoteEventManager.SendEvent(RemoteEventManager.MessageTypes.SirenUpdate, _vehicle);
             }
         }

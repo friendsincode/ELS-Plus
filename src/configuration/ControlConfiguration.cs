@@ -12,7 +12,7 @@ namespace ELS.configuration
     {
 
         public static event ControlsUpdatedhandler ControlsUpdated;
-        ELSControls KeyBindings = new ELSControls();
+        public static ELSControls KeyBindings = new ELSControls();
         public ControlConfiguration()
         {
             FileLoader.OnSettingsLoaded += FileLoader_OnSettingsLoaded;   
@@ -23,14 +23,15 @@ namespace ELS.configuration
             if (type == SettingsType.Type.GLOBAL)
             {
                 var u = SharpConfig.Configuration.LoadFromString(Data);
-                var t = u["CONTROL"]["Toggle_SIRN"].IntValue;
-                KeyBindings.Toggle_SIRN = (Control)t;
+                var t = u["CONTROL"]["Sound_Ahorn"].IntValue;
+                KeyBindings.Sound_Ahorn = (Control)t;
                 ControlsUpdated?.Invoke(KeyBindings);
             }
         }
         public class ELSControls
         {
-            public CitizenFX.Core.Control Toggle_SIRN { get; set; }
+            public Control Toggle_SIRN { get; internal set; }
+            public Control Sound_Ahorn { get; internal set; }
         }
     }
 }

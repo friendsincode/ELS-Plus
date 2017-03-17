@@ -1,6 +1,6 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
-using ELS.Sirens.Tones;
+using ELS.Siren.Tones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
