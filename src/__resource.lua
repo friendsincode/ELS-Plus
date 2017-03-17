@@ -1,4 +1,3 @@
-client_script 'System.Xml.net.dll'
 client_script 'SharpConfig.net.dll'
 client_script 'ELS-for-FiveM.net.dll'
 server_script 'server.lua'

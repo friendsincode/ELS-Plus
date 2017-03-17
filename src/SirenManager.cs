@@ -46,6 +46,7 @@ namespace ELS
 
         internal void CleanUp()
         {
+            Debug.WriteLine("Running CleanUp()");
             foreach(var siren in _sirens)
             {
                 siren.CleanUP();
