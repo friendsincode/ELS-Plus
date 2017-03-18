@@ -33,14 +33,15 @@ namespace ELS.Siren
             if (EntityDecoration.ExistOn(vehicle, "HasELS"))
             {
                 _vehicle = vehicle;
-                _tones = new tones();
-                _tones.horn = new Tone("SIRENS_AIRHORN", _vehicle);
-
-                _tones.tone1 = new Tone("", _vehicle,EntityDecoration.Get<bool>(_vehicle, "HornState"));
-                _tones.tone2 = new Tone("", _vehicle);
-                _tones.tone3 = new Tone("", _vehicle);
-                _tones.tone4 = new Tone("", _vehicle);
-                updateLocalRemoteSiren();
+                _tones = new tones()
+                {
+                    horn = new Tone("SIRENS_AIRHORN", _vehicle),
+                    tone1 = new Tone("", _vehicle),
+                    tone2 = new Tone("", _vehicle),
+                    tone3 = new Tone("", _vehicle),
+                    tone4 = new Tone("", _vehicle)
+                };
+                //updateLocalRemoteSiren();
             }
             else
             {
@@ -49,8 +50,6 @@ namespace ELS.Siren
                 EntityDecoration.RegisterProperty("HasELS", DecorationType.Bool);
                 EntityDecoration.Set(_vehicle, "HasELS",true);
                 _tones.horn = new Tone("SIRENS_AIRHORN", _vehicle);
-                EntityDecoration.RegisterProperty("HornState", DecorationType.Bool);
-
                 _tones.tone1 = new Tone("", _vehicle);
                 _tones.tone2 = new Tone("", _vehicle);
                 _tones.tone3 = new Tone("", _vehicle);
@@ -65,7 +64,6 @@ namespace ELS.Siren
             _tones.tone2.CleanUp();
             _tones.tone3.CleanUp();
             _tones.tone4.CleanUp();
-            EntityDecoration.Set(_vehicle, "HornState", false);
             
         }
         public void ticker()
@@ -76,9 +74,9 @@ namespace ELS.Siren
                 Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn);
                 Game.DisableControlThisFrame(2, Control.ScriptPadDown);
                 _tones.horn.SetState(true);
-                Debug.WriteLine("set decoration");
-                EntityDecoration.Set(_vehicle, "HornState", true);
-                RemoteEventManager.SendEvent(RemoteEventManager.MessageTypes.SirenUpdate, _vehicle);
+               // Debug.WriteLine("set decoration");
+               // EntityDecoration.Set(_vehicle, "HornState", true);
+                RemoteEventManager.SendEvent(RemoteEventManager.MessageTypes.SirenUpdate, _vehicle, "horn",true);
             }
 
             if ((Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) 
@@ -88,15 +86,19 @@ namespace ELS.Siren
                 Game.DisableControlThisFrame(2, Control.ScriptPadDown);
                 _tones.horn.SetState(false);
                 Debug.WriteLine("set decoration");
-                EntityDecoration.Set(_vehicle, "HornState", false);
-                RemoteEventManager.SendEvent(RemoteEventManager.MessageTypes.SirenUpdate, _vehicle);
+               // EntityDecoration.Set(_vehicle, "HornState", false);
+                RemoteEventManager.SendEvent(RemoteEventManager.MessageTypes.SirenUpdate, _vehicle, "horn",false);
             }
         }
 
-        internal void updateLocalRemoteSiren()
+        internal void updateLocalRemoteSiren(string sirenString,bool state)
         {
-            var state = EntityDecoration.Get<bool>(this._vehicle, "HornState");
-            _tones.horn.SetState(state);
+            if(sirenString == "horn")
+            {
+                //var state = EntityDecoration.Get<bool>(this._vehicle, "HornState");
+                _tones.horn.SetState(state);
+            }
+            
         }
     }
 }

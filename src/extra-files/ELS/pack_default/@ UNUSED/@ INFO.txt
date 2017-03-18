@@ -1,0 +1,13 @@
+-----------------------------------------------------
+EMERGENCY LIGHTING SYSTEM V -- INFORMATION
+-----------------------------------------------------
+
+UNUSED VCF STORAGE FOLDER
+
+This folder is provided for your convenience. You can use it as a storage space to place VCFs you wish to keep but not use, as VCFs placed inside this folder will be ignored by ELS.
+
+A sample standard VCF is stored in this folder. It has no use other than to provide you with a base to create your own personalized VCFs.
+
+
+
+(It is safe to delete this .txt file once you have read it.)

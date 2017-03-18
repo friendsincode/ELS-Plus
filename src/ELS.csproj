@@ -63,6 +63,9 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml.net">
+      <HintPath>..\libs\System.Xml.net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="configuration\ControlConfiguration.cs" />
@@ -97,7 +100,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="extra-files\ELS.xml">
+    <Content Include="extra-files\ELS\%40 INFO.txt" />
+    <Content Include="extra-files\ELS\pack_default\%40 INFO.txt" />
+    <Content Include="extra-files\ELS\pack_default\%40 UNUSED\%40 INFO.txt" />
+    <Content Include="extra-files\ELS\pack_default\%40 UNUSED\SAMPLE VCF.xml" />
+    <Content Include="extra-files\ELS\pack_default\POLICE.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

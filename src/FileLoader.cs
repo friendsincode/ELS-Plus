@@ -30,8 +30,12 @@ namespace ELS
                 {
                     OnSettingsLoaded?.Invoke(configuration.SettingsType.Type.GLOBAL, data);
                 }
-                if (filename.Equals("extra-files/ELS.xml", StringComparison.CurrentCultureIgnoreCase))
+                if (filename.Equals("extra-files/ELS/pack_default/POLICE.xml", StringComparison.CurrentCultureIgnoreCase))
                 {
+                    System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+                    doc.LoadXml(data);
+
+                    Debug.WriteLine(doc["vcfroot"]["INTERFACE"]["LstgActivationType"].InnerText);
                     OnSettingsLoaded?.Invoke(configuration.SettingsType.Type.LIGHTING,data);
                 }
             }

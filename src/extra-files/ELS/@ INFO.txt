@@ -1,0 +1,12 @@
+-----------------------------------------------------
+EMERGENCY LIGHTING SYSTEM V -- INFORMATION
+-----------------------------------------------------
+
+ELS FOLDER / VCF CONTAINER DIRECTORY
+
+This directory holds your VCF container folder(s) which, in turn, hold(s) the VCFs that ELS will apply to vehicles in-game. Only one VCF container folder may be in use at a time. Specify the name of the one you wish to use in the ELS.ini file.
+
+
+
+(It is safe to delete this .txt file once you have read it.)
+

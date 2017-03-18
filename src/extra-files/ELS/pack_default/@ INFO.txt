@@ -1,0 +1,16 @@
+-----------------------------------------------------
+EMERGENCY LIGHTING SYSTEM V -- INFORMATION
+-----------------------------------------------------
+
+VCF CONTAINER FOLDER
+
+This folder is a VCF (ELS vehicle configuration file) container. All VCFs placed in this folder will automatically be loaded by ELS on game startup. You may have several VCF container folders, but only one can be in use at a time. The folder specified in the ELS.ini will be used.
+
+In order to load correctly, a VCF must bear the name of a valid game vehicle model, to which its data will then be applied during the game session.
+
+Always ensure that your VCFs are up to date and in conformity with the latest ELS VCF standard. A sample VCF is provided in the UNUSED folder.
+
+
+
+(It is safe to delete this .txt file once you have read it.)
+
