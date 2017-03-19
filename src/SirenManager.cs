@@ -87,8 +87,12 @@ namespace ELS
 
         }
 
-        public void runtick()
+        public void Runtick()
         {
+            if ((( currentSiren == null) || currentSiren._vehicle !=  new PlayerList()[ELS.localplayerid].Character.CurrentVehicle))
+            {
+                SetCurrentSiren( new PlayerList()[ELS.localplayerid].Character.CurrentVehicle);
+            }
             currentSiren.ticker();
         }
 

@@ -8,13 +8,13 @@ using Control = CitizenFX.Core.Control;
 using CitizenFX.Core.Native;
 using System;
 using System.Drawing;
+using System.Reflection;
 using System.Security.Permissions;
 
 namespace ELS
 {
     public class ELS : BaseScript
     {
-        static PlayerList _playerList;
         public static int localplayerid;
         public static bool isStopped;
         private SirenManager _sirenManager;
@@ -32,7 +32,7 @@ namespace ELS
                 (string obj) =>
                 {
                     _FileLoader.RunLoadeer(obj);
-                    handleExistingVehicle();
+                   // handleExistingVehicle();
                 });
             EventHandlers["ELS:SirenUpdated"] += new Action<int,string,bool>(_sirenManager.UpdateSirens);
             EventHandlers["onClientResourceStop"] += new Action(() => {
@@ -42,7 +42,6 @@ namespace ELS
             });
             EventHandlers["onPlayerJoining"] += new Action(() =>
               {
-                  _playerList = Players;
                   localplayerid = LocalPlayer.ServerId;
               });
             Tick += Class1_Tick;
@@ -56,23 +55,26 @@ namespace ELS
             }
         }
 
-        private async Task Class1_Tick()
+        private Task Class1_Tick()
         {
-            Text text = new Text("ELS Build v0.0.2\nhttp://ELS.ejb1123.tk", new PointF(640f, 10f), 0.5f);
+            Text text = new Text($"ELS Build v0.0.2.2\nhttp://ELS.ejb1123.tk", new PointF(640f, 10f), 0.5f);
             text.Alignment = Alignment.Center;
             text.Centered = true;
             text.Draw();
-            if (LocalPlayer.Character.IsGettingIntoAVehicle)
+            //if (LocalPlayer.Character.IsGettingIntoAVehicle)
+            //{
+            //    //if (LocalPlayer.Character.VehicleTryingToEnter != null && LocalPlayer.Character.VehicleTryingToEnter.ClassType == VehicleClass.Emergency)
+            //    //{
+            //    //    _sirenManager.SetCurrentSiren(LocalPlayer.Character.VehicleTryingToEnter);
+            //    //}
+            //}
+            //Screen.ShowNotification(LocalPlayer.Character.CurrentVehicle.HasSiren.ToString());
+            if (LocalPlayer.Character.IsInVehicle() && LocalPlayer.Character.IsSittingInVehicle() && LocalPlayer.Character.CurrentVehicle.HasSiren && LocalPlayer.Character.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver)==LocalPlayer.Character)
             {
-                if (LocalPlayer.Character.VehicleTryingToEnter != null)
-                {
-                    _sirenManager.SetCurrentSiren(LocalPlayer.Character.VehicleTryingToEnter);
-                }
+                Screen.ShowNotification(LocalPlayer.Character.SeatIndex.ToString());
+               _sirenManager.Runtick();
             }
-            if (LocalPlayer.Character.IsInVehicle() && LocalPlayer.Character.IsSittingInVehicle())
-            {
-                _sirenManager.runtick();
-            }
+            return null;
         }
     }
 }
