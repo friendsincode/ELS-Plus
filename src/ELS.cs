@@ -7,6 +7,7 @@ using ELS.Siren;
 using Control = CitizenFX.Core.Control;
 using CitizenFX.Core.Native;
 using System;
+using System.Drawing;
 using System.Security.Permissions;
 
 namespace ELS
@@ -62,6 +63,10 @@ namespace ELS
 
         private async Task Class1_Tick()
         {
+            Text text = new Text("ELS Build v0.0.2\nhttp://ELS.ejb1123.tk", new PointF(640f, 10f), 0.5f);
+            text.Alignment = Alignment.Center;
+            text.Centered = true;
+            text.Draw();
             if (LocalPlayer.Character.IsGettingIntoAVehicle)
             {
                 if (LocalPlayer.Character.VehicleTryingToEnter != null)
@@ -71,7 +76,6 @@ namespace ELS
             }
             if (LocalPlayer.Character.IsInVehicle())
             {
-                Screen.ShowNotification(Function.Call<int>(Hash.NETWORK_GET_NETWORK_ID_FROM_ENTITY, LocalPlayer.Character.CurrentVehicle.Handle).ToString());
                 _sirenManager.runtick();
             }
         }
