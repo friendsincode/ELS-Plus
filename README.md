@@ -2,7 +2,7 @@
 This project is still in development and should be expected to be buggy and not work in its current state  
 # ELS-FiveM
 
-### Defult Controls
+### Default Controls
 
 |Action Key|Default Key|Default Binding
 |---|---|---|
