@@ -19,7 +19,6 @@ namespace ELS
         private SirenManager _sirenManager;
         private FileLoader _FileLoader;
         private configuration.ControlConfiguration controlConfiguration;
-       // [SecurityPermission(SecurityAction.Demand,Flags =SecurityPermissionFlag.ControlAppDomain)]
         public ELS()
         {
             localplayerid = LocalPlayer.ServerId;
