@@ -11,7 +11,8 @@ namespace ELS.configuration
         public enum Type
         {
             LIGHTING,
-            GLOBAL
+            GLOBAL,
+            VCF
         }
     }
 }

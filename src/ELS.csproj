@@ -71,6 +71,7 @@
     <Compile Include="configuration\ControlConfiguration.cs" />
     <Compile Include="configuration\global.cs" />
     <Compile Include="configuration\SettingsType.cs" />
+    <Compile Include="configuration\SoundConfig.cs" />
     <Compile Include="DecorManager.cs" />
     <Compile Include="ELS.cs" />
     <Compile Include="EntityDecoration.cs" />
@@ -78,7 +79,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteEventManager.cs" />
     <Compile Include="Siren\Siren.cs" />
-    <Compile Include="Siren\Tones\Tone.cs" />
+    <Compile Include="Siren\Tone.cs" />
     <Compile Include="SirenManager.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -106,7 +107,11 @@
     <Content Include="extra-files\ELS\pack_default\%40 UNUSED\SAMPLE VCF.xml" />
     <Content Include="extra-files\ELS\pack_default\POLICE.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Siren\Tones\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

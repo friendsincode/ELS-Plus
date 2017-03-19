@@ -36,7 +36,7 @@ namespace ELS
                     doc.LoadXml(data);
 
                     Debug.WriteLine(doc["vcfroot"]["INTERFACE"]["LstgActivationType"].InnerText);
-                    OnSettingsLoaded?.Invoke(configuration.SettingsType.Type.LIGHTING,data);
+                    OnSettingsLoaded?.Invoke(configuration.SettingsType.Type.VCF,data);
                 }
             }
         }

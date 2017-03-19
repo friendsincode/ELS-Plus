@@ -47,7 +47,7 @@ namespace ELS
         internal void CleanUp()
         {
             Debug.WriteLine("Running CleanUp()");
-            foreach(var siren in _sirens)
+            foreach (var siren in _sirens)
             {
                 siren.CleanUP();
             }
@@ -104,17 +104,17 @@ namespace ELS
             }
             return vehicleIsRegisteredLocaly;
         }
-        
-        public void UpdateSirens(int NetID,string sirenString,bool state)
+
+        public void UpdateSirens(int NetID, string sirenString, bool state)
         {
             Debug.WriteLine($"netId:{NetID.ToString()} localId {ELS.localplayerid.ToString()}");
             if (ELS.localplayerid == NetID)
             {
-               return;
+                return;
             }
             if (ELS.isStopped) return;
             var y = new PlayerList()[NetID];
-           
+
             Vehicle vehicle = y.Character.CurrentVehicle;
             if (vehicleIsRegisteredLocaly(vehicle))
             {
@@ -122,7 +122,7 @@ namespace ELS
                 {
                     if (siren._vehicle == vehicle)
                     {
-                        siren.updateLocalRemoteSiren(sirenString,state);
+                        siren.updateLocalRemoteSiren(sirenString, state);
                     }
                 }
             }
@@ -137,7 +137,7 @@ namespace ELS
                     }
                 }
             }
-        } 
+        }
     }
 
 }

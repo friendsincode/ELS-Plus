@@ -19,10 +19,12 @@ namespace ELS
         private SirenManager _sirenManager;
         private FileLoader _FileLoader;
         private configuration.ControlConfiguration controlConfiguration;
+        private configuration.SoundConfig soundConfig;
         public ELS()
         {
             localplayerid = LocalPlayer.ServerId;
             controlConfiguration = new configuration.ControlConfiguration();
+            soundConfig = new configuration.SoundConfig();
             _FileLoader = new FileLoader(this);
             _sirenManager = new SirenManager();
             EventHandlers["onClientResourceStart"] += new Action<string>(

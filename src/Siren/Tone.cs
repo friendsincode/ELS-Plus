@@ -8,29 +8,34 @@ using CitizenFX.Core.Native;
 
 namespace ELS.Siren.Tones
 {
+    public enum ToneType
+    {
+        Horn,
+        SrnTon1,
+        SrnTon2,
+        SrnTon3,
+        SrnTon4
+    }
     public class Tone
     {
         
         private readonly string _file;
         private int soundId = Function.Call<int>(Hash.GET_SOUND_ID);
         private Entity _entity;
-        public Tone(string file, Entity entity)
+        private readonly ToneType _type;
+        private bool _state;
+        public Tone(string file, Entity entity,ToneType type,bool state =false)
         {
             _entity = entity;
             _file = file;
-        }
-
-        public Tone(string file, Entity entity,bool state)
-        {
-            _entity = entity;
-            _file = file;
+            _type = type;
             SetState(state);
         }
 
         public void SetState( bool state)
         {
-
-            if (state)
+            _state = state;
+            if (_state)
             {
                 Debug.WriteLine("file:" + _file);
                 Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)_file, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
@@ -39,6 +44,10 @@ namespace ELS.Siren.Tones
             {
                 Audio.StopSound(soundId);
             }
+        }
+        public void SendMessage()
+        {
+            RemoteEventManager.SendEvent(RemoteEventManager.MessageTypes.SirenUpdate,(Vehicle) _entity, _type.ToString() , _state);
         }
         public void CleanUp()
         {

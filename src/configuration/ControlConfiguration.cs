@@ -25,13 +25,30 @@ namespace ELS.configuration
                 var u = SharpConfig.Configuration.LoadFromString(Data);
                 var t = u["CONTROL"]["Sound_Ahorn"].IntValue;
                 KeyBindings.Sound_Ahorn = (Control)t;
+
+                t = u["CONTROL"]["Snd_SrnTon1"].IntValue;
+                KeyBindings.Snd_SrnTon1 = (Control)t;
+
+                t = u["CONTROL"]["Snd_SrnTon2"].IntValue;
+                KeyBindings.Snd_SrnTon2 = (Control)t;
+
+                t = u["CONTROL"]["Snd_SrnTon3"].IntValue;
+                KeyBindings.Snd_SrnTon3 = (Control)t;
+
+                t = u["CONTROL"]["Snd_SrnTon4"].IntValue;
+                KeyBindings.Snd_SrnTon4 = (Control)t;
                 ControlsUpdated?.Invoke(KeyBindings);
+
             }
         }
         public class ELSControls
         {
             public Control Toggle_SIRN { get; internal set; }
             public Control Sound_Ahorn { get; internal set; }
+            public Control Snd_SrnTon1 { get; internal set; }
+            public Control Snd_SrnTon2 { get; internal set; }
+            public Control Snd_SrnTon3 { get; internal set; }
+            public Control Snd_SrnTon4 { get; internal set; }
         }
     }
 }
