@@ -37,6 +37,13 @@ namespace ELS.configuration
 
                 t = u["CONTROL"]["Snd_SrnTon4"].IntValue;
                 KeyBindings.Snd_SrnTon4 = (Control)t;
+
+                t = u["CONTROL"]["Sound_Manul"].IntValue;
+                KeyBindings.Sound_Manul = (Control)t;
+
+                t = u["CONTROL"]["Toggle_SIRN"].IntValue;
+                KeyBindings.Toggle_SIRN = (Control)t;
+
                 ControlsUpdated?.Invoke(KeyBindings);
 
             }
@@ -49,6 +56,7 @@ namespace ELS.configuration
             public Control Snd_SrnTon2 { get; internal set; }
             public Control Snd_SrnTon3 { get; internal set; }
             public Control Snd_SrnTon4 { get; internal set; }
+            public Control Sound_Manul { get; internal set; }
         }
     }
 }

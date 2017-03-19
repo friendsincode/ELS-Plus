@@ -39,13 +39,28 @@ namespace ELS.Siren.Tones
             {
                 Debug.WriteLine("file:" + _file);
                 Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)_file, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
+                SendMessage();
+            }
+            else
+            {
+                Audio.StopSound(soundId);
+                SendMessage();
+            }
+        }
+        public void SetRemoteState(bool state)
+        {
+            _state = state;
+            if (_state)
+            {
+                Debug.WriteLine("file:" + _file);
+                Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)_file, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
             }
             else
             {
                 Audio.StopSound(soundId);
             }
         }
-        public void SendMessage()
+        private void SendMessage()
         {
             RemoteEventManager.SendEvent(RemoteEventManager.MessageTypes.SirenUpdate,(Vehicle) _entity, _type.ToString() , _state);
         }

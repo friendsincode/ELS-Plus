@@ -56,11 +56,6 @@ namespace ELS
             }
         }
 
-        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         private async Task Class1_Tick()
         {
             Text text = new Text("ELS Build v0.0.2\nhttp://ELS.ejb1123.tk", new PointF(640f, 10f), 0.5f);
@@ -74,7 +69,7 @@ namespace ELS
                     _sirenManager.SetCurrentSiren(LocalPlayer.Character.VehicleTryingToEnter);
                 }
             }
-            if (LocalPlayer.Character.IsInVehicle())
+            if (LocalPlayer.Character.IsInVehicle() && LocalPlayer.Character.IsSittingInVehicle())
             {
                 _sirenManager.runtick();
             }

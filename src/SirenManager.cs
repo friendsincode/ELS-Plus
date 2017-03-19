@@ -114,7 +114,7 @@ namespace ELS
             }
             if (ELS.isStopped) return;
             var y = new PlayerList()[NetID];
-
+            if (!y.Character.IsInVehicle() || !y.Character.IsSittingInVehicle()) return;
             Vehicle vehicle = y.Character.CurrentVehicle;
             if (vehicleIsRegisteredLocaly(vehicle))
             {
