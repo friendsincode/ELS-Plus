@@ -71,7 +71,6 @@ namespace ELS
             //Screen.ShowNotification(LocalPlayer.Character.CurrentVehicle.HasSiren.ToString());
             if (LocalPlayer.Character.IsInVehicle() && LocalPlayer.Character.IsSittingInVehicle() && LocalPlayer.Character.CurrentVehicle.HasSiren && LocalPlayer.Character.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver)==LocalPlayer.Character)
             {
-                Screen.ShowNotification(LocalPlayer.Character.SeatIndex.ToString());
                _sirenManager.Runtick();
             }
             return null;
