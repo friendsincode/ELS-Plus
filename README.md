@@ -6,12 +6,13 @@ This project is still in development and should be expected to be buggy and not 
 
 |Action Key|Default Key|Default Binding
 |---|---|---|
-|Team Text Chat | (Y key) | horn control|
+|Team Text Chat | Y key | Horn control|
 |Select Unarmed Weapon | 1 Key | Manual tone 1
 |Select Melee Weapon | 2 Key | Manual tone 2|
 |Select Shotgun Weapon | 3 Key | Manual tone 3|
 |Select Heavy Weapon | 4 Key | Manual tone 4|
-
+|Chat All| T Key|Goes to next tone or plays tone 1|
+|Throw Grenade| G Key|Toggles main siren|
 
 ###How to Build and Test
 
