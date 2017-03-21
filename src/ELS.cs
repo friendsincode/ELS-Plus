@@ -61,14 +61,7 @@ namespace ELS
             text.Alignment = Alignment.Center;
             text.Centered = true;
             text.Draw();
-            //if (LocalPlayer.Character.IsGettingIntoAVehicle)
-            //{
-            //    //if (LocalPlayer.Character.VehicleTryingToEnter != null && LocalPlayer.Character.VehicleTryingToEnter.ClassType == VehicleClass.Emergency)
-            //    //{
-            //    //    _sirenManager.SetCurrentSiren(LocalPlayer.Character.VehicleTryingToEnter);
-            //    //}
-            //}
-            //Screen.ShowNotification(LocalPlayer.Character.CurrentVehicle.HasSiren.ToString());
+
             if (LocalPlayer.Character.IsInVehicle() && LocalPlayer.Character.IsSittingInVehicle() && LocalPlayer.Character.CurrentVehicle.HasSiren && LocalPlayer.Character.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver)==LocalPlayer.Character)
             {
                _sirenManager.Runtick();
