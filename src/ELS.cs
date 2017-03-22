@@ -10,6 +10,7 @@ using System;
 using System.Drawing;
 using System.Reflection;
 using System.Security.Permissions;
+using ELS.configuration;
 
 namespace ELS
 {
@@ -20,19 +21,18 @@ namespace ELS
         private SirenManager _sirenManager;
         private FileLoader _FileLoader;
         private configuration.ControlConfiguration controlConfiguration;
-        private configuration.SoundConfig soundConfig;
+
         public ELS()
         {
             localplayerid = LocalPlayer.ServerId;
             controlConfiguration = new configuration.ControlConfiguration();
-            soundConfig = new configuration.SoundConfig();
             _FileLoader = new FileLoader(this);
             _sirenManager = new SirenManager();
             EventHandlers["onClientResourceStart"] += new Action<string>(
                 (string obj) =>
                 {
                     _FileLoader.RunLoadeer(obj);
-                   // handleExistingVehicle();
+                    Tick += Class1_Tick;
                 });
             EventHandlers["ELS:SirenUpdated"] += new Action<int,string,bool>(_sirenManager.UpdateSirens);
             EventHandlers["onClientResourceStop"] += new Action(() => {
@@ -44,15 +44,6 @@ namespace ELS
               {
                   localplayerid = LocalPlayer.ServerId;
               });
-            Tick += Class1_Tick;
-        }
-
-        private void handleExistingVehicle()
-        {
-            if (LocalPlayer.Character.IsInVehicle())
-            {
-                _sirenManager.SetCurrentSiren(LocalPlayer.Character.CurrentVehicle);
-            }
         }
 
         private Task Class1_Tick()
@@ -64,6 +55,9 @@ namespace ELS
 
             if (LocalPlayer.Character.IsInVehicle() && LocalPlayer.Character.IsSittingInVehicle() && LocalPlayer.Character.CurrentVehicle.HasSiren && LocalPlayer.Character.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver)==LocalPlayer.Character)
             {
+                //Game.PlayerPed.CurrentVehicle.IsSirenActive = true;
+                Function.Call(Hash.SET_HORN_ENABLED,LocalPlayer.Character.CurrentVehicle,false);
+               // Function.Call(Hash.USE_SIREN_AS_HORN,LocalPlayer.Character.CurrentVehicle,false);
                _sirenManager.Runtick();
             }
             return null;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ELS.configuration
 {
-    class SettingsType
+   public  class SettingsType
     {
         public enum Type
         {

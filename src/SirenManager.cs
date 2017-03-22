@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using ELS.configuration;
 using ELS.Siren;
 
 namespace ELS
@@ -93,6 +94,7 @@ namespace ELS
             {
                 SetCurrentSiren( new PlayerList()[ELS.localplayerid].Character.CurrentVehicle);
             }
+
             currentSiren.ticker();
         }
 

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using ELS.configuration;
 
 namespace ELS.Siren
 {
@@ -73,12 +74,15 @@ namespace ELS.Siren
         public Siren(Vehicle vehicle)
         {
             _vehicle = vehicle;
-            _tones = new Tones();
-            _tones.horn = new Tone(configuration.SoundConfig.SoundBindings.MainHorn, _vehicle, ToneType.Horn);
-            _tones.tone1 = new Tone(configuration.SoundConfig.SoundBindings.SrnTone1, _vehicle, ToneType.SrnTon1);
-            _tones.tone2 = new Tone(configuration.SoundConfig.SoundBindings.SrnTone2, _vehicle, ToneType.SrnTon2);
-            _tones.tone3 = new Tone(configuration.SoundConfig.SoundBindings.SrnTone3, _vehicle, ToneType.SrnTon3);
-            _tones.tone4 = new Tone(configuration.SoundConfig.SoundBindings.SrnTone4, _vehicle, ToneType.SrnTon4);
+            Debug.WriteLine($"horn:{VCF.data.SOUNDS.MainHorn.AudioString}");
+            _tones = new Tones
+            {
+                horn = new Tone(VCF.data.SOUNDS.MainHorn.AudioString, _vehicle, ToneType.Horn),
+                tone1 = new Tone(VCF.data.SOUNDS.SrnTone1.AudioString, _vehicle, ToneType.SrnTon1),
+                tone2 = new Tone(VCF.data.SOUNDS.SrnTone2.AudioString, _vehicle, ToneType.SrnTon2),
+                tone3 = new Tone(VCF.data.SOUNDS.SrnTone3.AudioString, _vehicle, ToneType.SrnTon3),
+                tone4 = new Tone(VCF.data.SOUNDS.SrnTone4.AudioString, _vehicle, ToneType.SrnTon4)
+            };
             _mainSiren = new MainSiren(_tones);
 
         }
@@ -93,6 +97,7 @@ namespace ELS.Siren
         }
         public void ticker()
         {
+            Game.DisableControlThisFrame(0,Control.VehicleHorn);
             Function.Call(Hash.SET_HORN_ENABLED, _vehicle, false);
             if ((Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) ||
             (Game.IsControlJustPressed(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
@@ -180,9 +185,6 @@ namespace ELS.Siren
                     _tones.tone1.SetState(false);
                 }
             }
-
-
-
 
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Toggle_SIRN))
             {

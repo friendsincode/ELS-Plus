@@ -66,12 +66,12 @@
     <Reference Include="System.Xml.net">
       <HintPath>..\libs\System.Xml.net.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="configuration\ControlConfiguration.cs" />
     <Compile Include="configuration\global.cs" />
     <Compile Include="configuration\SettingsType.cs" />
-    <Compile Include="configuration\SoundConfig.cs" />
     <Compile Include="DecorManager.cs" />
     <Compile Include="ELS.cs" />
     <Compile Include="EntityDecoration.cs" />
@@ -81,6 +81,7 @@
     <Compile Include="Siren\Siren.cs" />
     <Compile Include="Siren\Tone.cs" />
     <Compile Include="SirenManager.cs" />
+    <Compile Include="configuration\VCF.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

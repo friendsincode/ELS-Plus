@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ELS.configuration;
 
 namespace ELS
 {
@@ -32,11 +33,12 @@ namespace ELS
                 }
                 if (filename.Equals("extra-files/ELS/pack_default/POLICE.xml", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-                    doc.LoadXml(data);
-
-                    Debug.WriteLine(doc["vcfroot"]["INTERFACE"]["LstgActivationType"].InnerText);
-                    OnSettingsLoaded?.Invoke(configuration.SettingsType.Type.VCF,data);
+                    //System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+                    //doc.LoadXml(data);
+                    Debug.WriteLine("loading VCF File");
+                    VCF.load(SettingsType.Type.VCF,data);
+                    //Debug.WriteLine(doc["vcfroot"]["INTERFACE"]["LstgActivationType"].InnerText);
+                    //OnSettingsLoaded?.Invoke(configuration.SettingsType.Type.VCF,data);
                 }
             }
         }
