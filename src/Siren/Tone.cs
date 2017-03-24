@@ -23,7 +23,7 @@ namespace ELS.Siren.Tones
         private int soundId = Function.Call<int>(Hash.GET_SOUND_ID);
         private Entity _entity;
         private readonly ToneType _type;
-        private bool _state;
+        public bool _state { private set;  get; }
         public Tone(string file, Entity entity,ToneType type,bool state =false)
         {
             _entity = entity;

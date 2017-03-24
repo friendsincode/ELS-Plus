@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using CitizenFX.Core.UI;
 using ELS.configuration;
 
 namespace ELS.Siren
@@ -14,10 +15,10 @@ namespace ELS.Siren
     /// <summary>
     /// Has diffrent tones
     /// </summary>
-    class Siren
+    class Siren : IManagerEntry
     {
         private configuration.ControlConfiguration.ELSControls keyBinding;
-        public readonly Vehicle _vehicle;
+        public Vehicle _vehicle { get; set; }
         private MainSiren _mainSiren;
         configuration.ControlConfiguration.ELSControls keybindings = new configuration.ControlConfiguration.ELSControls();
 
@@ -47,27 +48,34 @@ namespace ELS.Siren
                 _state = state;
                 if (_state)
                 {
+                    _state = true;
+                    foreach (var siren in MainTones)
+                    {
+                        if (siren._state == true) { siren.SetState(false);}
+                    }
                     currentTone.SetState(true);
                 }
                 else
                 {
+                    _state = false;
                     currentTone.SetState(false);
+                    currentTone = MainTones[0];
                 }
             }
             internal void nextTone()
             {
-                if (MainTones.IndexOf(currentTone) == MainTones.Count - 1)
-                {
-                    currentTone.SetState(false);
-                    currentTone = MainTones[0];
-                    currentTone.SetState(true);
-                }
-                else
-                {
-                    currentTone.SetState(false);
-                    currentTone = MainTones[MainTones.IndexOf(currentTone) + 1];
-                    currentTone.SetState(true);
-                }
+                
+                currentTone.SetState(false);
+                currentTone = MainTones[MainTones.IndexOf(currentTone) + 1];
+                currentTone.SetState(true);
+                
+            }
+
+            internal void previousTone()
+            {
+                currentTone.SetState(false);
+                currentTone = MainTones[MainTones.IndexOf(currentTone) -1];
+                currentTone.SetState(true);
             }
 
         }
@@ -97,8 +105,13 @@ namespace ELS.Siren
         }
         public void ticker()
         {
-            Game.DisableControlThisFrame(0,Control.VehicleHorn);
-            Function.Call(Hash.SET_HORN_ENABLED, _vehicle, false);
+            Game.DisableControlThisFrame(0, Control.VehicleHorn);
+            if (Game.IsControlJustReleased(0, Control.VehicleHorn))
+            {
+                Function.Call(Hash.DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, _vehicle, true);
+                _vehicle.IsSirenActive = !_vehicle.IsSirenActive;
+            }
+
             if ((Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) ||
             (Game.IsControlJustPressed(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
             {
@@ -114,56 +127,42 @@ namespace ELS.Siren
                 _tones.horn.SetState(false);
             }
 
-
-
-            if (Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon1))
-            {
-                Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon1);
-
-                _tones.tone1.SetState(true);
-            }
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon1))
             {
-                _tones.tone1.SetState(false);
+                if (_tones.tone1._state == true && _mainSiren._state==true)
+                {
+                    _mainSiren.SetState(false);
+                    _tones.tone1.SetState(false);
+                }
+                else
+                {
+                    _tones.tone1.SetState(!_tones.tone1._state);
+                }
             }
 
 
-
-            if (Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon2))
-            {
-                Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon2);
-
-                _tones.tone2.SetState(true);
-            }
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon2))
             {
-                _tones.tone2.SetState(false);
+                if (_tones.tone2._state == true && _mainSiren._state==true)
+                {
+                    _mainSiren.SetState(false);
+                    _tones.tone2.SetState(false);
+                }
+                else
+                {
+                    _tones.tone2.SetState(!_tones.tone2._state);
+                }
             }
 
 
-
-            if (Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon3))
-            {
-                Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon3);
-
-                _tones.tone3.SetState(true);
-            }
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon3))
             {
-                _tones.tone3.SetState(false);
+                _tones.tone3.SetState(!_tones.tone3._state);
             }
 
-
-
-            if (Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon4))
-            {
-                Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon4);
-
-                _tones.tone4.SetState(true);
-            }
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon4))
             {
-                _tones.tone4.SetState(false);
+                _tones.tone4.SetState(!_tones.tone4._state);
             }
 
 
@@ -173,16 +172,20 @@ namespace ELS.Siren
                 {
                     _tones.tone1.SetState(true);
                 }
-            }
-            if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Manul))
-            {
-                if (_mainSiren._state)
+                else
                 {
                     _mainSiren.nextTone();
                 }
-                else
+            }
+            if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Manul))
+            {
+                if (!_mainSiren._state)
                 {
                     _tones.tone1.SetState(false);
+                }
+                else
+                {
+                    _mainSiren.previousTone();
                 }
             }
 
@@ -192,7 +195,7 @@ namespace ELS.Siren
             }
         }
 
-        internal void updateLocalRemoteSiren(string sirenString, bool state)
+        public void updateLocalRemoteSiren(string sirenString, bool state)
         {
             Debug.WriteLine(sirenString);
             Enum.TryParse(sirenString, out ToneType tonetype);
@@ -220,5 +223,6 @@ namespace ELS.Siren
                     break;
             }
         }
+
     }
 }

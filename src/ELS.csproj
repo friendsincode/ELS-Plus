@@ -76,8 +76,13 @@
     <Compile Include="ELS.cs" />
     <Compile Include="EntityDecoration.cs" />
     <Compile Include="FileLoader.cs" />
+    <Compile Include="LightManager.cs" />
+    <Compile Include="Light\Light.cs" />
+    <Compile Include="Light\LightArray.cs" />
+    <Compile Include="Manager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteEventManager.cs" />
+    <Compile Include="Siren\IManagerEntry.cs" />
     <Compile Include="Siren\Siren.cs" />
     <Compile Include="Siren\Tone.cs" />
     <Compile Include="SirenManager.cs" />
