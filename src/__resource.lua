@@ -6,7 +6,7 @@ client_script 'System.Xml.net.dll'
 
 -- ELS-FiveM Requirements
 client_script 'SharpConfig.net.dll'
-client_script 'ELS-for-FiveM.net.dll'.
+client_script 'ELS-for-FiveM.net.dll'
 
 -- NUI Stuff
 if NUIEnabled then
@@ -17,7 +17,7 @@ if NUIEnabled then
 
 	files({
 		'NUI/app/index.html',
-		'NUI/app/js/vue.js'
+		'NUI/app/js/vue.js',
 		'NUI/app/js/app.js'
 	})
 
