@@ -1,6 +1,7 @@
 RegisterServerEvent("sirenStateChanged")
 RegisterServerEvent("ELS")
 RegisterServerEvent("error")
+
 AddEventHandler("sirenStateChanged",function (vehnetId,netSoundid,propertyName,state)
 	--print(netId .. propertyName .. state)
 	TriggerClientEvent("sirenStateChanged",-1,vehnetId,netSoundid,propertyName,state)
@@ -10,10 +11,12 @@ AddEventHandler("sirenStateChanged",function (vehnetId,netSoundid,propertyName,s
 		print(x .. " "  .. y)
 	end
 end)
+
 AddEventHandler("ELS",function(type,netId,siren,state)
 	print(netId .. " " .. siren .. state)
 	TriggerClientEvent("ELS:SirenUpdated",-1,netId,siren,state)
-	end)
-	AddEventHandler("error",function(error)
-		print(error)
-	end)
+end)
+
+AddEventHandler("error",function(error)
+	print(error)
+end)
