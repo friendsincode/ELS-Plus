@@ -1,3 +1,4 @@
+
 RegisterServerEvent("sirenStateChanged")
 RegisterServerEvent("ELS")
 RegisterServerEvent("error")
