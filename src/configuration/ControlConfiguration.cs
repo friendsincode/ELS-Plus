@@ -44,6 +44,12 @@ namespace ELS.configuration
                 t = u["CONTROL"]["Toggle_SIRN"].IntValue;
                 KeyBindings.Toggle_SIRN = (Control)t;
 
+                t = u["CONTROL"]["Toggle_DSRN"].IntValue;
+                KeyBindings.Toggle_DSRN = (Control)t;
+
+                t = u["CONTROL"]["TogInfoPanl"].IntValue;
+                KeyBindings.TogInfoPanl = (Control)t;
+
                 ControlsUpdated?.Invoke(KeyBindings);
 
             }
@@ -57,6 +63,8 @@ namespace ELS.configuration
             public Control Snd_SrnTon3 { get; internal set; }
             public Control Snd_SrnTon4 { get; internal set; }
             public Control Sound_Manul { get; internal set; }
+            public Control Toggle_DSRN { get; internal set; }
+            public Control TogInfoPanl { get; internal set; }
         }
     }
 }
