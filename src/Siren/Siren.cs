@@ -110,6 +110,23 @@ namespace ELS.Siren
                     _vcf = vcfroot;
                 }
             }
+            if (_vcf == null)
+            {
+                Debug.WriteLine($"Their is no VCF file for this vehicle: {_vehicle.DisplayName} defaulting to POLICE.xml");
+                foreach (var vcfroot in VCF.ELSVehicle)
+                {
+                    if (vcfroot.FileName == "POLICE")
+                    {
+                        _vcf = vcfroot;
+                    }
+                }
+            }
+            if (_vcf == null)
+            {
+                Debug.WriteLine("failed");
+                return;
+            }
+           
             Debug.WriteLine($"horn: {_vcf.SOUNDS.MainHorn.AudioString}");
             _tones = new Tones
             {
