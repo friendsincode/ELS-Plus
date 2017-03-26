@@ -42,6 +42,8 @@ namespace ELS
                     var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
                     VCF.load(SettingsType.Type.VCF,data);
                 }
+                var ldata = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
+                Debug.WriteLine(ldata);
             }
         }
     }
