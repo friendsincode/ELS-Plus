@@ -63,6 +63,25 @@ namespace ELS.Siren
                     currentTone = MainTones[0];
                 }
             }
+
+            internal void SetTone(Tone tone)
+            {
+                currentTone.SetState(false);
+                if (tone == currentTone)
+                {
+                    currentTone.SetState(false);
+                    SetState(false);
+                    return;
+                }
+                foreach (var variable in MainTones)
+                {
+                    if (variable == tone)
+                    {
+                        currentTone = variable;
+                        currentTone.SetState(true);
+                    }
+                }
+            }
             internal void nextTone()
             {
                 
@@ -137,54 +156,49 @@ namespace ELS.Siren
 
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon1))
             {
-                if (_tones.tone1._state == true && _mainSiren._state==true)
+                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Snd_SrnTon1);
+
+                if (_mainSiren._state)
                 {
-                    _mainSiren.SetState(false);
-                    _tones.tone1.SetState(false);
-                }
-                else
-                {
-                    if (IsAnySirenOn() && !dual_siren && !_tones.tone1._state) return;
-                    _tones.tone1.SetState(!_tones.tone1._state);
+                    _mainSiren.SetTone(_tones.tone1);
                 }
             }
 
 
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon2))
             {
-                if (_tones.tone2._state == true && _mainSiren._state == true && !dual_siren)
-                {
-                    _mainSiren.SetState(false);
-                    _tones.tone2.SetState(false);
-                }
-                else if (_tones.tone2._state == true && _mainSiren._state == true && dual_siren)
-                {
-                    _tones.tone2.SetState(false);
-                }
+                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Snd_SrnTon2);
 
-            else
-            {
-                if (IsAnySirenOn() && !dual_siren && !_tones.tone2._state) return;
-                _tones.tone2.SetState(!_tones.tone2._state);
+                if (_mainSiren._state)
+                {
+                    _mainSiren.SetTone(_tones.tone2);
+                }
             }
-        }
 
 
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon3))
             {
-                if (IsAnySirenOn() && !dual_siren && !_tones.tone3._state) return;
-                _tones.tone3.SetState(!_tones.tone3._state);
+                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Snd_SrnTon3);
+                if (_mainSiren._state)
+                {
+                    _mainSiren.SetTone(_tones.tone3);
+                }
             }
 
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon4))
             {
-                if (IsAnySirenOn() && !dual_siren && !_tones.tone4._state) return;
-                _tones.tone4.SetState(!_tones.tone4._state);
+                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Snd_SrnTon4);
+                if (_mainSiren._state)
+                {
+                    _mainSiren.SetTone(_tones.tone4);
+                }
             }
 
 
             if (Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Sound_Manul))
             {
+                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Sound_Manul);
+
                 if (!_mainSiren._state)
                 {
                     _tones.tone1.SetState(true);
@@ -196,6 +210,7 @@ namespace ELS.Siren
             }
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Manul))
             {
+                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Sound_Manul);
                 if (!_mainSiren._state)
                 {
                     _tones.tone1.SetState(false);
@@ -208,10 +223,12 @@ namespace ELS.Siren
 
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Toggle_SIRN))
             {
+                Game.DisableControlThisFrame(0,ControlConfiguration.KeyBindings.Toggle_SIRN);
                 _mainSiren.SetState(!_mainSiren._state);
             }
             if (Game.IsControlJustReleased(0, ControlConfiguration.KeyBindings.Toggle_DSRN))
             {
+                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Toggle_DSRN);
                 dual_siren = !dual_siren;
                 Screen.ShowNotification($"Dual Siren {dual_siren}");
             }
