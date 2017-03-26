@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using System.Xml.Serialization;
 using CitizenFX.Core;
@@ -7,37 +11,102 @@ namespace ELS.configuration
 {
     public class VCF
     {
-        public static vcfroot data = new vcfroot();
+        public static List<vcfroot> ELSVehicle = new List<vcfroot>();
         public VCF()
         {
-            FileLoader.OnSettingsLoaded += (type, stringData) =>
-            {
-                //data = (vcfroot) new XmlSerializer(typeof(vcfroot)).Deserialize(new StringReader(stringData));
-                //load(type,stringData);
-            };
         }
-        public static void load(SettingsType.Type type, string Data)
+        public static void load(SettingsType.Type type, string name,string Data)
         {
+
+            vcfroot data = new vcfroot();
+
             data = new vcfroot();
+            data.FileName = Path.GetFileNameWithoutExtension(name);
+            Debug.WriteLine();
             data.SOUNDS = new vcfrootSOUNDS();
             data.SOUNDS.MainHorn = new vcfrootSOUNDSMainHorn();
+
             data.SOUNDS.SrnTone1 = new vcfrootSOUNDSSrnTone1();
             data.SOUNDS.SrnTone2 = new vcfrootSOUNDSSrnTone2();
             data.SOUNDS.SrnTone3 = new vcfrootSOUNDSSrnTone3();
             data.SOUNDS.SrnTone4 = new vcfrootSOUNDSSrnTone4();
+            data.SOUNDS.AuxSiren = new vcfrootSOUNDSAuxSiren();
+            data.SOUNDS.ManTone1 = new vcfrootSOUNDSManTone1();
+            data.SOUNDS.ManTone2 = new vcfrootSOUNDSManTone2();
+            data.SOUNDS.PanicMde = new vcfrootSOUNDSPanicMde();
+
+            data.ACORONAS = new vcfrootACORONAS();
+
+            data.CRUISE = new vcfrootCRUISE();
+
+            data.EOVERRIDE = new vcfrootEOVERRIDE();
+            data.EOVERRIDE.Extra01 = new vcfrootEOVERRIDEExtra01();
+            data.EOVERRIDE.Extra02 = new vcfrootEOVERRIDEExtra02();
+            data.EOVERRIDE.Extra03 = new vcfrootEOVERRIDEExtra03();
+            data.EOVERRIDE.Extra04 = new vcfrootEOVERRIDEExtra04();
+            data.EOVERRIDE.Extra05 = new vcfrootEOVERRIDEExtra05();
+            data.EOVERRIDE.Extra06 = new vcfrootEOVERRIDEExtra06();
+            data.EOVERRIDE.Extra07 = new vcfrootEOVERRIDEExtra07();
+            data.EOVERRIDE.Extra08 = new vcfrootEOVERRIDEExtra08();
+            data.EOVERRIDE.Extra09 = new vcfrootEOVERRIDEExtra09();
+            data.EOVERRIDE.Extra10 = new vcfrootEOVERRIDEExtra10();
+            data.EOVERRIDE.Extra11 = new vcfrootEOVERRIDEExtra11();
+            data.EOVERRIDE.Extra12 = new vcfrootEOVERRIDEExtra12();
+
+            data.INTERFACE = new vcfrootINTERFACE();
+
+            data.MISC = new vcfrootMISC();
+
+            data.PRML = new vcfrootPRML();
+
+            data.SECL = new vcfrootSECL();
+
+            data.WRNL = new vcfrootWRNL();
             if (type == SettingsType.Type.VCF)
             {
                 System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
                 doc.LoadXml(Data);
+                //Debug.WriteLine(doc.DocumentElement);
+                bool res;
 
-                VCF.data.SOUNDS.MainHorn.AudioString = doc["vcfroot"]["SOUNDS"]["MainHorn"].Attributes["AudioString"].Value;
-                VCF.data.SOUNDS.SrnTone1.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone1"].Attributes["AudioString"].Value;
-                VCF.data.SOUNDS.SrnTone2.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone2"].Attributes["AudioString"].Value;
-                VCF.data.SOUNDS.SrnTone3.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone3"].Attributes["AudioString"].Value;
-                VCF.data.SOUNDS.SrnTone4.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone4"].Attributes["AudioString"].Value;
+                data.SOUNDS.ManTone1.AudioString = doc["vcfroot"]["SOUNDS"]["ManTone1"].Attributes["AudioString"].Value;
+                data.SOUNDS.ManTone1.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["ManTone1"].Attributes["AllowUse"].Value);
+
+                data.SOUNDS.ManTone2.AudioString = doc["vcfroot"]["SOUNDS"]["ManTone2"].Attributes["AudioString"].Value;
+                data.SOUNDS.ManTone2.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["ManTone2"].Attributes["AllowUse"].Value);
+
+
+                data.SOUNDS.MainHorn.AudioString = doc["vcfroot"]["SOUNDS"]["MainHorn"].Attributes["AudioString"].Value;
+                data.SOUNDS.MainHorn.InterruptsSiren = bool.Parse(doc["vcfroot"]["SOUNDS"]["MainHorn"].Attributes["InterruptsSiren"].Value);
+
+                data.SOUNDS.SrnTone1.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone1"].Attributes["AudioString"].Value;
+                data.SOUNDS.SrnTone1.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["SrnTone1"].Attributes["AllowUse"].Value);
+
+                data.SOUNDS.SrnTone2.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone2"].Attributes["AudioString"].Value;
+                data.SOUNDS.SrnTone2.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["SrnTone2"].Attributes["AllowUse"].Value);
+
+                data.SOUNDS.SrnTone3.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone3"].Attributes["AudioString"].Value;
+                data.SOUNDS.SrnTone3.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["SrnTone3"].Attributes["AllowUse"].Value);
+
+                data.SOUNDS.SrnTone4.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone4"].Attributes["AudioString"].Value;
+                data.SOUNDS.SrnTone4.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["SrnTone4"].Attributes["AllowUse"].Value);
+
+                data.SOUNDS.AuxSiren.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["AuxSiren"].Attributes["AllowUse"].Value);
+                data.SOUNDS.AuxSiren.AudioString = doc["vcfroot"]["SOUNDS"]["AuxSiren"].Attributes["AudioString"].Value;
+
+                data.SOUNDS.PanicMde.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["PanicMde"].Attributes["AllowUse"].Value);
+                data.SOUNDS.PanicMde.AudioString = doc["vcfroot"]["SOUNDS"]["PanicMde"].Attributes["AudioString"].Value;
+
+                data.Author = doc["vcfroot"].Attributes["Author"].Value;
+                ELSVehicle.Add(data);
+                foreach (var vcfroot in ELSVehicle)
+                {
+                    Debug.WriteLine(vcfroot.FileName);
+                }
             }
         }
         /// <remarks/>
+
         [System.SerializableAttribute()]
         [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
@@ -67,6 +136,7 @@ namespace ELS.configuration
 
             private string authorField;
 
+            private string FileNameField;
             /// <remarks/>
             public vcfrootINTERFACE INTERFACE
             {
@@ -209,6 +279,18 @@ namespace ELS.configuration
                 set
                 {
                     this.authorField = value;
+                }
+            }
+
+            public string FileName
+            {
+                get
+                {
+                    return this.FileNameField;
+                }
+                set
+                {
+                    this.FileNameField = value; 
                 }
             }
         }

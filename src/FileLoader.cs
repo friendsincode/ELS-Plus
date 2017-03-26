@@ -31,19 +31,28 @@ namespace ELS
 #if DEBUG
                 Debug.WriteLine($"Name: {name} Loading: {filename}");
 #endif
-                
+
                 if (filename.Equals("extra-files/ELS.ini"))
                 {
                     var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
                     OnSettingsLoaded?.Invoke(configuration.SettingsType.Type.GLOBAL, data);
                 }
-                if (filename.Equals("extra-files/ELS/pack_default/POLICE.xml", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
-                    VCF.load(SettingsType.Type.VCF,data);
-                }
-                var ldata = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
-                Debug.WriteLine(ldata);
+                // var ldata = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
+                //Debug.WriteLine(ldata);
+            }
+
+            num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "ELSFMVCF");
+            for (int i = 0; i < num; i++)
+            {
+                var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "ELSFMVCF", i);
+#if DEBUG
+                Debug.WriteLine($"Name: {name} Loading: {filename}");
+#endif
+
+
+                var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
+                VCF.load(SettingsType.Type.VCF, filename,data);
+                //Debug.WriteLine(ldata);
             }
         }
     }

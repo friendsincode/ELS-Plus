@@ -21,6 +21,7 @@ namespace ELS.Siren
         private configuration.ControlConfiguration.ELSControls keyBinding;
         public Vehicle _vehicle { get; set; }
         private MainSiren _mainSiren;
+        private VCF.vcfroot _vcf;
         configuration.ControlConfiguration.ELSControls keybindings = new configuration.ControlConfiguration.ELSControls();
 
         internal struct Tones
@@ -52,7 +53,7 @@ namespace ELS.Siren
                     _state = true;
                     foreach (var siren in MainTones)
                     {
-                        if (siren._state == true) { siren.SetState(false);}
+                        if (siren._state == true) { siren.SetState(false); }
                     }
                     currentTone.SetState(true);
                 }
@@ -84,17 +85,17 @@ namespace ELS.Siren
             }
             internal void nextTone()
             {
-                
+
                 currentTone.SetState(false);
                 currentTone = MainTones[MainTones.IndexOf(currentTone) + 1];
                 currentTone.SetState(true);
-                
+
             }
 
             internal void previousTone()
             {
                 currentTone.SetState(false);
-                currentTone = MainTones[MainTones.IndexOf(currentTone) -1];
+                currentTone = MainTones[MainTones.IndexOf(currentTone) - 1];
                 currentTone.SetState(true);
             }
 
@@ -102,14 +103,21 @@ namespace ELS.Siren
         public Siren(Vehicle vehicle)
         {
             _vehicle = vehicle;
-            Debug.WriteLine($"horn: {VCF.data.SOUNDS.MainHorn.AudioString}");
+            foreach (VCF.vcfroot vcfroot in VCF.ELSVehicle)
+            {
+                if (vcfroot.FileName == _vehicle.DisplayName)
+                {
+                    _vcf = vcfroot;
+                }
+            }
+            Debug.WriteLine($"horn: {_vcf.SOUNDS.MainHorn.AudioString}");
             _tones = new Tones
             {
-                horn = new Tone(VCF.data.SOUNDS.MainHorn.AudioString, _vehicle, ToneType.Horn),
-                tone1 = new Tone(VCF.data.SOUNDS.SrnTone1.AudioString, _vehicle, ToneType.SrnTon1),
-                tone2 = new Tone(VCF.data.SOUNDS.SrnTone2.AudioString, _vehicle, ToneType.SrnTon2),
-                tone3 = new Tone(VCF.data.SOUNDS.SrnTone3.AudioString, _vehicle, ToneType.SrnTon3),
-                tone4 = new Tone(VCF.data.SOUNDS.SrnTone4.AudioString, _vehicle, ToneType.SrnTon4)
+                horn = new Tone(_vcf.SOUNDS.MainHorn.AudioString, _vehicle, ToneType.Horn),
+                tone1 = new Tone(_vcf.SOUNDS.SrnTone1.AudioString, _vehicle, ToneType.SrnTon1),
+                tone2 = new Tone(_vcf.SOUNDS.SrnTone2.AudioString, _vehicle, ToneType.SrnTon2),
+                tone3 = new Tone(_vcf.SOUNDS.SrnTone3.AudioString, _vehicle, ToneType.SrnTon3),
+                tone4 = new Tone(_vcf.SOUNDS.SrnTone4.AudioString, _vehicle, ToneType.SrnTon4)
             };
             dual_siren = false;
             _mainSiren = new MainSiren(_tones);
@@ -223,7 +231,7 @@ namespace ELS.Siren
 
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Toggle_SIRN))
             {
-                Game.DisableControlThisFrame(0,ControlConfiguration.KeyBindings.Toggle_SIRN);
+                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Toggle_SIRN);
                 _mainSiren.SetState(!_mainSiren._state);
             }
             if (Game.IsControlJustReleased(0, ControlConfiguration.KeyBindings.Toggle_DSRN))
