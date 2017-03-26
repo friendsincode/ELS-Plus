@@ -31,6 +31,7 @@ local function object_entry(data)
 end
 object_entry('streams/CarName/ELS/CarName.xml')
 ```
+9. Add the resource folder name to `AutoStartResources` in `citmp-server.yml` below `ELS-for-FiveM`
 ### How to Build and Test
 
 1. `git clone https://github.com/ejb1123/ELS-FiveM.git`
