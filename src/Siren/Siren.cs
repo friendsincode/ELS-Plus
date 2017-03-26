@@ -61,7 +61,7 @@ namespace ELS.Siren
                 {
                     _state = false;
                     currentTone.SetState(false);
-                    currentTone = MainTones[0];
+                    //currentTone = MainTones[0];
                 }
             }
 
@@ -88,7 +88,7 @@ namespace ELS.Siren
 
                 currentTone.SetState(false);
                 currentTone = MainTones[MainTones.IndexOf(currentTone) + 1];
-                currentTone.SetState(true);
+                if(_state)currentTone.SetState(true);
 
             }
 
@@ -96,7 +96,7 @@ namespace ELS.Siren
             {
                 currentTone.SetState(false);
                 currentTone = MainTones[MainTones.IndexOf(currentTone) - 1];
-                currentTone.SetState(true);
+                if(_state)currentTone.SetState(true);
             }
 
         }
@@ -169,14 +169,30 @@ namespace ELS.Siren
             {
                 Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn);
                 Game.DisableControlThisFrame(2, Control.ScriptPadDown);
-                _tones.horn.SetState(true);
+                if (_vcf.SOUNDS.MainHorn.InterruptsSiren)
+                {
+                    _mainSiren.SetState(false);
+                    _tones.horn.SetState(true);
+                }
+                else
+                {
+                    _tones.horn.SetState(true);
+                }
             }
             if ((Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
                 || (Game.IsControlJustReleased(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
             {
                 Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn);
                 Game.DisableControlThisFrame(2, Control.ScriptPadDown);
-                _tones.horn.SetState(false);
+                if (_vcf.SOUNDS.MainHorn.InterruptsSiren)
+                {
+                    _tones.horn.SetState(false);
+                    _mainSiren.SetState(true);
+                }
+                else
+                {
+                    _tones.horn.SetState(false);
+                }
             }
 
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon1))
@@ -224,7 +240,7 @@ namespace ELS.Siren
             {
                 Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Sound_Manul);
 
-                if (!_mainSiren._state)
+                if (!_mainSiren._state || (!_mainSiren._state && _vcf.SOUNDS.MainHorn.InterruptsSiren && _tones.horn._state))
                 {
                     _tones.tone1.SetState(true);
                 }
@@ -236,7 +252,7 @@ namespace ELS.Siren
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Manul))
             {
                 Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Sound_Manul);
-                if (!_mainSiren._state)
+                if (!_mainSiren._state || (!_mainSiren._state&& _vcf.SOUNDS.MainHorn.InterruptsSiren && _tones.horn._state))
                 {
                     _tones.tone1.SetState(false);
                 }
