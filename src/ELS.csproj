@@ -94,12 +94,8 @@
     <Compile Include="configuration\VCF.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NUI\api.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="NUI\app\css\app.less">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="NUI\api.lua" />
+    <None Include="NUI\app\css\app.less" />
     <None Include="packages.config" />
     <None Include="extra-files\ELS.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -126,22 +122,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="NUI\app\css\app.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NUI\app\index.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NUI\app\js\app.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NUI\app\js\vue.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="NUI\app\css\app.css" />
+    <Content Include="NUI\app\index.html" />
+    <Content Include="NUI\app\js\app.js" />
+    <Content Include="NUI\app\js\vue.js" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Siren\Tones\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>powershell -File "$(SolutionDir)..\utils\buildscript.ps1" -serverRootFolder %25USERPROFILE%25\Desktop\cfx-server -address 127.0.0.1 -port 30120 -password lovely -projectName "$(TargetPath)" -sourceDir "$(TargetDir)\"
