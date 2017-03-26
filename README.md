@@ -14,10 +14,18 @@ This project is still in development and should be expected to be buggy and not 
 |Chat All| T Key|Goes to next tone or plays tone 1|
 |Throw Grenade| G Key|Toggles main siren|
 
-###How to Build and Test
+### How to Build and Test
 
-`git clone https://github.com/ejb1123/ELS-FiveM.git`  
-copy `{fivereborn}\citizen\clr2\lib\mono\4.5\CitizenFX.Core.dll` to `ELS-FiveM\libs`  
-open `ELS-FiveM\src\ELS-for-FiveM.sln` with visual studio  
-copy the files from `ELS-FiveM\src\bin\{Release Type}` to `cfx-server\resources\ELS-FiveM`  
-add `ELS-FiveM` to `AutoStartResources` in `cfx-server\citmp-server.yml`
+1. `git clone https://github.com/ejb1123/ELS-FiveM.git`
+
+2. Copy `{fivereborn}\citizen\clr2\lib\mono\4.5\CitizenFX.Core.dll` to `ELS-FiveM\libs`
+
+3. Open `ELS-FiveM\src\ELS-for-FiveM.sln` in Visual Studio
+
+4. Select `Release` and `Any CPU`  next to the Start button
+
+5. In the menu bar under Build click on `Build Solution`
+
+6. Copy all the files from `ELS-FiveM\src\bin\Release` to `cfx-server\resources\ELS-FiveM`
+
+7. Add `ELS-FiveM` to `AutoStartResources` in `cfx-server\citmp-server.yml`
