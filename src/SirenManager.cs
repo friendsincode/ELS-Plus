@@ -35,8 +35,6 @@ namespace ELS
                     if (_sirens != null)
                     {
                         _sirens.Capacity = t;
-                        Debug.WriteLine($"INI Value:{t}\n" +
-                            $"varible capicity: {_sirens.Capacity}");
                     }
                     break;
                 case configuration.SettingsType.Type.LIGHTING:
@@ -47,7 +45,9 @@ namespace ELS
 
         internal void CleanUp()
         {
+#if DEBUG
             Debug.WriteLine("Running CleanUp()");
+#endif
             foreach (var siren in _sirens)
             {
                 siren.CleanUP();
@@ -57,6 +57,13 @@ namespace ELS
         private void AddSiren(Vehicle vehicle)
         {
             if (ELS.isStopped) return;
+#if DEBUG
+            foreach (var VARIABLE in vehicle.Bones)
+            {
+                Debug.WriteLine("Bones\n" + VARIABLE.ToString());
+            }
+#endif
+            
             _sirens.Add(new Siren.Siren(vehicle));
         }
 
@@ -90,9 +97,9 @@ namespace ELS
 
         public void Runtick()
         {
-            if ((( currentSiren == null) || currentSiren._vehicle !=  new PlayerList()[ELS.localplayerid].Character.CurrentVehicle))
+            if ((( currentSiren == null) || currentSiren._vehicle !=  new PlayerList()[Game.Player.ServerId].Character.CurrentVehicle))
             {
-                SetCurrentSiren( new PlayerList()[ELS.localplayerid].Character.CurrentVehicle);
+                SetCurrentSiren( new PlayerList()[Game.Player.ServerId].Character.CurrentVehicle);
             }
 
             currentSiren.ticker();
@@ -113,11 +120,13 @@ namespace ELS
 
         public void UpdateSirens(int NetID, string sirenString, bool state)
         {
-            Debug.WriteLine($"netId:{NetID.ToString()} localId {ELS.localplayerid.ToString()}");
-            if (ELS.localplayerid == NetID)
+            if (Game.Player.ServerId == NetID)
             {
                 return;
             }
+#if DEBUG
+            Debug.WriteLine($"netId:{NetID.ToString()} localId {Game.Player.ServerId.ToString()}");
+#endif
             if (ELS.isStopped) return;
             var y = new PlayerList()[NetID];
             if (!y.Character.IsInVehicle() || !y.Character.IsSittingInVehicle()) return;

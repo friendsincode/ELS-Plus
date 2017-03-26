@@ -28,8 +28,7 @@ namespace ELS
                     if (_list != null)
                     {
                         _list.Capacity = t;
-                        Debug.WriteLine($"INI Value:{t}\n" +
-                            $"varible capicity: {_list.Capacity}");
+                        
                     }
                     break;
                 case configuration.SettingsType.Type.LIGHTING:
@@ -40,7 +39,9 @@ namespace ELS
 
         internal void CleanUp()
         {
+#if DEBUG
             Debug.WriteLine("Running CleanUp()");
+#endif
             foreach (var entry in _list)
             {
                 entry.CleanUP();
@@ -83,9 +84,9 @@ namespace ELS
 
         public void Runtick()
         {
-            if (((currentEntry == null) || currentEntry._vehicle != new PlayerList()[ELS.localplayerid].Character.CurrentVehicle))
+            if (((currentEntry == null) || currentEntry._vehicle != new PlayerList()[Game.Player.ServerId].Character.CurrentVehicle))
             {
-                SetEntry(new PlayerList()[ELS.localplayerid].Character.CurrentVehicle);
+                SetEntry(new PlayerList()[Game.Player.ServerId].Character.CurrentVehicle);
             }
 
             currentEntry.ticker();
@@ -106,8 +107,8 @@ namespace ELS
 
         public void UpdateSirens(int NetID, string sirenString, bool state)
         {
-            Debug.WriteLine($"netId:{NetID.ToString()} localId {ELS.localplayerid.ToString()}");
-            if (ELS.localplayerid == NetID)
+            //Debug.WriteLine($"netId:{NetID.ToString()} localId {ELS.localplayerid.ToString()}");
+            if (Game.Player.ServerId == NetID)
             {
                 return;
             }

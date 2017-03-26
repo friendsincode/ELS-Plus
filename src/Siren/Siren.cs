@@ -17,6 +17,7 @@ namespace ELS.Siren
     /// </summary>
     class Siren : IManagerEntry
     {
+        private bool dual_siren;
         private configuration.ControlConfiguration.ELSControls keyBinding;
         public Vehicle _vehicle { get; set; }
         private MainSiren _mainSiren;
@@ -82,7 +83,7 @@ namespace ELS.Siren
         public Siren(Vehicle vehicle)
         {
             _vehicle = vehicle;
-            Debug.WriteLine($"horn:{VCF.data.SOUNDS.MainHorn.AudioString}");
+            Debug.WriteLine($"horn: {VCF.data.SOUNDS.MainHorn.AudioString}");
             _tones = new Tones
             {
                 horn = new Tone(VCF.data.SOUNDS.MainHorn.AudioString, _vehicle, ToneType.Horn),
@@ -91,6 +92,7 @@ namespace ELS.Siren
                 tone3 = new Tone(VCF.data.SOUNDS.SrnTone3.AudioString, _vehicle, ToneType.SrnTon3),
                 tone4 = new Tone(VCF.data.SOUNDS.SrnTone4.AudioString, _vehicle, ToneType.SrnTon4)
             };
+            dual_siren = false;
             _mainSiren = new MainSiren(_tones);
 
         }
@@ -102,6 +104,12 @@ namespace ELS.Siren
             _tones.tone3.CleanUp();
             _tones.tone4.CleanUp();
 
+        }
+
+        private bool IsAnySirenOn()
+        {
+            var tmp = false || _tones.tone1._state || _tones.tone2._state || _tones.tone3._state || _tones.tone4._state;
+            return tmp;
         }
         public void ticker()
         {
@@ -136,6 +144,7 @@ namespace ELS.Siren
                 }
                 else
                 {
+                    if (IsAnySirenOn() && !dual_siren && !_tones.tone1._state) return;
                     _tones.tone1.SetState(!_tones.tone1._state);
                 }
             }
@@ -143,25 +152,33 @@ namespace ELS.Siren
 
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon2))
             {
-                if (_tones.tone2._state == true && _mainSiren._state==true)
+                if (_tones.tone2._state == true && _mainSiren._state == true && !dual_siren)
                 {
                     _mainSiren.SetState(false);
                     _tones.tone2.SetState(false);
                 }
-                else
+                else if (_tones.tone2._state == true && _mainSiren._state == true && dual_siren)
                 {
-                    _tones.tone2.SetState(!_tones.tone2._state);
+                    _tones.tone2.SetState(false);
                 }
+
+            else
+            {
+                if (IsAnySirenOn() && !dual_siren && !_tones.tone2._state) return;
+                _tones.tone2.SetState(!_tones.tone2._state);
             }
+        }
 
 
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon3))
             {
+                if (IsAnySirenOn() && !dual_siren && !_tones.tone3._state) return;
                 _tones.tone3.SetState(!_tones.tone3._state);
             }
 
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon4))
             {
+                if (IsAnySirenOn() && !dual_siren && !_tones.tone4._state) return;
                 _tones.tone4.SetState(!_tones.tone4._state);
             }
 
@@ -193,11 +210,18 @@ namespace ELS.Siren
             {
                 _mainSiren.SetState(!_mainSiren._state);
             }
+            if (Game.IsControlJustReleased(0, ControlConfiguration.KeyBindings.Toggle_DSRN))
+            {
+                dual_siren = !dual_siren;
+                Screen.ShowNotification($"Dual Siren {dual_siren}");
+            }
         }
 
         public void updateLocalRemoteSiren(string sirenString, bool state)
         {
+#if DEBUG
             Debug.WriteLine(sirenString);
+#endif
             Enum.TryParse(sirenString, out ToneType tonetype);
             switch (tonetype)
             {
@@ -207,19 +231,19 @@ namespace ELS.Siren
                     break;
                 case ToneType.SrnTon1:
                     _tones.tone1.SetRemoteState(state);
-                    Debug.WriteLine("setting 1");
+                    Debug.WriteLine("setting tone 1");
                     break;
                 case ToneType.SrnTon2:
                     _tones.tone2.SetRemoteState(state);
-                    Debug.WriteLine("setting 2");
+                    Debug.WriteLine("setting tone 2");
                     break;
                 case ToneType.SrnTon3:
                     _tones.tone3.SetRemoteState(state);
-                    Debug.WriteLine("setting 3");
+                    Debug.WriteLine("setting tone 3");
                     break;
                 case ToneType.SrnTon4:
                     _tones.tone4.SetRemoteState(state);
-                    Debug.WriteLine("setting 4");
+                    Debug.WriteLine("setting tone 4");
                     break;
             }
         }

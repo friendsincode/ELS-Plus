@@ -22,23 +22,25 @@ namespace ELS
         {
             if (ELS.isStopped) return;
             int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "ELSFM");
-            Debug.WriteLine(num.ToString() + " " + name);
+#if DEBUG
+            Debug.WriteLine("number of files to load: " + num.ToString() + " " + name);
+#endif
             for (int i = 0; i < num; i++)
             {
                 var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "ELSFM", i);
-                var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
+#if DEBUG
+                Debug.WriteLine($"Name: {name} Loading: {filename}");
+#endif
+                
                 if (filename.Equals("extra-files/ELS.ini"))
                 {
+                    var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
                     OnSettingsLoaded?.Invoke(configuration.SettingsType.Type.GLOBAL, data);
                 }
                 if (filename.Equals("extra-files/ELS/pack_default/POLICE.xml", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    //System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-                    //doc.LoadXml(data);
-                    Debug.WriteLine("loading VCF File");
+                    var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
                     VCF.load(SettingsType.Type.VCF,data);
-                    //Debug.WriteLine(doc["vcfroot"]["INTERFACE"]["LstgActivationType"].InnerText);
-                    //OnSettingsLoaded?.Invoke(configuration.SettingsType.Type.VCF,data);
                 }
             }
         }

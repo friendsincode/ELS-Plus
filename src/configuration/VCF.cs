@@ -18,7 +18,6 @@ namespace ELS.configuration
         }
         public static void load(SettingsType.Type type, string Data)
         {
-            Debug.WriteLine("reached");
             data = new vcfroot();
             data.SOUNDS = new vcfrootSOUNDS();
             data.SOUNDS.MainHorn = new vcfrootSOUNDSMainHorn();
@@ -32,8 +31,6 @@ namespace ELS.configuration
                 doc.LoadXml(Data);
 
                 VCF.data.SOUNDS.MainHorn.AudioString = doc["vcfroot"]["SOUNDS"]["MainHorn"].Attributes["AudioString"].Value;
-                Debug.WriteLine("reached 2");
-
                 VCF.data.SOUNDS.SrnTone1.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone1"].Attributes["AudioString"].Value;
                 VCF.data.SOUNDS.SrnTone2.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone2"].Attributes["AudioString"].Value;
                 VCF.data.SOUNDS.SrnTone3.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone3"].Attributes["AudioString"].Value;
