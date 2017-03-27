@@ -28,14 +28,15 @@ end
 server_script 'server.lua'
 
 -- Object Entry
-local function object_entry(data)
+local function ini_entry(data)
 	files(data)
 	ELSFM(data)
 end
-local function object_entry2(data)
+
+local function vcf_entry(data)
 	files(data)
 	ELSFMVCF(data)
 end
 
-object_entry('extra-files/ELS.ini')
-object_entry2('extra-files/ELS/pack_default/POLICE.xml')
+ini_entry('extra-files/ELS.ini')
+vcf_entry('extra-files/ELS/pack_default/POLICE.xml')

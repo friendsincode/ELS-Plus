@@ -105,7 +105,7 @@ namespace ELS.Siren
             _vehicle = vehicle;
             foreach (VCF.vcfroot vcfroot in VCF.ELSVehicle)
             {
-                if (vcfroot.FileName == _vehicle.DisplayName)
+                if (vcfroot.FileName.ToUpper() == _vehicle.DisplayName.ToUpper())
                 {
                     _vcf = vcfroot;
                 }
@@ -115,7 +115,7 @@ namespace ELS.Siren
                 Debug.WriteLine($"Their is no VCF file for this vehicle: {_vehicle.DisplayName} defaulting to POLICE.xml");
                 foreach (var vcfroot in VCF.ELSVehicle)
                 {
-                    if (vcfroot.FileName == "POLICE")
+                    if (vcfroot.FileName.ToUpper() == "POLICE")
                     {
                         _vcf = vcfroot;
                     }

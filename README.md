@@ -17,21 +17,29 @@ This project is still in development and should be expected to be buggy and not 
 ### How to add custom Vehicles
 
 1. Create a folder under resources with any name you want such as `cars`.
-2. Create a file as UTF-8 without signature/BOM called `__resources.lua` in the folder you madin step 1.
-3. Create a folder in the folder created in step 1 called `streams`.
-4. For each vehicle you want to add create a folder with the name of the in game vehicle slot you want to replace such as `FBI2`
-5. In the folder that was created in step 4 add the vehicle files. The name should be the same as folder name from step 4.
+2. Create a file as UTF-8 without signature/BOM called `__resource.lua` in the folder you made in step 1.
+3. Create a folder  called `streams` in the folder created in step 1.
+4. For each vehicle you want to add create a folder with the name of the vehicle slot you want to replace such as `FBI2`
+5. In the folder that was created in step 4 add the vehicle files.
 6. Create a folder called `ELS` in the folder that was created in step 4.
-7. In the folder created in step 6 add the vehicles VCF file. The Name should be the name match the name of the vehicle files with a xml extension.
+7. In the folder created in step 6 add the repective vehicle's VCF file. The Name should be the name match the name of the vehicle files with a xml extension.
 8. In the `__resource.lua` file add the code below
 ```
-local function object_entry(data)
+local function vcf_entry(data)
 	files(data)
 	ELSFMVCF(data)
 end
-object_entry('streams/CarName/ELS/CarName.xml')
+
+vcf_entry('streams-(step-3)/CarName-(step-4)/ELS-(step 6)/CARNAME.xml (step 7)')
+vcf_entry('streams-(step-3)/PoliceName-(step-4)/ELS-(step-6)/POLICENAME.xml (step 7)')
 ```
 9. Add the resource folder name to `AutoStartResources` in `citmp-server.yml` below `ELS-for-FiveM`
+#### Important Notes
+
+- When running the rcon command `restart ELS-for-FiveM` or `start ELS-for-FiveM`.  
+Make sure you restart any resources that have ELS vehicles.
+- Make sure ELS-for-FiveM is located above all ELS enabled vehicle stream resources in the `AutoStartResources` section in the `citmp-server.yml` file.
+
 ### How to Build and Test
 
 1. `git clone https://github.com/ejb1123/ELS-FiveM.git`
