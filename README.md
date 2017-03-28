@@ -27,7 +27,6 @@ This project is in early development stages. You should expect bugs and/or issue
 4. Create a folder called `ELS` in the folder that was created in step 3, or, copy the ELS folder from the example and paste it in here. It won't matter at this stage of the project.
 5. In the folder created in step 4 add the repective vehicle's VCF file. The Name should be the name match the name of the vehicle files (all caps, though) with an xml extension, like shown in the example resource.
 6. In the `__resource.lua` file copied from the example resource, check out the `vcf_loader` function and modify it to include your cars. If you have a custom car in the `police` and `police2` slot, this is how it would look:
-7. **Double-check everything is in the right directory tree!** If the directories are not created properly the vcf_loader() will NOT import the VCF files properly into ELS.
 
 ```
 local function vcf_loader()
@@ -43,6 +42,8 @@ local function vcf_loader()
 	end
 end
 ```
+
+7. **Double-check everything is in the right directory tree!** If the directories are not created properly the vcf_loader() will NOT import the VCF files properly into ELS.
 
 9. Add the resource folder name to `AutoStartResources` in `citmp-server.yml` below `ELS-for-FiveM`
 #### Important Notes
