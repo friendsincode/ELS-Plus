@@ -30,16 +30,16 @@ This project is in early development stages. You should expect bugs and/or issue
 
 ```
 local function vcf_loader()
-	local vcf_files = {
-		-- We modified inside of this Lua table to create a list of strings containing our car names.
-		'POLICE',
-		'POLICE2'
-	}
-	for i = 1, #vcf_files do
-		local car = vcf_files[i]:upper()
-		files('stream/' .. car .. '/ELS/' .. car .. '.xml')
-		ELSFMVCF('stream/' .. car .. '/ELS/' .. car .. '.xml')
-	end
+  local vcf_files = {
+	-- We modified inside of this Lua table to create a list of strings containing our car names.
+	'POLICE',
+	'POLICE2'
+  }
+  for i = 1, #vcf_files do
+	local car = vcf_files[i]:upper()
+	files('stream/' .. car .. '/ELS/' .. car .. '.xml')
+	ELSFMVCF('stream/' .. car .. '/ELS/' .. car .. '.xml')
+  end
 end
 ```
 
