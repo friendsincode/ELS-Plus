@@ -21,7 +21,7 @@ This project is in early development stages. You should expect bugs and/or issue
 
 ### How to add custom Vehicles
 
-1. Download the example resource for custom cars in the `Help` directory. The resource is packaged into a zip file called `cars.zip`.
+1. Download the example resource for custom cars: https://github.com/ejb1123/ELS-FiveM/raw/master/src/Help/cars.zip
 2. For each vehicle you want to add create a folder with the name of the vehicle slot you want to replace such as `FBI2`. This folder **must** be in all caps. No exceptions.
 3. In the folder that was created in step 2 add the vehicle files directly to that folder.
 4. Create a folder called `ELS` in the folder that was created in step 3, or, copy the ELS folder from the example and paste it in here. It won't matter at this stage of the project.
