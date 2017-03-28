@@ -280,7 +280,8 @@ namespace ELS.Siren
 #if DEBUG
             Debug.WriteLine(sirenString);
 #endif
-            Enum.TryParse(sirenString, out ToneType tonetype);
+            ToneType tonetype;
+            Enum.TryParse(sirenString, out tonetype);
             switch (tonetype)
             {
                 case ToneType.Horn:
