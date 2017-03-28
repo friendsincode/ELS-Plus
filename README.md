@@ -1,5 +1,10 @@
-# disclaimer  
-This project is still in development and should be expected to be buggy and not work in its current state  
+# DISCLAIMER  
+This project is in early development stages. You should expect bugs and/or issues. To effectively combat these issues we ask that you submit issues to the Issues board in this repository. See: https://github.com/ejb1123/ELS-FiveM/issues to submit an issue. It is important that if you test ELS for FiveM that you submit issues so that we may work to resolve these. Here's some things to consider:
+
+- ELS vehicles are not yet supported.
+- Lights are not yet supported.
+- Custom cars will require VCF files to be created by following the "How to add custom Vehicles" section below.
+
 # ELS-FiveM
 
 ### Default Controls
