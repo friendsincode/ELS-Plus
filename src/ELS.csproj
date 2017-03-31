@@ -130,8 +130,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>powershell -File "$(SolutionDir)..\utils\buildscript.ps1" -serverRootFolder %25USERPROFILE%25\Desktop\cfx-server -address 127.0.0.1 -port 30120 -password lovely -projectName "$(TargetPath)" -sourceDir "$(TargetDir)\"
-rem TIMEOUT /T 5 /NOBREAK
-rem "$(SolutionDir)\..\utils\icecon_windows_amd64.exe" -c "restart ELS-for-FiveM" 127.0.0.1:30120 lovely</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

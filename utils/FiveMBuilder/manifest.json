@@ -1,0 +1,13 @@
+{
+    "dependencies": {
+        "github.com/spf13/cobra": {
+            "branch": "master"
+        },
+        "github.com/spf13/viper": {
+            "branch": "master"
+        },
+        "golang.org/x/sys": {
+            "branch": "master"
+        }
+    }
+}
