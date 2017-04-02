@@ -1,8 +1,8 @@
 server:
-  enabled: false
+  enabled: true
   url: 127.0.0.1:30120
   password: lovely
-  src: src\bin\Release
+  src: .
   root: C:\Users\ejbev\Desktop\cfx-server
   name: ELS-for-FiveM
   iceconpath: utils\icecon.exe

@@ -28,11 +28,10 @@ func GetFiles(src *string) *Tempfiles {
 				files.folders = append(files.folders, tpath)
 			}
 		}
-		if v, _ := os.Stat(path); !v.Mode().IsDir() && !v.IsDir() {
+		if v, _ := os.Stat(path); v.Mode().IsRegular() {
 			tpath, _ := filepath.Rel(*src, path)
 			files.files = append(files.files, tpath)
 		}
-		//files = append(files, path)
 		return nil
 	})
 	fmt.Println(files)
@@ -63,7 +62,6 @@ func DoCopy(tempfiles *Tempfiles, src *string, root *string, projectName *string
 			}
 			fmt.Println("written:" + pathn)
 			dst.Close()
-			return
 		}
 	}
 }
@@ -91,8 +89,7 @@ func ReadConfig(config string) *T {
 		log.Fatal(err)
 		panic(err)
 	}
-	s := string(result)
-	fmt.Println(s)
+
 	g := T{}
 	yaml.Unmarshal(result, &g)
 	if g.Server.Enabled == false {
@@ -118,9 +115,9 @@ func ReadConfig(config string) *T {
 func RestartServer(url *string, password *string, projectName *string, iceconPath *string) {
 	time.Sleep(1000)
 	cmdd := exec.Command(*iceconPath, "-c restart " + *projectName, *url, *password)
-	cmdd.Stdout=os.Stdout
+	cmdd.Stdout = os.Stdout
 	//hhh,_:=cmdd.Output()
 	//fmt.Println(hhh)
-	cmdd.Stderr=os.Stderr
+	cmdd.Stderr = os.Stderr
 	cmdd.Run()
 }
