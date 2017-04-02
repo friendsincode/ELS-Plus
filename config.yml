@@ -1,0 +1,7 @@
+server:
+  enabled: false
+  url: 127.0.0.1
+  password: lovely
+  src: C:\Users\ejbev\Documents\GitHub\ELS-FiveM\src\bin\Release
+  root: C:\Users\ejbev\Desktop\cfx-server
+  name: ELS-for-FiveM

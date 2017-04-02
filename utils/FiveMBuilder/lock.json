@@ -1,5 +1,5 @@
 {
-    "memo": "",
+    "memo": "869f7735f48ae8244677e6e6e81f7e9adf86df7b99b4132e0220a30afe6d18eb",
     "projects": [
         {
             "name": "github.com/fsnotify/fsnotify",
@@ -14,7 +14,15 @@
             "branch": "master",
             "revision": "630949a3c5fa3c613328e1b8256052cbc2327c9b",
             "packages": [
-                "."
+                ".",
+                "hcl/ast",
+                "hcl/parser",
+                "hcl/scanner",
+                "hcl/strconv",
+                "hcl/token",
+                "json/parser",
+                "json/scanner",
+                "json/token"
             ]
         },
         {
@@ -62,7 +70,8 @@
             "branch": "master",
             "revision": "9be650865eab0c12963d8753212f4f9c66cdcf12",
             "packages": [
-                "."
+                ".",
+                "mem"
             ]
         },
         {
@@ -110,8 +119,9 @@
             "branch": "master",
             "revision": "9a7256cb28ed514b4e1e5f68959914c4c28a92e0",
             "packages": [
-                "windows/registry",
-                "unix"
+                "unix",
+                "windows",
+                "windows/registry"
             ]
         },
         {
@@ -119,7 +129,11 @@
             "branch": "master",
             "revision": "f28f36722d5ef2f9655ad3de1f248e3e52ad5ebd",
             "packages": [
+                "internal/gen",
+                "internal/triegen",
+                "internal/ucd",
                 "transform",
+                "unicode/cldr",
                 "unicode/norm"
             ]
         },
