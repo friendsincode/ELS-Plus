@@ -130,7 +130,6 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)..\build.exe" copy -c $(SolutionDir)..\config.yml</PostBuildEvent>
   </PropertyGroup>
 </Project>
