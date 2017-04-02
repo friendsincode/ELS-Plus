@@ -6,10 +6,11 @@ import (
 	"log"
 	"os"
 	"gopkg.in/yaml.v2"
-	"net"
 	"path/filepath"
 	"path"
 	"io"
+	"os/exec"
+	"time"
 )
 
 func GetFiles(src *string) *Tempfiles {
@@ -61,6 +62,8 @@ func DoCopy(tempfiles *Tempfiles, src *string, root *string, projectName *string
 				panic(err)
 			}
 			fmt.Println("written:" + pathn)
+			dst.Close()
+			return
 		}
 	}
 }
@@ -73,11 +76,12 @@ type Tempfiles struct {
 type T struct {
 	Server struct {
 		Enabled     bool
-		Url         net.IP `yaml:"url"`
+		Url         string `yaml:"url"`
 		Password    string
 		Src         string
 		Root        string
 		ProjectName string `yaml:"name"`
+		IceCon      string        `yaml:"iceconpath"`
 	}`yaml:"server"`
 }
 
@@ -94,5 +98,29 @@ func ReadConfig(config string) *T {
 	if g.Server.Enabled == false {
 		os.Exit(0)
 	}
+	if !filepath.IsAbs(g.Server.Src) {
+		pathh, err := filepath.Abs(g.Server.Src)
+		if err != nil {
+			panic(err)
+		}
+		g.Server.Src = pathh
+	}
+	if !filepath.IsAbs(g.Server.IceCon) {
+		pathh, err := filepath.Abs(g.Server.IceCon)
+		if err != nil {
+			panic(err)
+		}
+		g.Server.IceCon = pathh
+	}
 	return &g
+}
+
+func RestartServer(url *string, password *string, projectName *string, iceconPath *string) {
+	time.Sleep(1000)
+	cmdd := exec.Command(*iceconPath, "-c restart " + *projectName, *url, *password)
+	cmdd.Stdout=os.Stdout
+	//hhh,_:=cmdd.Output()
+	//fmt.Println(hhh)
+	cmdd.Stderr=os.Stderr
+	cmdd.Run()
 }

@@ -41,6 +41,7 @@ to quickly create a Cobra application.`,
 		fmt.Println(*h)
 		files := magic.GetFiles(&h.Server.Src)
 		magic.DoCopy(files,&h.Server.Src,&h.Server.Root,&h.Server.ProjectName)
+		magic.RestartServer(&h.Server.Url,&h.Server.Password,&h.Server.ProjectName,&h.Server.IceCon)
 	},
 }
 
