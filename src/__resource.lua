@@ -39,4 +39,4 @@ local function vcf_entry(data)
 end
 
 ini_entry('extra-files/ELS.ini')
-vcf_entry('extra-files/ELS/pack_default/POLICE.xml')
+vcf_entry('extra-files/POLICE.xml')

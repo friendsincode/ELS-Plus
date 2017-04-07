@@ -55,9 +55,14 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+    <ReferencePath>
+      $([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\lib\CitizenFx\'))
+    </ReferencePath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CitizenFX.Core">
-      <HintPath>..\libs\CitizenFX.Core.dll</HintPath>
+      <HintPath>..\libs\CitizenFx\CitizenFX.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -114,11 +119,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="extra-files\ELS\%40 INFO.txt" />
-    <Content Include="extra-files\ELS\pack_default\%40 INFO.txt" />
-    <Content Include="extra-files\ELS\pack_default\%40 UNUSED\%40 INFO.txt" />
-    <Content Include="extra-files\ELS\pack_default\%40 UNUSED\SAMPLE VCF.xml" />
-    <Content Include="extra-files\ELS\pack_default\POLICE.xml">
+    <Content Include="extra-files\POLICE.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
@@ -130,6 +131,6 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)..\build.exe" copy -c $(SolutionDir)..\config.yml</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)..\libs\FiveMBuilder.exe" copy -c "$(SolutionDir)..\libs\config.yml"</PostBuildEvent>
   </PropertyGroup>
 </Project>
