@@ -3,7 +3,6 @@ libs/*
 !libs/SharpConfig-master
 !libs/CitizenFx
 !libs/FiveMBuilder.exe
-!libs/config.yml
 .vscode/
 config.yml
 ## Ignore Visual Studio temporary files, build results, and
