@@ -21,7 +21,7 @@ This project is in early development stages. You should expect bugs and/or issue
 
 ### How to add custom Vehicles
 
-1. Download the example resource for custom cars: https://github.com/ejb1123/ELS-FiveM/raw/master/src/Help/cars.zip
+1. Download the example resource for custom cars: https://github.com/FiveM-Scripts/ELS-FiveM/raw/master/src/Help/cars.zip
 2. For each vehicle you want to add create a folder with the name of the vehicle slot you want to replace such as `FBI2`. This folder **must** be in all caps. No exceptions.
 3. In the folder that was created in step 2 add the vehicle files directly to that folder.
 4. Create a folder called `ELS` in the folder that was created in step 3, or, copy the ELS folder from the example and paste it in here. It won't matter at this stage of the project.
@@ -54,16 +54,14 @@ Make sure you restart any resources that have ELS vehicles.
 
 ### How to Build and Test
 
-1. `git clone https://github.com/ejb1123/ELS-FiveM.git`
+1. `git clone https://github.com/FiveM-Scripts/ELS-FiveM.git`
 
-2. Copy `{fivereborn}\citizen\clr2\lib\mono\4.5\CitizenFX.Core.dll` to `ELS-FiveM\libs`
+2. Open `ELS-FiveM\src\ELS-for-FiveM.sln` in Visual Studio
 
-3. Open `ELS-FiveM\src\ELS-for-FiveM.sln` in Visual Studio
+3. Select `Release` and `Any CPU`  next to the Start button
 
-4. Select `Release` and `Any CPU`  next to the Start button
+4. In the menu bar under Build click on `Build Solution`
 
-5. In the menu bar under Build click on `Build Solution`
+5. Copy all the files from `ELS-FiveM\src\bin\Release` to `cfx-server\resources\ELS-FiveM`
 
-6. Copy all the files from `ELS-FiveM\src\bin\Release` to `cfx-server\resources\ELS-FiveM`
-
-7. Add `ELS-FiveM` to `AutoStartResources` in `cfx-server\citmp-server.yml`
+6. Add `ELS-FiveM` to `AutoStartResources` in `cfx-server\citmp-server.yml`
