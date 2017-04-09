@@ -19,7 +19,12 @@ namespace ELS.configuration
         {
 
             vcfroot data = new vcfroot();
-
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(VCF));
+            using (StringReader reader = new StringReader(Data))
+            {
+                VCF vcf = (VCF) (xmlSerializer.Deserialize(reader));
+                Debug.WriteLine(vcf.ToString());
+            }
             data = new vcfroot();
             data.FileName = Path.GetFileNameWithoutExtension(name);
             Debug.WriteLine();
