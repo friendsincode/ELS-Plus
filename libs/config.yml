@@ -1,5 +1,5 @@
 server:
-  enabled: false
+  enabled: true
   url: 127.0.0.1:30120
   password: lovely
   src: .

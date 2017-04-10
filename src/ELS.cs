@@ -39,7 +39,8 @@ namespace ELS
                     }
                     catch (Exception e)
                     {
-                        TriggerServerEvent($"DEBUG:", e);
+                        TriggerServerEvent($"ONDEBUG", e.ToString());
+                        Screen.ShowNotification($"ERROR:{e}");
                         Tick -= Class1_Tick;
                         throw;
                     }
@@ -55,16 +56,16 @@ namespace ELS
               });
         }
 
-        private Task Class1_Tick()
+        private async Task Class1_Tick()
         {
             try
             {
 
 
-                Text text = new Text($"ELS Build dev-v0.0.2.4\nhttp://ELS.ejb1123.tk", new PointF(640f, 10f), 0.5f);
+               /* Text text = new Text($"ELS Build dev-v0.0.2.4\nhttp://ELS.ejb1123.tk", new PointF(640f, 10f), 0.5f);
                 text.Alignment = Alignment.Center;
                 text.Centered = true;
-                text.Draw();
+                text.Draw();*/
 
                 if (LocalPlayer.Character.IsInVehicle() && LocalPlayer.Character.IsSittingInVehicle() &&
                     LocalPlayer.Character.CurrentVehicle.HasSiren &&
@@ -75,14 +76,14 @@ namespace ELS
                     _sirenManager.Runtick();
                     //_spotLight.RunTick();
                 }
-                return null;
+                
             }
             catch (Exception ex)
             {
-                TriggerServerEvent($"DEBUG:", ex);
-                throw;
+                TriggerServerEvent($"ONDEBUG", ex.ToString());
+                await Delay(5000);
+                Screen.ShowNotification($"ERROR {ex}", true);
             }
-            return null;
         }
     }
 }
