@@ -5,6 +5,15 @@ namespace ELS.Siren
 {
     partial class Siren
     {
+        struct syncSettings
+        {
+            private bool dualsiren;
+            private bool mainSiren;
+        }
+        public void updateLocalRemoteELSSettings()
+        {
+            
+        }
         public void updateLocalRemoteSiren(string sirenString, bool state)
         {
 #if DEBUG

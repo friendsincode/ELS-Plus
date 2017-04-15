@@ -20,9 +20,12 @@ namespace ELS.Siren
         public Vehicle _vehicle { get; set; }
         private MainSiren _mainSiren;
         private VCF.vcfroot _vcf;
-        configuration.ControlConfiguration.ELSControls keybindings = new configuration.ControlConfiguration.ELSControls();
+
+        configuration.ControlConfiguration.ELSControls keybindings =
+            new configuration.ControlConfiguration.ELSControls();
 
         Tones _tones;
+
         public Siren(Vehicle vehicle)
         {
             _vehicle = vehicle;
@@ -35,7 +38,8 @@ namespace ELS.Siren
             }
             if (_vcf == null)
             {
-                Debug.WriteLine($"Their is no VCF file for this vehicle: {_vehicle.DisplayName} defaulting to POLICE.xml");
+                Debug.WriteLine(
+                    $"Their is no VCF file for this vehicle: {_vehicle.DisplayName} defaulting to POLICE.xml");
                 foreach (var vcfroot in VCF.ELSVehicle)
                 {
                     if (vcfroot.FileName.ToUpper() == "POLICE")
@@ -62,6 +66,7 @@ namespace ELS.Siren
             _mainSiren = new MainSiren(_tones);
 
         }
+
         public void CleanUP()
         {
             _tones.horn.CleanUp();
@@ -72,48 +77,6 @@ namespace ELS.Siren
 
         }
 
-        private void AirHornControls()
-        {
-            if ((Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) ||
-                (Game.IsControlJustPressed(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
-            {
-                Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn);
-                Game.DisableControlThisFrame(2, Control.ScriptPadDown);
-                if (_vcf.SOUNDS.MainHorn.InterruptsSiren)
-                {
-                    if (_mainSiren._state)
-                    {
-                        _mainSiren.interupted = true;
-                        _mainSiren.SetState(false);
-
-                    }
-                    _tones.horn.SetState(true);
-                }
-                else
-                {
-                    _tones.horn.SetState(true);
-                }
-            }
-            if ((Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
-                || (Game.IsControlJustReleased(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
-            {
-                Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn);
-                Game.DisableControlThisFrame(2, Control.ScriptPadDown);
-                if (_vcf.SOUNDS.MainHorn.InterruptsSiren)
-                {
-                    _tones.horn.SetState(false);
-                    if (_mainSiren.interupted)
-                    {
-                        _mainSiren.interupted = false;
-                        _mainSiren.SetState(true);
-                    }
-                }
-                else
-                {
-                    _tones.horn.SetState(false);
-                }
-            }
-        }
         public void ticker()
         {
             Game.DisableControlThisFrame(0, Control.VehicleHorn);
@@ -123,87 +86,14 @@ namespace ELS.Siren
                 _vehicle.IsSirenActive = !_vehicle.IsSirenActive;
             }
 
-            AirHornControls();
-
-
-            if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon1))
-            {
-                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Snd_SrnTon1);
-
-                if (_mainSiren._state)
-                {
-                    _mainSiren.setMainTone(_tones.tone1);
-                }
-            }
-
-
-            if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon2))
-            {
-                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Snd_SrnTon2);
-
-                if (_mainSiren._state)
-                {
-                    _mainSiren.setMainTone(_tones.tone2);
-                }
-            }
-
-
-            if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon3))
-            {
-                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Snd_SrnTon3);
-                if (_mainSiren._state)
-                {
-                    _mainSiren.setMainTone(_tones.tone3);
-                }
-            }
-
-            if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon4))
-            {
-                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Snd_SrnTon4);
-                if (_mainSiren._state)
-                {
-                    _mainSiren.setMainTone(_tones.tone4);
-                }
-            }
-
-
-            if (Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Sound_Manul))
-            {
-                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Sound_Manul);
-
-                if (!_mainSiren._state || (!_mainSiren._state && _vcf.SOUNDS.MainHorn.InterruptsSiren && _tones.horn._state))
-                {
-                    _tones.tone1.SetState(true);
-                }
-                else
-                {
-                    _mainSiren.nextTone();
-                }
-            }
-            if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Manul))
-            {
-                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Sound_Manul);
-                if (!_mainSiren._state || (!_mainSiren._state && _vcf.SOUNDS.MainHorn.InterruptsSiren && _tones.horn._state))
-                {
-                    _tones.tone1.SetState(false);
-                }
-                else
-                {
-                    _mainSiren.previousTone();
-                }
-            }
-
-            if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Toggle_SIRN))
-            {
-                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Toggle_SIRN);
-                _mainSiren.SetState(!_mainSiren._state);
-            }
-            if (Game.IsControlJustReleased(0, ControlConfiguration.KeyBindings.Toggle_DSRN))
-            {
-                Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Toggle_DSRN);
-                dual_siren = !dual_siren;
-                Screen.ShowNotification($"Dual Siren {dual_siren}");
-            }
+            AirHornControlsProccess();
+            ManualTone1ControlsProccess();
+            ManualTone2ControlsProccess();
+            ManualTone3ControlsProccess();
+            ManualTone4ControlsProccess();
+            ManualSoundControlsProccess();
+            MainSirenToggleControlsProccess();
+            
         }
     }
 }

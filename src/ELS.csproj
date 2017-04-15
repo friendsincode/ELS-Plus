@@ -94,6 +94,8 @@
     <Compile Include="RemoteEventManager.cs" />
     <Compile Include="Siren\IManagerEntry.cs" />
     <Compile Include="Siren\MainSiren.cs" />
+    <Compile Include="Siren\Siren.Controls.cs" />
+    <Compile Include="Siren\Siren.ControlsProccess.cs" />
     <Compile Include="Siren\Siren.cs" />
     <Compile Include="Siren\Siren.updateLocalRemoteSiren.cs" />
     <Compile Include="Siren\Tone.cs" />
