@@ -16,8 +16,10 @@ This project is in early development stages. You should expect bugs and/or issue
 |Select Melee Weapon | 2 Key | Manual tone 2|
 |Select Shotgun Weapon | 3 Key | Manual tone 3|
 |Select Heavy Weapon | 4 Key | Manual tone 4|
+|Select Special Weapon | 5 Key | Toggles Dual Siren Mode|
 |Chat All| T Key|Goes to next tone or plays tone 1|
 |Throw Grenade| G Key|Toggles main siren|
+|Vehicle Horn | E Key | Toggles vehicle's emergency lights|
 
 ### How to add custom Vehicles
 
