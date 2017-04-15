@@ -97,9 +97,9 @@ namespace ELS
 
         public void Runtick()
         {
-            if ((( currentSiren == null) || currentSiren._vehicle !=  new PlayerList()[Game.Player.ServerId].Character.CurrentVehicle))
+            if ((( currentSiren == null) || currentSiren._vehicle !=  Game.Player.Character.CurrentVehicle))
             {
-                SetCurrentSiren( new PlayerList()[Game.Player.ServerId].Character.CurrentVehicle);
+                SetCurrentSiren( Game.Player.Character.CurrentVehicle);
             }
 
             currentSiren.ticker();

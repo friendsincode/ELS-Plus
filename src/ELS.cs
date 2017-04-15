@@ -12,7 +12,6 @@ using System.Reflection;
 using System.Security.Permissions;
 using ELS.configuration;
 using ELS.Light;
-using Debug = System.Diagnostics.Debug;
 
 namespace ELS
 {
@@ -62,21 +61,19 @@ namespace ELS
             {
 
 
-               /* Text text = new Text($"ELS Build dev-v0.0.2.4\nhttp://ELS.ejb1123.tk", new PointF(640f, 10f), 0.5f);
-                text.Alignment = Alignment.Center;
-                text.Centered = true;
-                text.Draw();*/
+                /* Text text = new Text($"ELS Build dev-v0.0.2.4\nhttp://ELS.ejb1123.tk", new PointF(640f, 10f), 0.5f);
+                 text.Alignment = Alignment.Center;
+                 text.Centered = true;
+                 text.Draw();*/
 
                 if (LocalPlayer.Character.IsInVehicle() && LocalPlayer.Character.IsSittingInVehicle() &&
-                    LocalPlayer.Character.CurrentVehicle.HasSiren &&
+                    VCF.isELSVechicle(LocalPlayer.Character.CurrentVehicle.DisplayName) &&
                     LocalPlayer.Character.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == LocalPlayer.Character)
                 {
-                    //Screen.ShowNotification(LocalPlayer.Character.CurrentVehicle.DisplayName);
-                    //Screen.ShowNotification(Function.Call<ulong>(Hash.GET_HASH_KEY,LocalPlayer.Character.CurrentVehicle.DisplayName).ToString());
                     _sirenManager.Runtick();
                     //_spotLight.RunTick();
                 }
-                
+
             }
             catch (Exception ex)
             {

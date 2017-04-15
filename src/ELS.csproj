@@ -93,10 +93,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteEventManager.cs" />
     <Compile Include="Siren\IManagerEntry.cs" />
+    <Compile Include="Siren\MainSiren.cs" />
     <Compile Include="Siren\Siren.cs" />
+    <Compile Include="Siren\Siren.updateLocalRemoteSiren.cs" />
     <Compile Include="Siren\Tone.cs" />
     <Compile Include="SirenManager.cs" />
     <Compile Include="configuration\VCF.cs" />
+    <Compile Include="Siren\Tones.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NUI\api.lua" />

@@ -15,12 +15,10 @@ namespace ELS.configuration
         public VCF()
         {
         }
-        public static void load(SettingsType.Type type, string name,string Data)
+        public static void load(SettingsType.Type type, string name, string Data)
         {
 
             var data = new vcfroot();
-            data.FileName = Path.GetFileNameWithoutExtension(name);
-            Debug.WriteLine();
             data.SOUNDS = new vcfrootSOUNDS();
             data.SOUNDS.MainHorn = new vcfrootSOUNDSMainHorn();
 
@@ -64,8 +62,8 @@ namespace ELS.configuration
             {
                 System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
                 doc.LoadXml(Data);
-                //Debug.WriteLine(doc.DocumentElement);
                 bool res;
+                data.FileName = Path.GetFileNameWithoutExtension(name);
 
                 data.SOUNDS.ManTone1.AudioString = doc["vcfroot"]["SOUNDS"]["ManTone1"].Attributes["AudioString"].Value;
                 data.SOUNDS.ManTone1.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["ManTone1"].Attributes["AllowUse"].Value);
@@ -99,9 +97,25 @@ namespace ELS.configuration
                 ELSVehicle.Add(data);
                 foreach (var vcfroot in ELSVehicle)
                 {
-                    Debug.WriteLine(vcfroot.FileName);
+                    Debug.WriteLine($"Added {vcfroot.FileName}");
                 }
             }
+        }
+
+        public static bool isELSVechicle(string vehicleName)
+        {
+            var returnstatus = false;
+#if DEBUG
+            Debug.WriteLine($"checking for {vehicleName}");
+#endif
+            foreach (var vehicle in ELSVehicle)
+            {
+                if (vehicle.FileName.ToUpper() == vehicleName.ToUpper())
+                {
+                    returnstatus = true;
+                }
+            }
+            return returnstatus;
         }
         /// <remarks/>
 
@@ -288,7 +302,7 @@ namespace ELS.configuration
                 }
                 set
                 {
-                    this.FileNameField = value; 
+                    this.FileNameField = value;
                 }
             }
         }
