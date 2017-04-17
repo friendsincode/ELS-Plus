@@ -18,46 +18,44 @@ namespace ELS.configuration
         public static void load(SettingsType.Type type, string name, string Data)
         {
 
-            var data = new vcfroot();
-            data.SOUNDS = new vcfrootSOUNDS();
-            data.SOUNDS.MainHorn = new vcfrootSOUNDSMainHorn();
+            var data = new vcfroot
+            {
+                SOUNDS = new vcfrootSOUNDS
+                {
+                    MainHorn = new vcfrootSOUNDSMainHorn(),
+                    SrnTone1 = new vcfrootSOUNDSSrnTone1(),
+                    SrnTone2 = new vcfrootSOUNDSSrnTone2(),
+                    SrnTone3 = new vcfrootSOUNDSSrnTone3(),
+                    SrnTone4 = new vcfrootSOUNDSSrnTone4(),
+                    AuxSiren = new vcfrootSOUNDSAuxSiren(),
+                    ManTone1 = new vcfrootSOUNDSManTone1(),
+                    ManTone2 = new vcfrootSOUNDSManTone2(),
+                    PanicMde = new vcfrootSOUNDSPanicMde()
+                },
+                ACORONAS = new vcfrootACORONAS(),
+                CRUISE = new vcfrootCRUISE(),
+                EOVERRIDE = new vcfrootEOVERRIDE
+                {
+                    Extra01 = new vcfrootEOVERRIDEExtra01(),
+                    Extra02 = new vcfrootEOVERRIDEExtra02(),
+                    Extra03 = new vcfrootEOVERRIDEExtra03(),
+                    Extra04 = new vcfrootEOVERRIDEExtra04(),
+                    Extra05 = new vcfrootEOVERRIDEExtra05(),
+                    Extra06 = new vcfrootEOVERRIDEExtra06(),
+                    Extra07 = new vcfrootEOVERRIDEExtra07(),
+                    Extra08 = new vcfrootEOVERRIDEExtra08(),
+                    Extra09 = new vcfrootEOVERRIDEExtra09(),
+                    Extra10 = new vcfrootEOVERRIDEExtra10(),
+                    Extra11 = new vcfrootEOVERRIDEExtra11(),
+                    Extra12 = new vcfrootEOVERRIDEExtra12()
+                },
+                INTERFACE = new vcfrootINTERFACE(),
+                MISC = new vcfrootMISC(),
+                PRML = new vcfrootPRML(),
+                SECL = new vcfrootSECL(),
+                WRNL = new vcfrootWRNL()
+            };
 
-            data.SOUNDS.SrnTone1 = new vcfrootSOUNDSSrnTone1();
-            data.SOUNDS.SrnTone2 = new vcfrootSOUNDSSrnTone2();
-            data.SOUNDS.SrnTone3 = new vcfrootSOUNDSSrnTone3();
-            data.SOUNDS.SrnTone4 = new vcfrootSOUNDSSrnTone4();
-            data.SOUNDS.AuxSiren = new vcfrootSOUNDSAuxSiren();
-            data.SOUNDS.ManTone1 = new vcfrootSOUNDSManTone1();
-            data.SOUNDS.ManTone2 = new vcfrootSOUNDSManTone2();
-            data.SOUNDS.PanicMde = new vcfrootSOUNDSPanicMde();
-
-            data.ACORONAS = new vcfrootACORONAS();
-
-            data.CRUISE = new vcfrootCRUISE();
-
-            data.EOVERRIDE = new vcfrootEOVERRIDE();
-            data.EOVERRIDE.Extra01 = new vcfrootEOVERRIDEExtra01();
-            data.EOVERRIDE.Extra02 = new vcfrootEOVERRIDEExtra02();
-            data.EOVERRIDE.Extra03 = new vcfrootEOVERRIDEExtra03();
-            data.EOVERRIDE.Extra04 = new vcfrootEOVERRIDEExtra04();
-            data.EOVERRIDE.Extra05 = new vcfrootEOVERRIDEExtra05();
-            data.EOVERRIDE.Extra06 = new vcfrootEOVERRIDEExtra06();
-            data.EOVERRIDE.Extra07 = new vcfrootEOVERRIDEExtra07();
-            data.EOVERRIDE.Extra08 = new vcfrootEOVERRIDEExtra08();
-            data.EOVERRIDE.Extra09 = new vcfrootEOVERRIDEExtra09();
-            data.EOVERRIDE.Extra10 = new vcfrootEOVERRIDEExtra10();
-            data.EOVERRIDE.Extra11 = new vcfrootEOVERRIDEExtra11();
-            data.EOVERRIDE.Extra12 = new vcfrootEOVERRIDEExtra12();
-
-            data.INTERFACE = new vcfrootINTERFACE();
-
-            data.MISC = new vcfrootMISC();
-
-            data.PRML = new vcfrootPRML();
-
-            data.SECL = new vcfrootSECL();
-
-            data.WRNL = new vcfrootWRNL();
             if (type == SettingsType.Type.VCF)
             {
                 System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
