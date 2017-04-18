@@ -22,7 +22,7 @@ build1:
    - ls
    - cd src
    - ls
-   - xbuild /p:outDir=tmp;Configuration=Release /p:PostBuildEvent= /t:Build ELS-for-FiveM.sln
+   - xbuild /p:outDir=tmp /p:Configuration=Release /p:PostBuildEvent= /t:Build ELS-for-FiveM.sln
    - ls
    - ls tmp
    
