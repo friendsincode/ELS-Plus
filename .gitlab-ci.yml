@@ -40,7 +40,8 @@ deploy1:
    - ls src
    - ls src/tmp
    - mkdir ELS_FiveM-$version-gitlab_$CI_JOB_ID
-   - cp -R src/tmp/* ELS_FiveM-$version-gitlab_$CI_JOB_ID
+   - mkdir ELS_FiveM-$version-gitlab_$CI_JOB_ID\ELS-FiveM
+   - cp -R src/tmp/* ELS_FiveM-$version-gitlab_$CI_JOB_ID\ELS-FiveM
    - cp -R README.md LICENSE.txt docs ELS_FiveM-$version-gitlab_$CI_JOB_ID/
  artifacts:
   name: "ELS_FiveM-$version-gitlab_$CI_JOB_ID"
