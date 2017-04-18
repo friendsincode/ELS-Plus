@@ -19,12 +19,13 @@ build1:
  stage: build
  script:
    - echo "Do your build here"
-   - ls
    - cd src
-   - ls
    - xbuild /p:outDir=tmp/ /p:Configuration=Release /p:PostBuildEvent= /t:Build ELS-for-FiveM.sln
-   - ls
-   - ls tmp
+  artifacts:
+    untracked: true
+    paths:
+      - tmp/
+
    
 test1:
  stage: test
@@ -36,12 +37,8 @@ test2:
  script: 
    - echo "Do another parallel test here"
    - echo "For example run a lint test"
-   
-arti:
-  artifacts:
-    untracked: true
-    paths:
-      - tmp/
+
+  
    
 deploy1:
  stage: deploy
