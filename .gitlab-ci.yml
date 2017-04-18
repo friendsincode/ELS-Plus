@@ -44,3 +44,4 @@ deploy1:
  stage: deploy
  script:
    - echo "Do your deploy here"
+   - ls
