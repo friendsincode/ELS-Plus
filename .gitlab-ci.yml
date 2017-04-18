@@ -20,7 +20,9 @@ build1:
  script:
    - echo "Do your build here"
    - ls
-   - xbuild /p:outDir=tmp;Configuration=Release /p:PostBuildEvent= /t:Build src/ELS-for-FiveM.sln
+   - cd src
+   - ls
+   - xbuild /p:outDir=tmp;Configuration=Release /p:PostBuildEvent= /t:Build ELS-for-FiveM.sln
    - ls
    - ls tmp
    
