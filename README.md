@@ -21,6 +21,10 @@ This project is in early development stages. You should expect bugs and/or issue
 |Throw Grenade| G Key|Toggles main siren|
 |Vehicle Horn | E Key | Toggles vehicle's emergency lights|
 
+### How to install
+1. Copy the `ELS-FiveM` folder to `cfx-server\resources\`
+2. Add `ELS-FiveM` near the top of `AutoStartResources`
+
 ### How to add custom Vehicles
 
 1. Download the example resource for custom cars: https://github.com/FiveM-Scripts/ELS-FiveM/raw/master/src/Help/cars.zip
@@ -47,12 +51,13 @@ end
 
 7. **Double-check everything is in the right directory tree!** If the directories are not created properly the vcf_loader() will NOT import the VCF files properly into ELS.
 
-9. Add the resource folder name to `AutoStartResources` in `citmp-server.yml` below `ELS-for-FiveM`
+9. Add the resource folder name to `AutoStartResources` in `citmp-server.yml` below `ELS-FiveM`
+
 #### Important Notes
 
-- When running the rcon command `restart ELS-for-FiveM` or `start ELS-for-FiveM`.  
+- When running the rcon command `restart ELS-FiveM` or `start ELS-for-FiveM`.  
 Make sure you restart any resources that have ELS vehicles.
-- Make sure ELS-for-FiveM is located above all ELS enabled vehicle stream resources in the `AutoStartResources` section in the `citmp-server.yml` file.
+- Make sure ELS-FiveM is located above all ELS enabled vehicle stream resources in the `AutoStartResources` section in the `citmp-server.yml` file.
 
 ### How to Build and Test
 
