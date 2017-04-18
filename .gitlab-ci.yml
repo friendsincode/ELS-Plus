@@ -41,7 +41,7 @@ deploy1:
  script:
    - echo "Do your deploy here"
    - mkdir ../ELS-for-FiveM-git-v$CI_JOB_ID
-   - cp tmp/* ../ELS-for-FiveM-git-v$CI_JOB_ID
+   - cp src/tmp/* ../ELS-for-FiveM-git-v$CI_JOB_ID
  artifacts:
   paths:
     - ../ELS-for-FiveM-git-v$CI_JOB_ID/*
