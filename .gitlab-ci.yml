@@ -18,7 +18,6 @@ build1:
    - xbuild /p:outDir=tmp/ /p:Configuration=Release /p:PostBuildEvent= /t:Build ELS-for-FiveM.sln
  artifacts:
   paths:
-    - tmp
     - src/tmp
 
    
