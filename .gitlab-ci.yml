@@ -20,7 +20,7 @@ build1:
  script:
    - echo "Do your build here"
    - ls
-   - xbuild
+   - xbuild /p:outDir=tmp;Configuration=Release /p:PostBuildEvent= /t:Build / src/ELS-for-FiveM.sln
    
 test1:
  stage: test
