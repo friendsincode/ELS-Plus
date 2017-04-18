@@ -40,6 +40,9 @@ deploy1:
  stage: deploy
  script:
    - echo "Do your deploy here"
+   - ls
+   - ls src
+   - ls src/tmp
    - mkdir ../ELS-for-FiveM-git-v$CI_JOB_ID
    - cp src/tmp/* ../ELS-for-FiveM-git-v$CI_JOB_ID
  artifacts:
