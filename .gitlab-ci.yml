@@ -22,9 +22,9 @@ build1:
    - cd src
    - xbuild /p:outDir=tmp/ /p:Configuration=Release /p:PostBuildEvent= /t:Build ELS-for-FiveM.sln
  artifacts:
-  untracked: true
   paths:
-    - tmp/
+    - tmp/*
+    - src/tmp/*
 
    
 test1:
