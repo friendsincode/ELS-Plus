@@ -5,20 +5,15 @@
 image: mono:latest
 
 before_script:
-   - echo "Before script section"
-   - echo "For example you might run an update here or install a build dependency"
-   - echo "Or perhaps you might print out some debugging details"
-   - apt-get update
-   - ls
+   
    
 after_script:
-  - echo "After script section"
-  - echo "For example you might do some cleanup here"
+
    
 build1:
  stage: build
  script:
-   - echo "Do your build here"
+   - echo "Building"
    - cd src
    - xbuild /p:outDir=tmp/ /p:Configuration=Release /p:PostBuildEvent= /t:Build ELS-for-FiveM.sln
  artifacts:
@@ -48,7 +43,7 @@ deploy1:
    - ls src
    - ls src/tmp
    - mkdir ../ELS-for-FiveM-git-v$CI_JOB_ID
-   - cp src/tmp/* ../ELS-for-FiveM-git-v$CI_JOB_ID
+   - cp -R src/tmp/* ../ELS-for-FiveM-git-v$CI_JOB_ID
  artifacts:
   paths:
     - ../ELS-for-FiveM-git-v$CI_JOB_ID/*
