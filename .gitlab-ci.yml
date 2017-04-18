@@ -2,12 +2,14 @@
 # see https://docs.gitlab.com/ce/ci/yaml/README.html for all available options
 
 # you can delete this line if you're not using Docker
-image: ejb1123/fivem-test-env
+image: mono:latest
 
 before_script:
    - echo "Before script section"
    - echo "For example you might run an update here or install a build dependency"
    - echo "Or perhaps you might print out some debugging details"
+   - apt-get update
+   - ls
    
 after_script:
   - echo "After script section"
@@ -17,13 +19,17 @@ build1:
  stage: build
  script:
    - echo "Do your build here"
+   - ls
+   - cd src
+   - ls
+   - xbuild /p:outDir=tmp/ /p:Configuration=Release /p:PostBuildEvent= /t:Build ELS-for-FiveM.sln
+   - ls
+   - ls tmp
    
 test1:
  stage: test
  script: 
    - echo "Do a test here"
-   - exit -1
-   - echo "did you get me?"
    
 test2:
  stage: test
