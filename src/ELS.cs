@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Security.Permissions;
 using ELS.configuration;
 using ELS.Light;
+using ELS.panel;
 
 namespace ELS
 {
@@ -23,6 +24,7 @@ namespace ELS
         private FileLoader _FileLoader;
         private SpotLight _spotLight;
         private configuration.ControlConfiguration controlConfiguration;
+        panel.test test = new test();
 
         public ELS()
         {
@@ -59,8 +61,7 @@ namespace ELS
         {
             try
             {
-
-
+                test.draw();
                 /* Text text = new Text($"ELS Build dev-v0.0.2.4\nhttp://ELS.ejb1123.tk", new PointF(640f, 10f), 0.5f);
                  text.Alignment = Alignment.Center;
                  text.Centered = true;
