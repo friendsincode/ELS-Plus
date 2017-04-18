@@ -39,9 +39,10 @@ deploy1:
    - ls
    - ls src
    - ls src/tmp
-   - mkdir ELS-for-FiveM-git-v$CI_JOB_ID
-   - cp -R src/tmp/* ELS-for-FiveM-git-v$CI_JOB_ID
+   - mkdir ELS_FiveM-$version-gitlab_$CI_JOB_ID
+   - cp -R src/tmp/* ELS_FiveM-$version-gitlab_$CI_JOB_ID
+   - cp README.md LICESE.txt docs ELS_FiveM-$version-gitlab_$CI_JOB_ID/
  artifacts:
-  name: "$CI_JOB_NAME"
+  name: "ELS_FiveM-$version-gitlab_$CI_JOB_ID"
   paths:
-    - ELS-for-FiveM-git-v$CI_JOB_ID/*
+    - ELS_FiveM-$version-gitlab_$CI_JOB_ID/*
