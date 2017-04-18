@@ -37,6 +37,12 @@ test2:
    - echo "Do another parallel test here"
    - echo "For example run a lint test"
    
+arti:
+  artifacts:
+    untracked: true
+    paths:
+      - tmp/
+   
 deploy1:
  stage: deploy
  script:
