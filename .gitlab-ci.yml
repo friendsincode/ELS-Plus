@@ -21,6 +21,10 @@ build1:
    - echo "Do your build here"
    - cd src
    - xbuild /p:outDir=tmp/ /p:Configuration=Release /p:PostBuildEvent= /t:Build ELS-for-FiveM.sln
+ artifacts:
+  paths:
+    - tmp
+    - src/tmp
 
    
 test1:
