@@ -5,26 +5,21 @@
 image: mono:latest
 
 before_script:
-   - echo "Before script section"
-   - echo "For example you might run an update here or install a build dependency"
-   - echo "Or perhaps you might print out some debugging details"
-   - apt-get update
-   - ls
+   
    
 after_script:
-  - echo "After script section"
-  - echo "For example you might do some cleanup here"
+
    
 build1:
  stage: build
  script:
-   - echo "Do your build here"
-   - ls
+   - echo "Building"
    - cd src
-   - ls
    - xbuild /p:outDir=tmp/ /p:Configuration=Release /p:PostBuildEvent= /t:Build ELS-for-FiveM.sln
-   - ls
-   - ls tmp
+ artifacts:
+  paths:
+    - src/tmp
+
    
 test1:
  stage: test
@@ -36,8 +31,20 @@ test2:
  script: 
    - echo "Do another parallel test here"
    - echo "For example run a lint test"
-   
+
 deploy1:
  stage: deploy
  script:
    - echo "Do your deploy here"
+   - ls
+   - ls src
+   - ls src/tmp
+   - mkdir ELS-FiveM
+   - cp -R src/tmp/* ELS-FiveM
+ artifacts:
+  name: ELS_FiveM-0.0.4.0-gitlab_$CI_JOB_ID
+  paths:
+    - ELS-FiveM/*
+    - README.md
+    - LICENSE.txt
+    - docs/*
