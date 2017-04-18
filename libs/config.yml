@@ -4,5 +4,5 @@ server:
   password: lovely
   src: .
   root: C:\Users\ejbev\Desktop\cfx-server
-  name: ELS-for-FiveM
+  name: ELS-FiveM
   iceconpath: ..\..\..\utils\icecon_windows_amd64.exe
