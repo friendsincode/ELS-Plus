@@ -8,7 +8,8 @@ before_script:
    - echo "Before script section"
    - echo "For example you might run an update here or install a build dependency"
    - echo "Or perhaps you might print out some debugging details"
-   - apt update
+   - apt-get update
+   - ls
    
 after_script:
   - echo "After script section"
@@ -25,8 +26,6 @@ test1:
  stage: test
  script: 
    - echo "Do a test here"
-   - exit -1
-   - echo "did you get me?"
    
 test2:
  stage: test
