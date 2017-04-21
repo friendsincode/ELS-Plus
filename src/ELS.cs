@@ -31,12 +31,21 @@ namespace ELS
             controlConfiguration = new configuration.ControlConfiguration();
             _FileLoader = new FileLoader(this);
             _sirenManager = new SirenManager();
+
             EventHandlers["onClientResourceStart"] += new Action<string>(
                 (string obj) =>
                 {
                     try
                     {
-                        _FileLoader.RunLoadeer(obj);
+                        if (obj != CurrentResourceName())
+                        {
+                            _FileLoader.RunLoadeer(obj);
+                        }
+                        else if (obj == CurrentResourceName())
+                        {
+                            _FileLoader.RunLoadeer(obj);
+                            Tick += Class1_Tick;
+                        }
                     }
                     catch (Exception e)
                     {
@@ -47,7 +56,6 @@ namespace ELS
                     }
 
                     //_spotLight= new SpotLight();
-                    if (obj == "ELS-for-FiveM") Tick += Class1_Tick;
                 });
             EventHandlers["ELS:SirenUpdated"] += new Action<int, string, bool>(_sirenManager.UpdateSirens);
 
@@ -55,6 +63,11 @@ namespace ELS
               {
 
               });
+        }
+
+        public static string CurrentResourceName()
+        {
+            return Function.Call<string>(Hash.GET_CURRENT_RESOURCE_NAME);
         }
 
         private async Task Class1_Tick()

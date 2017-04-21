@@ -6,7 +6,7 @@ client_script 'System.Xml.net.dll'
 
 -- ELS-FiveM Requirements
 client_script 'SharpConfig.net.dll'
-client_script 'ELS-for-FiveM.net.dll'
+client_script 'ELS-FiveM.net.dll'
 
 -- NUI Stuff
 if NUIEnabled then

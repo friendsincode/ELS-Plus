@@ -31,27 +31,14 @@ namespace ELS.Siren
             _vehicle = vehicle;
             foreach (VCF.vcfroot vcfroot in VCF.ELSVehicle)
             {
-                if (vcfroot.FileName.ToUpper() == _vehicle.DisplayName.ToUpper())
+                if (vcfroot.FileName == _vehicle.DisplayName)
                 {
                     _vcf = vcfroot;
                 }
             }
             if (_vcf == null)
             {
-                Debug.WriteLine(
-                    $"Their is no VCF file for this vehicle: {_vehicle.DisplayName} defaulting to POLICE.xml");
-                foreach (var vcfroot in VCF.ELSVehicle)
-                {
-                    if (vcfroot.FileName.ToUpper() == "POLICE")
-                    {
-                        _vcf = vcfroot;
-                    }
-                }
-            }
-            if (_vcf == null)
-            {
-                Debug.WriteLine("failed");
-                return;
+                throw new Exception($"Their is no VCF file for this vehicle: {_vehicle.DisplayName}");
             }
 
             _tones = new Tones
@@ -93,7 +80,7 @@ namespace ELS.Siren
             ManualTone4ControlsProccess();
             ManualSoundControlsProccess();
             MainSirenToggleControlsProccess();
-            
+
         }
     }
 }
