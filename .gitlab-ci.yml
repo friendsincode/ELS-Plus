@@ -10,7 +10,7 @@ before_script:
 after_script:
 
    
-build1:
+build-release:
  stage: build
  script:
    - echo "Building"
@@ -32,7 +32,7 @@ test2:
    - echo "Do another parallel test here"
    - echo "For example run a lint test"
 
-deploy1:
+Release:
  stage: deploy
  script:
    - echo "Do your deploy here"
