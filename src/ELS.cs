@@ -60,11 +60,14 @@ namespace ELS
                         }
                         else if (obj == CurrentResourceName())
                         {
-                            Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY,"STRING");
+                            /*Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY,"STRING");
                             Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, $"Welcome {LocalPlayer.Name}  to ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
                             Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY, "STRING");
-                            Function.Call(Hash._SET_NOTIFICATION_MESSAGE, "CHAR_LESTER", "CHAR_LESTER", true, 5, "ELS FiveM", "v0.0.3.0");
-                            Function.Call<int>(Hash._DRAW_NOTIFICATION,false,true);
+                            Function.Call(Hash._SET_NOTIFICATION_MESSAGE, "CHAR_DEFAULT", "CHAR_DEFAULT", true, 8, "ELS FiveM", "v0.0.3.0");
+                            Function.Call<int>(Hash._DRAW_NOTIFICATION,false,true);*/
+                            Screen.ShowSubtitle("saas");
+                            Screen.ShowNotification($"Welcome {LocalPlayer.Name}  to ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
+                            
                            // BaseScript.Delay(5000);
                             _FileLoader.RunLoadeer(obj);
                             Tick += Class1_Tick;
