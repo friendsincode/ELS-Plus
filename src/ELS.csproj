@@ -105,6 +105,12 @@
     <Compile Include="Siren\Tones.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Help\cars.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\cars\__resource.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="NUI\api.lua" />
     <None Include="NUI\app\css\app.less" />
     <None Include="packages.config" />
@@ -128,6 +134,9 @@
     <Content Include="extra-files\POLICE.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Help\cars\stream\POLICE\ELS\POLICE.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="NUI\app\css\app.css" />
     <Content Include="NUI\app\index.html" />
