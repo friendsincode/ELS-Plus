@@ -3,7 +3,7 @@ This project is in early development stages. You should expect bugs and/or issue
 
 - ELS vehicles are not yet supported.
 - Lights are not yet supported.
-- Custom cars will require VCF files to be created by following the "How to add custom Vehicles" section below.
+- Custom cars will require VCF files to be created by following the [How to add custom Vehicles](docs/Add%20Cutom%20Vehicles.md) section.
 
 # ELS-FiveM
 
