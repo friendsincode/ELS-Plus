@@ -18,10 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Xml;
-using System.Xml.Serialization;
+using System.Text;
 using CitizenFX.Core;
 
 namespace ELS.configuration
@@ -34,7 +31,16 @@ namespace ELS.configuration
         }
         public static void load(SettingsType.Type type, string name, string Data)
         {
-
+            var bytes = Encoding.UTF8.GetBytes(Data);
+            if (bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
+            {
+                var ex = new Exception($"Error Loading:{name}\n" +
+                                    $"Please save {name} with UTF-8 no BOM/Signature Encoding");
+                ex.Data.Add("onlymsg","true");
+                throw (ex);
+                
+            }
+            Encoding.UTF8.GetPreamble();
             var data = new vcfroot
             {
                 SOUNDS = new vcfrootSOUNDS

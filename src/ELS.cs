@@ -48,7 +48,7 @@ namespace ELS
             controlConfiguration = new configuration.ControlConfiguration();
             _FileLoader = new FileLoader(this);
             _sirenManager = new SirenManager();
-
+            
             EventHandlers["onClientResourceStart"] += new Action<string>(
                 (string obj) =>
                 {
@@ -67,7 +67,7 @@ namespace ELS
                     catch (Exception e)
                     {
                         TriggerServerEvent($"ONDEBUG", e.ToString());
-                        Screen.ShowNotification($"ERROR:{e}");
+                        Screen.ShowNotification($"ERROR:{e.Message}");
                         Tick -= Class1_Tick;
                         throw;
                     }
