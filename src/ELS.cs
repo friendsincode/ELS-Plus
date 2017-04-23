@@ -48,7 +48,7 @@ namespace ELS
             controlConfiguration = new configuration.ControlConfiguration();
             _FileLoader = new FileLoader(this);
             _sirenManager = new SirenManager();
-            
+
             EventHandlers["onClientResourceStart"] += new Action<string>(
                 (string obj) =>
                 {
@@ -60,6 +60,12 @@ namespace ELS
                         }
                         else if (obj == CurrentResourceName())
                         {
+                            Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY,"STRING");
+                            Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, $"Welcome {LocalPlayer.Name}  to ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
+                            Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY, "STRING");
+                            Function.Call(Hash._SET_NOTIFICATION_MESSAGE, "CHAR_LESTER", "CHAR_LESTER", true, 5, "ELS FiveM", "v0.0.3.0");
+                            Function.Call<int>(Hash._DRAW_NOTIFICATION,false,true);
+                           // BaseScript.Delay(5000);
                             _FileLoader.RunLoadeer(obj);
                             Tick += Class1_Tick;
                         }
@@ -91,7 +97,6 @@ namespace ELS
         {
             try
             {
-                test.draw();
                 /* Text text = new Text($"ELS Build dev-v0.0.2.4\nhttp://ELS.ejb1123.tk", new PointF(640f, 10f), 0.5f);
                  text.Alignment = Alignment.Center;
                  text.Centered = true;
