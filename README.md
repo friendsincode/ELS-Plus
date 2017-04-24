@@ -33,7 +33,7 @@ Make sure you restart any resources that have ELS vehicles.
 
 ## Contribute
 if you are a developer and  would like to contribute any help is welcome!   
-The contribution guide can be found [here](CONTRIBUTING.MD).
+The contribution guide can be found [here](CONTRIBUTING.md).
 
 ### How to Build and Test
 
