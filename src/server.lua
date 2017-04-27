@@ -54,12 +54,14 @@ end
 
 
 AddEventHandler("ONDEBUG",function(error)
-	--[[PerformHttpRequest('http://localhost:8080/bugsubmit', function(err, text, headers)
-		if text then
-			print(text)
-		end
-	end, 'POST', json.encode({ msg = error }), { ["Content-Type"] = 'application/json' }) ]]
-	local mp = require 'system/MessagePack'
+	 PerformHttpRequest('http://127.0.0.1:8000/bugs/submit', function(err, text, headers)
+        if text then
+            print(json.decode(text))
+        end
+        if err then
+            print("error " .. err)
+        end
+    end, 'POST', json.encode({version='0.0.3.2',project_id=3,details=error}), { ["Content-Type"] = 'application/json' })
 	local file = clr.System.IO.FileInfo("resources/" .. GetInvokingResource() .. "/bugs/bug-" .. clr.System.DateTime.Now.ToFileTimeUtc().ToString() .. "." .. "bug")
 	local tw = file.CreateText()
 	local stc = json.encode({error})
