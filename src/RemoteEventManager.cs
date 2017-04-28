@@ -35,7 +35,8 @@ namespace ELS
         {
             SirenUpdate,
             SirenAdded,
-            SirenRemoved
+            SirenRemoved,
+            LightUpdate
         }
         public delegate void RemoteMessageRecievedHandler();
         public static event RemoteMessageRecievedHandler RemoteMessageRecieved;

@@ -29,6 +29,8 @@ namespace ELS.Siren
         public Siren(Vehicle vehicle)
         {
             _vehicle = vehicle;
+            Function.Call(Hash.DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, _vehicle, true);
+
             foreach (VCF.vcfroot vcfroot in VCF.ELSVehicle)
             {
                 if (vcfroot.FileName == _vehicle.DisplayName)
@@ -69,7 +71,6 @@ namespace ELS.Siren
             Game.DisableControlThisFrame(0, Control.VehicleHorn);
             if (Game.IsControlJustReleased(0, Control.VehicleHorn))
             {
-                Function.Call(Hash.DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, _vehicle, true);
                 _vehicle.IsSirenActive = !_vehicle.IsSirenActive;
             }
 
