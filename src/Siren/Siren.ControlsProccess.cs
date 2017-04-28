@@ -12,12 +12,14 @@ namespace ELS.Siren
                 (Game.IsControlJustPressed(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
             {
                 AirHornControls(true);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle,"aithorn",true );
             }
             if ((Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) &&
                  Game.CurrentInputMode == InputMode.MouseAndKeyboard)
                 || (Game.IsControlJustReleased(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
             {
                 AirHornControls(false);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle, "aithorn", false);
             }
         }
 

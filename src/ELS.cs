@@ -77,7 +77,7 @@ namespace ELS
 
                     //_spotLight= new SpotLight();
                 });
-            EventHandlers["ELS:SirenUpdated"] += new Action<int, string, bool>(_sirenManager.UpdateSirens);
+            EventHandlers["ELS:SirenUpdated"] += new Action<string,int, string, bool>(_sirenManager.UpdateSirens);
 
             EventHandlers["onPlayerJoining"] += new Action(() =>
               {
@@ -100,8 +100,8 @@ namespace ELS
                  text.Draw();*/
 
                 if (LocalPlayer.Character.IsInVehicle() && LocalPlayer.Character.IsSittingInVehicle() &&
-                    VCF.isELSVechicle(LocalPlayer.Character.CurrentVehicle.DisplayName) &&
-                    LocalPlayer.Character.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == LocalPlayer.Character)
+                    VCF.isELSVechicle(LocalPlayer.Character.CurrentVehicle.DisplayName) &&(
+                    LocalPlayer.Character.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == LocalPlayer.Character|| LocalPlayer.Character.CurrentVehicle.GetPedOnSeat(VehicleSeat.Passenger) == LocalPlayer.Character))
                 {
                     _sirenManager.Runtick();
                     //_spotLight.RunTick();

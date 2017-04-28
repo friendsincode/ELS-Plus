@@ -127,7 +127,7 @@ namespace ELS.configuration
         {
             var returnstatus = false;
 #if DEBUG
-            Debug.WriteLine($"checking for {vehicleName}");
+            //Debug.WriteLine($"checking for {vehicleName}");
 #endif
             foreach (var vehicle in ELSVehicle)
             {

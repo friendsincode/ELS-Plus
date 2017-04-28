@@ -81,9 +81,9 @@
     <Compile Include="configuration\ControlConfiguration.cs" />
     <Compile Include="configuration\global.cs" />
     <Compile Include="configuration\SettingsType.cs" />
-    <Compile Include="DecorManager.cs" />
+    <Compile Include="Decorator\DecorManager.cs" />
     <Compile Include="ELS.cs" />
-    <Compile Include="EntityDecoration.cs" />
+    <Compile Include="Decorator\EntityDecoration.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="Light\Light.cs" />
     <Compile Include="Light\LightArray.cs" />

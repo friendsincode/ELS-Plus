@@ -135,7 +135,7 @@ namespace ELS
             return vehicleIsRegisteredLocaly;
         }
 
-        public void UpdateSirens(int NetID, string sirenString, bool state)
+        public void UpdateSirens(string command,int NetID, string sirenString, bool state)
         {
             if (Game.Player.ServerId == NetID)
             {
@@ -150,26 +150,25 @@ namespace ELS
             Vehicle vehicle = y.Character.CurrentVehicle;
             if (vehicleIsRegisteredLocaly(vehicle))
             {
-                foreach (Siren.Siren siren in _sirens)
+                foreach (var siren in _sirens)
                 {
                     if (siren._vehicle == vehicle)
                     {
-                        siren.updateLocalRemoteSiren(sirenString, state);
+                        siren.updateLocalRemoteSiren(command, state);
                     }
                 }
             }
             else
             {
                 AddSiren(vehicle);
-                foreach (Siren.Siren siren in _sirens)
+                foreach (var  siren in _sirens)
                 {
                     if (siren._vehicle == vehicle)
                     {
-                        siren.updateLocalRemoteSiren(sirenString, state);
+                        siren.updateLocalRemoteSiren(command, state);
                     }
                 }
             }
         }
     }
-
 }

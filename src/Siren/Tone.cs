@@ -62,7 +62,7 @@ namespace ELS.Siren
         }
         private void SendMessage()
         {
-            RemoteEventManager.SendEvent(RemoteEventManager.MessageTypes.SirenUpdate,(Vehicle) _entity, _type.ToString() , _state);
+            //RemoteEventManager.SendEvent(RemoteEventManager.MessageTypes.SirenUpdate,(Vehicle) _entity, _type.ToString() , _state);
         }
         public void CleanUp()
         {
