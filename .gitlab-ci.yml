@@ -42,7 +42,7 @@ Release:
    - mkdir ELS-FiveM
    - cp -R src/tmp/* ELS-FiveM
  artifacts:
-  name: ELS_FiveM-0.0.3.1-gitlab_$CI_JOB_ID
+  name: ELS_FiveM-0.0.3.2-gitlab_$CI_JOB_ID
   paths:
     - ELS-FiveM/*
     - README.md
