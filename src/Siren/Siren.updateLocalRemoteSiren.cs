@@ -28,6 +28,18 @@ namespace ELS.Siren
                 case RemoteEventManager.Commands.AirHorn:
                     AirHornControls(state);
                     break;
+                case RemoteEventManager.Commands.ManualTone1:
+                    ManualTone1Controls(state);
+                    break;
+                case RemoteEventManager.Commands.ManualTone2:
+                    ManualTone2Controls(state);
+                    break;
+                case RemoteEventManager.Commands.ManualTone3:
+                    ManualTone3Controls(state);
+                    break;
+                case RemoteEventManager.Commands.ManualTone4:
+                    ManualTone4Controls(state);
+                    break;
             }
         }
     }

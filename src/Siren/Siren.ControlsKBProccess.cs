@@ -5,54 +5,58 @@ namespace ELS.Siren
 {
     partial class Siren
     {
-        private void AirHornControlsProccess()
+        private void AirHornControlsKBProccess()
         {
             if ((Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) &&
                  Game.CurrentInputMode == InputMode.MouseAndKeyboard) ||
                 (Game.IsControlJustPressed(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
             {
                 AirHornControls(true);
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle,"aithorn",true );
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle,true );
             }
             if ((Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) &&
                  Game.CurrentInputMode == InputMode.MouseAndKeyboard)
                 || (Game.IsControlJustReleased(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
             {
                 AirHornControls(false);
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle, "aithorn", false);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle, false);
             }
         }
 
-        private void ManualTone1ControlsProccess()
+        private void ManualTone1ControlsKBProccess()
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon1))
             {
                 ManualTone1Controls(true);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone1, _vehicle, true);
             }
         }
-        private void ManualTone2ControlsProccess()
+        private void ManualTone2ControlsKBProccess()
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon2))
             {
                 ManualTone2Controls(true);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone2, _vehicle, true);
             }
         }
-        private void ManualTone3ControlsProccess()
+        private void ManualTone3ControlsKBProccess()
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon3))
             {
                 ManualTone3Controls(true);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone3, _vehicle, true);
             }
         }
-        private void ManualTone4ControlsProccess()
+        private void ManualTone4ControlsKBProccess()
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon4))
             {
                 ManualTone4Controls(true);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone4, _vehicle, true);
             }
         }
 
-        private void MainSirenToggleControlsProccess()
+        private void MainSirenToggleControlsKBProccess()
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Toggle_SIRN))
             {
@@ -60,7 +64,7 @@ namespace ELS.Siren
             }
         }
 
-        private void ManualSoundControlsProccess()
+        private void ManualSoundControlsKBProccess()
         {
             if (Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Sound_Manul))
             {
@@ -74,7 +78,7 @@ namespace ELS.Siren
             }
         }
 
-        private void DualSirenControlsProccess()
+        private void DualSirenControlsKBProccess()
         {
             if (Game.IsControlJustReleased(0, ControlConfiguration.KeyBindings.Toggle_DSRN))
             {

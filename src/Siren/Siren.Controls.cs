@@ -57,6 +57,10 @@ namespace ELS.Siren
                 {
                     _mainSiren.setMainTone(_tones.tone1);
                 }
+                else
+                {
+                    _tones.tone1.SetState(!_tones.tone1._state);
+                }
             }
 
         }
@@ -70,6 +74,10 @@ namespace ELS.Siren
                 {
                     _mainSiren.setMainTone(_tones.tone2);
                 }
+                else
+                {
+                    _tones.tone2.SetState(!_tones.tone2._state);
+                }
             }
         }
         private void ManualTone3Controls(bool pressed)
@@ -81,6 +89,10 @@ namespace ELS.Siren
                 {
                     _mainSiren.setMainTone(_tones.tone3);
                 }
+                else
+                {
+                    _tones.tone3.SetState(!_tones.tone3._state);
+                }
             }
         }
         private void ManualTone4Controls(bool pressed)
@@ -91,6 +103,10 @@ namespace ELS.Siren
                 if (_mainSiren._state)
                 {
                     _mainSiren.setMainTone(_tones.tone4);
+                }
+                else
+                {
+                    _tones.tone4.SetState(!_tones.tone4._state);
                 }
             }
         }

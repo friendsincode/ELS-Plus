@@ -35,7 +35,11 @@ namespace ELS
         public enum Commands
         {
             MainSiren,
-            AirHorn
+            AirHorn,
+            ManualTone1,
+            ManualTone2,
+            ManualTone3,
+            ManualTone4
         }
         public enum MessageTypes
         {
@@ -46,11 +50,11 @@ namespace ELS
         }
         public delegate void RemoteMessageRecievedHandler();
         public static event RemoteMessageRecievedHandler RemoteMessageRecieved;
-        public static void SendEvent(Commands type,Vehicle vehicle,string siren,bool state)
+        public static void SendEvent(Commands type,Vehicle vehicle,bool state)
         {
             var netID = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);
             var ped = vehicle.GetPedOnSeat(VehicleSeat.Driver);
-            BaseScript.TriggerServerEvent("ELS",type.ToString(),Game.Player.ServerId,siren,state);
+            BaseScript.TriggerServerEvent("ELS",type.ToString(),Game.Player.ServerId,state);
             //BaseScript.TriggerServerEvent("ELS", type, netID);
         }
     }

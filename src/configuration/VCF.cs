@@ -85,6 +85,7 @@ namespace ELS.configuration
                 doc.LoadXml(Data);
                 bool res;
                 data.FileName = Path.GetFileNameWithoutExtension(name);
+                Debug.WriteLine(data.FileName);
 
                 data.SOUNDS.ManTone1.AudioString = doc["vcfroot"]["SOUNDS"]["ManTone1"].Attributes["AudioString"].Value;
                 data.SOUNDS.ManTone1.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["ManTone1"].Attributes["AllowUse"].Value);
@@ -116,10 +117,7 @@ namespace ELS.configuration
 
                 data.Author = doc["vcfroot"].Attributes["Author"].Value;
                 ELSVehicle.Add(data);
-                foreach (var vcfroot in ELSVehicle)
-                {
-                    Debug.WriteLine($"Added {vcfroot.FileName}");
-                }
+                    Debug.WriteLine($"Added {data.FileName}");
             }
         }
 
@@ -127,7 +125,7 @@ namespace ELS.configuration
         {
             var returnstatus = false;
 #if DEBUG
-            //Debug.WriteLine($"checking for {vehicleName}");
+           // Debug.WriteLine($"checking for {vehicleName}");
 #endif
             foreach (var vehicle in ELSVehicle)
             {

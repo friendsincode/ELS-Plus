@@ -35,44 +35,48 @@ namespace ELS
         {
             _baseScript = h;
         }
-        public void RunLoadeer(string name)
+        public void RunLoadeer()
         {
             if (ELS.isStopped) return;
-            int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "ELSFM");
-#if DEBUG
-            Debug.WriteLine("number of INI files to load: " + num.ToString() + " " + name);
-#endif
-            for (int i = 0; i < num; i++)
+            var numResources = Function.Call<int>((Hash)Game.GenerateHash("GET_NUM_RESOURCES"));
+            for (int x = 0; x < numResources; x++)
             {
-                var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "ELSFM", i);
+                var name = Function.Call<string>((Hash)Game.GenerateHash("GET_RESOURCE_BY_FIND_INDEX"),x);
+                int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "ELSFM");
 #if DEBUG
-                Debug.WriteLine($"Name: {name}, Loading: {filename}");
+                Debug.WriteLine("number of INI files to load: " + num.ToString() + " " + name);
 #endif
-
-                if (filename.Equals("extra-files/ELS.ini"))
+                for (int i = 0; i < num; i++)
                 {
-                    var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
-                    OnSettingsLoaded?.Invoke(configuration.SettingsType.Type.GLOBAL, data);
+                    var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "ELSFM", i);
+#if DEBUG
+                    Debug.WriteLine($"Name: {name}, Loading: {filename}");
+#endif
+
+                    if (filename.Equals("extra-files/ELS.ini"))
+                    {
+                        var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
+                        OnSettingsLoaded?.Invoke(configuration.SettingsType.Type.GLOBAL, data);
+                    }
                 }
-                // var ldata = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
-                //Debug.WriteLine(ldata);
-            }
 
-            num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "ELSFMVCF");
+                num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "ELSFMVCF");
 #if DEBUG
-            Debug.WriteLine("number of VCF files to load: " + num.ToString() + " " + name);
+                Debug.WriteLine("number of VCF files to load: " + num.ToString() + " " + name);
 #endif
-            for (int i = 0; i < num; i++)
-            {
-                var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "ELSFMVCF", i);
+                for (int i = 0; i < num; i++)
+                {
+                    var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "ELSFMVCF", i);
 #if DEBUG
-                Debug.WriteLine($"Name: {name}, Loading: {filename}");
+                    Debug.WriteLine($"Name: {name}, Loading: {filename}");
 #endif
 
-
-                var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
-                Debug.WriteLine("Sending data to XML parser");
-                VCF.load(SettingsType.Type.VCF, filename, data);
+                    var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
+#if DEBUG
+                    Debug.WriteLine("Sending data to XML parser");
+#endif
+                    VCF.load(SettingsType.Type.VCF, filename, data);
+                }
             }
         }
     }

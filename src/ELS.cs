@@ -54,18 +54,13 @@ namespace ELS
                 {
                     try
                     {
-                        if (obj != CurrentResourceName())
-                        {
-                            _FileLoader.RunLoadeer(obj);
-                        }
-                        else if (obj == CurrentResourceName())
-                        {
-                            Screen.ShowNotification($"Welcome {LocalPlayer.Name}  to ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
-                            
-                           // BaseScript.Delay(5000);
-                            _FileLoader.RunLoadeer(obj);
+                        _FileLoader.RunLoadeer();
+                        
+                           Screen.ShowNotification($"Welcome {LocalPlayer.Name}  to ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
+
+                          // BaseScript.Delay(5000);
                             Tick += Class1_Tick;
-                        }
+                        //}
                     }
                     catch (Exception e)
                     {
@@ -77,7 +72,7 @@ namespace ELS
 
                     //_spotLight= new SpotLight();
                 });
-            EventHandlers["ELS:SirenUpdated"] += new Action<string,int, string, bool>(_sirenManager.UpdateSirens);
+            EventHandlers["ELS:SirenUpdated"] += new Action<string, int, bool>(_sirenManager.UpdateSirens);
 
             EventHandlers["onPlayerJoining"] += new Action(() =>
               {
@@ -98,20 +93,13 @@ namespace ELS
                  text.Alignment = Alignment.Center;
                  text.Centered = true;
                  text.Draw();*/
-
-                if (LocalPlayer.Character.IsInVehicle() && LocalPlayer.Character.IsSittingInVehicle() &&
-                    VCF.isELSVechicle(LocalPlayer.Character.CurrentVehicle.DisplayName) &&(
-                    LocalPlayer.Character.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == LocalPlayer.Character|| LocalPlayer.Character.CurrentVehicle.GetPedOnSeat(VehicleSeat.Passenger) == LocalPlayer.Character))
-                {
-                    _sirenManager.Runtick();
-                    //_spotLight.RunTick();
-                }
-
+                _sirenManager.Runtick();
+                //_spotLight.RunTick();
             }
             catch (Exception ex)
             {
-                TriggerServerEvent($"ONDEBUG", ex.ToString());
-                await Delay(5000);
+                //TriggerServerEvent($"ONDEBUG", ex.ToString());
+                //await Delay(5000);
                 Screen.ShowNotification($"ERROR {ex}", true);
             }
         }

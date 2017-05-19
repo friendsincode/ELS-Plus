@@ -74,13 +74,13 @@ namespace ELS.Siren
                 _vehicle.IsSirenActive = !_vehicle.IsSirenActive;
             }
 
-            AirHornControlsProccess();
-            ManualTone1ControlsProccess();
-            ManualTone2ControlsProccess();
-            ManualTone3ControlsProccess();
-            ManualTone4ControlsProccess();
-            ManualSoundControlsProccess();
-            MainSirenToggleControlsProccess();
+            AirHornControlsKBProccess();
+            ManualTone1ControlsKBProccess();
+            ManualTone2ControlsKBProccess();
+            ManualTone3ControlsKBProccess();
+            ManualTone4ControlsKBProccess();
+            ManualSoundControlsKBProccess();
+            MainSirenToggleControlsKBProccess();
 
         }
     }

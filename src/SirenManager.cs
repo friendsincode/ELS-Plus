@@ -74,13 +74,13 @@ namespace ELS
         private void AddSiren(Vehicle vehicle)
         {
             if (ELS.isStopped) return;
-#if DEBUG
-            foreach (var VARIABLE in vehicle.Bones)
-            {
-                Debug.WriteLine("Bones\n" + VARIABLE.ToString());
-            }
-#endif
-            
+//#if DEBUG
+//            foreach (var VARIABLE in vehicle.Bones)
+//            {
+//                Debug.WriteLine("Tones\n" + VARIABLE.ToString());
+//            }
+//#endif
+
             _sirens.Add(new Siren.Siren(vehicle));
         }
 
@@ -93,33 +93,42 @@ namespace ELS
 #if DEBUG
                 Debug.WriteLine("added new siren");
 #endif
-                SetCurrentSiren(vehicle);
             }
             else
             {
-                foreach (Siren.Siren siren in _sirens)
-                {
-                    if (siren._vehicle.Handle == vehicle.Handle)
-                    {
 #if DEBUG
-                        Debug.WriteLine("added existing siren");
+                Debug.WriteLine("added existing siren");
 #endif
-                        currentSiren = siren;
-                    }
-                }
             }
 
-
+            foreach (Siren.Siren siren in _sirens)
+            {
+                if (siren._vehicle.Handle == vehicle.Handle)
+                {
+                    currentSiren = siren;
+                    break;
+                }
+            }
         }
 
         public void Runtick()
         {
-            if ((( currentSiren == null) || currentSiren._vehicle !=  Game.Player.Character.CurrentVehicle))
+            var LocalPlayer = Game.Player;
+            if (LocalPlayer.Character.IsInVehicle()
+                && LocalPlayer.Character.IsSittingInVehicle()
+                && VCF.isELSVechicle(LocalPlayer.Character.CurrentVehicle.DisplayName)
+                && (
+                    LocalPlayer.Character.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == LocalPlayer.Character
+                    || LocalPlayer.Character.CurrentVehicle.GetPedOnSeat(VehicleSeat.Passenger) == LocalPlayer.Character
+                    )
+                )
             {
-                SetCurrentSiren( Game.Player.Character.CurrentVehicle);
+                if (((currentSiren == null) || currentSiren._vehicle != Game.Player.Character.CurrentVehicle))
+                {
+                    SetCurrentSiren(Game.Player.Character.CurrentVehicle);
+                }
+                currentSiren.ticker();
             }
-
-            currentSiren.ticker();
         }
 
         private bool vehicleIsRegisteredLocaly(Vehicle vehicle)
@@ -135,7 +144,7 @@ namespace ELS
             return vehicleIsRegisteredLocaly;
         }
 
-        public void UpdateSirens(string command,int NetID, string sirenString, bool state)
+        public void UpdateSirens(string command, int NetID, bool state)
         {
             if (Game.Player.ServerId == NetID)
             {
@@ -146,27 +155,20 @@ namespace ELS
 #endif
             if (ELS.isStopped) return;
             var y = new PlayerList()[NetID];
-            if (!y.Character.IsInVehicle() || !y.Character.IsSittingInVehicle()) return;
+            // if (!y.Character.IsInVehicle() || !y.Character.IsSittingInVehicle()) return;
             Vehicle vehicle = y.Character.CurrentVehicle;
-            if (vehicleIsRegisteredLocaly(vehicle))
-            {
-                foreach (var siren in _sirens)
-                {
-                    if (siren._vehicle == vehicle)
-                    {
-                        siren.updateLocalRemoteSiren(command, state);
-                    }
-                }
-            }
-            else
+            if (vehicle.Exists()) throw new Exception("Vehicle does not exist");
+            if (!vehicleIsRegisteredLocaly(vehicle))
             {
                 AddSiren(vehicle);
-                foreach (var  siren in _sirens)
+            }
+
+            foreach (var siren in _sirens)
+            {
+                if (siren._vehicle == vehicle)
                 {
-                    if (siren._vehicle == vehicle)
-                    {
-                        siren.updateLocalRemoteSiren(command, state);
-                    }
+                    siren.updateLocalRemoteSiren(command, state);
+                    break;
                 }
             }
         }
