@@ -74,12 +74,6 @@ namespace ELS
         private void AddSiren(Vehicle vehicle)
         {
             if (ELS.isStopped) return;
-//#if DEBUG
-//            foreach (var VARIABLE in vehicle.Bones)
-//            {
-//                Debug.WriteLine("Tones\n" + VARIABLE.ToString());
-//            }
-//#endif
 
             _sirens.Add(new Siren.Siren(vehicle));
         }
@@ -100,15 +94,8 @@ namespace ELS
                 Debug.WriteLine("added existing siren");
 #endif
             }
-
-            foreach (Siren.Siren siren in _sirens)
-            {
-                if (siren._vehicle.Handle == vehicle.Handle)
-                {
-                    currentSiren = siren;
-                    break;
-                }
-            }
+            currentSiren = _sirens.Find(siren=>siren._vehicle.Handle == vehicle.Handle)
+           
         }
 
         public void Runtick()
@@ -133,15 +120,7 @@ namespace ELS
 
         private bool vehicleIsRegisteredLocaly(Vehicle vehicle)
         {
-            bool vehicleIsRegisteredLocaly = false;
-            foreach (Siren.Siren siren in _sirens)
-            {
-                if (siren._vehicle.Handle == vehicle.Handle)
-                {
-                    vehicleIsRegisteredLocaly = true;
-                }
-            }
-            return vehicleIsRegisteredLocaly;
+            return _sirens.Exists(siren => siren._vehicle.Handle == vehicle.Handle);
         }
 
         public void UpdateSirens(string command, int NetID, bool state)
@@ -162,7 +141,7 @@ namespace ELS
             {
                 AddSiren(vehicle);
             }
-
+            _sirens.Find(siren => siren._vehicle.Handle == vehicle.Handle).updateLocalRemoteSiren(command, state);
             foreach (var siren in _sirens)
             {
                 if (siren._vehicle == vehicle)
