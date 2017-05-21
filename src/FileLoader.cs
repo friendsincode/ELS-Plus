@@ -29,13 +29,13 @@ namespace ELS
     class FileLoader
     {
         ELS _baseScript;
-        public delegate void SettingsLoadedHandler(configuration.SettingsType.Type type, String Data);
-        public static event SettingsLoadedHandler OnSettingsLoaded;
+         internal delegate void SettingsLoadedHandler(configuration.SettingsType.Type type, String Data);
+         internal static event SettingsLoadedHandler OnSettingsLoaded;
         public FileLoader(ELS h)
         {
             _baseScript = h;
         }
-        public void RunLoadeer()
+        internal void RunLoadeer()
         {
             if (ELS.isStopped) return;
             var numResources = Function.Call<int>((Hash)Game.GenerateHash("GET_NUM_RESOURCES"));

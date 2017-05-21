@@ -1,11 +1,11 @@
 ﻿namespace ELS.Siren
 {
-    public struct Tones
+    internal struct Tones
     {
-        public Tone horn;
-        public Tone tone1;
-        public Tone tone2;
-        public Tone tone3;
-        public Tone tone4;
+        internal Tone horn;
+        internal Tone tone1;
+        internal Tone tone2;
+        internal Tone tone3;
+        internal Tone tone4;
     }
 }

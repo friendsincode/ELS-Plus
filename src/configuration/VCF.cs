@@ -29,7 +29,7 @@ namespace ELS.configuration
         public VCF()
         {
         }
-        public static void load(SettingsType.Type type, string name, string Data)
+        internal static void load(SettingsType.Type type, string name, string Data)
         {
             var bytes = Encoding.UTF8.GetBytes(Data);
             if (bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
@@ -121,7 +121,7 @@ namespace ELS.configuration
             }
         }
 
-        public static bool isELSVechicle(string vehicleName)
+        internal static bool isELSVechicle(string vehicleName)
         {
             var returnstatus = false;
 #if DEBUG
@@ -142,7 +142,7 @@ namespace ELS.configuration
         [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
-        public partial class vcfroot
+        internal partial class vcfroot
         {
 
             private vcfrootINTERFACE iNTERFACEField;

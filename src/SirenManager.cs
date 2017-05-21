@@ -34,19 +34,19 @@ namespace ELS
         /// <summary>
         /// Siren that LocalPlayer can manage
         /// </summary>
-        private Siren.Siren currentSiren;
-        private List<Siren.Siren> _sirens;
+        Siren.Siren currentSiren;
+        List<Siren.Siren> _sirens;
         public SirenManager()
         {
             FileLoader.OnSettingsLoaded += FileLoader_OnSettingsLoaded;
             _sirens = new List<Siren.Siren>();
         }
 
-        private void FileLoader_OnSettingsLoaded(configuration.SettingsType.Type type, string Data)
+        void FileLoader_OnSettingsLoaded(SettingsType.Type type, string Data)
         {
             switch (type)
             {
-                case configuration.SettingsType.Type.GLOBAL:
+                case SettingsType.Type.GLOBAL:
                     var u = SharpConfig.Configuration.LoadFromString(Data);
                     var t = u["GENERAL"]["MaxActiveVehs"].IntValue;
                     if (_sirens != null)
@@ -54,7 +54,7 @@ namespace ELS
                         _sirens.Capacity = t;
                     }
                     break;
-                case configuration.SettingsType.Type.LIGHTING:
+                case SettingsType.Type.LIGHTING:
                     break;
             }
 
@@ -65,13 +65,10 @@ namespace ELS
 #if DEBUG
             Debug.WriteLine("Running CleanUp()");
 #endif
-            foreach (var siren in _sirens)
-            {
-                siren.CleanUP();
-            }
+            _sirens.ForEach(siren => siren.CleanUP());
         }
 
-        private void AddSiren(Vehicle vehicle)
+        void AddSiren(Vehicle vehicle)
         {
             if (ELS.isStopped) return;
 
@@ -79,7 +76,7 @@ namespace ELS
         }
 
 
-        public void SetCurrentSiren(Vehicle vehicle)
+        void SetCurrentSiren(Vehicle vehicle)
         {
             if (!vehicleIsRegisteredLocaly(vehicle))
             {
@@ -94,11 +91,11 @@ namespace ELS
                 Debug.WriteLine("added existing siren");
 #endif
             }
-            currentSiren = _sirens.Find(siren=>siren._vehicle.Handle == vehicle.Handle)
+            currentSiren = _sirens.Find(siren => siren._vehicle.Handle == vehicle.Handle);
            
         }
 
-        public void Runtick()
+        internal void Runtick()
         {
             var LocalPlayer = Game.Player;
             if (LocalPlayer.Character.IsInVehicle()
@@ -118,12 +115,12 @@ namespace ELS
             }
         }
 
-        private bool vehicleIsRegisteredLocaly(Vehicle vehicle)
+        bool vehicleIsRegisteredLocaly(Vehicle vehicle)
         {
             return _sirens.Exists(siren => siren._vehicle.Handle == vehicle.Handle);
         }
 
-        public void UpdateSirens(string command, int NetID, bool state)
+        internal void UpdateSirens(string command, int NetID, bool state)
         {
             if (Game.Player.ServerId == NetID)
             {
@@ -142,14 +139,7 @@ namespace ELS
                 AddSiren(vehicle);
             }
             _sirens.Find(siren => siren._vehicle.Handle == vehicle.Handle).updateLocalRemoteSiren(command, state);
-            foreach (var siren in _sirens)
-            {
-                if (siren._vehicle == vehicle)
-                {
-                    siren.updateLocalRemoteSiren(command, state);
-                    break;
-                }
-            }
         }
+        
     }
 }

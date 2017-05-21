@@ -8,7 +8,7 @@ using ELS.configuration;
 
 namespace ELS.Siren
 {
-    public delegate void StateChangedHandler(Tone tone);
+    internal delegate void StateChangedHandler(Tone tone);
 
     /// <summary>
     /// Has diffrent tones
@@ -21,8 +21,7 @@ namespace ELS.Siren
         private MainSiren _mainSiren;
         private VCF.vcfroot _vcf;
 
-        configuration.ControlConfiguration.ELSControls keybindings =
-            new configuration.ControlConfiguration.ELSControls();
+        configuration.ControlConfiguration.ELSControls keybindings = new configuration.ControlConfiguration.ELSControls();
 
         Tones _tones;
 

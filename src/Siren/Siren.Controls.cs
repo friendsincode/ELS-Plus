@@ -7,7 +7,7 @@ namespace ELS.Siren
 {
     partial class Siren
     {
-        private void AirHornControls(bool pressed)
+        void AirHornControls(bool pressed)
         {
             if (pressed)
             {
@@ -47,7 +47,7 @@ namespace ELS.Siren
             }
         }
 
-        private void ManualTone1Controls(bool pressed)
+        void ManualTone1Controls(bool pressed)
         {
             if (pressed)
             {
@@ -64,7 +64,7 @@ namespace ELS.Siren
             }
 
         }
-        private void ManualTone2Controls(bool pressed)
+        void ManualTone2Controls(bool pressed)
         {
             if (pressed)
             {
@@ -80,7 +80,7 @@ namespace ELS.Siren
                 }
             }
         }
-        private void ManualTone3Controls(bool pressed)
+        void ManualTone3Controls(bool pressed)
         {
             if (pressed)
             {
@@ -95,7 +95,7 @@ namespace ELS.Siren
                 }
             }
         }
-        private void ManualTone4Controls(bool pressed)
+        void ManualTone4Controls(bool pressed)
         {
             if (pressed)
             {
@@ -120,7 +120,7 @@ namespace ELS.Siren
             }
         }
 
-        private void ManualSoundControls(bool pressed)
+        void ManualSoundControls(bool pressed)
         {
             if (pressed)
             {
@@ -149,7 +149,7 @@ namespace ELS.Siren
             }
         }
 
-        private void DualSirenControls(bool pressed)
+        void DualSirenControls(bool pressed)
         {
             if (pressed)
             {

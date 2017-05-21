@@ -27,12 +27,12 @@ namespace ELS
 {
     class RemoteEventManager
     {
-        public RemoteEventManager()
+        internal RemoteEventManager()
         {
              
         }
 
-        public enum Commands
+        internal enum Commands
         {
             MainSiren,
             AirHorn,
@@ -41,16 +41,16 @@ namespace ELS
             ManualTone3,
             ManualTone4
         }
-        public enum MessageTypes
+        internal enum MessageTypes
         {
             SirenUpdate,
             SirenAdded,
             SirenRemoved,
             LightUpdate
         }
-        public delegate void RemoteMessageRecievedHandler();
-        public static event RemoteMessageRecievedHandler RemoteMessageRecieved;
-        public static void SendEvent(Commands type,Vehicle vehicle,bool state)
+        internal delegate void RemoteMessageRecievedHandler();
+        internal static event RemoteMessageRecievedHandler RemoteMessageRecieved;
+        internal static void SendEvent(Commands type,Vehicle vehicle,bool state)
         {
             var netID = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);
             var ped = vehicle.GetPedOnSeat(VehicleSeat.Driver);

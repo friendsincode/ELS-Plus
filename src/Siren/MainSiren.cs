@@ -6,17 +6,17 @@ namespace ELS.Siren
     {
         internal class MainSiren
         {
-            public bool _state { get; private set; }
-            public bool interupted = false;
-            public Tone currentTone;
+            internal bool _state { get; private set; }
+            internal bool interupted = false;
+            private Tone currentTone;
             private List<Tone> MainTones;
-            public MainSiren(Tones tonesl)
+            internal MainSiren(Tones tonesl)
             {
                 MainTones = new List<Tone>(new[] { tonesl.tone1, tonesl.tone2, tonesl.tone3, tonesl.tone4 });
                 currentTone = MainTones[0];
             }
 
-            public void SetState(bool state)
+            internal void SetState(bool state)
             {
                 _state = state;
                 if (_state) //turning the main siren on

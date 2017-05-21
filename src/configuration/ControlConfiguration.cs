@@ -24,13 +24,13 @@ using System.Threading.Tasks;
 
 namespace ELS.configuration
 {
-    delegate void ControlsUpdatedhandler(configuration.ControlConfiguration.ELSControls elsControls);
+    internal delegate void ControlsUpdatedhandler(configuration.ControlConfiguration.ELSControls elsControls);
     class ControlConfiguration
     {
 
         public static event ControlsUpdatedhandler ControlsUpdated;
         public static ELSControls KeyBindings = new ELSControls();
-        public ControlConfiguration()
+        internal ControlConfiguration()
         {
             FileLoader.OnSettingsLoaded += FileLoader_OnSettingsLoaded;   
         }
@@ -71,17 +71,17 @@ namespace ELS.configuration
 
             }
         }
-        public class ELSControls
+        internal class ELSControls
         {
-            public Control Toggle_SIRN { get; internal set; }
-            public Control Sound_Ahorn { get; internal set; }
-            public Control Snd_SrnTon1 { get; internal set; }
-            public Control Snd_SrnTon2 { get; internal set; }
-            public Control Snd_SrnTon3 { get; internal set; }
-            public Control Snd_SrnTon4 { get; internal set; }
-            public Control Sound_Manul { get; internal set; }
-            public Control Toggle_DSRN { get; internal set; }
-            public Control TogInfoPanl { get; internal set; }
+            internal Control Toggle_SIRN { get; set; }
+            internal Control Sound_Ahorn { get; set; }
+            internal Control Snd_SrnTon1 { get; set; }
+            internal Control Snd_SrnTon2 { get; set; }
+            internal Control Snd_SrnTon3 { get; set; }
+            internal Control Snd_SrnTon4 { get; set; }
+            internal Control Sound_Manul { get; set; }
+            internal Control Toggle_DSRN { get; set; }
+            internal Control TogInfoPanl { get; set; }
         }
     }
 }

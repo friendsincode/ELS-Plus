@@ -5,14 +5,14 @@ namespace ELS.Siren
 {
     partial class Siren
     {
-        private void AirHornControlsKBProccess()
+        void AirHornControlsKBProccess()
         {
             if ((Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) &&
                  Game.CurrentInputMode == InputMode.MouseAndKeyboard) ||
                 (Game.IsControlJustPressed(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
             {
                 AirHornControls(true);
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle,true );
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle, true);
             }
             if ((Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) &&
                  Game.CurrentInputMode == InputMode.MouseAndKeyboard)
@@ -23,7 +23,7 @@ namespace ELS.Siren
             }
         }
 
-        private void ManualTone1ControlsKBProccess()
+        void ManualTone1ControlsKBProccess()
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon1))
             {
@@ -31,7 +31,7 @@ namespace ELS.Siren
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone1, _vehicle, true);
             }
         }
-        private void ManualTone2ControlsKBProccess()
+        void ManualTone2ControlsKBProccess()
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon2))
             {
@@ -39,7 +39,7 @@ namespace ELS.Siren
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone2, _vehicle, true);
             }
         }
-        private void ManualTone3ControlsKBProccess()
+        void ManualTone3ControlsKBProccess()
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon3))
             {
@@ -47,7 +47,7 @@ namespace ELS.Siren
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone3, _vehicle, true);
             }
         }
-        private void ManualTone4ControlsKBProccess()
+        void ManualTone4ControlsKBProccess()
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon4))
             {
@@ -56,7 +56,7 @@ namespace ELS.Siren
             }
         }
 
-        private void MainSirenToggleControlsKBProccess()
+        void MainSirenToggleControlsKBProccess()
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Toggle_SIRN))
             {
@@ -64,7 +64,7 @@ namespace ELS.Siren
             }
         }
 
-        private void ManualSoundControlsKBProccess()
+        void ManualSoundControlsKBProccess()
         {
             if (Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Sound_Manul))
             {
@@ -78,7 +78,7 @@ namespace ELS.Siren
             }
         }
 
-        private void DualSirenControlsKBProccess()
+        void DualSirenControlsKBProccess()
         {
             if (Game.IsControlJustReleased(0, ControlConfiguration.KeyBindings.Toggle_DSRN))
             {

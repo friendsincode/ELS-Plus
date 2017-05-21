@@ -14,6 +14,10 @@ namespace ELS.Siren
         {
 
         }
+        internal void FullSync()
+        {
+
+        }
         public void updateLocalRemoteSiren(string sirenString, bool state)
         {
 #if DEBUG

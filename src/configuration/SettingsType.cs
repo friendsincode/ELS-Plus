@@ -23,9 +23,9 @@ using System.Threading.Tasks;
 
 namespace ELS.configuration
 {
-   public  class SettingsType
+    internal class SettingsType
     {
-        public enum Type
+        internal enum Type
         {
             LIGHTING,
             GLOBAL,

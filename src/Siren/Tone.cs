@@ -16,15 +16,15 @@ namespace ELS.Siren
         SrnTon3,
         SrnTon4
     }
-    public class Tone
+    class Tone
     {
         
         private readonly string _file;
         private int soundId = Function.Call<int>(Hash.GET_SOUND_ID);
         private Entity _entity;
         private readonly ToneType _type;
-        public bool _state { private set;  get; }
-        public Tone(string file, Entity entity,ToneType type,bool state =false)
+        internal bool _state { private set;  get; }
+        internal Tone(string file, Entity entity,ToneType type,bool state =false)
         {
             _entity = entity;
             _file = file;
@@ -32,7 +32,7 @@ namespace ELS.Siren
             SetState(state);
         }
 
-        public void SetState( bool state)
+        internal void SetState( bool state)
         {
             _state = state;
             if (_state)
@@ -45,26 +45,13 @@ namespace ELS.Siren
             {
                 Audio.StopSound(soundId);
                 SendMessage();
-            }
-        }
-        public void SetRemoteState(bool state)
-        {
-            _state = state;
-            if (_state)
-            {
-                Debug.WriteLine("file:" + _file);
-                Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)_file, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
-            }
-            else
-            {
-                Audio.StopSound(soundId);
             }
         }
         private void SendMessage()
         {
             //RemoteEventManager.SendEvent(RemoteEventManager.MessageTypes.SirenUpdate,(Vehicle) _entity, _type.ToString() , _state);
         }
-        public void CleanUp()
+        internal void CleanUp()
         {
             Audio.StopSound(soundId);
             Audio.ReleaseSound(soundId);
