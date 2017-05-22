@@ -52,23 +52,28 @@ namespace ELS
             EventHandlers["onClientResourceStart"] += new Action<string>(
                 (string obj) =>
                 {
-                    try
+                    if (obj == "ELS-FiveM")
                     {
-                        _FileLoader.RunLoadeer();
+                        try
+                        {
+                            _FileLoader.RunLoader();
 
-                        Screen.ShowNotification($"Welcome {LocalPlayer.Name}  to ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
-
-                        // BaseScript.Delay(5000);
-                        Tick += Class1_Tick;
-                        //}
+                            Screen.ShowNotification($"Welcome {LocalPlayer.Name}  to ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
+                            Tick += Class1_Tick;
+                        }
+                        catch (Exception e)
+                        {
+                            TriggerServerEvent($"ONDEBUG", e.ToString());
+                            Screen.ShowNotification($"ERROR:{e.Message}");
+                            Tick -= Class1_Tick;
+                            throw;
+                        }
                     }
-                    catch (Exception e)
+                    else
                     {
-                        TriggerServerEvent($"ONDEBUG", e.ToString());
-                        Screen.ShowNotification($"ERROR:{e.Message}");
-                        Tick -= Class1_Tick;
-                        throw;
+                        _FileLoader.RunLoader(obj);
                     }
+                   
 
                     //_spotLight= new SpotLight();
                 });

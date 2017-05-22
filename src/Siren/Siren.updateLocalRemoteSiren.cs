@@ -10,10 +10,6 @@ namespace ELS.Siren
             private bool dualsiren;
             private bool mainSiren;
         }
-        public void updateLocalRemoteELSSettings()
-        {
-
-        }
         internal void FullSync()
         {
 

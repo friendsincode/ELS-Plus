@@ -25,7 +25,7 @@ namespace ELS.configuration
 {
     public class VCF
     {
-        public static List<vcfroot> ELSVehicle = new List<vcfroot>();
+        internal static List<vcfroot> ELSVehicle = new List<vcfroot>();
         public VCF()
         {
         }

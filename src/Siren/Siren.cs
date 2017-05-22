@@ -30,13 +30,7 @@ namespace ELS.Siren
             _vehicle = vehicle;
             Function.Call(Hash.DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, _vehicle, true);
 
-            foreach (VCF.vcfroot vcfroot in VCF.ELSVehicle)
-            {
-                if (vcfroot.FileName == _vehicle.DisplayName)
-                {
-                    _vcf = vcfroot;
-                }
-            }
+            _vcf = VCF.ELSVehicle.Find(item => item.FileName == _vehicle.DisplayName);
             if (_vcf == null)
             {
                 throw new Exception($"Their is no VCF file for this vehicle: {_vehicle.DisplayName}");
