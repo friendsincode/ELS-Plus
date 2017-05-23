@@ -36,9 +36,7 @@ namespace ELS.configuration
             {
                 var ex = new Exception($"Error Loading:{name}\n" +
                                     $"Please save {name} with UTF-8 no BOM/Signature Encoding");
-                ex.Data.Add("onlymsg","true");
                 throw (ex);
-                
             }
             Encoding.UTF8.GetPreamble();
             var data = new vcfroot
@@ -117,24 +115,13 @@ namespace ELS.configuration
 
                 data.Author = doc["vcfroot"].Attributes["Author"].Value;
                 ELSVehicle.Add(data);
-                    Debug.WriteLine($"Added {data.FileName}");
+                Debug.WriteLine($"Added {data.FileName}");
             }
         }
 
         internal static bool isELSVechicle(string vehicleName)
         {
-            var returnstatus = false;
-#if DEBUG
-           // Debug.WriteLine($"checking for {vehicleName}");
-#endif
-            foreach (var vehicle in ELSVehicle)
-            {
-                if (vehicle.FileName.ToUpper() == vehicleName.ToUpper())
-                {
-                    returnstatus = true;
-                }
-            }
-            return returnstatus;
+            return ELSVehicle.Exists(obj => obj.FileName == vehicleName);
         }
         /// <remarks/>
 

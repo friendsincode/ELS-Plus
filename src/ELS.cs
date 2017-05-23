@@ -73,7 +73,6 @@ namespace ELS
                     {
                         _FileLoader.RunLoader(obj);
                     }
-                   
 
                     //_spotLight= new SpotLight();
                 });
@@ -106,6 +105,7 @@ namespace ELS
                 //TriggerServerEvent($"ONDEBUG", ex.ToString());
                 //await Delay(5000);
                 Screen.ShowNotification($"ERROR {ex}", true);
+                throw ex;
             }
         }
     }
