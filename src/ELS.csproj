@@ -84,6 +84,7 @@
     <Compile Include="Decorator\DecorManager.cs" />
     <Compile Include="ELS.cs" />
     <Compile Include="Decorator\EntityDecoration.cs" />
+    <Compile Include="extentions.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="Light\Light.cs" />
     <Compile Include="Light\LightArray.cs" />

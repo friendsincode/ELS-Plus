@@ -12,7 +12,8 @@ namespace ELS.Siren
         }
         internal void FullSync()
         {
-
+            this._mainSiren.FullSync();
+            this._tones.FullSync();
         }
         public void updateLocalRemoteSiren(string sirenString, bool state)
         {

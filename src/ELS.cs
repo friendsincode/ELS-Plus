@@ -35,7 +35,6 @@ namespace ELS
 {
     public class ELS : BaseScript
     {
-        // public static int localplayerid;
         public static bool isStopped;
         private SirenManager _sirenManager;
         private FileLoader _FileLoader;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ELS.Siren
 {
@@ -9,6 +10,12 @@ namespace ELS.Siren
             internal bool _state { get; private set; }
             internal bool interupted = false;
             private Tone currentTone;
+
+            internal void FullSync()
+            {
+                throw new NotImplementedException();
+            }
+
             private List<Tone> MainTones;
             internal MainSiren(Tones tonesl)
             {

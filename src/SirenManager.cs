@@ -41,7 +41,18 @@ namespace ELS
             FileLoader.OnSettingsLoaded += FileLoader_OnSettingsLoaded;
             _sirens = new List<Siren.Siren>();
         }
-
+        private void RunGC()
+        {
+            _sirens.RemoveAll(obj => !obj._vehicle.Exists());
+        }
+        internal void FullSync()
+        {
+            RunGC();
+            _sirens.ForEach((siren) =>
+            {
+                siren.FullSync();
+            });
+        }
         void FileLoader_OnSettingsLoaded(SettingsType.Type type, string Data)
         {
             switch (type)
@@ -92,7 +103,7 @@ namespace ELS
 #endif
             }
             currentSiren = _sirens.Find(siren => siren._vehicle.Handle == vehicle.Handle);
-           
+
         }
 
         internal void Runtick()
@@ -122,16 +133,12 @@ namespace ELS
 
         internal void UpdateSirens(string command, int NetID, bool state)
         {
-            if (Game.Player.ServerId == NetID)
-            {
-                return;
-            }
+            if (Game.Player.ServerId == NetID) return;
 #if DEBUG
             Debug.WriteLine($"netId:{NetID.ToString()} localId {Game.Player.ServerId.ToString()}");
 #endif
             if (ELS.isStopped) return;
             var y = new PlayerList()[NetID];
-            // if (!y.Character.IsInVehicle() || !y.Character.IsSittingInVehicle()) return;
             Vehicle vehicle = y.Character.CurrentVehicle;
             if (vehicle.Exists()) throw new Exception("Vehicle does not exist");
             if (!vehicleIsRegisteredLocaly(vehicle))
@@ -140,6 +147,6 @@ namespace ELS
             }
             _sirens.Find(siren => siren._vehicle.Handle == vehicle.Handle).updateLocalRemoteSiren(command, state);
         }
-        
+
     }
 }
