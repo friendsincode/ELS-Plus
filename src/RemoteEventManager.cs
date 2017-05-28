@@ -55,7 +55,6 @@ namespace ELS
             var netID = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);
             var ped = vehicle.GetPedOnSeat(VehicleSeat.Driver);
             BaseScript.TriggerServerEvent("ELS",type.ToString(),Game.Player.ServerId,state);
-            //BaseScript.TriggerServerEvent("ELS", type, netID);
         }
     }
 }

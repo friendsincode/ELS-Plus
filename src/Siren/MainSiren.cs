@@ -13,9 +13,22 @@ namespace ELS.Siren
 
             internal void FullSync()
             {
-                throw new NotImplementedException();
+                CitizenFX.Core.BaseScript.TriggerServerEvent("ELS:FullSync:MainSiren", ToDic());
             }
-
+            private Dictionary<string, string> ToDic()
+            {
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("interupted", this.interupted.ToString());
+                dic.Add("currentTone", this.MainTones.IndexOf(currentTone).ToString());
+                dic.Add("state", this._state.ToString());
+                return dic;
+            }
+            internal void SetData(Dictionary<string, string> data)
+            {
+                currentTone = MainTones[int.Parse(data["currentTone"])];
+                interupted = bool.Parse(data["interupted"]);
+                _state=(bool.Parse(data["state"]));
+            }
             private List<Tone> MainTones;
             internal MainSiren(Tones tonesl)
             {
@@ -38,21 +51,12 @@ namespace ELS.Siren
 
             internal void setMainTone(Tone tone)
             {
-                foreach (var mainTone in MainTones)
-                {
-                    if (mainTone == tone)
-                    {
-                        setTone(tone);
-                    }
-                }
+                setTone(MainTones.Find((maintone) => maintone == tone));
             }
 
             private void setTone(Tone tone)
             {
-                if (currentTone == tone)
-                {
-                    SetState(false);
-                }
+                if (currentTone == tone) SetState(false);
                 else
                 {
                     currentTone.SetState(false);

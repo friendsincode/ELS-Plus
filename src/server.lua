@@ -33,9 +33,9 @@ AddEventHandler("sirenStateChanged",function (vehnetId,netSoundid,propertyName,s
 	end
 end)
 
-AddEventHandler("ELS",function(type,netId,siren,state)
-	print(type .. " " .. netId .. " " .. siren .. state)
-	TriggerClientEvent("ELS:SirenUpdated",-1,type,netId,siren,state)
+AddEventHandler("ELS",function(type,netId,state)
+	print(type .. " " .. netId .. " "  .. state)
+	TriggerClientEvent("ELS:SirenUpdated",-1,type,netId,state)
 end)
 
 

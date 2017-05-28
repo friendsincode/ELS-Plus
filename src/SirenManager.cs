@@ -133,14 +133,16 @@ namespace ELS
 
         internal void UpdateSirens(string command, int NetID, bool state)
         {
+#if !REMOTETEST
             if (Game.Player.ServerId == NetID) return;
+#endif
 #if DEBUG
             Debug.WriteLine($"netId:{NetID.ToString()} localId {Game.Player.ServerId.ToString()}");
 #endif
             if (ELS.isStopped) return;
             var y = new PlayerList()[NetID];
             Vehicle vehicle = y.Character.CurrentVehicle;
-            if (vehicle.Exists()) throw new Exception("Vehicle does not exist");
+            if (!vehicle.Exists()) throw new Exception("Vehicle does not exist");
             if (!vehicleIsRegisteredLocaly(vehicle))
             {
                 AddSiren(vehicle);

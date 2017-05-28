@@ -25,6 +25,7 @@ namespace ELS.Siren
             switch (command)
             {
                 case RemoteEventManager.Commands.MainSiren:
+                    MainSirenToggleControls(state);
                     break;
                 case RemoteEventManager.Commands.AirHorn:
                     AirHornControls(state);

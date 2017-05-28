@@ -12,7 +12,7 @@ namespace ELS.Siren
 
         internal void FullSync()
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
