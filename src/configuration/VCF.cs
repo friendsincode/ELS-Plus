@@ -119,10 +119,6 @@ namespace ELS.configuration
             }
         }
 
-        internal static bool isELSVechicle(string vehicleName)
-        {
-            return ELSVehicle.Exists(obj => obj.FileName == vehicleName);
-        }
         /// <remarks/>
 
         [System.SerializableAttribute()]

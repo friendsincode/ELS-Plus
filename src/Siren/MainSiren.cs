@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CitizenFX.Core;
+using System;
 using System.Collections.Generic;
 
 namespace ELS.Siren
@@ -10,10 +11,9 @@ namespace ELS.Siren
             internal bool _state { get; private set; }
             internal bool interupted = false;
             private Tone currentTone;
-
             internal void FullSync()
             {
-                CitizenFX.Core.BaseScript.TriggerServerEvent("ELS:FullSync:MainSiren", ToDic());
+                BaseScript.TriggerServerEvent("ELS:FullSync","MainSiren", ToDic(), new PlayerList()[-1].ServerId);
             }
             private Dictionary<string, string> ToDic()
             {

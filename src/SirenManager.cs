@@ -103,7 +103,6 @@ namespace ELS
 #endif
             }
             currentSiren = _sirens.Find(siren => siren._vehicle.Handle == vehicle.Handle);
-
         }
 
         internal void Runtick()
@@ -111,7 +110,7 @@ namespace ELS
             var LocalPlayer = Game.Player;
             if (LocalPlayer.Character.IsInVehicle()
                 && LocalPlayer.Character.IsSittingInVehicle()
-                && VCF.isELSVechicle(LocalPlayer.Character.CurrentVehicle.DisplayName)
+                && LocalPlayer.Character.CurrentVehicle.IsELS()
                 && (
                     LocalPlayer.Character.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == LocalPlayer.Character
                     || LocalPlayer.Character.CurrentVehicle.GetPedOnSeat(VehicleSeat.Passenger) == LocalPlayer.Character
@@ -133,15 +132,13 @@ namespace ELS
 
         internal void UpdateSirens(string command, int NetID, bool state)
         {
-#if !REMOTETEST
             if (Game.Player.ServerId == NetID) return;
-#endif
+
 #if DEBUG
             Debug.WriteLine($"netId:{NetID.ToString()} localId {Game.Player.ServerId.ToString()}");
 #endif
             if (ELS.isStopped) return;
-            var y = new PlayerList()[NetID];
-            Vehicle vehicle = y.Character.CurrentVehicle;
+            Vehicle vehicle = new PlayerList()[NetID].Character.CurrentVehicle;
             if (!vehicle.Exists()) throw new Exception("Vehicle does not exist");
             if (!vehicleIsRegisteredLocaly(vehicle))
             {
@@ -149,6 +146,5 @@ namespace ELS
             }
             _sirens.Find(siren => siren._vehicle.Handle == vehicle.Handle).updateLocalRemoteSiren(command, state);
         }
-
     }
 }
