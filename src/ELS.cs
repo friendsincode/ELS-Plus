@@ -57,7 +57,7 @@ namespace ELS
                         {
                             _FileLoader.RunLoader();
 
-                            Screen.ShowNotification($"Welcome {LocalPlayer.Name}  to ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
+                            Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
                             Tick += Class1_Tick;
                         }
                         catch (Exception e)
