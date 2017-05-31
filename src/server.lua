@@ -17,6 +17,7 @@
 ]]
 RegisterServerEvent("sirenStateChanged")
 RegisterServerEvent("ELS")
+RegisterServerEvent("ELS:FullSync")
 RegisterServerEvent("ONDEBUG")
 
 if clr.System.IO.Directory.Exists("resources/" .. GetInvokingResource() .. "/bugs") ==false then
@@ -38,6 +39,10 @@ AddEventHandler("ELS",function(type,netId,state)
 	TriggerClientEvent("ELS:SirenUpdated",-1,type,netId,state)
 end)
 
+AddEventHandler("ELS:FullSync",function(DataType,DataDic,PlayerId)
+	print(type(DataType),type(DataDic),type(PlayerId))
+	TriggerClientEvent("ELS:NewFullSyncData",-1,DataType,DataDic,PlayerId)
+end)
 
 
 local function getAllSubDirs(directory)

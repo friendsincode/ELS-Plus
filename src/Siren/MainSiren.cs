@@ -13,7 +13,7 @@ namespace ELS.Siren
             private Tone currentTone;
             internal void FullSync()
             {
-                BaseScript.TriggerServerEvent("ELS:FullSync","MainSiren", ToDic(), new PlayerList()[-1].ServerId);
+                BaseScript.TriggerServerEvent("ELS:FullSync", "MainSiren", ToDic(), Game.Player.ServerId);
             }
             private Dictionary<string, string> ToDic()
             {
@@ -23,11 +23,11 @@ namespace ELS.Siren
                 dic.Add("state", this._state.ToString());
                 return dic;
             }
-            internal void SetData(Dictionary<string, string> data)
+            internal void SetData(IDictionary<string, object> data)
             {
-                currentTone = MainTones[int.Parse(data["currentTone"])];
-                interupted = bool.Parse(data["interupted"]);
-                _state=(bool.Parse(data["state"]));
+                currentTone = MainTones[int.Parse(data["currentTone"].ToString())];
+                interupted = bool.Parse(data["interupted"].ToString());
+                _state = (bool.Parse(data["state"].ToString()));
             }
             private List<Tone> MainTones;
             internal MainSiren(Tones tonesl)

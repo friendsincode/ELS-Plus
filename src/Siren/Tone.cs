@@ -37,7 +37,6 @@ namespace ELS.Siren
             _state = state;
             if (_state)
             {
-                Debug.WriteLine("file:" + _file);
                 Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)_file, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
             }
             else

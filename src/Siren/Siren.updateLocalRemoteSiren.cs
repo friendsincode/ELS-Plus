@@ -1,5 +1,6 @@
 ﻿using System;
 using CitizenFX.Core;
+using System.Collections.Generic;
 
 namespace ELS.Siren
 {
@@ -14,6 +15,18 @@ namespace ELS.Siren
         {
             this._mainSiren.FullSync();
             this._tones.FullSync();
+        }
+        internal void SetFullSync(string DataType, IDictionary<string, object> DataDic)
+        {
+            switch (DataType)
+            {
+                case "MainSiren":
+                    _mainSiren.SetData(DataDic);
+                    break;
+                case "Tones":
+                    _tones.SetData(DataDic);
+                    break;
+            }
         }
         public void updateLocalRemoteSiren(string sirenString, bool state)
         {
