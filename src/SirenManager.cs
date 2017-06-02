@@ -49,7 +49,7 @@ namespace ELS
         }
         internal void FullSync(string dataType, IDictionary<string, object> dataDic, int playerId)
         {
-            // RunGC();
+            RunGC();
             var randVehicle = new PlayerList()[playerId].Character.CurrentVehicle;
             Debug.WriteLine("FullSyncRecieved");
             _sirens.Find(siren => siren._vehicle.Handle == randVehicle.Handle).SetFullSync(dataType, dataDic);

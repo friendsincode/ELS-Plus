@@ -83,6 +83,9 @@
       <HintPath>..\libs\CitizenFx\CitizenFX.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="MsgPack">
+      <HintPath>..\libs\CitizenFx\MsgPack.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -105,6 +108,7 @@
     <Compile Include="ELSStates\State.cs" />
     <Compile Include="extentions.cs" />
     <Compile Include="FileLoader.cs" />
+    <Compile Include="FullSync\FullSync.cs" />
     <Compile Include="Light\Light.cs" />
     <Compile Include="Light\LightArray.cs" />
     <Compile Include="Light\LightStage.cs" />

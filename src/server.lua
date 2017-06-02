@@ -39,8 +39,23 @@ AddEventHandler("ELS",function(type,netId,state)
 	TriggerClientEvent("ELS:SirenUpdated",-1,type,netId,state)
 end)
 
+local function PrintTable(table)
+	if type(table) == 'table' then
+		foreach v in table do
+			print(v)
+			if type(v) == 'table' then
+				PrintTable(v)
+			end
+		end
+	end
+end
+
 AddEventHandler("ELS:FullSync",function(DataType,DataDic,PlayerId)
-	print(type(DataType),type(DataDic),type(PlayerId))
+	--print(type(DataType),type(DataDic),type(PlayerId))
+	--PrintTable(DataType)
+	--if DataType == 'Tones' then
+		PrintTable(DataDic)
+	
 	TriggerClientEvent("ELS:NewFullSyncData",-1,DataType,DataDic,PlayerId)
 end)
 

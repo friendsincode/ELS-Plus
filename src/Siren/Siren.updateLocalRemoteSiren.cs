@@ -16,15 +16,15 @@ namespace ELS.Siren
             this._mainSiren.FullSync();
             this._tones.FullSync();
         }
-        internal void SetFullSync(string DataType, IDictionary<string, object> DataDic)
+        internal void SetFullSync(string dataType, IDictionary<string, object> dataDic)
         {
-            switch (DataType)
+            switch (dataType)
             {
                 case "MainSiren":
-                    _mainSiren.SetData(DataDic);
+                    _mainSiren.SetData(dataDic);
                     break;
                 case "Tones":
-                    _tones.SetData(DataDic);
+                    _tones.SetData(dataDic);
                     break;
             }
         }
