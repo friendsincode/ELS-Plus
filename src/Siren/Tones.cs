@@ -29,7 +29,7 @@ namespace ELS.Siren
                     {"tone3", tone3._state.ToString()},
                     {"tone4", tone4._state.ToString()}
                 };
-#if !REMOTETEST
+#if REMOTETEST
             Debug.WriteLine($"tone1: {tone1._state}\n" +
                 $"tone2: {tone2._state}\n" +
                 $"tone3: {tone3._state}\n" +
@@ -40,6 +40,7 @@ namespace ELS.Siren
         }
         internal void SetData(IDictionary<string, object> data)
         {
+            
             tone1.SetState(bool.Parse(data["tone1"].ToString()));
             tone2.SetState(bool.Parse(data["tone2"].ToString()));
             tone3.SetState(bool.Parse(data["tone3"].ToString()));
