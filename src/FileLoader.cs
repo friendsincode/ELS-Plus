@@ -15,13 +15,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+using System;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ELS.configuration;
 
 namespace ELS
@@ -29,20 +26,20 @@ namespace ELS
     class FileLoader
     {
         ELS _baseScript;
-         internal delegate void SettingsLoadedHandler(configuration.SettingsType.Type type, String Data);
-         internal static event SettingsLoadedHandler OnSettingsLoaded;
+        internal delegate void SettingsLoadedHandler(SettingsType.Type type, String data);
+        internal static event SettingsLoadedHandler OnSettingsLoaded;
         public FileLoader(ELS h)
         {
             _baseScript = h;
         }
-        internal void RunLoader(String ScriptName)
+        internal void RunLoader(String scriptName)
         {
-            if (ELS.isStopped) return;
-            LoadFilesPromScript(ScriptName);
+            if (ELS.IsStopped) return;
+            LoadFilesPromScript(scriptName);
         }
         internal void RunLoader()
         {
-            if (ELS.isStopped) return;
+            if (ELS.IsStopped) return;
             var numResources = Function.Call<int>((Hash)Game.GenerateHash("GET_NUM_RESOURCES"));
             for (int x = 0; x < numResources; x++)
             {
@@ -55,7 +52,7 @@ namespace ELS
         {
             int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "ELSFM");
 #if DEBUG
-            Debug.WriteLine("number of INI files to load: " + num.ToString() + " " + name);
+            Debug.WriteLine("number of INI files to load: " + num + " " + name);
 #endif
             for (int i = 0; i < num; i++)
             {
@@ -67,13 +64,13 @@ namespace ELS
                 if (filename.Equals("extra-files/ELS.ini"))
                 {
                     var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
-                    OnSettingsLoaded?.Invoke(configuration.SettingsType.Type.GLOBAL, data);
+                    OnSettingsLoaded?.Invoke(SettingsType.Type.GLOBAL, data);
                 }
             }
 
             num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "ELSFMVCF");
 #if DEBUG
-            Debug.WriteLine("number of VCF files to load: " + num.ToString() + " " + name);
+            Debug.WriteLine("number of VCF files to load: " + num + " " + name);
 #endif
             for (int i = 0; i < num; i++)
             {

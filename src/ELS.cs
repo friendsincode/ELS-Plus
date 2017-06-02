@@ -15,19 +15,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.UI;
-using ELS.Siren;
 using Control = CitizenFX.Core.Control;
 using CitizenFX.Core.Native;
 using System;
-using System.Drawing;
-using System.Reflection;
-using System.Security.Permissions;
-using ELS.configuration;
 using ELS.Light;
 using ELS.panel;
 using System.Collections.Generic;
@@ -36,16 +30,16 @@ namespace ELS
 {
     public class ELS : BaseScript
     {
-        public static bool isStopped;
-        private SirenManager _sirenManager;
-        private FileLoader _FileLoader;
+        public static bool IsStopped;
+        private readonly SirenManager _sirenManager;
+        private readonly FileLoader _FileLoader;
         private SpotLight _spotLight;
-        private configuration.ControlConfiguration controlConfiguration;
-        panel.test test = new test();
+        private configuration.ControlConfiguration _controlConfiguration;
+        panel.test _test = new test();
 
         public ELS()
         {
-            controlConfiguration = new configuration.ControlConfiguration();
+            _controlConfiguration = new configuration.ControlConfiguration();
             _FileLoader = new FileLoader(this);
             _sirenManager = new SirenManager();
 
