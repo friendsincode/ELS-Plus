@@ -94,7 +94,7 @@ namespace ELS
                  text.Draw();*/
                 _sirenManager.Runtick();
                 //_spotLight.RunTick();
-                if (Game.IsControlJustReleased(0, Control.MultiplayerInfo) && Function.Call<bool>(Hash.NETWORK_IS_HOST))
+                if (Game.IsControlJustReleased(0, Control.MultiplayerInfo))
                 {
                     _sirenManager.FullSync();
                     Debug.WriteLine("FullSync™ ran");
