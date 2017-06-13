@@ -13,11 +13,5 @@ namespace ELS
         {
             if (!poolObject.Exists()) poolObject.CleanUp();
         }
-
-    }
-
-    public interface CleanUP :
-    {
-
     }
 }
