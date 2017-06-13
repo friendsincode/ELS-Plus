@@ -17,6 +17,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CitizenFX.Core;
 using ELS.configuration;
 
@@ -142,11 +143,32 @@ namespace ELS
                 Debug.WriteLine("added new siren");
 #endif
             }
+#if DEBUG
             else
             {
-#if DEBUG
                 Debug.WriteLine("added existing siren");
+            }
 #endif
+        }
+
+        public void GetAllSirenData()
+        {
+            var localPLayer = Game.Player;
+            var players = new PlayerList().Where((player, i) => player.Character.CurrentVehicle.IsEls() || player.Character.LastVehicle.IsEls());
+            foreach (var player in players)
+            {
+                if (player.Character.CurrentVehicle.IsEls())
+                {
+                    AddVehicleIfNotRegistered(player.Character.CurrentVehicle);
+                    BaseScript.TriggerServerEvent("ELS:RequestFullySyncData",player.Character.CurrentVehicle.Mods.LicensePlate,"CurrentVehicle");
+                }
+
+                if (player.Character.LastVehicle.IsEls())
+                {
+                    AddVehicleIfNotRegistered(player.Character.LastVehicle);
+                    //BaseScript.TriggerServerEvent("ELS:RequestFullySyncDataFromPlayer", player.ServerId, "CurrentVehicle");
+                }
+
             }
         }
     }
