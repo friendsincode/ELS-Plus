@@ -8,6 +8,16 @@ namespace ELS
         {
             return configuration.VCF.ELSVehicle.Exists(obj => obj.FileName == vehicle.DisplayName);
         }
-        
+
+        public static void CleanUp(this PoolObject poolObject)
+        {
+            if (!poolObject.Exists()) poolObject.CleanUp();
+        }
+
+    }
+
+    public interface CleanUP :
+    {
+
     }
 }

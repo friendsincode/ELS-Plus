@@ -103,6 +103,7 @@
     <Compile Include="ELS.cs" />
     <Compile Include="Decorator\EntityDecoration.cs" />
     <Compile Include="ELSStates\State.cs" />
+    <Compile Include="ELSVehicle.cs" />
     <Compile Include="extentions.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="FullSync\FullSync.cs" />
@@ -110,6 +111,8 @@
     <Compile Include="Light\LightArray.cs" />
     <Compile Include="Light\LightStage.cs" />
     <Compile Include="Light\SpotLight.cs" />
+    <Compile Include="Manager\Manager.cs" />
+    <Compile Include="Manager\VehicleManager.cs" />
     <Compile Include="panel\test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteEventManager.cs" />
@@ -120,7 +123,6 @@
     <Compile Include="Siren\Siren.cs" />
     <Compile Include="Siren\Siren.updateLocalRemoteSiren.cs" />
     <Compile Include="Siren\Tone.cs" />
-    <Compile Include="SirenManager.cs" />
     <Compile Include="configuration\VCF.cs" />
     <Compile Include="Siren\Tones.cs" />
   </ItemGroup>
