@@ -107,10 +107,13 @@
     <Compile Include="extentions.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="FullSync\FullSync.cs" />
+    <Compile Include="LightManager.cs" />
     <Compile Include="Light\Light.cs" />
     <Compile Include="Light\LightArray.cs" />
     <Compile Include="Light\LightStage.cs" />
     <Compile Include="Light\SpotLight.cs" />
+    <Compile Include="Manager\Manager.cs" />
+    <Compile Include="Manager\VehicleManager.cs" />
     <Compile Include="panel\test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteEventManager.cs" />

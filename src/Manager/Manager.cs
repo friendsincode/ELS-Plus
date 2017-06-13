@@ -10,7 +10,7 @@ namespace ELS.Manager
 {
     abstract class Manager
     {
-        private List<PoolObject> Entities = new List<PoolObject>();
+        protected List<PoolObject> Entities = new List<PoolObject>();
         internal Manager()
         {
             
@@ -18,7 +18,7 @@ namespace ELS.Manager
         /// <summary>
         /// Runs garbage collection.
         /// </summary>
-        void RunGC()
+        protected void RunGC()
         {
             Entities.RemoveAll(o => !o.Exists());
         }
@@ -28,12 +28,14 @@ namespace ELS.Manager
         {
             Entities.RemoveAll(o => !o.Exists());
         }
-        protected void AddIfNotPresint(PoolObject o)
+        protected bool AddIfNotPresint(PoolObject o)
         {
             if (!Entities.Exists(poolObject => poolObject.Handle == o.Handle))
             {
                 Entities.Add(o);
+                return false;
             }
+            return true;
         }
         internal abstract void RunTick();
     }
