@@ -123,6 +123,7 @@
     <Compile Include="Siren\Siren.Controls.cs" />
     <Compile Include="Siren\Siren.ControlsKBProccess.cs" />
     <Compile Include="Siren\Siren.cs" />
+    <Compile Include="Siren\Siren.FullSync.cs" />
     <Compile Include="Siren\Siren.updateLocalRemoteSiren.cs" />
     <Compile Include="Siren\Tone.cs" />
     <Compile Include="configuration\VCF.cs" />

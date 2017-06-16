@@ -33,6 +33,7 @@ namespace ELS.Manager
             if (!Entities.Exists(poolObject => poolObject.Handle == o.Handle))
             {
                 Entities.Add(o);
+                
                 return false;
             }
             return true;

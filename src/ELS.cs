@@ -25,15 +25,16 @@ using System;
 using ELS.Light;
 using ELS.panel;
 using System.Collections.Generic;
+using ELS.Manager;
 
 namespace ELS
 {
     public class ELS : BaseScript
     {
-        public static bool IsStopped;
-        private readonly SirenManager _sirenManager;
+       // private readonly SirenManager _sirenManager;
         private readonly FileLoader _FileLoader;
         private SpotLight _spotLight;
+        private readonly VehicleManager _vehicleManager;
         private configuration.ControlConfiguration _controlConfiguration;
         panel.test _test = new test();
 
@@ -41,8 +42,8 @@ namespace ELS
         {
             _controlConfiguration = new configuration.ControlConfiguration();
             _FileLoader = new FileLoader(this);
-            _sirenManager = new SirenManager();
-
+           // _sirenManager = new SirenManager();
+            _vehicleManager = new VehicleManager();
             EventHandlers["onClientResourceStart"] += new Action<string>(
                 (string obj) =>
                 {
@@ -53,7 +54,7 @@ namespace ELS
                             _FileLoader.RunLoader();
 
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
-                            EventHandlers["ELS:NewFullSyncData"]+=new Action<string, IDictionary<string, object>, int>(_sirenManager.FullSync);
+                           // EventHandlers["ELS:NewFullSyncData"] += new Action<string, IDictionary<string, object>, int>(_sirenManager.FullSync);
                             Tick += Class1_Tick;
                         }
                         catch (Exception e)
@@ -71,7 +72,7 @@ namespace ELS
 
                     //_spotLight= new SpotLight();
                 });
-            EventHandlers["ELS:SirenUpdated"] += new Action<string, int, bool>(_sirenManager.UpdateSirens);
+            //EventHandlers["ELS:SirenUpdated"] += new Action<string, int, bool>(_sirenManager.UpdateSirens);
 
             EventHandlers["onPlayerJoining"] += new Action(() =>
               {
@@ -92,11 +93,13 @@ namespace ELS
                  text.Alignment = Alignment.Center;
                  text.Centered = true;
                  text.Draw();*/
-                _sirenManager.Runtick();
+                //_sirenManager.Runtick();
                 //_spotLight.RunTick();
+                _vehicleManager.RunTick();
                 if (Game.IsControlJustReleased(0, Control.MultiplayerInfo))
                 {
-                    _sirenManager.FullSync();
+                    
+                    //_sirenManager.FullSync();
                     Debug.WriteLine("FullSync™ ran");
                 }
             }

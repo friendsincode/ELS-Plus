@@ -34,12 +34,10 @@ namespace ELS
         }
         internal void RunLoader(String scriptName)
         {
-            if (ELS.IsStopped) return;
             LoadFilesPromScript(scriptName);
         }
         internal void RunLoader()
         {
-            if (ELS.IsStopped) return;
             var numResources = Function.Call<int>((Hash)Game.GenerateHash("GET_NUM_RESOURCES"));
             for (int x = 0; x < numResources; x++)
             {

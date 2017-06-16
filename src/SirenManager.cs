@@ -15,31 +15,36 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using CitizenFX.Core;
 using ELS.configuration;
+using SharpConfig;
 
 namespace ELS
 {
-    class SirenManager
+    internal class SirenManager
     {
-        /// <summary>
-        /// Siren that LocalPlayer can manage
-        /// </summary>
-        Siren.Siren _currentSiren;
-
         private readonly List<Siren.Siren> _sirens;
+
+        /// <summary>
+        ///     Siren that LocalPlayer can manage
+        /// </summary>
+        private Siren.Siren _currentSiren;
+
         public SirenManager()
         {
             FileLoader.OnSettingsLoaded += FileLoader_OnSettingsLoaded;
             _sirens = new List<Siren.Siren>();
         }
+
         private void RunGC()
         {
             _sirens.RemoveAll(obj => !obj._vehicle.Exists());
         }
+
         internal void FullSync()
         {
             _currentSiren.FullSync();
@@ -48,6 +53,7 @@ namespace ELS
             //    siren.FullSync();
             //});
         }
+
         internal void FullSync(string dataType, IDictionary<string, object> dataDic, int playerId)
         {
             RunGC();
@@ -55,22 +61,20 @@ namespace ELS
             Debug.WriteLine("FullSyncRecieved");
             _sirens.Find(siren => siren._vehicle.Handle == randVehicle.Handle).SetFullSync(dataType, dataDic);
         }
-        void FileLoader_OnSettingsLoaded(SettingsType.Type type, string data)
+
+        private void FileLoader_OnSettingsLoaded(SettingsType.Type type, string data)
         {
             switch (type)
             {
                 case SettingsType.Type.GLOBAL:
-                    var u = SharpConfig.Configuration.LoadFromString(data);
+                    var u = Configuration.LoadFromString(data);
                     var t = u["GENERAL"]["MaxActiveVehs"].IntValue;
                     if (_sirens != null)
-                    {
                         _sirens.Capacity = t;
-                    }
                     break;
                 case SettingsType.Type.LIGHTING:
                     break;
             }
-
         }
 
         internal void CleanUp()
@@ -79,20 +83,6 @@ namespace ELS
             Debug.WriteLine("Running CleanUp()");
 #endif
             _sirens.ForEach(siren => siren.CleanUP());
-        }
-
-        void AddSiren(Vehicle vehicle)
-        {
-            if (ELS.IsStopped) return;
-
-            _sirens.Add(new Siren.Siren(vehicle));
-        }
-
-
-        void SetCurrentSiren(Vehicle vehicle)
-        {
-            AddVehicleIfNotRegistered(vehicle);
-            _currentSiren = _sirens.Find(siren => siren._vehicle.Handle == vehicle.Handle);
         }
 
         internal void Runtick()
@@ -107,17 +97,14 @@ namespace ELS
                     )
                 )
             {
-                if (((_currentSiren == null) || _currentSiren._vehicle != Game.Player.Character.CurrentVehicle))
+                if (_currentSiren == null || _currentSiren._vehicle != Game.Player.Character.CurrentVehicle)
                 {
-                    SetCurrentSiren(Game.Player.Character.CurrentVehicle);
+                    var vehicle = Game.Player.Character.CurrentVehicle;
+                    AddVehicleIfNotRegistered(vehicle);
+                    _currentSiren = _sirens.Find(siren => siren._vehicle.Handle == vehicle.Handle);
                 }
                 _currentSiren.ticker();
             }
-        }
-
-        bool VehicleIsRegisteredLocaly(Vehicle vehicle)
-        {
-            return _sirens.Exists(siren => siren._vehicle.Handle == vehicle.Handle);
         }
 
         internal void UpdateSirens(string command, int netId, bool state)
@@ -127,8 +114,7 @@ namespace ELS
 #if DEBUG
             Debug.WriteLine($"netId:{netId} localId:{Game.Player.ServerId}");
 #endif
-            if (ELS.IsStopped) return;
-            Vehicle vehicle = new PlayerList()[netId].Character.CurrentVehicle;
+            var vehicle = new PlayerList()[netId].Character.CurrentVehicle;
             if (!vehicle.Exists()) throw new Exception("Vehicle does not exist");
             AddVehicleIfNotRegistered(vehicle);
             _sirens.Find(siren => siren._vehicle.Handle == vehicle.Handle).updateLocalRemoteSiren(command, state);
@@ -136,9 +122,9 @@ namespace ELS
 
         private void AddVehicleIfNotRegistered(Vehicle vehicle)
         {
-            if (!VehicleIsRegisteredLocaly(vehicle))
+            if (!_sirens.Exists(siren => siren._vehicle.Handle == vehicle.Handle))
             {
-                AddSiren(vehicle);
+                _sirens.Add(new Siren.Siren(vehicle));
 #if DEBUG
                 Debug.WriteLine("added new siren");
 #endif
@@ -160,15 +146,10 @@ namespace ELS
                 if (player.Character.CurrentVehicle.IsEls())
                 {
                     AddVehicleIfNotRegistered(player.Character.CurrentVehicle);
-                    BaseScript.TriggerServerEvent("ELS:RequestFullySyncData",player.Character.CurrentVehicle.Mods.LicensePlate,"CurrentVehicle");
                 }
 
                 if (player.Character.LastVehicle.IsEls())
-                {
                     AddVehicleIfNotRegistered(player.Character.LastVehicle);
-                    //BaseScript.TriggerServerEvent("ELS:RequestFullySyncDataFromPlayer", player.ServerId, "CurrentVehicle");
-                }
-
             }
         }
     }

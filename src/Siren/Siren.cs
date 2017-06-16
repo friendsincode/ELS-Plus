@@ -42,7 +42,7 @@ namespace ELS.Siren
             };
             dual_siren = false;
             _mainSiren = new MainSiren(_tones);
-
+            RequestFullSyncData();
         }
 
         public void CleanUP()
