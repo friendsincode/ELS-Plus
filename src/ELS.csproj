@@ -117,7 +117,6 @@
     <Compile Include="panel\test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteEventManager.cs" />
-    <Compile Include="SirenManager.cs" />
     <Compile Include="Siren\IManagerEntry.cs" />
     <Compile Include="Siren\MainSiren.cs" />
     <Compile Include="Siren\Siren.Controls.cs" />
