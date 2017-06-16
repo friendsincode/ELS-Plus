@@ -61,10 +61,10 @@ namespace ELS.Siren
         void ManualTone4ControlsKBProccess()
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon4))
-            { 
+            {
                 ManualTone4Controls(true);
 #if !REMOTETEST
-            RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone4, _vehicle, true);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone4, _vehicle, true);
 #endif
             }
         }

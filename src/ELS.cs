@@ -72,7 +72,7 @@ namespace ELS
 
                     //_spotLight= new SpotLight();
                 });
-            //EventHandlers["ELS:SirenUpdated"] += new Action<string, int, bool>(_sirenManager.UpdateSirens);
+            EventHandlers["ELS:SirenUpdated"] += new Action<string, int, bool>(_vehicleManager.UpdateSirens);
 
             EventHandlers["onPlayerJoining"] += new Action(() =>
               {

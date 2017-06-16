@@ -26,5 +26,10 @@ namespace ELS
         {
            _vehicle.Delete();
         }
+
+        internal void SendSirenCommand(string command,bool state)
+        {
+            _siren.updateLocalRemoteSiren(command,state);
+        }
     }
 }
