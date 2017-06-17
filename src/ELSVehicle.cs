@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CitizenFX.Core;
 
 namespace ELS
@@ -31,9 +32,14 @@ namespace ELS
            _vehicle.Delete();
         }
 
-        internal void RunFullSync()
+        private void RunFullSync()
         {
             _siren.FullSync();
+        }
+
+        internal void SyncData(string dataType, IDictionary<string, object> dataDic)
+        {
+            _siren.SetFullSync(dataType,dataDic);
         }
         internal void SendSirenCommand(string command,bool state)
         {

@@ -54,7 +54,7 @@ namespace ELS
                             _FileLoader.RunLoader();
 
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
-                           // EventHandlers["ELS:NewFullSyncData"] += new Action<string, IDictionary<string, object>, int>(_sirenManager.FullSync);
+                            EventHandlers["ELS:NewFullSyncData"] += new Action<string, IDictionary<string, object>, int>(_vehicleManager.SyncVehicle);
                             Tick += Class1_Tick;
                         }
                         catch (Exception e)

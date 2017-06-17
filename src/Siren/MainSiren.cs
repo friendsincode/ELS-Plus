@@ -12,10 +12,6 @@ namespace ELS.Siren
             internal bool _state { get; private set; }
             internal bool interupted = false;
             private Tone currentTone;
-            internal void FullSync()
-            {
-                //BaseScript.TriggerServerEvent("ELS:FullSync", "MainSiren", ToDic(), Game.Player.ServerId);
-            }
 
             void IFullSyncComponent.SetData(IDictionary<string, object> data)
             {

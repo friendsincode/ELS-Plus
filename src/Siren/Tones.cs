@@ -12,10 +12,6 @@ namespace ELS.Siren
         internal Tone tone3;
         internal Tone tone4;
 
-        internal void FullSync()
-        {
-        }
-
         public Dictionary<string, string> ToDic()
         {
             var dic =

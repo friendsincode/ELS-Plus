@@ -6,7 +6,7 @@ namespace ELS.Siren
     {
         internal void FullSync()
         {
-            this._mainSiren.FullSync();
+            this._mainSiren.RunSync();
             this._tones.RunSync();
         }
 
@@ -25,7 +25,8 @@ namespace ELS.Siren
 
         private void RequestFullSyncData()
         {
-            this._vehicle.GetNetWorkId();
+            _mainSiren.RequestData();
+            _tones.RequestData();
         }
     }
 }
