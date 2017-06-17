@@ -17,11 +17,6 @@
 */
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ELS
 {
@@ -52,7 +47,7 @@ namespace ELS
         internal static event RemoteMessageRecievedHandler RemoteMessageRecieved;
         internal static void SendEvent(Commands type,Vehicle vehicle,bool state)
         {
-            var netID = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);
+            var netId = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);
             var ped = vehicle.GetPedOnSeat(VehicleSeat.Driver);
             BaseScript.TriggerServerEvent("ELS",type.ToString(),Game.Player.ServerId,state);
         }

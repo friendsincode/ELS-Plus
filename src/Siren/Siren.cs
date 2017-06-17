@@ -16,13 +16,9 @@ namespace ELS.Siren
     partial class Siren : IManagerEntry
     {
         private bool dual_siren;
-        private configuration.ControlConfiguration.ELSControls keyBinding;
         public Vehicle _vehicle { get; set; }
         private MainSiren _mainSiren;
         private VCF.vcfroot _vcf;
-
-        configuration.ControlConfiguration.ELSControls keybindings = new configuration.ControlConfiguration.ELSControls();
-
         Tones _tones;
 
         public Siren(Vehicle vehicle)
@@ -46,7 +42,7 @@ namespace ELS.Siren
             };
             dual_siren = false;
             _mainSiren = new MainSiren(_tones);
-
+            RequestFullSyncData();
         }
 
         public void CleanUP()
@@ -74,6 +70,7 @@ namespace ELS.Siren
             ManualTone4ControlsKBProccess();
             ManualSoundControlsKBProccess();
             MainSirenToggleControlsKBProccess();
+            DualSirenControlsKBProccess();
 
         }
     }

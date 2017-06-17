@@ -19,10 +19,10 @@ RegisterServerEvent("sirenStateChanged")
 RegisterServerEvent("ELS")
 RegisterServerEvent("ELS:FullSync")
 RegisterServerEvent("ONDEBUG")
-
+--[[
 if clr.System.IO.Directory.Exists("resources/" .. GetInvokingResource() .. "/bugs") ==false then
 	clr.System.IO.Directory.CreateDirectory("resources/" .. GetInvokingResource() .. "/bugs")
-end
+end]]
 
 AddEventHandler("sirenStateChanged",function (vehnetId,netSoundid,propertyName,state)
 	--print(netId .. propertyName .. state)
@@ -39,8 +39,23 @@ AddEventHandler("ELS",function(type,netId,state)
 	TriggerClientEvent("ELS:SirenUpdated",-1,type,netId,state)
 end)
 
+local function PrintTable(table)
+	if type(table) == 'table' then
+		for v in table do
+			print(v)
+			if type(v) == 'table' then
+				PrintTable(v)
+			end
+		end
+	end
+end
+
 AddEventHandler("ELS:FullSync",function(DataType,DataDic,PlayerId)
-	print(type(DataType),type(DataDic),type(PlayerId))
+	--print(type(DataType),type(DataDic),type(PlayerId))
+	--PrintTable(DataType)
+	--if DataType == 'Tones' then
+		PrintTable(DataDic)
+	
 	TriggerClientEvent("ELS:NewFullSyncData",-1,DataType,DataDic,PlayerId)
 end)
 
@@ -48,7 +63,7 @@ end)
 local function getAllSubDirs(directory)
     local tabletoreturn={}
     local dfiles = clr.System.IO.Directory.GetDirectories(directory,"*",clr.System.IO.SearchOption.AllDirectories)
-    foreach v in dfiles do
+    for v in dfiles do
 	print(type(v))
         table.insert(tabletoreturn,v)
     end
@@ -66,7 +81,7 @@ AddEventHandler("ONDEBUG",function(error)
         if err then
             print("error " .. err)
         end
-    end, 'POST', json.encode({version='0.0.3.2',project_id=3,details=error}), { ["Content-Type"] = 'application/json' })]]
+    end, 'POST', json.encode({version='0.0.3.2',project_id=3,details=error}), { ["Content-Type"] = 'application/json' })
 	local file = clr.System.IO.FileInfo("resources/" .. GetInvokingResource() .. "/bugs/bug-" .. clr.System.DateTime.Now.ToFileTimeUtc().ToString() .. "." .. "bug")
 	local tw = file.CreateText()
 	local stc = json.encode({error})
@@ -74,5 +89,5 @@ AddEventHandler("ONDEBUG",function(error)
 	tw.Write(stc)
 	tw.Flush()
 	tw.Close()
-	--file.AppendText(error)
+	--file.AppendText(error)]]
 end)

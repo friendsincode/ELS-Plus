@@ -6,35 +6,12 @@ namespace ELS.Siren
 {
     partial class Siren
     {
-        struct syncSettings
-        {
-            private bool dualsiren;
-            private bool mainSiren;
-        }
-        internal void FullSync()
-        {
-            this._mainSiren.FullSync();
-            this._tones.FullSync();
-        }
-        internal void SetFullSync(string DataType, IDictionary<string, object> DataDic)
-        {
-            switch (DataType)
-            {
-                case "MainSiren":
-                    _mainSiren.SetData(DataDic);
-                    break;
-                case "Tones":
-                    _tones.SetData(DataDic);
-                    break;
-            }
-        }
         public void updateLocalRemoteSiren(string sirenString, bool state)
         {
 #if DEBUG
             Debug.WriteLine(sirenString.ToString());
 #endif
-            RemoteEventManager.Commands command;
-            Enum.TryParse(sirenString, out command);
+            Enum.TryParse(sirenString, out RemoteEventManager.Commands command);
             switch (command)
             {
                 case RemoteEventManager.Commands.MainSiren:
