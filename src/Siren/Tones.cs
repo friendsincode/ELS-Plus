@@ -1,9 +1,10 @@
 ﻿using CitizenFX.Core;
 using System.Collections.Generic;
+using ELS.FullSync;
 
 namespace ELS.Siren
 {
-    internal struct Tones
+    internal class Tones : IFullSyncComponent
     {
         internal Tone horn;
         internal Tone tone1;
@@ -13,10 +14,9 @@ namespace ELS.Siren
 
         internal void FullSync()
         {
-
-            BaseScript.TriggerServerEvent("ELS:FullSync", "Tones",ToDic(), Game.Player.ServerId);
         }
-        private Dictionary<string, string> ToDic()
+
+        public Dictionary<string, string> ToDic()
         {
             var dic =
                 new Dictionary<string, string>
@@ -35,7 +35,18 @@ namespace ELS.Siren
 
             return dic;
         }
-        internal void SetData(IDictionary<string, object> data)
+
+        public void RequestData()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void RunSync()
+        {
+            FullSyncManager.SendData(this.GetType().Name, ToDic(), Game.Player.ServerId);
+        }
+
+        public void SetData(IDictionary<string, object> data)
         {
             
             tone1.SetState(bool.Parse(data["tone1"].ToString()));

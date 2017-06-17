@@ -16,6 +16,10 @@ namespace ELS
         internal void RunTick()
         {
             _siren.ticker();
+            if (Game.IsControlJustPressed(0,Control.Cover))
+            {
+                RunFullSync();
+            }
         }
         public override bool Exists()
         {
@@ -27,6 +31,10 @@ namespace ELS
            _vehicle.Delete();
         }
 
+        internal void RunFullSync()
+        {
+            _siren.FullSync();
+        }
         internal void SendSirenCommand(string command,bool state)
         {
             _siren.updateLocalRemoteSiren(command,state);

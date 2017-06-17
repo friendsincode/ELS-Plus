@@ -1,20 +1,42 @@
 ﻿using CitizenFX.Core;
 using System;
 using System.Collections.Generic;
+using ELS.FullSync;
 
 namespace ELS.Siren
 {
     partial class Siren : IManagerEntry
     {
-        internal class MainSiren
+        private class MainSiren : IFullSyncComponent
         {
             internal bool _state { get; private set; }
             internal bool interupted = false;
             private Tone currentTone;
             internal void FullSync()
             {
-                BaseScript.TriggerServerEvent("ELS:FullSync", "MainSiren", ToDic(), Game.Player.ServerId);
+                //BaseScript.TriggerServerEvent("ELS:FullSync", "MainSiren", ToDic(), Game.Player.ServerId);
             }
+
+            void IFullSyncComponent.SetData(IDictionary<string, object> data)
+            {
+                SetData(data);
+            }
+
+            Dictionary<string, string> IFullSyncComponent.ToDic()
+            {
+                return ToDic();
+            }
+
+            public void RequestData()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void RunSync()
+            {
+                FullSyncManager.SendData(this.GetType().Name, ToDic(), Game.Player.ServerId);
+            }
+
             private Dictionary<string, string> ToDic()
             {
                 Dictionary<string, string> dic = new Dictionary<string, string>();

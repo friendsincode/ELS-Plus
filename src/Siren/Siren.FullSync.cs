@@ -7,7 +7,7 @@ namespace ELS.Siren
         internal void FullSync()
         {
             this._mainSiren.FullSync();
-            this._tones.FullSync();
+            this._tones.RunSync();
         }
 
         internal void SetFullSync(string dataType, IDictionary<string, object> dataDic)
