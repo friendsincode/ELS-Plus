@@ -25,7 +25,7 @@ namespace ELS.Siren
 
             public void RequestData()
             {
-                throw new NotImplementedException();
+               // throw new NotImplementedException();
             }
 
             public void RunSync()

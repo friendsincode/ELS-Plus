@@ -34,7 +34,7 @@ namespace ELS.Siren
 
         public void RequestData()
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
         public void RunSync()

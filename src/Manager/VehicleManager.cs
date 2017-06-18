@@ -24,18 +24,28 @@ namespace ELS.Manager
                 )
             )
             {
-                AddIfNotPresint(new ELSVehicle(Game.PlayerPed.CurrentVehicle.Handle));
+                this.AddIfNotPresint(Game.PlayerPed.CurrentVehicle);
                 _currentVehicle = Entities.Find((o => o.Handle == (int) Game.PlayerPed.CurrentVehicle.Handle)) as ELSVehicle;
                 _currentVehicle?.RunTick();
             }
         }
 
+        private new bool  AddIfNotPresint(PoolObject o)
+        {
+            if (!Entities.Exists(poolObject => poolObject.Handle == o.Handle))
+            {
+                Entities.Add(new ELSVehicle(o.Handle));
+
+                return false;
+            }
+            return true;
+        }
         internal void UpdateSirens(string command, int netId, bool state)
         {
             if (Game.Player.ServerId == netId) return;
             var vehicle = new PlayerList()[netId].Character.CurrentVehicle;
             if (!vehicle.Exists()) throw new Exception("Vehicle does not exist");
-            AddIfNotPresint(new ELSVehicle(vehicle.Handle));
+            AddIfNotPresint(vehicle);
            ((ELSVehicle) Entities.Find(o => o.Handle == (int) vehicle.Handle)).SendSirenCommand(command,state);
         }
 

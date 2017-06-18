@@ -12,6 +12,7 @@ namespace ELS
         {
             _vehicle = new Vehicle(handle);
             _siren = new Siren.Siren(_vehicle);
+            Debug.WriteLine($"created vehicle");
         }
 
         internal void RunTick()

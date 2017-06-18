@@ -63,7 +63,7 @@ namespace ELS
                 var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
 
 
-                if (filename.Equals("/extra-files/ELS.ini"))
+                if (filename.Equals("extra-files/ELS.ini"))
                 {
                     OnSettingsLoaded?.Invoke(SettingsType.Type.GLOBAL, data);
                 }
