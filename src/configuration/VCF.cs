@@ -122,7 +122,6 @@ namespace ELS.configuration
         /// <remarks/>
 
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
         internal partial class vcfroot
@@ -311,7 +310,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootINTERFACE
         {
@@ -379,7 +377,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootEOVERRIDE
         {
@@ -567,7 +564,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootEOVERRIDEExtra01
         {
@@ -671,7 +667,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootEOVERRIDEExtra02
         {
@@ -775,7 +770,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootEOVERRIDEExtra03
         {
@@ -879,7 +873,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootEOVERRIDEExtra04
         {
@@ -983,7 +976,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootEOVERRIDEExtra05
         {
@@ -1087,7 +1079,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootEOVERRIDEExtra06
         {
@@ -1191,7 +1182,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootEOVERRIDEExtra07
         {
@@ -1295,7 +1285,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootEOVERRIDEExtra08
         {
@@ -1399,7 +1388,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootEOVERRIDEExtra09
         {
@@ -1503,7 +1491,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootEOVERRIDEExtra10
         {
@@ -1527,7 +1514,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootEOVERRIDEExtra11
         {
@@ -1551,7 +1537,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootEOVERRIDEExtra12
         {
@@ -1575,7 +1560,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootMISC
         {
@@ -1673,7 +1657,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootMISCTakedowns
         {
@@ -1713,7 +1696,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootMISCSceneLights
         {
@@ -1753,7 +1735,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootCRUISE
         {
@@ -1791,7 +1772,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootCRUISEUseExtras
         {
@@ -1863,7 +1843,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootACORONAS
         {
@@ -1946,7 +1925,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootACORONASHeadlights
         {
@@ -2002,7 +1980,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootACORONASTailLights
         {
@@ -2058,7 +2035,6 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootACORONASIndicatorsF
         {
@@ -2114,7 +2090,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootACORONASIndicatorsB
         {
@@ -2170,7 +2146,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootACORONASReverseLights
         {
@@ -2226,7 +2202,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSOUNDS
         {
@@ -2369,7 +2345,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSOUNDSMainHorn
         {
@@ -2409,7 +2385,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSOUNDSManTone1
         {
@@ -2449,7 +2425,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSOUNDSManTone2
         {
@@ -2489,7 +2465,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSOUNDSSrnTone1
         {
@@ -2529,7 +2505,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSOUNDSSrnTone2
         {
@@ -2569,7 +2545,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSOUNDSSrnTone3
         {
@@ -2609,7 +2585,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSOUNDSSrnTone4
         {
@@ -2649,7 +2625,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSOUNDSAuxSiren
         {
@@ -2689,7 +2665,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSOUNDSPanicMde
         {
@@ -2729,7 +2705,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootWRNL
         {
@@ -2798,7 +2774,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootWRNLPresetPatterns
         {
@@ -2821,7 +2797,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootWRNLPresetPatternsLstg3
         {
@@ -2861,7 +2837,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootWRNLForcedPatterns
         {
@@ -2974,7 +2950,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootWRNLForcedPatternsMainHorn
         {
@@ -3014,7 +2990,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootWRNLForcedPatternsSrnTone1
         {
@@ -3054,7 +3030,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootWRNLForcedPatternsSrnTone2
         {
@@ -3094,7 +3070,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootWRNLForcedPatternsSrnTone3
         {
@@ -3134,7 +3110,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootWRNLForcedPatternsSrnTone4
         {
@@ -3174,7 +3150,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootWRNLForcedPatternsPanicMde
         {
@@ -3214,7 +3190,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootWRNLForcedPatternsOutOfVeh
         {
@@ -3254,7 +3230,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootWRNLScanPatternCustomPool
         {
@@ -3310,7 +3286,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootPRML
         {
@@ -3395,7 +3371,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootPRMLPresetPatterns
         {
@@ -3433,7 +3409,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootPRMLPresetPatternsLstg2
         {
@@ -3473,7 +3449,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootPRMLPresetPatternsLstg3
         {
@@ -3513,7 +3489,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootPRMLForcedPatterns
         {
@@ -3626,7 +3602,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootPRMLForcedPatternsMainHorn
         {
@@ -3666,7 +3642,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootPRMLForcedPatternsSrnTone1
         {
@@ -3706,7 +3682,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootPRMLForcedPatternsSrnTone2
         {
@@ -3746,7 +3722,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootPRMLForcedPatternsSrnTone3
         {
@@ -3786,7 +3762,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootPRMLForcedPatternsSrnTone4
         {
@@ -3826,7 +3802,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootPRMLForcedPatternsPanicMde
         {
@@ -3866,7 +3842,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootPRMLForcedPatternsOutOfVeh
         {
@@ -3906,7 +3882,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootPRMLScanPatternCustomPool
         {
@@ -3962,7 +3938,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSECL
         {
@@ -4047,7 +4023,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSECLPresetPatterns
         {
@@ -4100,7 +4076,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSECLPresetPatternsLstg1
         {
@@ -4140,7 +4116,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSECLPresetPatternsLstg2
         {
@@ -4180,7 +4156,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSECLPresetPatternsLstg3
         {
@@ -4220,7 +4196,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSECLForcedPatterns
         {
@@ -4333,7 +4309,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSECLForcedPatternsMainHorn
         {
@@ -4373,7 +4349,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSECLForcedPatternsSrnTone1
         {
@@ -4413,7 +4389,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSECLForcedPatternsSrnTone2
         {
@@ -4453,7 +4429,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSECLForcedPatternsSrnTone3
         {
@@ -4493,7 +4469,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSECLForcedPatternsSrnTone4
         {
@@ -4533,7 +4509,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSECLForcedPatternsPanicMde
         {
@@ -4573,7 +4549,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSECLForcedPatternsOutOfVeh
         {
@@ -4613,7 +4589,7 @@ namespace ELS.configuration
 
         /// <remarks/>
         [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
+        
         [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
         public partial class vcfrootSECLScanPatternCustomPool
         {

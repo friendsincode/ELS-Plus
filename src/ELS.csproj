@@ -57,7 +57,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ReferencePath>
-      $([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\lib\CitizenFx\'))
+      $([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\libs\CitizenFx\'))
     </ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugREMOTETEST|AnyCPU'">
@@ -83,6 +83,7 @@
       <HintPath>..\libs\CitizenFx\CitizenFX.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.CSharp, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -93,7 +94,6 @@
       <HintPath>..\libs\System.Xml.net.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="configuration\ControlConfiguration.cs" />
