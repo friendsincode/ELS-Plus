@@ -3,6 +3,6 @@ server:
   url: 127.0.0.1:30120
   password: lovely
   src: .
-  root: C:\Users\ejbev\Desktop\cfx-server
+  root: C:\Users\ejbev\Documents\server-data
   name: ELS-FiveM
   iceconpath: ..\..\..\utils\icecon_windows_amd64.exe

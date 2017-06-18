@@ -40,20 +40,9 @@ if NUIEnabled then
 
 end
 
-
 -- Server Events
 server_script 'server.lua'
 
--- Object Entry
-local function ini_entry(data)
-	files(data)
-	ELSFM(data)
-end
-
-local function vcf_entry(data)
-	files(data)
-	ELSFMVCF(data)
-end
-
-ini_entry('extra-files/ELS.ini')
-vcf_entry('extra-files/POLICE.xml')
+files({
+'extra-files/ELS.ini',
+'extra-files/POLICE.xml'})

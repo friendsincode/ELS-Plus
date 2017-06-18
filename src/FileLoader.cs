@@ -17,6 +17,7 @@
 */
 
 using System;
+using System.IO;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using ELS.configuration;
@@ -48,40 +49,31 @@ namespace ELS
 
         private static void LoadFilesPromScript(string name)
         {
-            int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "ELSFM");
+            int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "file");
 #if DEBUG
-            Debug.WriteLine("number of INI files to load: " + num + " " + name);
+            if(num>0) Debug.WriteLine("number of files to load: " + num + " " + name);
 #endif
             for (int i = 0; i < num; i++)
             {
-                var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "ELSFM", i);
+                var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
+
 #if DEBUG
                 Debug.WriteLine($"Name: {name}, Loading: {filename}");
 #endif
+                var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
 
-                if (filename.Equals("extra-files/ELS.ini"))
+
+                if (filename.Equals("/extra-files/ELS.ini"))
                 {
-                    var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
                     OnSettingsLoaded?.Invoke(SettingsType.Type.GLOBAL, data);
                 }
-            }
-
-            num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "ELSFMVCF");
+                else if (Path.GetExtension(filename).ToLower()==".xml")
+                {
 #if DEBUG
-            Debug.WriteLine("number of VCF files to load: " + num + " " + name);
+                    Debug.WriteLine("Sending data to XML parser");
 #endif
-            for (int i = 0; i < num; i++)
-            {
-                var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "ELSFMVCF", i);
-#if DEBUG
-                Debug.WriteLine($"Name: {name}, Loading: {filename}");
-#endif
-
-                var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
-#if DEBUG
-                Debug.WriteLine("Sending data to XML parser");
-#endif
-                VCF.load(SettingsType.Type.VCF, filename, data);
+                    VCF.load(SettingsType.Type.VCF, filename, data);
+                }
             }
         }
     }
