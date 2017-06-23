@@ -83,5 +83,10 @@ namespace ELS.configuration
             internal Control Toggle_DSRN { get; set; }
             internal Control TogInfoPanl { get; set; }
         }
+
+        internal static bool isValidData(string data)
+        {
+            return SharpConfig.Configuration.LoadFromString(data).Contains("CONTROL","Toggle_WRNL");
+        }
     }
 }

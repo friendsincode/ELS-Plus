@@ -44,15 +44,14 @@ namespace ELS
             _FileLoader = new FileLoader(this);
            // _sirenManager = new SirenManager();
             _vehicleManager = new VehicleManager();
-            EventHandlers["onClientResourceStart"] += new Action<string>(
-                (string obj) =>
+            EventHandlers["onClientResourceStart"] += new Action<string>(async (string obj) =>
                 {
-                    if (obj == "ELS-FiveM")
+                    if (obj == Function.Call<string>(Hash.GET_CURRENT_RESOURCE_NAME))
                     {
+                        await Delay(5000);
                         try
                         {
-                            _FileLoader.RunLoader();
-
+                            _FileLoader.RunLoader(obj);
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
                             EventHandlers["ELS:NewFullSyncData"] += new Action<string, IDictionary<string, object>, int>(_vehicleManager.SyncVehicle);
                             Tick += Class1_Tick;

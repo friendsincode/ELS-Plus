@@ -50,29 +50,31 @@ namespace ELS
         private static void LoadFilesPromScript(string name)
         {
             int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "file");
-#if DEBUG
-            if(num>0) Debug.WriteLine("number of files to load: " + num + " " + name);
-#endif
+            
             for (int i = 0; i < num; i++)
             {
                 var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
 
-#if DEBUG
-                Debug.WriteLine($"Name: {name}, Loading: {filename}");
-#endif
                 var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
 
 
                 if (filename.Equals("extra-files/ELS.ini"))
                 {
-                    OnSettingsLoaded?.Invoke(SettingsType.Type.GLOBAL, data);
+                    if (configuration.ControlConfiguration.isValidData(data))
+                    {
+                        OnSettingsLoaded?.Invoke(SettingsType.Type.GLOBAL, data);
+                    }
                 }
                 else if (Path.GetExtension(filename).ToLower()==".xml")
                 {
+
+                    if (VCF.isValidData(data))
+                    {
 #if DEBUG
-                    Debug.WriteLine("Sending data to XML parser");
+                        Debug.WriteLine("Sending data to XML parser");
 #endif
-                    VCF.load(SettingsType.Type.VCF, filename, data);
+                        VCF.load(SettingsType.Type.VCF, filename, data);
+                    }
                 }
             }
         }

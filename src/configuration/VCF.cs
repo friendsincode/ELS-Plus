@@ -83,7 +83,6 @@ namespace ELS.configuration
                 doc.LoadXml(Data);
                 bool res;
                 data.FileName = Path.GetFileNameWithoutExtension(name);
-                Debug.WriteLine(data.FileName);
 
                 data.SOUNDS.ManTone1.AudioString = doc["vcfroot"]["SOUNDS"]["ManTone1"].Attributes["AudioString"].Value;
                 data.SOUNDS.ManTone1.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["ManTone1"].Attributes["AllowUse"].Value);
@@ -4644,5 +4643,11 @@ namespace ELS.configuration
         }
 
 
+        internal static bool isValidData(string data)
+        {
+            System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+            doc.LoadXml(data);
+            return doc.DocumentElement.Name == "vcfroot";
+        }
     }
 }
