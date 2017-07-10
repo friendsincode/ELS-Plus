@@ -25,5 +25,12 @@ namespace ELS.Light
 {
     class Light
     {
+        private int _extraId;
+        private ELSVehicle _vehicle;
+        internal Light(ELSVehicle vehicle,int extraId)
+        {
+            _vehicle = vehicle;
+            _extraId = extraId;
+        }
     }
 }

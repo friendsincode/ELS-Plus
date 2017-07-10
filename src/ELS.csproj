@@ -107,7 +107,6 @@
     <Compile Include="extentions.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="FullSync\FullSync.cs" />
-    <Compile Include="LightManager.cs" />
     <Compile Include="Light\Light.cs" />
     <Compile Include="Light\LightArray.cs" />
     <Compile Include="Light\LightStage.cs" />
