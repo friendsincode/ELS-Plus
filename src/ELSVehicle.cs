@@ -8,7 +8,6 @@ namespace ELS
     {
         private Siren.Siren _siren;
         private Vehicle _vehicle;
-        private Light.Light = new 
         public ELSVehicle(int handle) : base(handle)
         {
             _vehicle = new Vehicle(handle);
