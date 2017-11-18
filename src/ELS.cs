@@ -52,6 +52,7 @@ namespace ELS
                         try
                         {
                             _FileLoader.RunLoader(obj);
+                            //TODO: make a load files from all resouces.
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
                             EventHandlers["ELS:NewFullSyncData"] += new Action<string, IDictionary<string, object>, int>(_vehicleManager.SyncVehicle);
                             Tick += Class1_Tick;
@@ -71,6 +72,11 @@ namespace ELS
 
                     //_spotLight= new SpotLight();
                 });
+            EventHandlers["onClientResourceStop"] += new Action<string>(async (string obj) =>
+            {
+                _FileLoader.UnLoadFilesFromScript(obj);
+            });
+
             EventHandlers["ELS:SirenUpdated"] += new Action<string, int, bool>(_vehicleManager.UpdateSirens);
 
             EventHandlers["onPlayerJoining"] += new Action(() =>
@@ -98,7 +104,7 @@ namespace ELS
                 if (Game.IsControlJustReleased(0, Control.MultiplayerInfo))
                 {
                     
-                    //_sirenManager.FullSync();
+                   // _sirenManager.FullSync();
                     Debug.WriteLine("FullSync™ ran");
                 }
             }

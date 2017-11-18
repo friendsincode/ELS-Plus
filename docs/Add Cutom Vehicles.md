@@ -16,7 +16,7 @@ local function vcf_loader()
   }
   for i = 1, #vcf_files do
 	local car = vcf_files[i]:upper()
-	files('stream/' .. car .. '/ELS/' .. car .. '.xml')
+	files({'stream/' .. car .. '/ELS/' .. car .. '.xml'})
 	ELSFMVCF('stream/' .. car .. '/ELS/' .. car .. '.xml')
   end
 end

@@ -8,7 +8,7 @@ namespace ELS
     {
         public static bool IsEls(this Vehicle vehicle)
         {
-            return configuration.VCF.ELSVehicle.Exists(obj => obj.FileName == vehicle.DisplayName);
+            return configuration.VCF.ELSVehicle.Exists(obj => obj.Item2.FileName == vehicle.DisplayName);
         }
 
         public static void CleanUp(this PoolObject poolObject)

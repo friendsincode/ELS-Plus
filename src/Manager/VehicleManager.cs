@@ -42,7 +42,9 @@ namespace ELS.Manager
         }
         internal void UpdateSirens(string command, int netId, bool state)
         {
+#if !REMOTETEST
             if (Game.Player.ServerId == netId) return;
+#endif
             var vehicle = new PlayerList()[netId].Character.CurrentVehicle;
             if (!vehicle.Exists()) throw new Exception("Vehicle does not exist");
             AddIfNotPresint(vehicle);

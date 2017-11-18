@@ -25,11 +25,11 @@ namespace ELS.configuration
 {
     public class VCF
     {
-        internal static List<vcfroot> ELSVehicle = new List<vcfroot>();
+        internal static List<Tuple<String,vcfroot>> ELSVehicle = new List<Tuple<String,vcfroot>>();
         public VCF()
         {
         }
-        internal static void load(SettingsType.Type type, string name, string Data)
+        internal static void load(SettingsType.Type type, string name, string Data,string ResourceName)
         {
             var bytes = Encoding.UTF8.GetBytes(Data);
             if (bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
@@ -113,9 +113,20 @@ namespace ELS.configuration
                 data.SOUNDS.PanicMde.AudioString = doc["vcfroot"]["SOUNDS"]["PanicMde"].Attributes["AudioString"].Value;
 
                 data.Author = doc["vcfroot"].Attributes["Author"].Value;
-                ELSVehicle.Add(data);
+                //TODO: add method to remove old file or a file from ELSVehicle
+                if (ELSVehicle.Exists(veh => veh.Item1 == ResourceName))
+                {
+                    Debug.WriteLine($"Removeing preexisting VCF for resource ${ResourceName}");
+                    ELSVehicle.RemoveAll(veh => veh.Item1 == ResourceName);
+                }
+                ELSVehicle.Add(new Tuple<String,vcfroot>(ResourceName,data));
                 Debug.WriteLine($"Added {data.FileName}");
             }
+        }
+        internal static void unload(string ResourceName)
+        {
+            var count = ELSVehicle.RemoveAll(veh => veh.Item1.Equals(ResourceName));
+            CitizenFX.Core.Debug.WriteLine($"Unloaded ${count} VCF for ${ResourceName}");
         }
 
         /// <remarks/>

@@ -59,7 +59,7 @@ AddEventHandler("ELS:FullSync",function(DataType,DataDic,PlayerId)
 	TriggerClientEvent("ELS:NewFullSyncData",-1,DataType,DataDic,PlayerId)
 end)
 
-
+--[[
 local function getAllSubDirs(directory)
     local tabletoreturn={}
     local dfiles = clr.System.IO.Directory.GetDirectories(directory,"*",clr.System.IO.SearchOption.AllDirectories)
@@ -69,7 +69,7 @@ local function getAllSubDirs(directory)
     end
 	--print(typeOf(dfiles))
     return dfiles
-end
+end]]
 
 
 
