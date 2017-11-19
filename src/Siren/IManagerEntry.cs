@@ -6,7 +6,7 @@ namespace ELS.Siren
     {
         void CleanUP();
         void ticker();
-        void updateLocalRemoteSiren(string sirenString, bool state);
+        void updateLocaFromlRemoteSirenControlData(string sirenString, bool state);
         Vehicle _vehicle { get; set; }
     }
 }

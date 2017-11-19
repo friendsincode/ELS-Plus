@@ -4,7 +4,7 @@ using CitizenFX.Core;
 
 namespace ELS
 {
-    public class ELSVehicle :PoolObject
+    public class ELSVehicle : PoolObject
     {
         private Siren.Siren _siren;
         private Vehicle _vehicle;
@@ -12,15 +12,17 @@ namespace ELS
         {
             _vehicle = new Vehicle(handle);
             _siren = new Siren.Siren(_vehicle);
-            Debug.WriteLine($"created vehicle");
+            CitizenFX.Core.Debug.WriteLine($"created vehicle");
         }
 
         internal void RunTick()
         {
             _siren.ticker();
-            if (Game.IsControlJustPressed(0,Control.Cover))
+            if (Game.IsControlJustPressed(0, Control.Cover))
             {
                 RunFullSync();
+                CitizenFX.Core.UI.Screen.ShowNotification("FullSync™ ran");
+                CitizenFX.Core.Debug.WriteLine("FullSync™ ran");
             }
         }
         public override bool Exists()
@@ -30,7 +32,7 @@ namespace ELS
 
         public override void Delete()
         {
-           _vehicle.Delete();
+            _vehicle.Delete();
         }
 
         private void RunFullSync()
@@ -40,11 +42,11 @@ namespace ELS
 
         internal void SyncData(string dataType, IDictionary<string, object> dataDic)
         {
-            _siren.SetFullSync(dataType,dataDic);
+            _siren.SetFullSync(dataType, dataDic);
         }
-        internal void SendSirenCommand(string command,bool state)
+        internal void UpdateSiren(string command, bool state)
         {
-            _siren.updateLocalRemoteSiren(command,state);
+            _siren.updateLocaFromlRemoteSirenControlData(command, state);
         }
     }
 }

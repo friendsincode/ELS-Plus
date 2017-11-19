@@ -15,7 +15,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]
-resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
+resource_manifest_version '05cfa83c-a124-4cfa-a768-c24a5811d8f9'
 local NUIEnabled = false
 
 -- XML Processing Requirements

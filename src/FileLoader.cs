@@ -50,7 +50,7 @@ namespace ELS
         private static void LoadFilesPromScript(string name)
         {
             int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "file");
-            Debug.WriteLine($"{num} files for {name}");
+            CitizenFX.Core.Debug.WriteLine($"{num} files for {name}");
             for (int i = 0; i < num; i++)
             {
                 var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
@@ -71,7 +71,7 @@ namespace ELS
                     if (VCF.isValidData(data))
                     {
 #if DEBUG
-                        Debug.WriteLine("Sending data to XML parser");
+                        CitizenFX.Core.Debug.WriteLine("Sending data to XML parser");
 #endif
                         VCF.load(SettingsType.Type.VCF, filename, data,name);
                     }

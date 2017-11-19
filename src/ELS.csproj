@@ -99,6 +99,7 @@
     <Compile Include="configuration\ControlConfiguration.cs" />
     <Compile Include="configuration\global.cs" />
     <Compile Include="configuration\SettingsType.cs" />
+    <Compile Include="Debug.cs" />
     <Compile Include="Decorator\DecorManager.cs" />
     <Compile Include="ELS.cs" />
     <Compile Include="Decorator\EntityDecoration.cs" />

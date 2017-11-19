@@ -6,10 +6,10 @@ namespace ELS.Siren
 {
     partial class Siren
     {
-        public void updateLocalRemoteSiren(string sirenString, bool state)
+        public void updateLocaFromlRemoteSirenControlData(string sirenString, bool state)
         {
 #if DEBUG
-            Debug.WriteLine(sirenString.ToString());
+            CitizenFX.Core.Debug.WriteLine(sirenString.ToString());
 #endif
             Enum.TryParse(sirenString, out RemoteEventManager.Commands command);
             switch (command)

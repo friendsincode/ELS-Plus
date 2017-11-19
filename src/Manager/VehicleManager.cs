@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using CitizenFX.Core;
+using CitizenFX.Core.Native;
+using CitizenFX.Core.UI;
 
 namespace ELS.Manager
 {
@@ -25,12 +27,12 @@ namespace ELS.Manager
             )
             {
                 this.AddIfNotPresint(Game.PlayerPed.CurrentVehicle);
-                _currentVehicle = Entities.Find((o => o.Handle == (int) Game.PlayerPed.CurrentVehicle.Handle)) as ELSVehicle;
+                _currentVehicle = Entities.Find((o => o.Handle == (int)Game.PlayerPed.CurrentVehicle.Handle)) as ELSVehicle;
                 _currentVehicle?.RunTick();
             }
         }
 
-        private new bool  AddIfNotPresint(PoolObject o)
+        private new bool AddIfNotPresint(PoolObject o)
         {
             if (!Entities.Exists(poolObject => poolObject.Handle == o.Handle))
             {
@@ -42,29 +44,34 @@ namespace ELS.Manager
         }
         internal void UpdateSirens(string command, int netId, bool state)
         {
-#if !REMOTETEST
-            if (Game.Player.ServerId == netId) return;
-#endif
-            var vehicle = new PlayerList()[netId].Character.CurrentVehicle;
-            if (!vehicle.Exists()) throw new Exception("Vehicle does not exist");
+            //#if !REMOTETEST
+            //            if (Game.Player.ServerId == netId) return;
+            //#endif
+            //var vehicle = new PlayerList()[netId].Character.CurrentVehicle;
+            var vehicle = new Vehicle(Function.Call<int>(Hash.NETWORK_GET_ENTITY_FROM_NETWORK_ID, netId));
+            if (!CitizenFX.Core.Native.Function.Call<bool>(Hash.DOES_ENTITY_EXIST, vehicle))
+            {
+                Screen.ShowNotification("Vehicle does not exist");
+                return;
+            };
             AddIfNotPresint(vehicle);
-           ((ELSVehicle) Entities.Find(o => o.Handle == (int) vehicle.Handle)).SendSirenCommand(command,state);
+            ((ELSVehicle)Entities.Find(o => o.Handle == (int)vehicle.Handle)).UpdateSiren(command, state);
         }
 
         internal void SyncVehicle(string dataType, IDictionary<string, object> dataDic, int playerId)
         {
             var veh = new PlayerList()[playerId].Character.CurrentVehicle;
-            ((ELSVehicle) Entities.Find(o => o.Handle == veh.Handle)).SyncData(dataType, dataDic);
+            ((ELSVehicle)Entities.Find(o => o.Handle == veh.Handle)).SyncData(dataType, dataDic);
         }
 
         void SyncAllVehicles()
         {
-            
+
         }
 
         void GetAllVehicles()
         {
-            
+
         }
     }
 }

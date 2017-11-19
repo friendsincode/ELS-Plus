@@ -47,9 +47,11 @@ namespace ELS
         internal static event RemoteMessageRecievedHandler RemoteMessageRecieved;
         internal static void SendEvent(Commands type,Vehicle vehicle,bool state)
         {
-            var netId = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);
-            var ped = vehicle.GetPedOnSeat(VehicleSeat.Driver);
-            BaseScript.TriggerServerEvent("ELS",type.ToString(),Game.Player.ServerId,state);
+            //var netId = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);
+            //var ped = vehicle.GetPedOnSeat(VehicleSeat.Driver);
+            vehicle.RegisterAsNetworked();
+            vehicle.SetExistOnAllMachines(true);
+            BaseScript.TriggerServerEvent("ELS",type.ToString(),vehicle.GetNetworkId(),state);
         }
     }
 }

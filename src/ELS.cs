@@ -31,7 +31,7 @@ namespace ELS
 {
     public class ELS : BaseScript
     {
-       // private readonly SirenManager _sirenManager;
+        // private readonly SirenManager _sirenManager;
         private readonly FileLoader _FileLoader;
         private SpotLight _spotLight;
         private readonly VehicleManager _vehicleManager;
@@ -42,13 +42,13 @@ namespace ELS
         {
             _controlConfiguration = new configuration.ControlConfiguration();
             _FileLoader = new FileLoader(this);
-           // _sirenManager = new SirenManager();
+            // _sirenManager = new SirenManager();
             _vehicleManager = new VehicleManager();
             EventHandlers["onClientResourceStart"] += new Action<string>(async (string obj) =>
                 {
                     if (obj == Function.Call<string>(Hash.GET_CURRENT_RESOURCE_NAME))
                     {
-                        await Delay(5000);
+                        await Delay(500);
                         try
                         {
                             _FileLoader.RunLoader(obj);
@@ -103,9 +103,9 @@ namespace ELS
                 _vehicleManager.RunTick();
                 if (Game.IsControlJustReleased(0, Control.MultiplayerInfo))
                 {
-                    
-                   // _sirenManager.FullSync();
-                    Debug.WriteLine("FullSync™ ran");
+                    await Debug.Spawn();
+
+                    // _sirenManager.FullSync();
                 }
             }
             catch (Exception ex)
@@ -113,7 +113,7 @@ namespace ELS
                 //TriggerServerEvent($"ONDEBUG", ex.ToString());
                 //await Delay(5000);
                 Screen.ShowNotification($"ERROR {ex}", true);
-                throw ex;
+                //throw ex;
             }
         }
     }

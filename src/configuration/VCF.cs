@@ -116,11 +116,11 @@ namespace ELS.configuration
                 //TODO: add method to remove old file or a file from ELSVehicle
                 if (ELSVehicle.Exists(veh => veh.Item1 == ResourceName))
                 {
-                    Debug.WriteLine($"Removeing preexisting VCF for resource ${ResourceName}");
+                    CitizenFX.Core.Debug.WriteLine($"Removeing preexisting VCF for resource ${ResourceName}");
                     ELSVehicle.RemoveAll(veh => veh.Item1 == ResourceName);
                 }
                 ELSVehicle.Add(new Tuple<String,vcfroot>(ResourceName,data));
-                Debug.WriteLine($"Added {data.FileName}");
+                CitizenFX.Core.Debug.WriteLine($"Added {data.FileName}");
             }
         }
         internal static void unload(string ResourceName)
