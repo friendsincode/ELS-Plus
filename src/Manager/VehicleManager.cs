@@ -26,8 +26,11 @@ namespace ELS.Manager
                 )
             )
             {
-                this.AddIfNotPresint(Game.PlayerPed.CurrentVehicle);
+
                 _currentVehicle = Entities.Find((o => o.Handle == (int)Game.PlayerPed.CurrentVehicle.Handle)) as ELSVehicle;
+                Screen.ShowNotification("adding vehicle");
+                AddIfNotPresint(Game.PlayerPed.CurrentVehicle);
+
                 _currentVehicle?.RunTick();
             }
         }
@@ -42,11 +45,11 @@ namespace ELS.Manager
             }
             return true;
         }
-        internal void UpdateSirens(string command, int netId, bool state)
+        internal void UpdateSirens(string command, int netId, int playerId, bool state)
         {
-            //#if !REMOTETEST
-            //            if (Game.Player.ServerId == netId) return;
-            //#endif
+#if !REMOTETEST
+            if (Game.Player.ServerId == playerId) return;
+#endif
             //var vehicle = new PlayerList()[netId].Character.CurrentVehicle;
             var vehicle = new Vehicle(Function.Call<int>(Hash.NETWORK_GET_ENTITY_FROM_NETWORK_ID, netId));
             if (!CitizenFX.Core.Native.Function.Call<bool>(Hash.DOES_ENTITY_EXIST, vehicle))
@@ -56,6 +59,8 @@ namespace ELS.Manager
             };
             AddIfNotPresint(vehicle);
             ((ELSVehicle)Entities.Find(o => o.Handle == (int)vehicle.Handle)).UpdateSiren(command, state);
+
+
         }
 
         internal void SyncVehicle(string dataType, IDictionary<string, object> dataDic, int playerId)

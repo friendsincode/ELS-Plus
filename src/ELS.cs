@@ -77,7 +77,7 @@ namespace ELS
                 _FileLoader.UnLoadFilesFromScript(obj);
             });
 
-            EventHandlers["ELS:SirenUpdated"] += new Action<string, int, bool>(_vehicleManager.UpdateSirens);
+            EventHandlers["ELS:SirenUpdated"] += new Action<string, int,int, bool>(_vehicleManager.UpdateSirens);
 
             EventHandlers["onPlayerJoining"] += new Action(() =>
               {

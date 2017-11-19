@@ -118,15 +118,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteEventManager.cs" />
     <Compile Include="Siren\IManagerEntry.cs" />
-    <Compile Include="Siren\MainSiren.cs" />
-    <Compile Include="Siren\Siren.Controls.cs" />
-    <Compile Include="Siren\Siren.ControlsKBProccess.cs" />
-    <Compile Include="Siren\Siren.cs" />
-    <Compile Include="Siren\Siren.FullSync.cs" />
-    <Compile Include="Siren\Siren.updateLocalRemoteSiren.cs" />
-    <Compile Include="Siren\Tone.cs" />
+    <Compile Include="Siren\Siren\Siren.Loop.cs" />
+    <Compile Include="Siren\MainSiren\MainSiren.cs" />
+    <Compile Include="Siren\Siren\Siren.Logic.cs" />
+    <Compile Include="Siren\Siren\Siren.Controls.KB.cs" />
+    <Compile Include="Siren\Siren\Siren.cs" />
+    <Compile Include="Siren\Siren\Siren.FullSync.cs" />
+    <Compile Include="Siren\Siren\Siren.Controls.Remote.cs" />
+    <Compile Include="Siren\Tone\Tone.cs" />
     <Compile Include="configuration\VCF.cs" />
-    <Compile Include="Siren\Tones.cs" />
+    <Compile Include="Siren\Tone\Tones.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NUI\api.lua" />

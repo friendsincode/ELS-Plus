@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace ELS.Siren
 {
-    partial class Siren
+    partial class Siren : IManagerEntry
     {
-        public void updateLocaFromlRemoteSirenControlData(string sirenString, bool state)
+        public void SirenControlsRemote(string sirenString, bool state)
         {
 #if DEBUG
             CitizenFX.Core.Debug.WriteLine(sirenString.ToString());
@@ -15,22 +15,22 @@ namespace ELS.Siren
             switch (command)
             {
                 case RemoteEventManager.Commands.MainSiren:
-                    MainSirenToggleControls(state);
+                    MainSirenToggleLogic(state);
                     break;
                 case RemoteEventManager.Commands.AirHorn:
-                    AirHornControls(state);
+                    AirHornLogic(state);
                     break;
                 case RemoteEventManager.Commands.ManualTone1:
-                    ManualTone1Controls(state);
+                    ManualTone1Logic(state);
                     break;
                 case RemoteEventManager.Commands.ManualTone2:
-                    ManualTone2Controls(state);
+                    ManualTone2Logic(state);
                     break;
                 case RemoteEventManager.Commands.ManualTone3:
-                    ManualTone3Controls(state);
+                    ManualTone3Logic(state);
                     break;
                 case RemoteEventManager.Commands.ManualTone4:
-                    ManualTone4Controls(state);
+                    ManualTone4Logic(state);
                     break;
             }
         }

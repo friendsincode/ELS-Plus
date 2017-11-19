@@ -27,7 +27,7 @@ namespace ELS
         }
         public override bool Exists()
         {
-            return _vehicle.Exists();
+            return CitizenFX.Core.Native.Function.Call<bool>(CitizenFX.Core.Native.Hash.DOES_ENTITY_EXIST,_vehicle);
         }
 
         public override void Delete()
@@ -46,7 +46,7 @@ namespace ELS
         }
         internal void UpdateSiren(string command, bool state)
         {
-            _siren.updateLocaFromlRemoteSirenControlData(command, state);
+            _siren.SirenControlsRemote(command, state);
         }
     }
 }

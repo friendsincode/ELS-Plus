@@ -54,24 +54,5 @@ namespace ELS.Siren
             _tones.tone4.CleanUp();
 
         }
-
-        public void ticker()
-        {
-            Game.DisableControlThisFrame(0, Control.VehicleHorn);
-            if (Game.IsControlJustReleased(0, Control.VehicleHorn))
-            {
-                _vehicle.IsSirenActive = !_vehicle.IsSirenActive;
-            }
-
-            AirHornControlsKBProccess();
-            ManualTone1ControlsKBProccess();
-            ManualTone2ControlsKBProccess();
-            ManualTone3ControlsKBProccess();
-            ManualTone4ControlsKBProccess();
-            ManualSoundControlsKBProccess();
-            MainSirenToggleControlsKBProccess();
-            DualSirenControlsKBProccess();
-
-        }
     }
 }

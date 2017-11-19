@@ -2,7 +2,7 @@
 
 namespace ELS.Siren
 {
-    partial class Siren
+    partial class Siren : IManagerEntry
     {
         internal void FullSync()
         {

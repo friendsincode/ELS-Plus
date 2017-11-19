@@ -5,9 +5,9 @@ using Control = CitizenFX.Core.Control;
 
 namespace ELS.Siren
 {
-    partial class Siren
+    partial class Siren : IManagerEntry
     {
-        void AirHornControls(bool pressed)
+        void AirHornLogic(bool pressed)
         {
             if (pressed)
             {
@@ -47,7 +47,7 @@ namespace ELS.Siren
             }
         }
 
-        void ManualTone1Controls(bool pressed)
+        void ManualTone1Logic(bool pressed)
         {
             if (pressed)
             {
@@ -64,7 +64,7 @@ namespace ELS.Siren
             }
 
         }
-        void ManualTone2Controls(bool pressed)
+        void ManualTone2Logic(bool pressed)
         {
             if (pressed)
             {
@@ -80,7 +80,7 @@ namespace ELS.Siren
                 }
             }
         }
-        void ManualTone3Controls(bool pressed)
+        void ManualTone3Logic(bool pressed)
         {
             if (pressed)
             {
@@ -95,7 +95,7 @@ namespace ELS.Siren
                 }
             }
         }
-        void ManualTone4Controls(bool pressed)
+        void ManualTone4Logic(bool pressed)
         {
             if (pressed)
             {
@@ -111,7 +111,7 @@ namespace ELS.Siren
             }
         }
 
-        private void MainSirenToggleControls(bool pressed)
+        private void MainSirenToggleLogic(bool pressed)
         {
             if (pressed)
             {
@@ -120,7 +120,7 @@ namespace ELS.Siren
             }
         }
 
-        void ManualSoundControls(bool pressed)
+        void ManualSoundLogic(bool pressed)
         {
             if (pressed)
             {
@@ -149,7 +149,7 @@ namespace ELS.Siren
             }
         }
 
-        void DualSirenControls(bool pressed)
+        void DualSirenLogic(bool pressed)
         {
             if (pressed)
             {

@@ -34,9 +34,9 @@ AddEventHandler("sirenStateChanged",function (vehnetId,netSoundid,propertyName,s
 	end
 end)
 
-AddEventHandler("ELS",function(type,netId,state)
+AddEventHandler("ELS",function(type,netId,PlayerId,state)
 	--print(type .. " " .. netId .. " "  .. state)
-	TriggerClientEvent("ELS:SirenUpdated",-1,type,netId,state)
+	TriggerClientEvent("ELS:SirenUpdated",-1,type,netId,PlayerId,state)
 end)
 
 local function PrintTable(table)
