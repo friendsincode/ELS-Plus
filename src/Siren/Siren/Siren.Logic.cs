@@ -111,9 +111,9 @@ namespace ELS.Siren
             }
         }
 
-        private void MainSirenToggleLogic(bool pressed)
+        private void MainSirenToggleLogic(bool toggle)
         {
-            if (pressed)
+            if (toggle)
             {
                 Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Toggle_SIRN);
                 _mainSiren.SetState(!_mainSiren._state);
@@ -149,9 +149,9 @@ namespace ELS.Siren
             }
         }
 
-        void DualSirenLogic(bool pressed)
+        void DualSirenLogic(bool toggle)
         {
-            if (pressed)
+            if (toggle)
             {
                 Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Toggle_DSRN);
                 dual_siren = !dual_siren;

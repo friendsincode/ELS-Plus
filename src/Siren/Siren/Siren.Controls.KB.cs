@@ -87,13 +87,14 @@ namespace ELS.Siren
                 Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Sound_Manul);
                 ManualSoundLogic(true);
 #if !REMOTETEST
-                //RemoteEventManager.SendEvent(RemoteEventManager.Commands.)
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualSound, _vehicle, true, Game.Player.ServerId);
 #endif
             }
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Manul))
             {
                 ManualSoundLogic(false);
 #if !REMOTETEST
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualSound, _vehicle, false, Game.Player.ServerId);
 #endif
             }
         }
@@ -104,6 +105,7 @@ namespace ELS.Siren
             {
                 DualSirenLogic(true);
 #if !REMOTETEST
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.DualSiren, _vehicle, true, Game.Player.ServerId);
 #endif
             }
         }

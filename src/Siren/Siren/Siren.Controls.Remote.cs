@@ -32,6 +32,12 @@ namespace ELS.Siren
                 case RemoteEventManager.Commands.ManualTone4:
                     ManualTone4Logic(state);
                     break;
+                case RemoteEventManager.Commands.ManualSound:
+                    ManualSoundLogic(state);
+                    break;
+                case RemoteEventManager.Commands.DualSiren:
+                    DualSirenLogic(state);
+                    break;
             }
         }
     }

@@ -31,7 +31,6 @@ namespace ELS.Siren
             {
                 throw new Exception($"Their is no VCF file for this vehicle: {_vehicle.DisplayName}");
             }
-
             _tones = new Tones
             {
                 horn = new Tone(_vcf.SOUNDS.MainHorn.AudioString, _vehicle, ToneType.Horn),
