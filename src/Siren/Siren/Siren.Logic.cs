@@ -19,32 +19,23 @@ namespace ELS.Siren
 
                 if (_vcf.SOUNDS.MainHorn.InterruptsSiren)
                 {
-                    if (_mainSiren._state)
+                    if (_mainSiren._enable)
                     {
                         _mainSiren.interupted = true;
-                        _mainSiren.SetState(false);
+                        _mainSiren.SetEnable(false);
                     }
-                    _tones.horn.SetState(true);
                 }
-                else
-                {
-                    _tones.horn.SetState(true);
-                }
+                _tones.horn.SetState(true);
             }
             if (!pressed)
             {
-                if (_vcf.SOUNDS.MainHorn.InterruptsSiren)
+                _tones.horn.SetState(false);
+
+                if (_vcf.SOUNDS.MainHorn.InterruptsSiren &&
+                    _mainSiren.interupted)
                 {
-                    _tones.horn.SetState(false);
-                    if (_mainSiren.interupted)
-                    {
-                        _mainSiren.interupted = false;
-                        _mainSiren.SetState(true);
-                    }
-                }
-                else
-                {
-                    _tones.horn.SetState(false);
+                    _mainSiren.interupted = false;
+                    _mainSiren.SetEnable(true);
                 }
             }
         }
@@ -55,7 +46,7 @@ namespace ELS.Siren
 
             if (pressed)
             {
-                if (_mainSiren._state)
+                if (_mainSiren._enable) //Is the MainSiren Active
                 {
                     _mainSiren.setMainTone(_tones.tone1);
                 }
@@ -73,7 +64,7 @@ namespace ELS.Siren
             if (pressed)
             {
 
-                if (_mainSiren._state)
+                if (_mainSiren._enable)
                 {
                     _mainSiren.setMainTone(_tones.tone2);
                 }
@@ -88,7 +79,7 @@ namespace ELS.Siren
             if (disableControls) Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Snd_SrnTon3);
             if (pressed)
             {
-                if (_mainSiren._state)
+                if (_mainSiren._enable)
                 {
                     _mainSiren.setMainTone(_tones.tone3);
                 }
@@ -103,7 +94,7 @@ namespace ELS.Siren
             if (disableControls) Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Snd_SrnTon4);
             if (pressed)
             {
-                if (_mainSiren._state)
+                if (_mainSiren._enable)
                 {
                     _mainSiren.setMainTone(_tones.tone4);
                 }
@@ -119,7 +110,7 @@ namespace ELS.Siren
             if (disableControls) Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Toggle_SIRN);
             if (toggle)
             {
-                _mainSiren.SetState(!_mainSiren._state);
+                _mainSiren.SetEnable(!_mainSiren._enable);
             }
         }
 
@@ -128,7 +119,7 @@ namespace ELS.Siren
             if (disableControls) Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Sound_Manul);
             if (pressed)
             {
-                if (!_mainSiren._state || (!_mainSiren._state && _vcf.SOUNDS.MainHorn.InterruptsSiren &&
+                if (!_mainSiren._enable || (!_mainSiren._enable && _vcf.SOUNDS.MainHorn.InterruptsSiren &&
                                            _tones.horn._state))
                 {
                     _tones.tone1.SetState(true);
@@ -140,7 +131,7 @@ namespace ELS.Siren
             }
             else
             {
-                if (!_mainSiren._state || (!_mainSiren._state && _vcf.SOUNDS.MainHorn.InterruptsSiren &&
+                if (!_mainSiren._enable || (!_mainSiren._enable && _vcf.SOUNDS.MainHorn.InterruptsSiren &&
                                            _tones.horn._state))
                 {
                     _tones.tone1.SetState(false);
