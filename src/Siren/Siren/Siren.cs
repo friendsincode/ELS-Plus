@@ -20,7 +20,6 @@ namespace ELS.Siren
         private MainSiren _mainSiren;
         private VCF.vcfroot _vcf;
         Tones _tones;
-
         public Siren(Vehicle vehicle)
         {
             _vehicle = vehicle;
@@ -37,10 +36,11 @@ namespace ELS.Siren
                 tone1 = new Tone(_vcf.SOUNDS.SrnTone1.AudioString, _vehicle, ToneType.SrnTon1),
                 tone2 = new Tone(_vcf.SOUNDS.SrnTone2.AudioString, _vehicle, ToneType.SrnTon2),
                 tone3 = new Tone(_vcf.SOUNDS.SrnTone3.AudioString, _vehicle, ToneType.SrnTon3),
-                tone4 = new Tone(_vcf.SOUNDS.SrnTone4.AudioString, _vehicle, ToneType.SrnTon4)
+                tone4 = new Tone(_vcf.SOUNDS.SrnTone4.AudioString, _vehicle, ToneType.SrnTon4),
+                panicAlarm = new Tone(_vcf.SOUNDS.PanicMde.AudioString, _vehicle, ToneType.SrnPnic)
             };
             dual_siren = false;
-            _mainSiren = new MainSiren(_tones);
+            _mainSiren = new MainSiren(ref _tones);
             RequestFullSyncData();
         }
 
@@ -51,7 +51,7 @@ namespace ELS.Siren
             _tones.tone2.CleanUp();
             _tones.tone3.CleanUp();
             _tones.tone4.CleanUp();
-
+            _tones.panicAlarm.CleanUp();
         }
     }
 }

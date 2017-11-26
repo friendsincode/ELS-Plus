@@ -11,10 +11,10 @@ namespace ELS
             return configuration.VCF.ELSVehicle.Exists(obj => obj.Item2.FileName == vehicle.DisplayName);
         }
 
-        public static void CleanUp(this PoolObject poolObject)
-        {
-            if (!poolObject.Exists()) poolObject.CleanUp();
-        }
+        //public static void CleanUp(this PoolObject poolObject)
+        //{
+        //    if (!poolObject.Exists()) poolObject.CleanUp();
+        //}
 
         public static Int64 GetNetworkId(this Entity entity)
         {

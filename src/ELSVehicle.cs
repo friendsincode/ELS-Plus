@@ -14,16 +14,28 @@ namespace ELS
             _siren = new Siren.Siren(_vehicle);
             CitizenFX.Core.Debug.WriteLine($"created vehicle");
         }
+        internal void CleanUP()
+        {
+            _siren.CleanUP();
+        }
 
         internal void RunTick()
         {
-            _siren.ticker();
+            _siren.Ticker();
             if (Game.IsControlJustPressed(0, Control.Cover))
             {
                 RunFullSync();
                 CitizenFX.Core.UI.Screen.ShowNotification("FullSync™ ran");
                 CitizenFX.Core.Debug.WriteLine("FullSync™ ran");
             }
+        }
+        internal void RunExternalTick()
+        {
+            _siren.ExternalTicker();
+        }
+        internal Vector3 GetBonePosistion()
+        {
+            return _vehicle.Bones["door_dside_f"].Position;
         }
         public override bool Exists()
         {
@@ -37,14 +49,14 @@ namespace ELS
 
         private void RunFullSync()
         {
-            _siren.FullSync();
+            _siren.FullSendSync();
         }
 
-        internal void SyncData(string dataType, IDictionary<string, object> dataDic)
+        internal void SetSyncData(string dataType, IDictionary<string, object> dataDic)
         {
             _siren.SetFullSync(dataType, dataDic);
         }
-        internal void UpdateSiren(string command, bool state)
+        internal void UpdateRemoteSiren(string command, bool state)
         {
             _siren.SirenControlsRemote(command, state);
         }

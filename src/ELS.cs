@@ -31,7 +31,6 @@ namespace ELS
 {
     public class ELS : BaseScript
     {
-        // private readonly SirenManager _sirenManager;
         private readonly FileLoader _FileLoader;
         private SpotLight _spotLight;
         private readonly VehicleManager _vehicleManager;
@@ -42,7 +41,6 @@ namespace ELS
         {
             _controlConfiguration = new configuration.ControlConfiguration();
             _FileLoader = new FileLoader(this);
-            // _sirenManager = new SirenManager();
             _vehicleManager = new VehicleManager();
             EventHandlers["onClientResourceStart"] += new Action<string>(async (string obj) =>
                 {
@@ -54,7 +52,7 @@ namespace ELS
                             _FileLoader.RunLoader(obj);
                             //TODO: make a load files from all resouces.
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
-                            EventHandlers["ELS:NewFullSyncData"] += new Action<string, IDictionary<string, object>, int>(_vehicleManager.SyncVehicle);
+                            EventHandlers["ELS:NewFullSyncData"] += new Action<string, IDictionary<string, object>, int>(_vehicleManager.SetSyncVehicle);
                             Tick += Class1_Tick;
                         }
                         catch (Exception e)
@@ -74,17 +72,24 @@ namespace ELS
                 });
             EventHandlers["onClientResourceStop"] += new Action<string>(async (string obj) =>
             {
-                _FileLoader.UnLoadFilesFromScript(obj);
+                if (obj == Function.Call<string>(Hash.GET_CURRENT_RESOURCE_NAME))
+                {
+                    _vehicleManager.CleanUP();
+                    _FileLoader.UnLoadFilesFromScript(obj);
+                }
             });
 
-            EventHandlers["ELS:SirenUpdated"] += new Action<string, int,int, bool>(_vehicleManager.UpdateSirens);
+            EventHandlers["ELS:SirenUpdated"] += new Action<string, int, int, bool>(_vehicleManager.UpdateRemoteSirens);
 
             EventHandlers["onPlayerJoining"] += new Action(() =>
-              {
+            {
 
-              });
+            });
         }
-
+        ~ELS()
+        {
+            CitizenFX.Core.Debug.WriteLine("ELS dcstor ran");
+        }
         public static string CurrentResourceName()
         {
             return Function.Call<string>(Hash.GET_CURRENT_RESOURCE_NAME);

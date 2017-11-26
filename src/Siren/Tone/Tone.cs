@@ -14,7 +14,8 @@ namespace ELS.Siren
         SrnTon1,
         SrnTon2,
         SrnTon3,
-        SrnTon4
+        SrnTon4,
+        SrnPnic
     }
     class Tone
     {
@@ -48,6 +49,9 @@ namespace ELS.Siren
         
         internal void CleanUp()
         {
+#if DEBUG
+            CitizenFX.Core.Debug.WriteLine("Tone deconstructor ran");
+#endif
             Audio.StopSound(soundId);
             Audio.ReleaseSound(soundId);
         }

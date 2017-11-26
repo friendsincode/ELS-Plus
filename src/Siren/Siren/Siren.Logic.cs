@@ -152,5 +152,15 @@ namespace ELS.Siren
                 Screen.ShowNotification($"Dual Siren {dual_siren}");
             }
         }
+        void PanicAlarmLogic(bool toggle,bool disableControls = false)
+        {
+            if (disableControls) Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Snd_SrnPnic);
+            CitizenFX.Core.UI.Screen.ShowNotification($"{toggle}");
+            this._tones.panicAlarm.SetState(toggle);
+            if (toggle)
+            {
+                //Screen.ShowNotification($"{toggle}");
+            }
+        }
     }
 }

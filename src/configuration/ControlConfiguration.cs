@@ -32,7 +32,7 @@ namespace ELS.configuration
         public static ELSControls KeyBindings = new ELSControls();
         internal ControlConfiguration()
         {
-            FileLoader.OnSettingsLoaded += FileLoader_OnSettingsLoaded;   
+            FileLoader.OnSettingsLoaded += FileLoader_OnSettingsLoaded;
         }
 
         private void FileLoader_OnSettingsLoaded(SettingsType.Type type, string Data)
@@ -67,6 +67,9 @@ namespace ELS.configuration
                 t = u["CONTROL"]["TogInfoPanl"].IntValue;
                 KeyBindings.TogInfoPanl = (Control)t;
 
+                t = u["CONTROL"]["Snd_SrnPnic"].IntValue;
+                KeyBindings.Snd_SrnPnic = (Control)t;
+
                 ControlsUpdated?.Invoke(KeyBindings);
 
             }
@@ -79,6 +82,7 @@ namespace ELS.configuration
             internal Control Snd_SrnTon2 { get; set; }
             internal Control Snd_SrnTon3 { get; set; }
             internal Control Snd_SrnTon4 { get; set; }
+            internal Control Snd_SrnPnic { get; set; }
             internal Control Sound_Manul { get; set; }
             internal Control Toggle_DSRN { get; set; }
             internal Control TogInfoPanl { get; set; }
@@ -86,7 +90,7 @@ namespace ELS.configuration
 
         internal static bool isValidData(string data)
         {
-            return SharpConfig.Configuration.LoadFromString(data).Contains("CONTROL","Toggle_WRNL");
+            return SharpConfig.Configuration.LoadFromString(data).Contains("CONTROL", "Toggle_WRNL");
         }
     }
 }

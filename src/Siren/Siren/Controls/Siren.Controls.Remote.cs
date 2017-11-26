@@ -11,39 +11,38 @@ namespace ELS.Siren
 #if DEBUG
             CitizenFX.Core.Debug.WriteLine(sirenString.ToString());
 #endif
-            var disableHWInput = false;
-            if (Game.Player.Character.CurrentVehicle == this._vehicle &&
+            bool disableHWInput = Game.Player.Character.CurrentVehicle == this._vehicle &&
                this._vehicle.GetPedOnSeat(VehicleSeat.Passenger) == Game.PlayerPed &&
-               this.dual_siren)
-            {
-                disableHWInput = true;
-            }
+               this.dual_siren;
             Enum.TryParse(sirenString, out RemoteEventManager.Commands command);
             switch (command)
             {
                 case RemoteEventManager.Commands.MainSiren:
-                    MainSirenToggleLogic(state,disableHWInput);
+                    MainSirenToggleLogic(state, disableHWInput);
                     break;
                 case RemoteEventManager.Commands.AirHorn:
-                    AirHornLogic(state,disableHWInput);
+                    AirHornLogic(state, disableHWInput);
                     break;
                 case RemoteEventManager.Commands.ManualTone1:
-                    ManualTone1Logic(state,disableHWInput);
+                    ManualTone1Logic(state, disableHWInput);
                     break;
                 case RemoteEventManager.Commands.ManualTone2:
-                    ManualTone2Logic(state,disableHWInput);
+                    ManualTone2Logic(state, disableHWInput);
                     break;
                 case RemoteEventManager.Commands.ManualTone3:
-                    ManualTone3Logic(state,disableHWInput);
+                    ManualTone3Logic(state, disableHWInput);
                     break;
                 case RemoteEventManager.Commands.ManualTone4:
-                    ManualTone4Logic(state,disableHWInput);
+                    ManualTone4Logic(state, disableHWInput);
                     break;
                 case RemoteEventManager.Commands.ManualSound:
-                    ManualSoundLogic(state,disableHWInput);
+                    ManualSoundLogic(state, disableHWInput);
                     break;
                 case RemoteEventManager.Commands.DualSiren:
-                    DualSirenLogic(state,disableHWInput);
+                    DualSirenLogic(state, disableHWInput);
+                    break;
+                case RemoteEventManager.Commands.PanicAlarm:
+                    PanicAlarmLogic(state, disableHWInput);
                     break;
             }
         }

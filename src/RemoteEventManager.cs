@@ -36,7 +36,8 @@ namespace ELS
             ManualTone3,
             ManualTone4,
             ManualSound,
-            DualSiren
+            DualSiren,
+            PanicAlarm
         }
         internal enum MessageTypes
         {

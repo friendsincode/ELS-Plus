@@ -9,7 +9,7 @@ namespace ELS.Siren
 {
     partial class Siren : IManagerEntry
     {
-        public void ticker()
+        public void Ticker()
         {
             Game.DisableControlThisFrame(0, Control.VehicleHorn);
             if (Game.IsControlJustReleased(0, Control.VehicleHorn))
@@ -25,7 +25,10 @@ namespace ELS.Siren
             ManualSoundControlsKB();
             MainSirenToggleControlsKB();
             DualSirenControlsKB();
-
+        }
+        public void ExternalTicker()
+        {
+            PanicAlarmControlsKB();
         }
     }
 }

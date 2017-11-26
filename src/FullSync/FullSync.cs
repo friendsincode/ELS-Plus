@@ -37,6 +37,6 @@ namespace ELS.FullSync
         void SetData(IDictionary<string, object> data);
         Dictionary<string, string> ToDic();
         void RequestData();
-        void RunSync();
+        void RunSendSync();
     }
 }
