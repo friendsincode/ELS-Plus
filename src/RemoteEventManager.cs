@@ -48,6 +48,7 @@ namespace ELS
         }
         internal delegate void RemoteMessageRecievedHandler();
         internal static event RemoteMessageRecievedHandler RemoteMessageRecieved;
+
         internal static void SendEvent(Commands type,Vehicle vehicle,bool state,int playerID)
         {
             //var netId = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);

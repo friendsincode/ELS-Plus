@@ -47,18 +47,22 @@ namespace ELS
             _vehicle.Delete();
         }
 
-        private void RunFullSync()
+        internal void RunFullSync()
         {
-            _siren.FullSendSync();
+            _siren.RunSendSync();
         }
 
-        internal void SetSyncData(string dataType, IDictionary<string, object> dataDic)
+        internal void SetSyncData(IDictionary<string, object> dataDic)
         {
-            _siren.SetFullSync(dataType, dataDic);
+            _siren.SetData(dataDic);
         }
         internal void UpdateRemoteSiren(string command, bool state)
         {
             _siren.SirenControlsRemote(command, state);
+        }
+        internal long GetNetworkId()
+        {
+            return this._vehicle.GetNetworkId();
         }
     }
 }

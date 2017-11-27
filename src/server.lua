@@ -15,24 +15,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]
-RegisterServerEvent("sirenStateChanged")
 RegisterServerEvent("ELS")
 RegisterServerEvent("ELS:FullSync")
 RegisterServerEvent("ONDEBUG")
+RegisterServerEvent("ELS:FullSync:Request")
 --[[
 if clr.System.IO.Directory.Exists("resources/" .. GetInvokingResource() .. "/bugs") ==false then
 	clr.System.IO.Directory.CreateDirectory("resources/" .. GetInvokingResource() .. "/bugs")
 end]]
-
-AddEventHandler("sirenStateChanged",function (vehnetId,netSoundid,propertyName,state)
-	--print(netId .. propertyName .. state)
-	TriggerClientEvent("sirenStateChanged",-1,vehnetId,netSoundid,propertyName,state)
-	local players=GetPlayers()
-	print(players)
-	for x,y in ipairs(players) do
-		print(x .. " "  .. y)
-	end
-end)
 
 AddEventHandler("ELS",function(type,netId,PlayerId,state)
 	--print(type .. " " .. netId .. " "  .. state)
@@ -41,22 +31,33 @@ end)
 
 local function PrintTable(table)
 	if type(table) == 'table' then
-		for v in table do
-			print(v)
+		for k,v in pairs(table) do
 			if type(v) == 'table' then
 				PrintTable(v)
+			end
+			if type(v) == 'string' then
+				print(string.format("%-20s",k),v)
+			end
+			if type(v) == 'number' then
+				print(string.format("%-20f",k),v)
 			end
 		end
 	end
 end
 
-AddEventHandler("ELS:FullSync",function(DataType,DataDic,PlayerId)
+AddEventHandler("ELS:FullSync:Request",function(NetworkId)
+	print(source," is requsting ELS sync data")
+	TriggerClientEvent(0,"ELS:FullSync:Request",NetworkId)
+end)
+--TriggerClientEvent()
+
+AddEventHandler("ELS:FullSync",function(DataType,DataDic,NetworkId)
 	--print(type(DataType),type(DataDic),type(PlayerId))
 	--PrintTable(DataType)
 	--if DataType == 'Tones' then
-		PrintTable(DataDic)
+	PrintTable(DataDic)
 	
-	TriggerClientEvent("ELS:NewFullSyncData",-1,DataType,DataDic,PlayerId)
+	TriggerClientEvent("ELS:NewFullSyncData",-1,DataType,DataDic,NetworkId)
 end)
 
 --[[

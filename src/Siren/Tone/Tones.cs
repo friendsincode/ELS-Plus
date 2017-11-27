@@ -13,10 +13,10 @@ namespace ELS.Siren
         internal Tone tone4;
         internal Tone panicAlarm;
 
-        public Dictionary<string, string> ToDic()
+        public Dictionary<string, object> ToDic()
         {
             var dic =
-                new Dictionary<string, string>
+                new Dictionary<string, object>
                 {
                     {"horn", horn._state.ToString()},
                     {"tone1", tone1._state.ToString()},
@@ -33,15 +33,6 @@ namespace ELS.Siren
 #endif
 
             return dic;
-        }
-        public void RequestData()
-        {
-            //throw new System.NotImplementedException();
-        }
-
-        public void RunSendSync()
-        {
-            FullSyncManager.SendData(this.GetType().Name, ToDic(), Game.Player.ServerId);
         }
 
         public void SetData(IDictionary<string, object> data)

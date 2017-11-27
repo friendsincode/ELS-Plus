@@ -29,7 +29,7 @@ namespace ELS.Manager
             {
 
                 _currentVehicle = Entities.Find((o => o.Handle == (int)Game.PlayerPed.CurrentVehicle.Handle)) as ELSVehicle;
-                Screen.ShowNotification("adding vehicle");
+                //Screen.ShowNotification("adding vehicle");
                 AddIfNotPresint(Game.PlayerPed.CurrentVehicle);
 
                 _currentVehicle?.RunTick();
@@ -70,7 +70,7 @@ namespace ELS.Manager
             if (!CitizenFX.Core.Native.Function.Call<bool>(Hash.DOES_ENTITY_EXIST, vehicle))
             {
                 Screen.ShowNotification("Vehicle does not exist");
-                Screen.ShowNotification($"Net Status {Function.Call<bool>(Hash.NETWORK_GET_ENTITY_IS_NETWORKED,vehicle)}");
+                Screen.ShowNotification($"Net Status {Function.Call<bool>(Hash.NETWORK_GET_ENTITY_IS_NETWORKED, vehicle)}");
                 return;
             };
             AddIfNotPresint(vehicle);
@@ -79,12 +79,15 @@ namespace ELS.Manager
 
         }
 
-        internal void SetSyncVehicle(string dataType, IDictionary<string, object> dataDic, int playerId)
+        internal void SetSyncVehicle(string dataType, IDictionary<string, object> dataDic, long NetworkID)
         {
-            var veh = new PlayerList()[playerId].Character.CurrentVehicle;
-            ((ELSVehicle)Entities.Find(o => o.Handle == veh.Handle)).SetSyncData(dataType, dataDic);
+            ((ELSVehicle)Entities.Find(o => ((ELSVehicle)o).GetNetworkId() == NetworkID)).SetSyncData(dataDic);
         }
 
+        internal void SyncRequestReply(long NetworkId)
+        {
+            ((ELSVehicle)Entities.Find(o => ((ELSVehicle)o).GetNetworkId() == NetworkId)).RunFullSync();
+        }
         void SyncAllVehicles()
         {
 
@@ -96,9 +99,9 @@ namespace ELS.Manager
         }
         internal void CleanUP()
         {
-            foreach(var obj in Entities)
+            foreach (var obj in Entities)
             {
-                ((ELSVehicle) obj).CleanUP();
+                ((ELSVehicle)obj).CleanUP();
             }
         }
         ~VehicleManager()

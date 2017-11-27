@@ -39,20 +39,22 @@ namespace ELS
 
         public ELS()
         {
+            bool Loaded = false;
             _controlConfiguration = new configuration.ControlConfiguration();
             _FileLoader = new FileLoader(this);
             _vehicleManager = new VehicleManager();
             EventHandlers["onClientResourceStart"] += new Action<string>(async (string obj) =>
                 {
+                    //TODO rewrite loader so that it 
                     if (obj == Function.Call<string>(Hash.GET_CURRENT_RESOURCE_NAME))
                     {
-                        await Delay(500);
+                        //await Delay(500);
                         try
                         {
                             _FileLoader.RunLoader(obj);
                             //TODO: make a load files from all resouces.
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
-                            EventHandlers["ELS:NewFullSyncData"] += new Action<string, IDictionary<string, object>, int>(_vehicleManager.SetSyncVehicle);
+                            SetupConnections();
                             Tick += Class1_Tick;
                         }
                         catch (Exception e)
@@ -65,11 +67,23 @@ namespace ELS
                     }
                     else
                     {
-                        _FileLoader.RunLoader(obj);
+                        try
+                        {
+                            _FileLoader.RunLoader(obj);
+                        }
+                        catch (Exception e)
+                        {
+                            TriggerServerEvent($"ONDEBUG", e.ToString());
+                            Screen.ShowNotification($"ERROR:{e.Message}");
+                        }
                     }
 
                     //_spotLight= new SpotLight();
                 });
+            
+        }
+        private void SetupConnections()
+        {
             EventHandlers["onClientResourceStop"] += new Action<string>(async (string obj) =>
             {
                 if (obj == Function.Call<string>(Hash.GET_CURRENT_RESOURCE_NAME))
@@ -85,6 +99,11 @@ namespace ELS
             {
 
             });
+
+            EventHandlers["ELS:NewFullSyncData"] += new Action<string, IDictionary<string, object>, long>(_vehicleManager.SetSyncVehicle);
+
+
+            EventHandlers["ELS:FullSync:Request"] += new Action<long>(_vehicleManager.SyncRequestReply);
         }
         ~ELS()
         {
