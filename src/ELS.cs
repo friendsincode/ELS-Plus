@@ -92,18 +92,19 @@ namespace ELS
                     _FileLoader.UnLoadFilesFromScript(obj);
                 }
             });
-
-            EventHandlers["ELS:SirenUpdated"] += new Action<string, int, int, bool>(_vehicleManager.UpdateRemoteSirens);
+            //command that siren state has changed.
+            //recieves a command
+            //EventHandlers["ELS:SirenUpdated"] += new Action<string, int, int, bool>(_vehicleManager.UpdateRemoteSirens);
 
             EventHandlers["onPlayerJoining"] += new Action(() =>
             {
 
             });
+            //Take in data and apply it
+            EventHandlers["ELS:NewFullSyncData"] += new Action<IDictionary<string, object>>(_vehicleManager.SetVehicleSyncData);
 
-            EventHandlers["ELS:NewFullSyncData"] += new Action<string, IDictionary<string, object>, long>(_vehicleManager.SetSyncVehicle);
-
-
-            EventHandlers["ELS:FullSync:Request"] += new Action<long>(_vehicleManager.SyncRequestReply);
+            //handle request for sync data.
+            EventHandlers["ELS:FullSync:Request"] += new Action<long>(VehicleManager.SyncRequestReply);
         }
         ~ELS()
         {

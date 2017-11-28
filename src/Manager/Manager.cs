@@ -10,7 +10,7 @@ namespace ELS.Manager
 {
     abstract class Manager
     {
-        protected List<PoolObject> Entities = new List<PoolObject>();
+        protected static List<PoolObject> Entities = new List<PoolObject>();
         internal Manager()
         {
             

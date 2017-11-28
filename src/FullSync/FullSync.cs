@@ -24,9 +24,13 @@ namespace ELS.FullSync
             BaseScript.TriggerServerEvent("ELS:FullSync:Request", NetworkID);
         }
 
-        internal static void SendData(string SirenType,IDictionary dic,long NetworkID)
+        internal static void SendDataBroadcast(IDictionary dic)
         {
-            BaseScript.TriggerServerEvent("ELS:FullSync",SirenType,dic,NetworkID);
+            BaseScript.TriggerServerEvent("ELS:FullSync:Broadcast",dic);
+        }
+        internal static void SendDataUnicast(IDictionary dic,int PlayerID)
+        {
+            BaseScript.TriggerServerEvent("ELS:FullSync:Unicast", dic,PlayerID);
         }
     }
     internal static class SetData
@@ -40,6 +44,6 @@ namespace ELS.FullSync
     internal interface IFullSyncComponent
     {
         void SetData(IDictionary<string, object> data);
-        Dictionary<string, object> ToDic();
+        Dictionary<string, object> GetData();
     }
 }

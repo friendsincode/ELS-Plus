@@ -13,7 +13,7 @@ namespace ELS.Siren
         internal Tone tone4;
         internal Tone panicAlarm;
 
-        public Dictionary<string, object> ToDic()
+        public Dictionary<string, object> GetData()
         {
             var dic =
                 new Dictionary<string, object>

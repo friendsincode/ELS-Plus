@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using CitizenFX.Core.UI;
 using ELS.configuration;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ELS.Siren
 {
@@ -20,7 +22,7 @@ namespace ELS.Siren
         private MainSiren _mainSiren;
         private VCF.vcfroot _vcf;
         Tones _tones;
-        public Siren(Vehicle vehicle)
+        public Siren(Vehicle vehicle,[Optional]IDictionary<string,object> data)
         {
             _vehicle = vehicle;
             Function.Call(Hash.DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, _vehicle, true);
@@ -41,7 +43,7 @@ namespace ELS.Siren
             };
             dual_siren = false;
             _mainSiren = new MainSiren(ref _tones);
-            RequestFullSyncData();
+            if (data != null) SetData(data);
         }
 
         public void CleanUP()

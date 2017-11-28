@@ -12,60 +12,61 @@ namespace ELS.Siren
                  Game.CurrentInputMode == InputMode.MouseAndKeyboard) ||
                 (Game.IsControlJustPressed(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
             {
-                AirHornLogic(true, true);
 #if !REMOTETEST
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle, true, Game.Player.ServerId);
+                AirHornLogic(true, true);
+
 #endif
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle, true, Game.Player.ServerId);
+
             }
             if ((Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) &&
                  Game.CurrentInputMode == InputMode.MouseAndKeyboard)
                 || (Game.IsControlJustReleased(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
             {
-                AirHornLogic(false, true);
 #if !REMOTETEST
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle, false, Game.Player.ServerId);
+                AirHornLogic(false, true);
 #endif
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle, false, Game.Player.ServerId);
             }
         }
         void ManualTone1ControlsKB()
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon1))
             {
-                ManualTone1Logic(true, true);
-
 #if !REMOTETEST
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone1, _vehicle, true, Game.Player.ServerId);
+                ManualTone1Logic(true, true);
 #endif
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone1, _vehicle, true, Game.Player.ServerId);
             }
         }
         void ManualTone2ControlsKB()
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon2))
             {
-                ManualTone2Logic(true, true);
 #if !REMOTETEST
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone2, _vehicle, true, Game.Player.ServerId);
+                ManualTone2Logic(true, true);
 #endif
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone2, _vehicle, true, Game.Player.ServerId);
             }
         }
         void ManualTone3ControlsKB()
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon3))
             {
-                ManualTone3Logic(true, true);
 #if !REMOTETEST
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone3, _vehicle, true, Game.Player.ServerId);
+                ManualTone3Logic(true, true);
 #endif
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone3, _vehicle, true, Game.Player.ServerId);
             }
         }
         void ManualTone4ControlsKB()
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon4))
             {
-                ManualTone4Logic(true, true);
 #if !REMOTETEST
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone4, _vehicle, true, Game.Player.ServerId);
+                ManualTone4Logic(true, true);
 #endif
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone4, _vehicle, true, Game.Player.ServerId);
             }
         }
 
@@ -73,10 +74,10 @@ namespace ELS.Siren
         {
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Toggle_SIRN))
             {
-                MainSirenToggleLogic(true, true);
 #if !REMOTETEST
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MainSiren, _vehicle, true, Game.Player.ServerId);
+                MainSirenToggleLogic(true, true);
 #endif
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MainSiren, _vehicle, true, Game.Player.ServerId);
             }
         }
 
@@ -84,17 +85,17 @@ namespace ELS.Siren
         {
             if (Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Sound_Manul))
             {
-                ManualSoundLogic(true, true);
 #if !REMOTETEST
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualSound, _vehicle, true, Game.Player.ServerId);
+                ManualSoundLogic(true, true);
 #endif
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualSound, _vehicle, true, Game.Player.ServerId);
             }
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Manul))
             {
-                ManualSoundLogic(false, true);
 #if !REMOTETEST
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualSound, _vehicle, false, Game.Player.ServerId);
+                ManualSoundLogic(false, true);
 #endif
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualSound, _vehicle, false, Game.Player.ServerId);
             }
         }
 
@@ -102,10 +103,12 @@ namespace ELS.Siren
         {
             if (Game.IsControlJustReleased(0, ControlConfiguration.KeyBindings.Toggle_DSRN))
             {
-                DualSirenLogic(true, true);
 #if !REMOTETEST
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.DualSiren, _vehicle, true, Game.Player.ServerId);
+                DualSirenLogic(true, true);
 #endif
+                System.Collections.Generic.Dictionary<String, object> dic = new System.Collections.Generic.Dictionary<string, object>();
+                Manager.VehicleManager.SyncRequestReply(this._vehicle.GetNetworkId());
+                //RemoteEventManager.SendEvent(RemoteEventManager.Commands.DualSiren, _vehicle, true, Game.Player.ServerId);
             }
         }
         int pressedTime;

@@ -19,15 +19,26 @@ RegisterServerEvent("ELS")
 RegisterServerEvent("ELS:FullSync")
 RegisterServerEvent("ONDEBUG")
 RegisterServerEvent("ELS:FullSync:Request")
+RegisterServerEvent("ELS:FullSync:Broadcast")
 --[[
 if clr.System.IO.Directory.Exists("resources/" .. GetInvokingResource() .. "/bugs") ==false then
 	clr.System.IO.Directory.CreateDirectory("resources/" .. GetInvokingResource() .. "/bugs")
 end]]
 
-AddEventHandler("ELS",function(type,netId,PlayerId,state)
-	--print(type .. " " .. netId .. " "  .. state)
-	TriggerClientEvent("ELS:SirenUpdated",-1,type,netId,PlayerId,state)
-end)
+-- Print contents of `tbl`, with indentation.
+-- `indent` sets the initial level of indentation.
+function tprint (tbl, indent)
+  if not indent then indent = 0 end
+  for k, v in pairs(tbl) do
+    formatting = string.rep("  ", indent) .. k .. ": "
+    if type(v) == "table" then
+      print(formatting)
+      tprint(v, indent+1)
+    else
+      print(formatting .. tostring(v))
+    end
+  end
+end
 
 local function PrintTable(table)
 	if type(table) == 'table' then
@@ -39,25 +50,25 @@ local function PrintTable(table)
 				print(string.format("%-20s",k),v)
 			end
 			if type(v) == 'number' then
-				print(string.format("%-20f",k),v)
+				print(string.format("%-20s",k),v)
 			end
 		end
 	end
 end
 
-AddEventHandler("ELS:FullSync:Request",function(NetworkId)
+AddEventHandler("ELS:FullSync:Request:All",function(NetworkId)
 	print(source," is requsting ELS sync data")
 	TriggerClientEvent(0,"ELS:FullSync:Request",NetworkId)
 end)
---TriggerClientEvent()
 
-AddEventHandler("ELS:FullSync",function(DataType,DataDic,NetworkId)
-	--print(type(DataType),type(DataDic),type(PlayerId))
-	--PrintTable(DataType)
-	--if DataType == 'Tones' then
+AddEventHandler("ELS:FullSync:Broadcast",function(DataDic)
+	tprint(DataDic)
+	TriggerClientEvent("ELS:NewFullSyncData",-1,DataDic)
+end)
+
+AddEventHandler("ELS:FullSync:Unicast",function(DataDic,PlayerId)
 	PrintTable(DataDic)
-	
-	TriggerClientEvent("ELS:NewFullSyncData",-1,DataType,DataDic,NetworkId)
+	TriggerClientEvent("ELS:NewFullSyncData",PlayerId,DataDic)
 end)
 
 --[[

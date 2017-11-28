@@ -4,14 +4,16 @@ using CitizenFX.Core;
 
 namespace ELS
 {
-    public class ELSVehicle : PoolObject
+    public class ELSVehicle : PoolObject, FullSync.IFullSyncComponent
     {
         private Siren.Siren _siren;
         private Vehicle _vehicle;
-        public ELSVehicle(int handle) : base(handle)
+        public ELSVehicle(int handle,IDictionary<string,object> data) : base(handle)
         {
             _vehicle = new Vehicle(handle);
-            _siren = new Siren.Siren(_vehicle);
+           _siren =  ((IDictionary<string, object>)data).ContainsKey("Siren") ?
+                _siren = new Siren.Siren(_vehicle, (IDictionary<string, object>)data["Siren"]) :
+                _siren = new Siren.Siren(_vehicle);
             CitizenFX.Core.Debug.WriteLine($"created vehicle");
         }
         internal void CleanUP()
@@ -22,12 +24,6 @@ namespace ELS
         internal void RunTick()
         {
             _siren.Ticker();
-            if (Game.IsControlJustPressed(0, Control.Cover))
-            {
-                RunFullSync();
-                CitizenFX.Core.UI.Screen.ShowNotification("FullSync™ ran");
-                CitizenFX.Core.Debug.WriteLine("FullSync™ ran");
-            }
         }
         internal void RunExternalTick()
         {
@@ -46,14 +42,13 @@ namespace ELS
         {
             _vehicle.Delete();
         }
-
-        internal void RunFullSync()
+        /// <summary>
+        /// Proxies sync data to te lighting and siren sub components
+        /// </summary>
+        /// <param name="dataDic"></param>
+        internal void SetSyncDataSets(IDictionary<string, object> dataDic)
         {
-            _siren.RunSendSync();
-        }
-
-        internal void SetSyncData(IDictionary<string, object> dataDic)
-        {
+            var sirenDic = dataDic["siren"];
             _siren.SetData(dataDic);
         }
         internal void UpdateRemoteSiren(string command, bool state)
@@ -63,6 +58,22 @@ namespace ELS
         internal long GetNetworkId()
         {
             return this._vehicle.GetNetworkId();
+        }
+
+        public void SetData(IDictionary<string, object> data)
+        {
+            _siren.SetData((IDictionary<string,object>)data["siren"]);
+        }
+
+        public Dictionary<string, object> GetData()
+        {
+            Dictionary<string, object> vehDic = new Dictionary<string, object>
+            {
+                {"siren",_siren.GetData() },
+                {"Lights",null },
+                {"NetworkID",_vehicle.GetNetworkId() }
+            };
+            return vehDic;
         }
     }
 }

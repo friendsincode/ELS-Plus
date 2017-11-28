@@ -6,33 +6,30 @@ namespace ELS.Siren
 {
     partial class Siren : IManagerEntry, IFullSyncComponent
     {
-
-        private void RequestFullSyncData()
-        {
-            FullSyncManager.RequestData(_vehicle.GetNetworkId());
-        }
-
         public void SetData(IDictionary<string, object> data)
         {
-            this._mainSiren.SetData((IDictionary<string,object>)data["_mainSiren"]);
-            this._tones.SetData((IDictionary<string, object>)data["_tones"]);
-            this.dual_siren = bool.Parse(data["dual_siren"].ToString());
+            if (data.ContainsKey("_mainSiren"))
+            {
+                _mainSiren.SetData((IDictionary<string, object>)data["_mainSiren"]);
+            }
+            if (data.ContainsKey("_tones")) {
+                _tones.SetData((IDictionary<string,object>)data["_tones"]);
+            }
+            if(data.TryGetValue("dual_siren", out object res))
+            {
+                dual_siren = (bool)res;
+            }
         }
 
-        public Dictionary<string, object> ToDic()
+        public Dictionary<string, object> GetData()
         {
             var dic = new Dictionary<string, object>
             {
-                {"_mainSiren",_mainSiren.ToDic() },
-                { "_tones",_tones.ToDic()},
-                {"dual_siren",dual_siren.ToString() }
+                {"_mainSiren",_mainSiren.GetData() },
+                { "_tones",_tones.GetData()},
+                {"dual_siren",dual_siren }
             };
             return dic;
-        }
-
-        public void RunSendSync()
-        {
-            FullSyncManager.SendData(this.GetType().Name, ToDic(), _vehicle.GetNetworkId());
         }
     }
 }

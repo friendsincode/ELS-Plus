@@ -10,7 +10,7 @@ namespace ELS.Siren
         {
 
 
-            public Dictionary<string, object> ToDic()
+            public Dictionary<string, object> GetData()
             {
                 Dictionary<string, object> dic = new Dictionary<string, object>();
                 dic.Add("interupted", this.interupted.ToString());
