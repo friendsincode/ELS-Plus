@@ -55,7 +55,7 @@ namespace ELS
                             //TODO: make a load files from all resouces.
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
                             SetupConnections();
-                            Tick += Class1_Tick;
+                            TriggerServerEvent("ELS:FullSync:Request:All");
                         }
                         catch (Exception e)
                         {
@@ -95,21 +95,18 @@ namespace ELS
             //command that siren state has changed.
             //recieves a command
             //EventHandlers["ELS:SirenUpdated"] += new Action<string, int, int, bool>(_vehicleManager.UpdateRemoteSirens);
-
             EventHandlers["onPlayerJoining"] += new Action(() =>
             {
-
+                
+            });
+            EventHandlers["ELS:FullSync:Request"] += new Action<System.Collections.IList>((a) =>
+            {
+                Tick += Class1_Tick;
             });
             //Take in data and apply it
             EventHandlers["ELS:NewFullSyncData"] += new Action<IDictionary<string, object>>(_vehicleManager.SetVehicleSyncData);
+        }
 
-            //handle request for sync data.
-            EventHandlers["ELS:FullSync:Request"] += new Action<long>(VehicleManager.SyncRequestReply);
-        }
-        ~ELS()
-        {
-            CitizenFX.Core.Debug.WriteLine("ELS dcstor ran");
-        }
         public static string CurrentResourceName()
         {
             return Function.Call<string>(Hash.GET_CURRENT_RESOURCE_NAME);
@@ -129,8 +126,6 @@ namespace ELS
                 if (Game.IsControlJustReleased(0, Control.MultiplayerInfo))
                 {
                     await Debug.Spawn();
-
-                    // _sirenManager.FullSync();
                 }
             }
             catch (Exception ex)

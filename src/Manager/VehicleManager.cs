@@ -101,6 +101,7 @@ namespace ELS.Manager
                         Function.Call<int>(Hash.NETWORK_GET_ENTITY_FROM_NETWORK_ID, (long)dataDic["NetworkID"])
                         )
                         , dataDic,out ELSVehicle veh);
+            veh.SetData(dataDic);
         }
 
         internal static void SyncRequestReply(long NetworkId)
@@ -109,9 +110,17 @@ namespace ELS.Manager
                 ((ELSVehicle)Entities.Find(o => ((ELSVehicle)o).GetNetworkId() == NetworkId)).GetData()
             );
         }
-        void SyncAllVehicles()
+        internal void SyncAllVehiclesOnFirstSpawn(IList data)
         {
-
+            foreach(Dictionary<string,object> element in data)
+            {
+                AddIfNotPresint(new Vehicle(
+                        Function.Call<int>(Hash.NETWORK_GET_ENTITY_FROM_NETWORK_ID, (long)element["NetworkID"])
+                        ),
+                        element,
+                        out ELSVehicle veh
+                );
+            }
         }
 
         void GetAllVehicles()

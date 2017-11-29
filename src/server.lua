@@ -20,6 +20,7 @@ RegisterServerEvent("ELS:FullSync")
 RegisterServerEvent("ONDEBUG")
 RegisterServerEvent("ELS:FullSync:Request")
 RegisterServerEvent("ELS:FullSync:Broadcast")
+RegisterServerEvent("ELS:FullSync:Request:All")
 --[[
 if clr.System.IO.Directory.Exists("resources/" .. GetInvokingResource() .. "/bugs") ==false then
 	clr.System.IO.Directory.CreateDirectory("resources/" .. GetInvokingResource() .. "/bugs")
@@ -27,6 +28,8 @@ end]]
 
 -- Print contents of `tbl`, with indentation.
 -- `indent` sets the initial level of indentation.
+CacheData = {}
+
 function tprint (tbl, indent)
   if not indent then indent = 0 end
   for k, v in pairs(tbl) do
@@ -40,30 +43,38 @@ function tprint (tbl, indent)
   end
 end
 
-local function PrintTable(table)
-	if type(table) == 'table' then
-		for k,v in pairs(table) do
-			if type(v) == 'table' then
-				PrintTable(v)
-			end
-			if type(v) == 'string' then
-				print(string.format("%-20s",k),v)
-			end
-			if type(v) == 'number' then
-				print(string.format("%-20s",k),v)
-			end
-		end
-	end
+function CacheELSData(data)
+  if CacheData[data["NetworkID"]] == nil then
+  	 table.insert(CacheData,data["NetworkID"],data)
+  	 	print("inserting data")
+  	 else 
+  		if type(CacheData[data["NetworkID"]]) == "table" then 
+  			table.remove(CacheData,data["NetworkID"])
+  			print("removing and inserting")
+  			table.insert(CacheData,data["NetworkID"],data)
+  	 end
+  end
+end
+local function GetBroadcastList(PlayerId)
+	local players = GetPlayers()
+	for k,v in pairs(players) do
+	    if v == tostring(PlayerId) then
+           table.remove(players,k)
+	   end
+    end
+	tprint(players)
+	return players
 end
 
-AddEventHandler("ELS:FullSync:Request:All",function(NetworkId)
+AddEventHandler("ELS:FullSync:Request:All",function()
 	print(source," is requsting ELS sync data")
-	TriggerClientEvent(0,"ELS:FullSync:Request",NetworkId)
+	TriggerClientEvent("ELS:FullSync:Request",source,CacheData)
 end)
 
 AddEventHandler("ELS:FullSync:Broadcast",function(DataDic)
-	tprint(DataDic)
-	TriggerClientEvent("ELS:NewFullSyncData",-1,DataDic)
+	CacheELSData(DataDic)
+	print(DataDic["NetworkID"])
+	TriggerClientEvent("ELS:NewFullSyncData",GetBroadcastList(source),DataDic)
 end)
 
 AddEventHandler("ELS:FullSync:Unicast",function(DataDic,PlayerId)

@@ -51,11 +51,13 @@ namespace ELS
 
         internal static void SendEvent(Commands type, Vehicle vehicle, bool state, int playerID)
         {
+            Manager.VehicleManager.SyncRequestReply(vehicle.GetNetworkId());
+
             //var netId = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);
             //var ped = vehicle.GetPedOnSeat(VehicleSeat.Driver);
             //vehicle.RegisterAsNetworked();
             //vehicle.SetExistOnAllMachines(true);
-           // BaseScript.TriggerServerEvent("ELS", type.ToString(), vehicle.GetNetworkId(), playerID, state);
+            // BaseScript.TriggerServerEvent("ELS", type.ToString(), vehicle.GetNetworkId(), playerID, state);
 
         }
     }
