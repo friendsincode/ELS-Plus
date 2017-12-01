@@ -58,8 +58,9 @@ namespace ELS.Manager
             //TODO Chnage how I check for the panic alarm
         }
 
-        private bool AddIfNotPresint(PoolObject o, [Optional] IDictionary<string, object> data, [Optional]out ELSVehicle vehicle)
+        private bool AddIfNotPresint(Vehicle o, [Optional] IDictionary<string, object> data, [Optional]out ELSVehicle vehicle)
         {
+            
             if (!Entities.Exists(poolObject => poolObject.Handle == o.Handle))
             {
                 if (data == null) data = new Dictionary<string, object>();
@@ -95,13 +96,13 @@ namespace ELS.Manager
         /// Proxies the sync data to a certain vehicle
         /// </summary>
         /// <param name="dataDic">data</param>
-        internal void SetVehicleSyncData(IDictionary<string, object> dataDic)
+        async internal void SetVehicleSyncData(IDictionary<string, object> dataDic)
         {
-            AddIfNotPresint(new Vehicle(
-                        Function.Call<int>(Hash.NETWORK_GET_ENTITY_FROM_NETWORK_ID, (long)dataDic["NetworkID"])
-                        )
-                        , dataDic,out ELSVehicle veh);
-            veh.SetData(dataDic);
+            CitizenFX.Core.Debug.WriteLine("cerate evhc");
+            var veh = new Vehicle(Function.Call<int>(Hash.NETWORK_GET_ENTITY_FROM_NETWORK_ID, (int)dataDic["NetworkID"]));
+            var bo = AddIfNotPresint(veh
+                        , dataDic,out ELSVehicle veh1);
+            veh1.SetData(dataDic);
         }
 
         internal static void SyncRequestReply(long NetworkId)
@@ -110,14 +111,19 @@ namespace ELS.Manager
                 ((ELSVehicle)Entities.Find(o => ((ELSVehicle)o).GetNetworkId() == NetworkId)).GetData()
             );
         }
-        internal void SyncAllVehiclesOnFirstSpawn(IList data)
+        internal void SyncAllVehiclesOnFirstSpawn(System.Dynamic.ExpandoObject data)
         {
-            foreach(Dictionary<string,object> element in data)
+            dynamic k = data;
+            var y = data.ToArray();
+            foreach ( var struct1 in y)
             {
+                int netID = int.Parse(struct1.Key);
+                var vehData = (IDictionary<string,object>)struct1.Value;
+                CitizenFX.Core.Debug.WriteLine($"{vehData["NetworkID"]}");
                 AddIfNotPresint(new Vehicle(
-                        Function.Call<int>(Hash.NETWORK_GET_ENTITY_FROM_NETWORK_ID, (long)element["NetworkID"])
+                    Function.Call<int>(Hash.NETWORK_GET_ENTITY_FROM_NETWORK_ID, (long)vehData["NetworkID"])
                         ),
-                        element,
+                        vehData,
                         out ELSVehicle veh
                 );
             }

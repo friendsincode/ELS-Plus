@@ -43,7 +43,7 @@ namespace ELS
             _controlConfiguration = new configuration.ControlConfiguration();
             _FileLoader = new FileLoader(this);
             _vehicleManager = new VehicleManager();
-            EventHandlers["onClientResourceStart"] += new Action<string>(async (string obj) =>
+            EventHandlers["onClientResourceStart"] += new Action<string>((string obj) =>
                 {
                     //TODO rewrite loader so that it 
                     if (obj == Function.Call<string>(Hash.GET_CURRENT_RESOURCE_NAME))
@@ -99,7 +99,12 @@ namespace ELS
             {
                 
             });
-            EventHandlers["ELS:FullSync:Request"] += new Action<System.Collections.IList>((a) =>
+            EventHandlers["ELS:FullSync:NewSpawnWithData"] += new Action<System.Dynamic.ExpandoObject>((a) =>
+            {
+                _vehicleManager.SyncAllVehiclesOnFirstSpawn(a);
+                Tick += Class1_Tick;
+            });
+            EventHandlers["ELS:FullSync:NewSpawn"] += new Action(() =>
             {
                 Tick += Class1_Tick;
             });

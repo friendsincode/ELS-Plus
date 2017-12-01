@@ -45,13 +45,13 @@ end
 
 function CacheELSData(data)
   if CacheData[data["NetworkID"]] == nil then
-  	 table.insert(CacheData,data["NetworkID"],data)
+  	 CacheData[data["NetworkID"]]=data
   	 	print("inserting data")
   	 else 
   		if type(CacheData[data["NetworkID"]]) == "table" then 
   			table.remove(CacheData,data["NetworkID"])
   			print("removing and inserting")
-  			table.insert(CacheData,data["NetworkID"],data)
+  			CacheData[data["NetworkID"]] = data
   	 end
   end
 end
@@ -68,13 +68,20 @@ end
 
 AddEventHandler("ELS:FullSync:Request:All",function()
 	print(source," is requsting ELS sync data")
-	TriggerClientEvent("ELS:FullSync:Request",source,CacheData)
+	if #CacheData > 0 then
+		TriggerClientEvent("ELS:FullSync:NewSpawnWithData",source,CacheData)
+	else
+		TriggerClientEvent("ELS:FullSync:NewSpawn",source)
+	end
 end)
 
 AddEventHandler("ELS:FullSync:Broadcast",function(DataDic)
+	tprint(DataDic)
 	CacheELSData(DataDic)
 	print(DataDic["NetworkID"])
-	TriggerClientEvent("ELS:NewFullSyncData",GetBroadcastList(source),DataDic)
+	TriggerClientEvent("ELS:NewFullSyncData",-1,DataDic)
+	--TriggerClientEvent("ELS:FullSync:Request2",source,CacheData)
+
 end)
 
 AddEventHandler("ELS:FullSync:Unicast",function(DataDic,PlayerId)

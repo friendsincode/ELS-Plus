@@ -11,9 +11,15 @@ namespace ELS
         public ELSVehicle(int handle,IDictionary<string,object> data) : base(handle)
         {
             _vehicle = new Vehicle(handle);
-           _siren =  ((IDictionary<string, object>)data).ContainsKey("Siren") ?
-                _siren = new Siren.Siren(_vehicle, (IDictionary<string, object>)data["Siren"]) :
+           if(data.ContainsKey("Siren"))
+            {
+                _siren = new Siren.Siren(_vehicle, (IDictionary<string, object>)data["Siren"]);
+
+            }
+            else
+            {
                 _siren = new Siren.Siren(_vehicle);
+            }
             CitizenFX.Core.Debug.WriteLine($"created vehicle");
         }
         internal void CleanUP()
