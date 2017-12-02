@@ -25,6 +25,10 @@ namespace ELS_Server
                 Debug.WriteLine($"{source} is requesting Sync Data");
                 TriggerClientEvent(Players[source], "ELS:FullSync:NewSpawnWithData", _cachedData);
             });
+            CitizenFX.Core.Native.API.RegisterCommand("resync", new Action<int, System.Collections.IList, string>((a,b,c)=> {
+                CitizenFX.Core.Debug.WriteLine($"{a}, {b}, {c}");
+                TriggerClientEvent(Players[(int.Parse((string)b[0]))], "ELS:FullSync:NewSpawnWithData", _cachedData);
+            }), false);
         }
     }
 }
