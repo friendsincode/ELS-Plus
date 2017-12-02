@@ -29,8 +29,7 @@ namespace ELS.Manager
             )
             {
                 //Screen.ShowNotification("adding vehicle");
-                AddIfNotPresint(Game.PlayerPed.CurrentVehicle,vehicle: out _currentVehicle);
-
+                AddIfNotPresint(Game.PlayerPed.CurrentVehicle, vehicle: out _currentVehicle);
                 _currentVehicle?.RunTick();
                 if (Game.IsControlJustPressed(0, Control.Cover))
                 {
@@ -99,7 +98,7 @@ namespace ELS.Manager
         async internal void SetVehicleSyncData(IDictionary<string, object> dataDic)
         {
             CitizenFX.Core.Debug.WriteLine("cerate evhc");
-            var veh = new Vehicle(Function.Call<int>(Hash.NETWORK_GET_ENTITY_FROM_NETWORK_ID, (int)dataDic["NetworkID"]));
+            var veh = new Vehicle(API.NetworkGetEntityFromNetworkId((int)dataDic["NetworkID"]));
             var bo = AddIfNotPresint(veh
                         , dataDic,out ELSVehicle veh1);
             veh1.SetData(dataDic);
@@ -119,10 +118,8 @@ namespace ELS.Manager
             {
                 int netID = int.Parse(struct1.Key);
                 var vehData = (IDictionary<string,object>)struct1.Value;
-                CitizenFX.Core.Debug.WriteLine($"{vehData["NetworkID"]}");
-                AddIfNotPresint(new Vehicle(
-                    Function.Call<int>(Hash.NETWORK_GET_ENTITY_FROM_NETWORK_ID, (int)vehData["NetworkID"])
-                        ),
+                CitizenFX.Core.Debug.WriteLine($"{vehData["NetworkID"]}, {API.NetworkDoesEntityExistWithNetworkId(netID)}, {API.NetworkDoesNetworkIdExist(netID)}, {API.DoesEntityExist(API.NetworkGetEntityFromNetworkId(netID))}");
+                AddIfNotPresint(new Vehicle(API.NetworkGetEntityFromNetworkId( (int)vehData["NetworkID"])),
                         vehData,
                         out ELSVehicle veh
                 );
