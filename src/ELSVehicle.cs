@@ -18,6 +18,26 @@ namespace ELS
             }
             else
             {
+               
+#if DEBUG
+
+                CitizenFX.Core.Debug.WriteLine($"registering netid:{_vehicle.GetNetworkId()}\n" +
+                    $"Does entity belong to this script:{CitizenFX.Core.Native.API.DoesEntityBelongToThisScript(_vehicle.Handle,true)}\n" +
+                    $"local handle{CitizenFX.Core.Native.API.NetworkGetEntityIsLocal(_vehicle.Handle)} veh handle{_vehicle.Handle}");
+
+#endif
+                CitizenFX.Core.Native.API.NetworkRequestControlOfEntity(_vehicle.Handle);
+                CitizenFX.Core.Native.API.NetworkSetEntityVisibleToNetwork(_vehicle.Handle, false);
+                _vehicle.RegisterAsNetworked();
+                _vehicle.SetExistOnAllMachines(true);
+                BaseScript.Delay(5000);
+
+#if DEBUG
+
+                CitizenFX.Core.Debug.WriteLine($"registering netid:{_vehicle.GetNetworkId()}\n" +
+                    $"Does entity belong to this script:{CitizenFX.Core.Native.API.DoesEntityBelongToThisScript(_vehicle.Handle, true)}");
+
+#endif
                 _siren = new Siren.Siren(_vehicle);
             }
             CitizenFX.Core.Debug.WriteLine($"created vehicle");
