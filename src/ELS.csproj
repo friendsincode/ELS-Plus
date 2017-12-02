@@ -137,9 +137,6 @@
     <None Include="extra-files\ELS.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="server.lua">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="__resource.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

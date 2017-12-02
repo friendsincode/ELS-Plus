@@ -41,7 +41,7 @@ if NUIEnabled then
 end
 
 -- Server Events
-server_script 'server.lua'
+server_script 'ELS-Server.net.dll'
 
 files({
 'extra-files/ELS.ini',

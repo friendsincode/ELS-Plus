@@ -121,7 +121,7 @@ namespace ELS.Manager
                 var vehData = (IDictionary<string,object>)struct1.Value;
                 CitizenFX.Core.Debug.WriteLine($"{vehData["NetworkID"]}");
                 AddIfNotPresint(new Vehicle(
-                    Function.Call<int>(Hash.NETWORK_GET_ENTITY_FROM_NETWORK_ID, (long)vehData["NetworkID"])
+                    Function.Call<int>(Hash.NETWORK_GET_ENTITY_FROM_NETWORK_ID, (int)vehData["NetworkID"])
                         ),
                         vehData,
                         out ELSVehicle veh

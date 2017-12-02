@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELS", "ELS.csproj", "{11AC40BA-192E-40D0-8A7E-1D800350D9F7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9858CB4D-F98D-497B-A532-A4DB965E898C} = {9858CB4D-F98D-497B-A532-A4DB965E898C}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpConfig", "..\libs\SharpConfig-master\SharpConfig\SharpConfig.csproj", "{47435426-6569-4208-868E-25C0519F1F0F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELS-Server", "..\server\ELS-Server\ELS-Server.csproj", "{9858CB4D-F98D-497B-A532-A4DB965E898C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,8 +31,17 @@ Global
 		{47435426-6569-4208-868E-25C0519F1F0F}.DebugREMOTETEST|Any CPU.Build.0 = DebugREMOTETEST|Any CPU
 		{47435426-6569-4208-868E-25C0519F1F0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47435426-6569-4208-868E-25C0519F1F0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9858CB4D-F98D-497B-A532-A4DB965E898C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9858CB4D-F98D-497B-A532-A4DB965E898C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9858CB4D-F98D-497B-A532-A4DB965E898C}.DebugREMOTETEST|Any CPU.ActiveCfg = Debug|Any CPU
+		{9858CB4D-F98D-497B-A532-A4DB965E898C}.DebugREMOTETEST|Any CPU.Build.0 = Debug|Any CPU
+		{9858CB4D-F98D-497B-A532-A4DB965E898C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9858CB4D-F98D-497B-A532-A4DB965E898C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E8608D23-BF55-4625-A51B-AE1805484BAD}
 	EndGlobalSection
 EndGlobal

@@ -68,7 +68,7 @@ end
 
 AddEventHandler("ELS:FullSync:Request:All",function()
 	print(source," is requsting ELS sync data")
-	if #CacheData > 0 then
+	if #CacheData > 1 then
 		TriggerClientEvent("ELS:FullSync:NewSpawnWithData",source,CacheData)
 	else
 		TriggerClientEvent("ELS:FullSync:NewSpawn",source)

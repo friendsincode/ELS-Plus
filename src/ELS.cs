@@ -55,7 +55,7 @@ namespace ELS
                             //TODO: make a load files from all resouces.
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
                             SetupConnections();
-                            TriggerServerEvent("ELS:FullSync:Request:All");
+                            TriggerServerEvent("ELS:FullSync:Request:All",Game.Player.ServerId);
                         }
                         catch (Exception e)
                         {
