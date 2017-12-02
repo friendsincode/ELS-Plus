@@ -17,9 +17,9 @@ namespace ELS
             await polModel.Request(-1);
             Vehicle veh = await World.CreateVehicle(polModel, Game.PlayerPed.Position);
             polModel.MarkAsNoLongerNeeded();
-            //veh.RegisterAsNetworked();
+            veh.RegisterAsNetworked();
             Screen.ShowNotification($"network status {Function.Call<bool>(Hash.NETWORK_GET_ENTITY_IS_NETWORKED, veh)}");
-            //veh.SetExistOnAllMachines(true);
+            veh.SetExistOnAllMachines(true);
             //await CitizenFX.Core.BaseScript.Delay(10000);
 
             if (veh == null)
