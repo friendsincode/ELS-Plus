@@ -49,6 +49,12 @@ The source code can be found on [GitHub](https://github.com/ejb1123/ELS-FiveM).
 
 ----------
 ### Change log
+#### v0.0.4.1
+- Fully implemented FullySync for siren data.
+- Fixed issues with requesting for vehicles that where not being rendered.
+- Rewrote Server in C#
+- Other fixes.
+
 #### v0.0.4.0
 - Use the Q key to manually sync the siren. 
 - Passenger siren control
@@ -104,4 +110,4 @@ Is true when the return value is not -1
 
 ----------
 ### Downloads
-[v0.0.4.0](https://github.com/ejb1123/ELS-FiveM/releases/)
+[v0.0.4.1](https://github.com/ejb1123/ELS-FiveM/releases/)

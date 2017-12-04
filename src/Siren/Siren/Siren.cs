@@ -29,16 +29,15 @@ namespace ELS.Siren
 
             Function.Call(Hash.DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, _vehicle, true);
             _vehicle.Model.Request();
+#if DEBUG
             CitizenFX.Core.Debug.WriteLine(_vehicle.DisplayName);
+#endif
             _vcf = VCF.ELSVehicle.Find(item => item.Item2.FileName == _vehicle.DisplayName).Item2;
-            //issue in above line
-            CitizenFX.Core.Debug.WriteLine("saa");
 
             if (_vcf == null)
             {
                 throw new Exception($"Their is no VCF file for this vehicle: {_vehicle.DisplayName}");
             }
-            CitizenFX.Core.Debug.WriteLine("saa");
 
             _tones = new Tones
             {
@@ -49,13 +48,10 @@ namespace ELS.Siren
                 tone4 = new Tone(_vcf.SOUNDS.SrnTone4.AudioString, _vehicle, ToneType.SrnTon4),
                 panicAlarm = new Tone(_vcf.SOUNDS.PanicMde.AudioString, _vehicle, ToneType.SrnPnic)
             };
-            CitizenFX.Core.Debug.WriteLine("saa");
 
             dual_siren = false;
-            CitizenFX.Core.Debug.WriteLine("saa");
 
             _mainSiren = new MainSiren(ref _tones);
-            CitizenFX.Core.Debug.WriteLine("saa");
 
             if (data != null) SetData(data);
         }

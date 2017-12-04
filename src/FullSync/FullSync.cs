@@ -26,7 +26,7 @@ namespace ELS.FullSync
 
         internal static void SendDataBroadcast(IDictionary dic)
         {
-            BaseScript.TriggerServerEvent("ELS:FullSync:Broadcast",dic);
+            BaseScript.TriggerServerEvent("ELS:FullSync:Broadcast",dic,Game.Player.ServerId);
         }
         internal static void SendDataUnicast(IDictionary dic,int PlayerID)
         {

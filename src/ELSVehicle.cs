@@ -20,8 +20,8 @@ namespace ELS
             else
             {
                 //_vehicle.SetExistOnAllMachines(true);
-                CitizenFX.Core.Debug.WriteLine(CitizenFX.Core.Native.API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
 #if DEBUG
+                CitizenFX.Core.Debug.WriteLine(CitizenFX.Core.Native.API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
 
                 CitizenFX.Core.Debug.WriteLine($"registering netid:{_vehicle.GetNetworkId()}\n" +
                     $"Does entity belong to this script:{CitizenFX.Core.Native.API.DoesEntityBelongToThisScript(_vehicle.Handle, false)}");
@@ -29,7 +29,9 @@ namespace ELS
 #endif
                 _siren = new Siren.Siren(_vehicle);
             }
+#if DEBUG
             CitizenFX.Core.Debug.WriteLine($"created vehicle");
+#endif
         }
          private async void  ModelLoaded()
         {
