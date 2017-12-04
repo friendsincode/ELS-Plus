@@ -28,9 +28,9 @@ namespace ELS
         //    if (!poolObject.Exists()) poolObject.CleanUp();
         //}
 
-        public static Int64 GetNetworkId(this Entity entity)
+        public static int GetNetworkId(this Entity entity)
         {
-            return Function.Call<Int64>(Hash.VEH_TO_NET, entity.Handle);
+            return Function.Call<int>(Hash.VEH_TO_NET, entity.Handle);
         }
 
         public static void RegisterAsNetworked(this Entity entity)

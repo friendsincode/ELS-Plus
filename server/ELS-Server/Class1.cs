@@ -17,6 +17,7 @@ namespace ELS_Server
             EventHandlers["ELS:FullSync:Broadcast"] += new Action<System.Dynamic.ExpandoObject>((dataDic) =>
             {
                 var dd = (IDictionary<string,object> )dataDic;
+                Debug.WriteLine($"NetworkID {dd["NetworkID"]}");
                 _cachedData[(int)dd["NetworkID"]] = dd;
                 TriggerClientEvent("ELS:NewFullSyncData", dataDic);
             });

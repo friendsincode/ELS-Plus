@@ -51,6 +51,7 @@ namespace ELS
 
         internal static void SendEvent(Commands type, Vehicle vehicle, bool state, int playerID)
         {
+            CitizenFX.Core.Debug.WriteLine($"sendding data for netID {vehicle.GetNetworkId()}");
             Manager.VehicleManager.SyncRequestReply(vehicle.GetNetworkId());
 
             //var netId = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);

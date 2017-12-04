@@ -107,7 +107,7 @@ namespace ELS.Siren
                 DualSirenLogic(true, true);
 #endif
                 System.Collections.Generic.Dictionary<String, object> dic = new System.Collections.Generic.Dictionary<string, object>();
-                Manager.VehicleManager.SyncRequestReply(this._vehicle.GetNetworkId());
+                Manager.VehicleManager.SyncRequestReply(_vehicle.GetNetworkId());
                 //RemoteEventManager.SendEvent(RemoteEventManager.Commands.DualSiren, _vehicle, true, Game.Player.ServerId);
             }
         }

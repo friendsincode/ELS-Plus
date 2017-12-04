@@ -8,39 +8,35 @@ namespace ELS
     {
         private Siren.Siren _siren;
         private Vehicle _vehicle;
-        public ELSVehicle(int handle,IDictionary<string,object> data) : base(handle)
+        public ELSVehicle(int handle, IDictionary<string, object> data) : base(handle)
         {
             _vehicle = new Vehicle(handle);
-           if(data.ContainsKey("Siren"))
+            ModelLoaded();
+            if (data.ContainsKey("Siren"))
             {
                 _siren = new Siren.Siren(_vehicle, (IDictionary<string, object>)data["Siren"]);
 
             }
             else
             {
-               
+                //_vehicle.SetExistOnAllMachines(true);
+                CitizenFX.Core.Debug.WriteLine(CitizenFX.Core.Native.API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
 #if DEBUG
 
                 CitizenFX.Core.Debug.WriteLine($"registering netid:{_vehicle.GetNetworkId()}\n" +
-                    $"Does entity belong to this script:{CitizenFX.Core.Native.API.DoesEntityBelongToThisScript(_vehicle.Handle,true)}\n" +
-                    $"local handle{CitizenFX.Core.Native.API.NetworkGetEntityIsLocal(_vehicle.Handle)} veh handle{_vehicle.Handle}");
-
-#endif
-                CitizenFX.Core.Native.API.NetworkRequestControlOfEntity(_vehicle.Handle);
-                CitizenFX.Core.Native.API.NetworkSetEntityVisibleToNetwork(_vehicle.Handle, false);
-                _vehicle.RegisterAsNetworked();
-                _vehicle.SetExistOnAllMachines(true);
-                BaseScript.Delay(5000);
-
-#if DEBUG
-
-                CitizenFX.Core.Debug.WriteLine($"registering netid:{_vehicle.GetNetworkId()}\n" +
-                    $"Does entity belong to this script:{CitizenFX.Core.Native.API.DoesEntityBelongToThisScript(_vehicle.Handle, true)}");
+                    $"Does entity belong to this script:{CitizenFX.Core.Native.API.DoesEntityBelongToThisScript(_vehicle.Handle, false)}");
 
 #endif
                 _siren = new Siren.Siren(_vehicle);
             }
             CitizenFX.Core.Debug.WriteLine($"created vehicle");
+        }
+         private async void  ModelLoaded()
+        {
+            while (_vehicle.DisplayName == "CARNOTFOUND")
+            {
+                await CitizenFX.Core.BaseScript.Delay(0);
+            }
         }
         internal void CleanUP()
         {
@@ -61,7 +57,7 @@ namespace ELS
         }
         public override bool Exists()
         {
-            return CitizenFX.Core.Native.Function.Call<bool>(CitizenFX.Core.Native.Hash.DOES_ENTITY_EXIST,_vehicle);
+            return CitizenFX.Core.Native.Function.Call<bool>(CitizenFX.Core.Native.Hash.DOES_ENTITY_EXIST, _vehicle);
         }
 
         public override void Delete()
@@ -81,14 +77,14 @@ namespace ELS
         {
             _siren.SirenControlsRemote(command, state);
         }
-        internal long GetNetworkId()
+        internal int GetNetworkId()
         {
-            return this._vehicle.GetNetworkId();
+            return _vehicle.GetNetworkId();
         }
 
         public void SetData(IDictionary<string, object> data)
         {
-            _siren.SetData((IDictionary<string,object>)data["siren"]);
+            _siren.SetData((IDictionary<string, object>)data["siren"]);
         }
 
         public Dictionary<string, object> GetData()
