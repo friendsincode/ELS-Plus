@@ -17,36 +17,29 @@ namespace ELS.Siren
     /// </summary>
     partial class Siren : IManagerEntry
     {
+        private VCF.vcfroot _vcf;
         private bool dual_siren;
         public Vehicle _vehicle { get; set; }
         private MainSiren _mainSiren;
-        private VCF.vcfroot _vcf;
         Tones _tones;
-        public Siren(Vehicle vehicle,[Optional]IDictionary<string,object> data)
+        public Siren(Vehicle vehicle,VCF.vcfroot vcfroot,[Optional]IDictionary<string,object> data)
         {
-
+            _vcf = vcfroot;
             _vehicle = vehicle;
 
             Function.Call(Hash.DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, _vehicle, true);
-            _vehicle.Model.Request();
 #if DEBUG
             CitizenFX.Core.Debug.WriteLine(_vehicle.DisplayName);
 #endif
-            _vcf = VCF.ELSVehicle.Find(item => item.Item2.FileName == _vehicle.DisplayName).Item2;
-
-            if (_vcf == null)
-            {
-                throw new Exception($"Their is no VCF file for this vehicle: {_vehicle.DisplayName}");
-            }
 
             _tones = new Tones
             {
-                horn = new Tone(_vcf.SOUNDS.MainHorn.AudioString, _vehicle, ToneType.Horn),
-                tone1 = new Tone(_vcf.SOUNDS.SrnTone1.AudioString, _vehicle, ToneType.SrnTon1),
-                tone2 = new Tone(_vcf.SOUNDS.SrnTone2.AudioString, _vehicle, ToneType.SrnTon2),
-                tone3 = new Tone(_vcf.SOUNDS.SrnTone3.AudioString, _vehicle, ToneType.SrnTon3),
-                tone4 = new Tone(_vcf.SOUNDS.SrnTone4.AudioString, _vehicle, ToneType.SrnTon4),
-                panicAlarm = new Tone(_vcf.SOUNDS.PanicMde.AudioString, _vehicle, ToneType.SrnPnic)
+                horn = new Tone(vcfroot.SOUNDS.MainHorn.AudioString, _vehicle, ToneType.Horn),
+                tone1 = new Tone(vcfroot.SOUNDS.SrnTone1.AudioString, _vehicle, ToneType.SrnTon1),
+                tone2 = new Tone(vcfroot.SOUNDS.SrnTone2.AudioString, _vehicle, ToneType.SrnTon2),
+                tone3 = new Tone(vcfroot.SOUNDS.SrnTone3.AudioString, _vehicle, ToneType.SrnTon3),
+                tone4 = new Tone(vcfroot.SOUNDS.SrnTone4.AudioString, _vehicle, ToneType.SrnTon4),
+                panicAlarm = new Tone(vcfroot.SOUNDS.PanicMde.AudioString, _vehicle, ToneType.SrnPnic)
             };
 
             dual_siren = false;

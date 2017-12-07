@@ -73,10 +73,19 @@ namespace ELS.Manager
             else if (!Entities.Exists(poolObject => ((ELSVehicle) poolObject).GetNetworkId() == NETID))
             {
                 if (data == null) data = new Dictionary<string, object>();
-                var veh = new ELSVehicle(API.NetToVeh(NETID), data);
-                Entities.Add(veh);
-                vehicle = veh;
-                return false;
+                try
+                {
+                    var veh = new ELSVehicle(API.NetToVeh(NETID), data);
+                    Entities.Add(veh);
+                    vehicle = veh;
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    vehicle = null;
+                    return false;
+                }
+               
             }
             else
             {
@@ -117,6 +126,11 @@ namespace ELS.Manager
 
         internal static void SyncRequestReply(int NetworkId)
         {
+            if (NetworkId == 0)
+            {
+                CitizenFX.Core.Debug.WriteLine("ERROR NetwordID equals 0\n");
+                return;
+            }
             FullSync.FullSyncManager.SendDataBroadcast(
                 ((ELSVehicle)Entities.Find(o => ((ELSVehicle)o).GetNetworkId() == NetworkId)).GetData()
             );
