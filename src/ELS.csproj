@@ -114,6 +114,8 @@
     <Compile Include="Light\SpotLight.cs" />
     <Compile Include="Manager\Manager.cs" />
     <Compile Include="Manager\VehicleManager.cs" />
+    <Compile Include="NUI\ElsUiPanel.cs" />
+    <Compile Include="NUI\ELSVehicleUIState.cs" />
     <Compile Include="panel\test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteEventManager.cs" />
@@ -153,8 +155,34 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="NUI\app\css\app.css" />
-    <Content Include="NUI\app\index.html" />
+    <Content Include="NUI\app\css\bootstrap-switch.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NUI\app\css\bootstrap.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NUI\app\css\main.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NUI\app\index.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="NUI\app\js\app.js" />
+    <Content Include="NUI\app\js\bootstrap-switch.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NUI\app\js\bootstrap.bundle.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NUI\app\js\jquery-3.2.1.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NUI\app\js\main.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NUI\app\js\popper.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="NUI\app\js\vue.js" />
   </ItemGroup>
   <ItemGroup />

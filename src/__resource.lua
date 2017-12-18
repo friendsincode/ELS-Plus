@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]
 resource_manifest_version '05cfa83c-a124-4cfa-a768-c24a5811d8f9'
-local NUIEnabled = false
+local NUIEnabled = true
 
 -- XML Processing Requirements
 client_script 'System.Xml.net.dll'
@@ -28,15 +28,21 @@ client_script 'ELS-FiveM.net.dll'
 -- NUI Stuff
 if NUIEnabled then
 
-	client_script 'NUI/api.lua'
+	--client_script 'NUI/api.lua'
 
 	ui_page('NUI/app/index.html')
 
 	files({
-		'NUI/app/index.html',
-		'NUI/app/js/vue.js',
-		'NUI/app/js/app.js'
-	})
+    'NUI/app/index.html',
+    'NUI/app/js/jquery-3.2.1.min.js',    
+    'NUI/app/js/popper.js',
+    'NUI/app/js/bootstrap.bundle.min.js',
+    'NUI/app/js/bootstrap-switch.js',
+    'NUI/app/js/main.js',
+    'NUI/app/css/bootstrap.min.css',
+    'NUI/app/css/bootstrap-switch.css',
+    'NUI/app/css/main.css'
+})
 
 end
 
