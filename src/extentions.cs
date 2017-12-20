@@ -9,7 +9,7 @@ namespace ELS
     {
         public static bool IsEls(this Vehicle vehicle)
         {
-            return configuration.VCF.ELSVehicle.Exists(obj => obj.Item2.FileName == vehicle.DisplayName);
+            return configuration.VCF.ELSVehicle.Exists(obj => obj.Item2.FileName.ToUpper() == vehicle.DisplayName.ToUpper());
         }
 
         async public static Task<bool> RequestCollision(this Vehicle vehicle)

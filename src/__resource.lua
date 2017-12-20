@@ -51,4 +51,6 @@ server_script 'ELS-Server.net.dll'
 
 files({
 'extra-files/ELS.ini',
-'extra-files/POLICE.xml'})
+'extra-files/POLICE.xml',
+'extra-files/ecto1.XML'
+})

@@ -57,7 +57,9 @@ namespace ELS
 
                 var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
 
-
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine($"Checking {filename}");
+#endif
                 if (filename.Equals("extra-files/ELS.ini"))
                 {
                     if (configuration.ControlConfiguration.isValidData(data))
@@ -72,8 +74,15 @@ namespace ELS
                     {
 #if DEBUG
                         CitizenFX.Core.Debug.WriteLine("Sending data to XML parser");
+                        CitizenFX.Core.Debug.WriteLine($"VCF.load({SettingsType.Type.VCF}, {filename}, data,{name})");
 #endif
                         VCF.load(SettingsType.Type.VCF, filename, data,name);
+                    }
+                    else
+                    {
+#if DEBUG
+                        CitizenFX.Core.Debug.WriteLine($"XML data for {filename} is not valid");
+#endif
                     }
                 }
             }

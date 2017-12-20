@@ -18,9 +18,9 @@ namespace ELS
             if (_vehicle.DisplayName == "CARNOTFOUND" || _vehicle.GetNetworkId()==0) {
                 throw new Exception("Vehicle creation failure.");
             }
-            else if( VCF.ELSVehicle.Exists(item => item.Item2.FileName == _vehicle.DisplayName))
+            else if( VCF.ELSVehicle.Exists(item => item.Item2.FileName.ToUpper() == _vehicle.DisplayName.ToUpper()))
             {
-                _vcf = VCF.ELSVehicle.Find(item => item.Item2.FileName == _vehicle.DisplayName).Item2;
+                _vcf = VCF.ELSVehicle.Find(item => item.Item2.FileName.ToUpper() == _vehicle.DisplayName.ToUpper()).Item2;
             }
             if (data.ContainsKey("Siren"))
             {
