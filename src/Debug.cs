@@ -13,7 +13,7 @@ namespace ELS
     {
         internal static async Task Spawn()
         {
-            var polModel = new Model((VehicleHash)228698904);
+            var polModel = new Model((VehicleHash)Game.GenerateHash("policegt350r"));
             await polModel.Request(-1);
             Vehicle veh = await World.CreateVehicle(polModel, Game.PlayerPed.Position);
             polModel.MarkAsNoLongerNeeded();
@@ -22,7 +22,8 @@ namespace ELS
             veh.SetExistOnAllMachines(true);
             await CitizenFX.Core.BaseScript.Delay(10000);
             CitizenFX.Core.Debug.WriteLine($"vehtonet{API.VehToNet(veh.Handle)} getnetworkidfromentity{API.NetworkGetNetworkIdFromEntity(veh.Handle)}");
-
+            CitizenFX.Core.Debug.WriteLine($"ModelName {veh.Model}" +
+                $"DisplayName {veh.DisplayName}");
             if (veh == null)
             {
                 CitizenFX.Core.Debug.WriteLine("failure to spawn");

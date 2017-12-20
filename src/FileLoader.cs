@@ -74,6 +74,7 @@ namespace ELS
                     {
 #if DEBUG
                         CitizenFX.Core.Debug.WriteLine("Sending data to XML parser");
+                        CitizenFX.Core.Debug.WriteLine($"VCF.load({SettingsType.Type.VCF}, {filename}, data,{name})");
 #endif
                         VCF.load(SettingsType.Type.VCF, filename, data,name);
                     }

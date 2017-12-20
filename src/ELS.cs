@@ -61,6 +61,7 @@ namespace ELS
                         {
                             TriggerServerEvent($"ONDEBUG", e.ToString());
                             Screen.ShowNotification($"ERROR:{e.Message}");
+                            Screen.ShowNotification($"ERROR:{e.StackTrace}");
                             Tick -= Class1_Tick;
                             throw;
                         }
@@ -75,6 +76,8 @@ namespace ELS
                         {
                             TriggerServerEvent($"ONDEBUG", e.ToString());
                             Screen.ShowNotification($"ERROR:{e.Message}");
+                            Screen.ShowNotification($"ERROR:{e.StackTrace}");
+
                         }
                     }
 

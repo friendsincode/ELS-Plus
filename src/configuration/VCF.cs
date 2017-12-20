@@ -126,7 +126,7 @@ namespace ELS.configuration
         internal static void unload(string ResourceName)
         {
             var count = ELSVehicle.RemoveAll(veh => veh.Item1.Equals(ResourceName));
-            CitizenFX.Core.Debug.WriteLine($"Unloaded ${count} VCF for ${ResourceName}");
+            CitizenFX.Core.Debug.WriteLine($"Unloaded {count} VCF for {ResourceName}");
         }
 
         /// <remarks/>
@@ -4656,8 +4656,10 @@ namespace ELS.configuration
 
         internal static bool isValidData(string data)
         {
+            if (data == null || data.Length == 0) return false;
             System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
             doc.LoadXml(data);
+            //TODO change how below is detected to account for xml meta tag being before it.
             return doc.DocumentElement.Name == "vcfroot";
         }
     }
