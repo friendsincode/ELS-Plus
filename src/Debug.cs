@@ -13,7 +13,7 @@ namespace ELS
     {
         internal static async Task Spawn()
         {
-            var polModel = new Model(VehicleHash.Police);
+            var polModel = new Model((VehicleHash)228698904);
             await polModel.Request(-1);
             Vehicle veh = await World.CreateVehicle(polModel, Game.PlayerPed.Position);
             polModel.MarkAsNoLongerNeeded();
