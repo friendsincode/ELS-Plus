@@ -35,11 +35,13 @@ namespace ELS
             else //if (Game.PlayerPed.CurrentVehicle.IsEls())
             {
                 var veh = Game.PlayerPed.CurrentVehicle;
-                for(var x =0; x < 10; x++)
+                for(var x =0; x < 24; x++)
                 {
                     if (veh.ExtraExists(x))
+                    {
                         veh.ToggleExtra(x, !veh.IsExtraOn(x));
-                }
+                    }
+                    }
                 veh.ToggleExtra(1, true);
             }
             // Game.Player.Character.SetIntoVehicle(veh, VehicleSeat.Any);
