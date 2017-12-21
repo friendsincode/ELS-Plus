@@ -17,7 +17,7 @@ namespace ELS.Siren
             if (pressed)
             {
 
-                if (_vcf.SOUNDS.MainHorn.InterruptsSiren)
+                if (bool.Parse(_vcf.SOUNDS.MainHorn.InterruptsSiren))
                 {
                     if (_mainSiren._enable)
                     {
@@ -31,7 +31,7 @@ namespace ELS.Siren
             {
                 _tones.horn.SetState(false);
 
-                if (_vcf.SOUNDS.MainHorn.InterruptsSiren &&
+                if (bool.Parse(_vcf.SOUNDS.MainHorn.InterruptsSiren )&&
                     _mainSiren.interupted)
                 {
                     _mainSiren.interupted = false;
@@ -119,7 +119,7 @@ namespace ELS.Siren
             if (disableControls) Game.DisableControlThisFrame(0, ControlConfiguration.KeyBindings.Sound_Manul);
             if (pressed)
             {
-                if (!_mainSiren._enable || (!_mainSiren._enable && _vcf.SOUNDS.MainHorn.InterruptsSiren &&
+                if (!_mainSiren._enable || (!_mainSiren._enable && bool.Parse(_vcf.SOUNDS.MainHorn.InterruptsSiren )&&
                                            _tones.horn._state))
                 {
                     _tones.tone1.SetState(true);
@@ -131,7 +131,7 @@ namespace ELS.Siren
             }
             else
             {
-                if (!_mainSiren._enable || (!_mainSiren._enable && _vcf.SOUNDS.MainHorn.InterruptsSiren &&
+                if (!_mainSiren._enable || (!_mainSiren._enable && bool.Parse(_vcf.SOUNDS.MainHorn.InterruptsSiren )&&
                                            _tones.horn._state))
                 {
                     _tones.tone1.SetState(false);

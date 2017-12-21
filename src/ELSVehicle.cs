@@ -10,7 +10,7 @@ namespace ELS
         private Siren.Siren _siren;
         private Light.Light _light;
         private Vehicle _vehicle;
-        private VCF.vcfroot _vcf;
+        private Vcfroot _vcf;
         public ELSVehicle(int handle, IDictionary<string, object> data) : base(handle)
         {
             _vehicle = new Vehicle(handle);
@@ -19,9 +19,9 @@ namespace ELS
             if (_vehicle.DisplayName == "CARNOTFOUND" || _vehicle.GetNetworkId()==0) {
                 throw new Exception("Vehicle creation failure.");
             }
-            else if( VCF.ELSVehicle.Exists(item => item.Item2.FileName.ToUpper() == _vehicle.DisplayName.ToUpper()))
+            else if( VCF.ELSVehicle.Exists(item => item.modelHash == _vehicle.Model))
             {
-                _vcf = VCF.ELSVehicle.Find(item => item.Item2.FileName.ToUpper() == _vehicle.DisplayName.ToUpper()).Item2;
+                _vcf = VCF.ELSVehicle.Find(item => item.modelHash == _vehicle.Model).root;
             }
             if (data.ContainsKey("Siren"))
             {

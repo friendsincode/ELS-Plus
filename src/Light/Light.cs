@@ -31,7 +31,7 @@ namespace ELS.Light
     {
         private int _extraId;
         private Vehicle _vehicle;
-        internal Light(Vehicle vehicle, VCF.vcfroot vcfroot,[Optional]IDictionary<string, object> data)
+        internal Light(Vehicle vehicle, Vcfroot vcfroot,[Optional]IDictionary<string, object> data)
         {
             _vehicle = vehicle;
         }
