@@ -15,7 +15,7 @@ namespace ELS
         {
             if (!Game.PlayerPed.IsInVehicle())
             {
-                var polModel = new Model( (VehicleHash)Game.GenerateHash("ecto1"));
+                var polModel = new Model((VehicleHash)Game.GenerateHash("policegt350r"));
                 await polModel.Request(-1);
                 Vehicle veh = await World.CreateVehicle(polModel, Game.PlayerPed.Position);
                 polModel.MarkAsNoLongerNeeded();
@@ -38,9 +38,11 @@ namespace ELS
                 for(var x =0; x < 24; x++)
                 {
                     if (veh.ExtraExists(x))
+                    {
                         veh.ToggleExtra(x, !veh.IsExtraOn(x));
-                }
-                //veh.ToggleExtra(1, false);
+                    }
+                    }
+                veh.ToggleExtra(1, true);
             }
             // Game.Player.Character.SetIntoVehicle(veh, VehicleSeat.Any);
         }

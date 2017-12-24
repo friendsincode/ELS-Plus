@@ -17,12 +17,12 @@ namespace ELS.Siren
     /// </summary>
     partial class Siren : IManagerEntry
     {
-        private VCF.vcfroot _vcf;
+        private Vcfroot _vcf;
         private bool dual_siren;
         public Vehicle _vehicle { get; set; }
         private MainSiren _mainSiren;
         Tones _tones;
-        public Siren(Vehicle vehicle,VCF.vcfroot vcfroot,[Optional]IDictionary<string,object> data)
+        public Siren(Vehicle vehicle,Vcfroot vcfroot,[Optional]IDictionary<string,object> data)
         {
             _vcf = vcfroot;
             _vehicle = vehicle;

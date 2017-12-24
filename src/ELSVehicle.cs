@@ -8,8 +8,9 @@ namespace ELS
     public class ELSVehicle : PoolObject, FullSync.IFullSyncComponent
     {
         private Siren.Siren _siren;
+        private Light.Light _light;
         private Vehicle _vehicle;
-        private VCF.vcfroot _vcf;
+        private Vcfroot _vcf;
         public ELSVehicle(int handle, IDictionary<string, object> data) : base(handle)
         {
             _vehicle = new Vehicle(handle);
@@ -18,14 +19,14 @@ namespace ELS
             if (_vehicle.DisplayName == "CARNOTFOUND" || _vehicle.GetNetworkId()==0) {
                 throw new Exception("Vehicle creation failure.");
             }
-            else if( VCF.ELSVehicle.Exists(item => item.Item2.FileName.ToUpper() == _vehicle.DisplayName.ToUpper()))
+            else if( VCF.ELSVehicle.Exists(item => item.modelHash == _vehicle.Model))
             {
-                _vcf = VCF.ELSVehicle.Find(item => item.Item2.FileName.ToUpper() == _vehicle.DisplayName.ToUpper()).Item2;
+                _vcf = VCF.ELSVehicle.Find(item => item.modelHash == _vehicle.Model).root;
             }
             if (data.ContainsKey("Siren"))
             {
                 _siren = new Siren.Siren(_vehicle, _vcf,(IDictionary<string, object>)data["Siren"]);
-
+                _light = new Light.Light(_vehicle, _vcf, (IDictionary<string, object>)data["Light"]);
             }
             else
             {
@@ -38,6 +39,8 @@ namespace ELS
 
 #endif
                 _siren = new Siren.Siren(_vehicle,_vcf);
+                _light = new Light.Light(_vehicle, _vcf);
+
             }
 #if DEBUG
             CitizenFX.Core.Debug.WriteLine($"created vehicle");
@@ -53,6 +56,7 @@ namespace ELS
         internal void CleanUP()
         {
             _siren.CleanUP();
+            _light.CleanUP();
             CitizenFX.Core.Debug.WriteLine("running vehicle deconstructor");
             CitizenFX.Core.Native.API.NetworkUnregisterNetworkedEntity(_vehicle.Handle);
             //CitizenFX.Core.Native.API.NetworkSetMissionFinished();
@@ -62,10 +66,12 @@ namespace ELS
         internal void RunTick()
         {
             _siren.Ticker();
+            _light.Ticker();
         }
         internal void RunExternalTick()
         {
             _siren.ExternalTicker();
+            _light.ExternalTicker();
         }
         internal Vector3 GetBonePosistion()
         {
@@ -80,15 +86,7 @@ namespace ELS
         {
             _vehicle.Delete();
         }
-        /// <summary>
-        /// Proxies sync data to te lighting and siren sub components
-        /// </summary>
-        /// <param name="dataDic"></param>
-        internal void SetSyncDataSets(IDictionary<string, object> dataDic)
-        {
-            var sirenDic = dataDic["siren"];
-            _siren.SetData(dataDic);
-        }
+
         internal void UpdateRemoteSiren(string command, bool state)
         {
             _siren.SirenControlsRemote(command, state);
@@ -97,10 +95,15 @@ namespace ELS
         {
             return _vehicle.GetNetworkId();
         }
-
+        /// <summary>
+        /// Proxies sync data to the lighting and siren sub components
+        /// </summary>
+        /// <param name="dataDic"></param>
         public void SetData(IDictionary<string, object> data)
         {
             _siren.SetData((IDictionary<string, object>)data["siren"]);
+            _light.SetData((IDictionary<string, object>)data["light"]);
+
         }
 
         public Dictionary<string, object> GetData()
@@ -108,7 +111,7 @@ namespace ELS
             Dictionary<string, object> vehDic = new Dictionary<string, object>
             {
                 {"siren",_siren.GetData() },
-                {"Lights",null },
+                {"light",_light.GetData() },
                 {"NetworkID",_vehicle.GetNetworkId() }
             };
             return vehDic;
