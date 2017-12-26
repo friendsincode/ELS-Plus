@@ -1,8 +1,0 @@
-server:
-  enabled: true
-  url: 192.168.1.237:30120
-  password: Nikkie2206
-  src: .
-  root: \\Gaming-rig\d\fivemserver
-  name: ELS-FiveM
-  iceconpath: ..\..\..\utils\icecon_windows_amd64.exe
