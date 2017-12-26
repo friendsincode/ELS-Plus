@@ -30,6 +30,14 @@ namespace ELS.configuration
         public string resource;
         public Vcfroot root;
         public Model modelHash;
+
+        public VCFEntry(string fn, string res, Model hash, Vcfroot vcfroot) 
+        {
+            filename = fn;
+            resource = res;
+            root = vcfroot;
+            modelHash = hash;
+        }
     }
     public class VCF
     {
@@ -47,49 +55,53 @@ namespace ELS.configuration
                 throw (ex);
             }
             Encoding.UTF8.GetPreamble();
-            var data = new VCFEntry();
-
+            var data = new VCFEntry(Path.GetFileNameWithoutExtension(name), ResourceName, Game.GenerateHash(Path.GetFileNameWithoutExtension(name)),new Vcfroot());
             if (type == SettingsType.Type.VCF)
             {
+                CitizenFX.Core.Debug.WriteLine("Loading XML");
                 System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
                 doc.LoadXml(Data);
                 bool res;
-                data.filename = Path.GetFileNameWithoutExtension(name);
-
+                //data.filename = Path.GetFileNameWithoutExtension(name);
+                if (data.root == null)
+                {
+                    CitizenFX.Core.Debug.WriteLine("Null issue");
+                    return;
+                }
                 data.root.SOUNDS.ManTone1.AudioString = doc?["vcfroot"]?["SOUNDS"]?["ManTone1"]?.Attributes["AudioString"]?.Value;
                 data.root.SOUNDS.ManTone1.AllowUse = doc["vcfroot"]["SOUNDS"]["ManTone1"].Attributes["AllowUse"].Value;
-
+                
                 data.root.SOUNDS.ManTone2.AudioString = doc["vcfroot"]["SOUNDS"]["ManTone2"].Attributes["AudioString"].Value;
                 data.root.SOUNDS.ManTone2.AllowUse = doc["vcfroot"]["SOUNDS"]["ManTone2"].Attributes["AllowUse"].Value;
-
+                
 
                 data.root.SOUNDS.MainHorn.AudioString = doc["vcfroot"]["SOUNDS"]["MainHorn"].Attributes["AudioString"].Value;
                 data.root.SOUNDS.MainHorn.InterruptsSiren = doc["vcfroot"]["SOUNDS"]["MainHorn"].Attributes["InterruptsSiren"].Value;
-
+                
                 data.root.SOUNDS.SrnTone1.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone1"].Attributes["AudioString"].Value;
                 data.root.SOUNDS.SrnTone1.AllowUse = doc["vcfroot"]["SOUNDS"]["SrnTone1"].Attributes["AllowUse"].Value;
-
+                
                 data.root.SOUNDS.SrnTone2.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone2"].Attributes["AudioString"].Value;
                 data.root.SOUNDS.SrnTone2.AllowUse = doc["vcfroot"]["SOUNDS"]["SrnTone2"].Attributes["AllowUse"].Value;
-
+                
                 data.root.SOUNDS.SrnTone3.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone3"].Attributes["AudioString"].Value;
                 data.root.SOUNDS.SrnTone3.AllowUse = doc["vcfroot"]["SOUNDS"]["SrnTone3"].Attributes["AllowUse"].Value;
-
+                
                 data.root.SOUNDS.SrnTone4.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone4"].Attributes["AudioString"].Value;
                 data.root.SOUNDS.SrnTone4.AllowUse = doc["vcfroot"]["SOUNDS"]["SrnTone4"].Attributes["AllowUse"].Value;
-
+                
                 data.root.SOUNDS.AuxSiren.AllowUse = doc["vcfroot"]["SOUNDS"]["AuxSiren"].Attributes["AllowUse"].Value;
                 data.root.SOUNDS.AuxSiren.AudioString = doc["vcfroot"]["SOUNDS"]["AuxSiren"].Attributes["AudioString"].Value;
-
+                
                 data.root.SOUNDS.PanicMde.AllowUse = doc["vcfroot"]["SOUNDS"]["PanicMde"].Attributes["AllowUse"].Value;
                 data.root.SOUNDS.PanicMde.AudioString = doc["vcfroot"]["SOUNDS"]["PanicMde"].Attributes["AudioString"].Value;
-
+                
                 data.root.Author = doc["vcfroot"].Attributes["Author"].Value;
                 //TODO: add method to remove old file or a file from ELSVehicle
-                if (ELSVehicle.Exists(veh => veh.resource== ResourceName))
+                if (ELSVehicle.Exists(veh => veh.resource == ResourceName))
                 {
                     CitizenFX.Core.Debug.WriteLine($"Removeing preexisting VCF for resource ${ResourceName}");
-                    ELSVehicle.RemoveAll(veh => veh.resource== ResourceName);
+                    ELSVehicle.RemoveAll(veh => veh.resource == ResourceName);
                 }
                 ELSVehicle.Add(data);
                 CitizenFX.Core.Debug.WriteLine($"Added {data.filename}");
@@ -103,7 +115,7 @@ namespace ELS.configuration
 
         internal static bool isValidData(string data)
         {
-            if (data == null || data.Length == 0) return false;
+            if (String.IsNullOrEmpty(data)) return false;
             System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
             doc.LoadXml(data);
             //TODO change how below is detected to account for xml meta tag being before it.
@@ -127,7 +139,7 @@ namespace ELS.configuration
     }
 
     [XmlRoot(ElementName = "Extra01")]
-    public class Extra01
+    public class Extra
     {
         [XmlAttribute(AttributeName = "IsElsControlled")]
         public string IsElsControlled { get; set; }
@@ -141,192 +153,50 @@ namespace ELS.configuration
         public string OffsetY { get; set; }
         [XmlAttribute(AttributeName = "OffsetZ")]
         public string OffsetZ { get; set; }
-    }
-
-    [XmlRoot(ElementName = "Extra02")]
-    public class Extra02
-    {
-        [XmlAttribute(AttributeName = "IsElsControlled")]
-        public string IsElsControlled { get; set; }
-        [XmlAttribute(AttributeName = "AllowEnvLight")]
-        public string AllowEnvLight { get; set; }
-        [XmlAttribute(AttributeName = "Color")]
-        public string Color { get; set; }
-        [XmlAttribute(AttributeName = "OffsetX")]
-        public string OffsetX { get; set; }
-        [XmlAttribute(AttributeName = "OffsetY")]
-        public string OffsetY { get; set; }
-        [XmlAttribute(AttributeName = "OffsetZ")]
-        public string OffsetZ { get; set; }
-    }
-
-    [XmlRoot(ElementName = "Extra03")]
-    public class Extra03
-    {
-        [XmlAttribute(AttributeName = "IsElsControlled")]
-        public string IsElsControlled { get; set; }
-        [XmlAttribute(AttributeName = "AllowEnvLight")]
-        public string AllowEnvLight { get; set; }
-        [XmlAttribute(AttributeName = "Color")]
-        public string Color { get; set; }
-        [XmlAttribute(AttributeName = "OffsetX")]
-        public string OffsetX { get; set; }
-        [XmlAttribute(AttributeName = "OffsetY")]
-        public string OffsetY { get; set; }
-        [XmlAttribute(AttributeName = "OffsetZ")]
-        public string OffsetZ { get; set; }
-    }
-
-    [XmlRoot(ElementName = "Extra04")]
-    public class Extra04
-    {
-        [XmlAttribute(AttributeName = "IsElsControlled")]
-        public string IsElsControlled { get; set; }
-        [XmlAttribute(AttributeName = "AllowEnvLight")]
-        public string AllowEnvLight { get; set; }
-        [XmlAttribute(AttributeName = "Color")]
-        public string Color { get; set; }
-        [XmlAttribute(AttributeName = "OffsetX")]
-        public string OffsetX { get; set; }
-        [XmlAttribute(AttributeName = "OffsetY")]
-        public string OffsetY { get; set; }
-        [XmlAttribute(AttributeName = "OffsetZ")]
-        public string OffsetZ { get; set; }
-    }
-
-    [XmlRoot(ElementName = "Extra05")]
-    public class Extra05
-    {
-        [XmlAttribute(AttributeName = "IsElsControlled")]
-        public string IsElsControlled { get; set; }
-        [XmlAttribute(AttributeName = "AllowEnvLight")]
-        public string AllowEnvLight { get; set; }
-        [XmlAttribute(AttributeName = "Color")]
-        public string Color { get; set; }
-        [XmlAttribute(AttributeName = "OffsetX")]
-        public string OffsetX { get; set; }
-        [XmlAttribute(AttributeName = "OffsetY")]
-        public string OffsetY { get; set; }
-        [XmlAttribute(AttributeName = "OffsetZ")]
-        public string OffsetZ { get; set; }
-    }
-
-    [XmlRoot(ElementName = "Extra06")]
-    public class Extra06
-    {
-        [XmlAttribute(AttributeName = "IsElsControlled")]
-        public string IsElsControlled { get; set; }
-        [XmlAttribute(AttributeName = "AllowEnvLight")]
-        public string AllowEnvLight { get; set; }
-        [XmlAttribute(AttributeName = "Color")]
-        public string Color { get; set; }
-        [XmlAttribute(AttributeName = "OffsetX")]
-        public string OffsetX { get; set; }
-        [XmlAttribute(AttributeName = "OffsetY")]
-        public string OffsetY { get; set; }
-        [XmlAttribute(AttributeName = "OffsetZ")]
-        public string OffsetZ { get; set; }
-    }
-
-    [XmlRoot(ElementName = "Extra07")]
-    public class Extra07
-    {
-        [XmlAttribute(AttributeName = "IsElsControlled")]
-        public string IsElsControlled { get; set; }
-        [XmlAttribute(AttributeName = "AllowEnvLight")]
-        public string AllowEnvLight { get; set; }
-        [XmlAttribute(AttributeName = "Color")]
-        public string Color { get; set; }
-        [XmlAttribute(AttributeName = "OffsetX")]
-        public string OffsetX { get; set; }
-        [XmlAttribute(AttributeName = "OffsetY")]
-        public string OffsetY { get; set; }
-        [XmlAttribute(AttributeName = "OffsetZ")]
-        public string OffsetZ { get; set; }
-    }
-
-    [XmlRoot(ElementName = "Extra08")]
-    public class Extra08
-    {
-        [XmlAttribute(AttributeName = "IsElsControlled")]
-        public string IsElsControlled { get; set; }
-        [XmlAttribute(AttributeName = "AllowEnvLight")]
-        public string AllowEnvLight { get; set; }
-        [XmlAttribute(AttributeName = "Color")]
-        public string Color { get; set; }
-        [XmlAttribute(AttributeName = "OffsetX")]
-        public string OffsetX { get; set; }
-        [XmlAttribute(AttributeName = "OffsetY")]
-        public string OffsetY { get; set; }
-        [XmlAttribute(AttributeName = "OffsetZ")]
-        public string OffsetZ { get; set; }
-    }
-
-    [XmlRoot(ElementName = "Extra09")]
-    public class Extra09
-    {
-        [XmlAttribute(AttributeName = "IsElsControlled")]
-        public string IsElsControlled { get; set; }
-        [XmlAttribute(AttributeName = "AllowEnvLight")]
-        public string AllowEnvLight { get; set; }
-        [XmlAttribute(AttributeName = "Color")]
-        public string Color { get; set; }
-        [XmlAttribute(AttributeName = "OffsetX")]
-        public string OffsetX { get; set; }
-        [XmlAttribute(AttributeName = "OffsetY")]
-        public string OffsetY { get; set; }
-        [XmlAttribute(AttributeName = "OffsetZ")]
-        public string OffsetZ { get; set; }
-    }
-
-    [XmlRoot(ElementName = "Extra10")]
-    public class Extra10
-    {
-        [XmlAttribute(AttributeName = "IsElsControlled")]
-        public string IsElsControlled { get; set; }
-    }
-
-    [XmlRoot(ElementName = "Extra11")]
-    public class Extra11
-    {
-        [XmlAttribute(AttributeName = "IsElsControlled")]
-        public string IsElsControlled { get; set; }
-    }
-
-    [XmlRoot(ElementName = "Extra12")]
-    public class Extra12
-    {
-        [XmlAttribute(AttributeName = "IsElsControlled")]
-        public string IsElsControlled { get; set; }
     }
 
     [XmlRoot(ElementName = "EOVERRIDE")]
     public class EOVERRIDE
     {
         [XmlElement(ElementName = "Extra01")]
-        public Extra01 Extra01 { get; set; }
+        public Extra Extra01 { get; set; }
         [XmlElement(ElementName = "Extra02")]
-        public Extra02 Extra02 { get; set; }
+        public Extra Extra02 { get; set; }
         [XmlElement(ElementName = "Extra03")]
-        public Extra03 Extra03 { get; set; }
+        public Extra Extra03 { get; set; }
         [XmlElement(ElementName = "Extra04")]
-        public Extra04 Extra04 { get; set; }
+        public Extra Extra04 { get; set; }
         [XmlElement(ElementName = "Extra05")]
-        public Extra05 Extra05 { get; set; }
+        public Extra Extra05 { get; set; }
         [XmlElement(ElementName = "Extra06")]
-        public Extra06 Extra06 { get; set; }
+        public Extra Extra06 { get; set; }
         [XmlElement(ElementName = "Extra07")]
-        public Extra07 Extra07 { get; set; }
+        public Extra Extra07 { get; set; }
         [XmlElement(ElementName = "Extra08")]
-        public Extra08 Extra08 { get; set; }
+        public Extra Extra08 { get; set; }
         [XmlElement(ElementName = "Extra09")]
-        public Extra09 Extra09 { get; set; }
+        public Extra Extra09 { get; set; }
         [XmlElement(ElementName = "Extra10")]
-        public Extra10 Extra10 { get; set; }
+        public Extra Extra10 { get; set; }
         [XmlElement(ElementName = "Extra11")]
-        public Extra11 Extra11 { get; set; }
+        public Extra Extra11 { get; set; }
         [XmlElement(ElementName = "Extra12")]
-        public Extra12 Extra12 { get; set; }
+        public Extra Extra12 { get; set; }
+
+        public EOVERRIDE()
+        {
+            Extra01 = new Extra();
+            Extra02 = new Extra();
+            Extra03 = new Extra();
+            Extra04 = new Extra();
+            Extra05 = new Extra();
+            Extra06 = new Extra();
+            Extra07 = new Extra();
+            Extra08 = new Extra();
+            Extra09 = new Extra();
+            Extra10 = new Extra();
+            Extra11 = new Extra();
+            Extra12 = new Extra();        }
     }
 
     [XmlRoot(ElementName = "Takedowns")]
@@ -362,6 +232,12 @@ namespace ELS.configuration
         public Takedowns Takedowns { get; set; }
         [XmlElement(ElementName = "SceneLights")]
         public SceneLights SceneLights { get; set; }
+
+        public MISC()
+        {
+            Takedowns = new Takedowns();
+            SceneLights = new SceneLights();
+        }
     }
 
     [XmlRoot(ElementName = "UseExtras")]
@@ -384,10 +260,15 @@ namespace ELS.configuration
         public string DisableAtLstg3 { get; set; }
         [XmlElement(ElementName = "UseExtras")]
         public UseExtras UseExtras { get; set; }
+
+        public CRUISE()
+        {
+            UseExtras = new UseExtras();
+        }
     }
 
     [XmlRoot(ElementName = "Headlights")]
-    public class Headlights
+    public class AcoronaLights
     {
         [XmlAttribute(AttributeName = "DfltPattern")]
         public string DfltPattern { get; set; }
@@ -397,63 +278,29 @@ namespace ELS.configuration
         public string ColorR { get; set; }
     }
 
-    [XmlRoot(ElementName = "TailLights")]
-    public class TailLights
-    {
-        [XmlAttribute(AttributeName = "DfltPattern")]
-        public string DfltPattern { get; set; }
-        [XmlAttribute(AttributeName = "ColorL")]
-        public string ColorL { get; set; }
-        [XmlAttribute(AttributeName = "ColorR")]
-        public string ColorR { get; set; }
-    }
-
-    [XmlRoot(ElementName = "IndicatorsF")]
-    public class IndicatorsF
-    {
-        [XmlAttribute(AttributeName = "DfltPattern")]
-        public string DfltPattern { get; set; }
-        [XmlAttribute(AttributeName = "ColorL")]
-        public string ColorL { get; set; }
-        [XmlAttribute(AttributeName = "ColorR")]
-        public string ColorR { get; set; }
-    }
-
-    [XmlRoot(ElementName = "IndicatorsB")]
-    public class IndicatorsB
-    {
-        [XmlAttribute(AttributeName = "DfltPattern")]
-        public string DfltPattern { get; set; }
-        [XmlAttribute(AttributeName = "ColorL")]
-        public string ColorL { get; set; }
-        [XmlAttribute(AttributeName = "ColorR")]
-        public string ColorR { get; set; }
-    }
-
-    [XmlRoot(ElementName = "ReverseLights")]
-    public class ReverseLights
-    {
-        [XmlAttribute(AttributeName = "DfltPattern")]
-        public string DfltPattern { get; set; }
-        [XmlAttribute(AttributeName = "ColorL")]
-        public string ColorL { get; set; }
-        [XmlAttribute(AttributeName = "ColorR")]
-        public string ColorR { get; set; }
-    }
 
     [XmlRoot(ElementName = "ACORONAS")]
     public class ACORONAS
     {
         [XmlElement(ElementName = "Headlights")]
-        public Headlights Headlights { get; set; }
+        public AcoronaLights Headlights { get; set; }
         [XmlElement(ElementName = "TailLights")]
-        public TailLights TailLights { get; set; }
+        public AcoronaLights TailLights { get; set; }
         [XmlElement(ElementName = "IndicatorsF")]
-        public IndicatorsF IndicatorsF { get; set; }
+        public AcoronaLights IndicatorsF { get; set; }
         [XmlElement(ElementName = "IndicatorsB")]
-        public IndicatorsB IndicatorsB { get; set; }
+        public AcoronaLights IndicatorsB { get; set; }
         [XmlElement(ElementName = "ReverseLights")]
-        public ReverseLights ReverseLights { get; set; }
+        public AcoronaLights ReverseLights { get; set; }
+
+        public ACORONAS()
+        {
+            Headlights = new AcoronaLights();
+            TailLights = new AcoronaLights();
+            IndicatorsF = new AcoronaLights();
+            IndicatorsB = new AcoronaLights();
+            ReverseLights = new AcoronaLights();
+        }
     }
 
     [XmlRoot(ElementName = "MainHorn")]
@@ -470,7 +317,7 @@ namespace ELS.configuration
     }
 
     [XmlRoot(ElementName = "ManTone1")]
-    public class ManTone1
+    public class ManTone
     {
         [XmlAttribute(AttributeName = "AllowUse")]
         public string AllowUse { get; set; }
@@ -478,17 +325,9 @@ namespace ELS.configuration
         public string AudioString { get; set; }
     }
 
-    [XmlRoot(ElementName = "ManTone2")]
-    public class ManTone2
-    {
-        [XmlAttribute(AttributeName = "AllowUse")]
-        public string AllowUse { get; set; }
-        [XmlAttribute(AttributeName = "AudioString")]
-        public string AudioString { get; set; }
-    }
 
     [XmlRoot(ElementName = "SrnTone1")]
-    public class SrnTone1
+    public class SrnTone
     {
         [XmlAttribute(AttributeName = "AllowUse")]
         public string AllowUse { get; set; }
@@ -500,44 +339,6 @@ namespace ELS.configuration
         public string Pattern { get; set; }
     }
 
-    [XmlRoot(ElementName = "SrnTone2")]
-    public class SrnTone2
-    {
-        [XmlAttribute(AttributeName = "AllowUse")]
-        public string AllowUse { get; set; }
-        [XmlAttribute(AttributeName = "AudioString")]
-        public string AudioString { get; set; }
-        [XmlAttribute(AttributeName = "Enabled")]
-        public string Enabled { get; set; }
-        [XmlAttribute(AttributeName = "Pattern")]
-        public string Pattern { get; set; }
-    }
-
-    [XmlRoot(ElementName = "SrnTone3")]
-    public class SrnTone3
-    {
-        [XmlAttribute(AttributeName = "AllowUse")]
-        public string AllowUse { get; set; }
-        [XmlAttribute(AttributeName = "AudioString")]
-        public string AudioString { get; set; }
-        [XmlAttribute(AttributeName = "Enabled")]
-        public string Enabled { get; set; }
-        [XmlAttribute(AttributeName = "Pattern")]
-        public string Pattern { get; set; }
-    }
-
-    [XmlRoot(ElementName = "SrnTone4")]
-    public class SrnTone4
-    {
-        [XmlAttribute(AttributeName = "AllowUse")]
-        public string AllowUse { get; set; }
-        [XmlAttribute(AttributeName = "AudioString")]
-        public string AudioString { get; set; }
-        [XmlAttribute(AttributeName = "Enabled")]
-        public string Enabled { get; set; }
-        [XmlAttribute(AttributeName = "Pattern")]
-        public string Pattern { get; set; }
-    }
 
     [XmlRoot(ElementName = "AuxSiren")]
     public class AuxSiren
@@ -567,41 +368,45 @@ namespace ELS.configuration
         [XmlElement(ElementName = "MainHorn")]
         public MainHorn MainHorn { get; set; }
         [XmlElement(ElementName = "ManTone1")]
-        public ManTone1 ManTone1 { get; set; }
+        public ManTone ManTone1 { get; set; }
         [XmlElement(ElementName = "ManTone2")]
-        public ManTone2 ManTone2 { get; set; }
+        public ManTone ManTone2 { get; set; }
         [XmlElement(ElementName = "SrnTone1")]
-        public SrnTone1 SrnTone1 { get; set; }
+        public SrnTone SrnTone1 { get; set; }
         [XmlElement(ElementName = "SrnTone2")]
-        public SrnTone2 SrnTone2 { get; set; }
+        public SrnTone SrnTone2 { get; set; }
         [XmlElement(ElementName = "SrnTone3")]
-        public SrnTone3 SrnTone3 { get; set; }
+        public SrnTone SrnTone3 { get; set; }
         [XmlElement(ElementName = "SrnTone4")]
-        public SrnTone4 SrnTone4 { get; set; }
+        public SrnTone SrnTone4 { get; set; }
         [XmlElement(ElementName = "AuxSiren")]
         public AuxSiren AuxSiren { get; set; }
         [XmlElement(ElementName = "PanicMde")]
         public PanicMde PanicMde { get; set; }
-    }
 
-    [XmlRoot(ElementName = "Lstg3")]
-    public class Lstg3
-    {
-        [XmlAttribute(AttributeName = "Enabled")]
-        public string Enabled { get; set; }
-        [XmlAttribute(AttributeName = "Pattern")]
-        public string Pattern { get; set; }
+        public SOUNDS()
+        {
+            MainHorn = new MainHorn();
+            ManTone1 = new ManTone();
+            ManTone2 = new ManTone();
+            SrnTone1 = new SrnTone();
+            SrnTone2 = new SrnTone();
+            SrnTone3 = new SrnTone();
+            SrnTone4 = new SrnTone();
+            AuxSiren = new AuxSiren();
+            PanicMde = new PanicMde();
+        }
     }
 
     [XmlRoot(ElementName = "PresetPatterns")]
     public class PresetPatterns
     {
         [XmlElement(ElementName = "Lstg3")]
-        public Lstg3 Lstg3 { get; set; }
+        public Lstg Lstg3 { get; set; }
         [XmlElement(ElementName = "Lstg2")]
-        public Lstg2 Lstg2 { get; set; }
+        public Lstg Lstg2 { get; set; }
         [XmlElement(ElementName = "Lstg1")]
-        public Lstg1 Lstg1 { get; set; }
+        public Lstg Lstg1 { get; set; }
     }
 
     [XmlRoot(ElementName = "OutOfVeh")]
@@ -619,17 +424,28 @@ namespace ELS.configuration
         [XmlElement(ElementName = "MainHorn")]
         public MainHorn MainHorn { get; set; }
         [XmlElement(ElementName = "SrnTone1")]
-        public SrnTone1 SrnTone1 { get; set; }
+        public SrnTone SrnTone1 { get; set; }
         [XmlElement(ElementName = "SrnTone2")]
-        public SrnTone2 SrnTone2 { get; set; }
+        public SrnTone SrnTone2 { get; set; }
         [XmlElement(ElementName = "SrnTone3")]
-        public SrnTone3 SrnTone3 { get; set; }
+        public SrnTone SrnTone3 { get; set; }
         [XmlElement(ElementName = "SrnTone4")]
-        public SrnTone4 SrnTone4 { get; set; }
+        public SrnTone SrnTone4 { get; set; }
         [XmlElement(ElementName = "PanicMde")]
         public PanicMde PanicMde { get; set; }
         [XmlElement(ElementName = "OutOfVeh")]
         public OutOfVeh OutOfVeh { get; set; }
+
+        public ForcedPatterns()
+        {
+            MainHorn = new MainHorn();
+            SrnTone1 = new SrnTone();
+            SrnTone2 = new SrnTone();
+            SrnTone3 = new SrnTone();
+            SrnTone4 = new SrnTone();
+            PanicMde = new PanicMde();
+            OutOfVeh = new OutOfVeh();
+        }
     }
 
     [XmlRoot(ElementName = "ScanPatternCustomPool")]
@@ -643,21 +459,7 @@ namespace ELS.configuration
         public string Sequential { get; set; }
     }
 
-    [XmlRoot(ElementName = "WRNL")]
-    public class WRNL
-    {
-        [XmlElement(ElementName = "PresetPatterns")]
-        public PresetPatterns PresetPatterns { get; set; }
-        [XmlElement(ElementName = "ForcedPatterns")]
-        public ForcedPatterns ForcedPatterns { get; set; }
-        [XmlElement(ElementName = "ScanPatternCustomPool")]
-        public ScanPatternCustomPool ScanPatternCustomPool { get; set; }
-        [XmlAttribute(AttributeName = "LightingFormat")]
-        public string LightingFormat { get; set; }
-    }
-
-    [XmlRoot(ElementName = "Lstg2")]
-    public class Lstg2
+    public class Lstg
     {
         [XmlAttribute(AttributeName = "Enabled")]
         public string Enabled { get; set; }
@@ -665,8 +467,7 @@ namespace ELS.configuration
         public string Pattern { get; set; }
     }
 
-    [XmlRoot(ElementName = "PRML")]
-    public class PRML
+    public class Lights
     {
         [XmlElement(ElementName = "PresetPatterns")]
         public PresetPatterns PresetPatterns { get; set; }
@@ -677,31 +478,16 @@ namespace ELS.configuration
         [XmlAttribute(AttributeName = "LightingFormat")]
         public string LightingFormat { get; set; }
         [XmlAttribute(AttributeName = "ExtrasActiveAtLstg2")]
+        public string ExtrasActiveAtLstg1 { get; set; }
         public string ExtrasActiveAtLstg2 { get; set; }
-    }
+        public string ExtrasActiveAtLstg3 { get; set; }
 
-    [XmlRoot(ElementName = "Lstg1")]
-    public class Lstg1
-    {
-        [XmlAttribute(AttributeName = "Enabled")]
-        public string Enabled { get; set; }
-        [XmlAttribute(AttributeName = "Pattern")]
-        public string Pattern { get; set; }
-    }
-
-    [XmlRoot(ElementName = "SECL")]
-    public class SECL
-    {
-        [XmlElement(ElementName = "PresetPatterns")]
-        public PresetPatterns PresetPatterns { get; set; }
-        [XmlElement(ElementName = "ForcedPatterns")]
-        public ForcedPatterns ForcedPatterns { get; set; }
-        [XmlElement(ElementName = "ScanPatternCustomPool")]
-        public ScanPatternCustomPool ScanPatternCustomPool { get; set; }
-        [XmlAttribute(AttributeName = "LightingFormat")]
-        public string LightingFormat { get; set; }
-        [XmlAttribute(AttributeName = "DisableAtLstg3")]
-        public string DisableAtLstg3 { get; set; }
+        public Lights()
+        {
+            PresetPatterns = new PresetPatterns();
+            ForcedPatterns = new ForcedPatterns();
+            ScanPatternCustomPool = new ScanPatternCustomPool();
+        }
     }
 
     [XmlRoot(ElementName = "vcfroot")]
@@ -720,15 +506,28 @@ namespace ELS.configuration
         [XmlElement(ElementName = "SOUNDS")]
         public SOUNDS SOUNDS { get; set; }
         [XmlElement(ElementName = "WRNL")]
-        public WRNL WRNL { get; set; }
+        public Lights WRNL { get; set; }
         [XmlElement(ElementName = "PRML")]
-        public PRML PRML { get; set; }
+        public Lights PRML { get; set; }
         [XmlElement(ElementName = "SECL")]
-        public SECL SECL { get; set; }
+        public Lights SECL { get; set; }
         [XmlAttribute(AttributeName = "Description")]
         public string Description { get; set; }
         [XmlAttribute(AttributeName = "Author")]
         public string Author { get; set; }
+
+        public Vcfroot()
+        {
+            INTERFACE = new INTERFACE();
+            EOVERRIDE = new EOVERRIDE();
+            MISC = new MISC();
+            CRUISE = new CRUISE();
+            ACORONAS = new ACORONAS();
+            SOUNDS = new SOUNDS();
+            WRNL = new Lights();
+            PRML = new Lights();
+            SECL = new Lights();
+        }
     }
 
 }
