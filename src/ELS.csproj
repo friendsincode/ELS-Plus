@@ -112,6 +112,7 @@
     <Compile Include="Light\LightStage.cs" />
     <Compile Include="Light\SpotLight.cs" />
     <Compile Include="Manager\Manager.cs" />
+    <Compile Include="Manager\VehicleList.cs" />
     <Compile Include="Manager\VehicleManager.cs" />
     <Compile Include="NUI\ElsUiPanel.cs" />
     <Compile Include="NUI\ELSVehicleUIState.cs" />

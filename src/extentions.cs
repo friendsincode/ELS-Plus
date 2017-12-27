@@ -11,6 +11,11 @@ namespace ELS
         {
             return configuration.VCF.ELSVehicle.Exists(obj => obj.modelHash == vehicle.Model);
         }
+        
+        public static bool IsSittingInELSVehicle(this Ped ped)
+        {
+            return (ped.IsSittingInVehicle() && ped.CurrentVehicle.IsEls()) ? true : false ; 
+        }
 
         async public static Task<bool> RequestCollision(this Vehicle vehicle)
         {

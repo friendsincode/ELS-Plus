@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using CitizenFX.Core;
 using ELS.configuration;
 
@@ -11,7 +12,7 @@ namespace ELS
         private Light.Light _light;
         private Vehicle _vehicle;
         private Vcfroot _vcf;
-        public ELSVehicle(int handle, IDictionary<string, object> data) : base(handle)
+        public ELSVehicle(int handle) : base(handle)
         {
             _vehicle = new Vehicle(handle);
             ModelLoaded();
@@ -23,13 +24,7 @@ namespace ELS
             {
                 _vcf = VCF.ELSVehicle.Find(item => item.modelHash == _vehicle.Model).root;
             }
-            if (data.ContainsKey("Siren"))
-            {
-                _siren = new Siren.Siren(_vehicle, _vcf,(IDictionary<string, object>)data["Siren"]);
-                _light = new Light.Light(_vehicle, _vcf, (IDictionary<string, object>)data["Light"]);
-            }
-            else
-            {
+ 
                 //_vehicle.SetExistOnAllMachines(true);
 #if DEBUG
                 CitizenFX.Core.Debug.WriteLine(CitizenFX.Core.Native.API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
@@ -40,13 +35,42 @@ namespace ELS
 #endif
                 _siren = new Siren.Siren(_vehicle,_vcf);
                 _light = new Light.Light(_vehicle, _vcf);
-
-            }
+           
 #if DEBUG
             CitizenFX.Core.Debug.WriteLine($"created vehicle");
 #endif
         }
-         private async void  ModelLoaded()
+        public ELSVehicle(int handle, [Optional]IDictionary<string, object> data) : base(handle)
+        {
+            _vehicle = new Vehicle(handle);
+            ModelLoaded();
+
+            if (_vehicle.DisplayName == "CARNOTFOUND" || _vehicle.GetNetworkId() == 0)
+            {
+                throw new Exception("Vehicle creation failure.");
+            }
+            else if (VCF.ELSVehicle.Exists(item => item.modelHash == _vehicle.Model))
+            {
+                _vcf = VCF.ELSVehicle.Find(item => item.modelHash == _vehicle.Model).root;
+            }
+            
+                _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data["Siren"]);
+                _light = new Light.Light(_vehicle, _vcf, (IDictionary<string, object>)data["Light"]);
+            
+                //_vehicle.SetExistOnAllMachines(true);
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine(CitizenFX.Core.Native.API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
+
+                CitizenFX.Core.Debug.WriteLine($"registering netid:{_vehicle.GetNetworkId()}\n" +
+                    $"Does entity belong to this script:{CitizenFX.Core.Native.API.DoesEntityBelongToThisScript(_vehicle.Handle, false)}");
+
+#endif
+
+#if DEBUG
+            CitizenFX.Core.Debug.WriteLine($"created vehicle");
+#endif
+        }
+        private async void  ModelLoaded()
         {
             while (_vehicle.DisplayName == "CARNOTFOUND")
             {

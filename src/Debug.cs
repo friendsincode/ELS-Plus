@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.UI;
 using CitizenFX.Core.Native;
+using System.Drawing;
 
 namespace ELS
 {
@@ -46,6 +47,17 @@ namespace ELS
             }
             // Game.Player.Character.SetIntoVehicle(veh, VehicleSeat.Any);
         }
-
+        internal static void DebugText()
+        {
+#if DEBUG
+            if (Game.Player.Character.LastVehicle == null) return;
+            var bonePos = Game.Player.Character.LastVehicle.Bones["door_dside_f"].Position;
+            var pos = Game.Player.Character.GetPositionOffset(bonePos);
+            var text = new Text($"X:{pos.X} Y:{pos.Y} Z:{pos.Z} Lenght:{pos.Length()}", new PointF(Screen.Width / 2.0f, 10f), 0.5f);
+            text.Alignment = Alignment.Center;
+            if (pos.Length() < 1.5) text.Color = Color.FromArgb(255, 0, 0);
+            text.Draw();
+#endif
+        }
     }
 }
