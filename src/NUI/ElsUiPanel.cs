@@ -11,7 +11,7 @@ using System.IO;
 
 namespace ELS.NUI
 {
-    internal class ElsUiPanel : BaseScript
+    internal class ElsUiPanel
     {
         public int _enabled = 0;
 
@@ -66,7 +66,7 @@ namespace ELS.NUI
                 {
                     SendLightData(true, light, color);
                 }
-                await Delay(100);
+                await ELS.Delay(100);
             }
             SendLightData(false, light, "");
         }
@@ -88,28 +88,6 @@ namespace ELS.NUI
         }
 
 
-        #region Callbacks for GUI
-        public void RegisterNUICallback(string msg, Func<IDictionary<string, object>, CallbackDelegate, CallbackDelegate> callback)
-        {
-            CitizenFX.Core.Debug.WriteLine("Registering NUI EventHandlers");
-            API.RegisterNuiCallbackType(msg); // Remember API calls must be executed on the first tick at the earliest!
-            
-
-            EventHandlers[$"__cfx_nui:togglePrimary"] += new Action<ExpandoObject, CallbackDelegate>((body, resultCallback) =>
-            {
-                Console.WriteLine("TogPri pressed state is " + body);
-                callback.Invoke(body, resultCallback);
-            });
-
-            EventHandlers[$"__cfx_nui:escape"] += new Action<ExpandoObject, CallbackDelegate>((body, resultCallback) =>
-            {
-                //Console.WriteLine("TogPri pressed state is " + body);
-                DisableUI();
-                _enabled = 0;
-                callback.Invoke(body, resultCallback);
-            });
-
-        }
-        #endregion
+        
     }
 }

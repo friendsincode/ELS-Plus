@@ -10,9 +10,22 @@ namespace ELS_Server
     public class Class1 : BaseScript
     {
         Dictionary<int, object> _cachedData = new Dictionary<int,object>();
+        VcfSync _vcfSync;
         public Class1()
         {
+            
             Debug.WriteLine("Server Running");
+            EventHandlers["ELS:VcfSync:Server"] += new Action<int>((int source) =>
+            {
+                _vcfSync = new VcfSync();
+                _vcfSync.CheckVCF();
+                Debug.WriteLine($"{source} is requesting VcfSync Data there are {VCF.ELSVehicle.Count} in list");
+                foreach (VCFServerEntry e in VCF.ELSVehicle)
+                {
+                    CitizenFX.Core.Debug.WriteLine($"VCF is loaded for {e.filename} written by {e.root.Author} doing {e.root.Description} sending to client");
+                }
+                TriggerClientEvent(Players[source], "ELS:VcfSync:Client", VCF.ELSVehicle);
+            });
             EventHandlers["ELS:FullSync:Unicast"] += new Action(() => { });
             EventHandlers["ELS:FullSync:Broadcast"] += new Action<System.Dynamic.ExpandoObject,int>((dataDic,playerID) =>
             {
@@ -30,6 +43,10 @@ namespace ELS_Server
                 CitizenFX.Core.Debug.WriteLine($"{a}, {b}, {c}");
                 TriggerClientEvent(Players[(int.Parse((string)b[0]))], "ELS:FullSync:NewSpawnWithData", _cachedData);
             }), false);
+
+            
+
+            
         }
         void BroadcastMessage(System.Dynamic.ExpandoObject dataDic, int SourcePlayerID)
         {
