@@ -22,45 +22,30 @@ using System.Text;
 using System.Xml.Serialization;
 using CitizenFX.Core;
 
-namespace ELS.configuration
+namespace ELS_Server
 {
-    internal struct VCFEntry
-    {
-        public string filename;
-        public string resource;
-        public Vcfroot root;
-        public Model modelHash;
-
-        public VCFEntry(string fn, string res, Model hash, Vcfroot vcfroot) 
-        {
-            filename = fn;
-            resource = res;
-            root = vcfroot;
-            modelHash = hash;
-        }
-    }
-
     internal struct VCFServerEntry
     {
         public string filename;
         public string resource;
-        public Vcfroot root;        
+        public Vcfroot root;
+        //public Model modelHash;
+        
 
-        public VCFServerEntry(string fn, string res, Vcfroot vcfroot)
+        public VCFServerEntry(string fn, string res, Vcfroot vcfroot) 
         {
             filename = fn;
             resource = res;
             root = vcfroot;
-            
         }
     }
     public class VCF
     {
-        internal static List<VCFEntry> ELSVehicle = new List<VCFEntry>();
+        internal static List<VCFServerEntry> ELSVehicle = new List<VCFServerEntry>();
         public VCF()
         {
         }
-        internal static void load(SettingsType.Type type, string name, string Data,string ResourceName)
+        internal static void load(string name, string Data,string ResourceName)
         {
             var bytes = Encoding.UTF8.GetBytes(Data);
             if (bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
@@ -70,9 +55,7 @@ namespace ELS.configuration
                 throw (ex);
             }
             Encoding.UTF8.GetPreamble();
-            var data = new VCFEntry(Path.GetFileNameWithoutExtension(name), ResourceName, Game.GenerateHash(Path.GetFileNameWithoutExtension(name)),new Vcfroot());
-            if (type == SettingsType.Type.VCF)
-            {
+            var data = new VCFServerEntry(Path.GetFileNameWithoutExtension(name), ResourceName, /*Game.GenerateHash(Path.GetFileNameWithoutExtension(name)),*/new Vcfroot());
                 CitizenFX.Core.Debug.WriteLine("Loading XML");
                 System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
                 doc.LoadXml(Data);
@@ -120,7 +103,7 @@ namespace ELS.configuration
                 }
                 ELSVehicle.Add(data);
                 CitizenFX.Core.Debug.WriteLine($"Added {data.filename}");
-            }
+            
         }
         internal static void unload(string ResourceName)
         {
@@ -136,10 +119,10 @@ namespace ELS.configuration
             //TODO change how below is detected to account for xml meta tag being before it.
             return doc.DocumentElement.Name == "vcfroot";
         }
+
+        
     }
-}
-namespace ELS.configuration
-{
+
     [XmlRoot(ElementName = "INTERFACE")]
     public class INTERFACE
     {

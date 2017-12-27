@@ -27,6 +27,8 @@ using ELS.panel;
 using System.Collections.Generic;
 using ELS.Manager;
 using ELS.NUI;
+using System.Dynamic;
+using ELS.configuration;
 
 namespace ELS
 {
@@ -58,6 +60,7 @@ namespace ELS
                             //TODO: make a load files from all resouces.
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
                             SetupConnections();
+                            TriggerServerEvent("ELS:VcfSync:Server", Game.Player.ServerId);
                             TriggerServerEvent("ELS:FullSync:Request:All",Game.Player.ServerId);
                             _eLSUiPanel.DisableUI();                            
                         }
@@ -74,7 +77,7 @@ namespace ELS
                     {
                         try
                         {
-                            _FileLoader.RunLoader(obj);
+                            //_FileLoader.RunLoader(obj);
                         }
                         catch (Exception e)
                         {
@@ -106,6 +109,27 @@ namespace ELS
             {
                
             });
+            EventHandlers["ELS:VcfSync:Client"] += new Action<List<object>>((a) =>
+            {
+                
+                foreach(object vcf in a)
+                {
+                    dynamic info = vcf;
+                    
+                    CitizenFX.Core.Debug.WriteLine($"VCF Server Entry: {vcf.GetType()}");
+                    //VCFEntry entry = new VCFEntry();
+                    //entry.filename = vcf.filename;
+                    //entry.modelHash = Game.GenerateHash(vcf.filename);
+                    //entry.root = vcf.root;
+                    // entry.resource = vcf.resource;
+                    //VCF.ELSVehicle.Add(entry);
+                }
+
+                foreach (VCFEntry e in VCF.ELSVehicle)
+                {
+                    CitizenFX.Core.Debug.WriteLine($"VCF is loaded for {e.filename} written by {e.root.Author} doing {e.root.Description}");
+                }
+            });
             EventHandlers["ELS:FullSync:NewSpawnWithData"] += new Action<System.Dynamic.ExpandoObject>((a) =>
             {
                 _vehicleManager.SyncAllVehiclesOnFirstSpawn(a);
@@ -119,12 +143,30 @@ namespace ELS
             });
             //Take in data and apply it
             EventHandlers["ELS:NewFullSyncData"] += new Action<IDictionary<string, object>>(_vehicleManager.SetVehicleSyncData);
+            RegisterNUICallback("escape", _eLSUiPanel.EscapeUI);
+            RegisterNUICallback("togglePrimary", _eLSUiPanel.TooglePrimary);
         }
 
         public static string CurrentResourceName()
         {
             return Function.Call<string>(Hash.GET_CURRENT_RESOURCE_NAME);
         }
+
+        #region Callbacks for GUI
+        public void RegisterNUICallback(string msg, Func<IDictionary<string, object>, CallbackDelegate, CallbackDelegate> callback)
+        {
+            CitizenFX.Core.Debug.WriteLine($"Registering NUI EventHandler for {msg}");
+            API.RegisterNuiCallbackType(msg); // Remember API calls must be executed on the first tick at the earliest!
+
+
+            EventHandlers[$"__cfx_nui:{msg}"] += new Action<ExpandoObject, CallbackDelegate>((body, resultCallback) =>
+            {
+                Console.WriteLine("TogPri pressed state is " + body);
+                callback.Invoke(body, resultCallback);
+            });
+
+        }
+        #endregion
 
         private async Task Class1_Tick()
         {
