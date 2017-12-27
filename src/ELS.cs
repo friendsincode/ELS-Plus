@@ -26,6 +26,7 @@ using ELS.Light;
 using ELS.panel;
 using System.Collections.Generic;
 using ELS.Manager;
+using ELS.NUI;
 
 namespace ELS
 {
@@ -33,6 +34,7 @@ namespace ELS
     {
         private readonly FileLoader _FileLoader;
         private SpotLight _spotLight;
+        private ElsUiPanel _eLSUiPanel;
         private readonly VehicleManager _vehicleManager;
         private configuration.ControlConfiguration _controlConfiguration;
         panel.test _test = new test();
@@ -43,6 +45,7 @@ namespace ELS
             _controlConfiguration = new configuration.ControlConfiguration();
             _FileLoader = new FileLoader(this);
             _vehicleManager = new VehicleManager();
+            _eLSUiPanel = new ElsUiPanel();
             EventHandlers["onClientResourceStart"] += new Action<string>((string obj) =>
                 {
                     //TODO rewrite loader so that it 
@@ -56,6 +59,7 @@ namespace ELS
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
                             SetupConnections();
                             TriggerServerEvent("ELS:FullSync:Request:All",Game.Player.ServerId);
+                            _eLSUiPanel.DisableUI();                            
                         }
                         catch (Exception e)
                         {
@@ -100,7 +104,7 @@ namespace ELS
             //EventHandlers["ELS:SirenUpdated"] += new Action<string, int, int, bool>(_vehicleManager.UpdateRemoteSirens);
             EventHandlers["onPlayerJoining"] += new Action(() =>
             {
-                
+               
             });
             EventHandlers["ELS:FullSync:NewSpawnWithData"] += new Action<System.Dynamic.ExpandoObject>((a) =>
             {
@@ -136,6 +140,15 @@ namespace ELS
                 if (Game.IsControlJustReleased(0, Control.MultiplayerInfo))
                 {
                     await Debug.Spawn();
+                }
+
+                if (Game.PlayerPed.IsInPoliceVehicle && _eLSUiPanel._enabled == 0)
+                {
+                    _eLSUiPanel.ShowUI();
+                }
+                else if (!Game.PlayerPed.IsInPoliceVehicle && _eLSUiPanel._enabled == 1)
+                {
+                    _eLSUiPanel.DisableUI();
                 }
             }
             catch (Exception ex)

@@ -1,23 +1,120 @@
-﻿<!DOCTYPE html>
+<html>
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-
-    <link rel="stylesheet" href="css/app.css" />
-
-    <script src="js/vue.js" type="text/javascript"></script>
-    <script src="js/app.js" type="text/javascript"></script>
-
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/bootstrap-switch.css">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/popper.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/bootstrap-switch.js"></script>
+  <script src="js/main.js"></script>
 </head>
+
 <body>
-
-    <div class="container" id="elsInterface">
-
-
-
+    <div class="card bg-dark text-white els-ui">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-2 ">
+                    <p>Main</p>
+                </div>
+                <div class="col-4">
+                    <button type="button" data-toggle="button" type="button" class="btn badge badge-pill btn-sm btn-secondary">S-1</button>
+                    <button type="button" data-toggle="button" type="button" class=" badge btn badge-pill btn-sm btn-secondary">S-2</button>
+                    <button type="button" data-toggle="button" type="button" class=" badge btn badge-pill btn-sm btn-secondary">S-3</button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-auto">
+                    <div class="row">
+                        <div class="card text-white bg-secondary btn-card">
+                            <div class="card-header sm-header">
+                                PRI
+                            </div>
+                            <div class="card-body card-body-sm">
+                                <input id="togPri" type="checkbox">
+                            </div>
+                        </div>
+                        <div class="card text-white bg-secondary btn-card">
+                            <div class="card-header sm-header">
+                                SEC
+                            </div>
+                            <div class="card-body card-body-sm">
+                                <input id="togSec" type="checkbox">
+                            </div>
+                        </div>
+                        <div class="card text-white bg-secondary btn-card">
+                            <div class="card-header sm-header">
+                                WRN
+                            </div>
+                            <div class="card-body card-body-sm">
+                                <input id="togWrn" type="checkbox">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="card text-white bg-secondary btn-card">
+                            <div class="card-header sm-header">
+                                HRN
+                            </div>
+                            <div class="card-body card-body-sm">
+                                <input id="togHrn" type="checkbox">
+                            </div>
+                        </div>
+                        <div class="card text-white bg-secondary btn-card">
+                            <div class="card-header sm-header">
+                                SRN
+                            </div>
+                            <div class="card-body card-body-sm">
+                                <input id="togSrn" type="checkbox">
+                            </div>
+                        </div>
+                        <div class="card text-white bg-secondary btn-card">
+                            <div class="card-header sm-header">
+                                SRM
+                            </div>
+                            <div class="card-body card-body-sm">
+                                <input id="togSrm" type="checkbox">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="card bg-secondary text-white">
+                        <div class="card-body card-body-sm">
+                            <input id="togTkdn" type="checkbox" />
+                            <input id="togCrs" type="checkbox" />
+                        </div>
+                    </div>
+                    <!--</div>
+                    <div class="col-auto">-->
+                    <div class="card bg-secondary text-white">
+                        <div class="card-body card-body-sm">
+                            <div class="wrapper">
+                                <div id="frt1" class="front-1 pri-lights off"></div>
+                                <div id="frt2" class="front-2 pri-lights off"></div>
+                                <div id="lb1" class="pri-1 pri-lights off"></div>
+                                <div id="lb2" class="pri-2 pri-lights off"></div>
+                                <div id="lb3" class="pri-3 pri-lights off"></div>
+                                <div id="lb4" class="pri-4 pri-lights off"></div>
+                                <div id="r1" class="rear-1 pri-lights off"></div>
+                                <div id="r2" class="rear-2 pri-lights off"></div>
+                                <div id="tk1" class="tkdn-1 sec-lights off"></div>
+                                <div id="tk2" class="tkdn-2 sec-lights off"></div>
+                                <div id="arrL1" class="arrow-1 pri-lights"></div>
+                                <div id="arrL2" class="arrow-2 pri-lights off"></div>
+                                <div id="arrL3" class="arrow-3 pri-lights off"></div>
+                                <div id="arrR3" class="arrow-4 pri-lights off"></div>
+                                <div id="arrR2" class="arrow-5 pri-lights off"></div>
+                                <div id="arrR1" class="arrow-6 pri-lights"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
 </body>
 </html>

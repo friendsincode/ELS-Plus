@@ -1,8 +1,0 @@
-server:
-  enabled: true
-  url: 127.0.0.1:30120
-  password: lovely
-  src: .
-  root: C:\Users\ejb11\Documents\server-data
-  name: ELS-FiveM
-  iceconpath: ..\..\..\utils\icecon_windows_amd64.exe
