@@ -40,32 +40,33 @@ namespace ELS.Light
 
         public void CleanUP()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public void ExternalTicker()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public void SirenControlsRemote(string sirenString, bool state)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public void Ticker()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         internal object GetData()
         {
-            throw new NotImplementedException();
+            return null;
+            //throw new NotImplementedException();
         }
 
         internal void SetData(IDictionary<string, object> dictionary)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }
