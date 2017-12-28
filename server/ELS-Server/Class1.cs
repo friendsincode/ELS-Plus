@@ -18,13 +18,7 @@ namespace ELS_Server
             EventHandlers["ELS:VcfSync:Server"] += new Action<int>((int source) =>
             {
                 _vcfSync = new VcfSync();
-                _vcfSync.CheckVCF();
-                Debug.WriteLine($"{source} is requesting VcfSync Data there are {VCF.ELSVehicle.Count} in list");
-                foreach (VCFServerEntry e in VCF.ELSVehicle)
-                {
-                    CitizenFX.Core.Debug.WriteLine($"VCF is loaded for {e.filename} written by {e.root.Author} doing {e.root.Description} sending to client");
-                }
-                TriggerClientEvent(Players[source], "ELS:VcfSync:Client", VCF.ELSVehicle);
+                _vcfSync.CheckVCF(Players[source]);
             });
             EventHandlers["ELS:FullSync:Unicast"] += new Action(() => { });
             EventHandlers["ELS:FullSync:Broadcast"] += new Action<System.Dynamic.ExpandoObject,int>((dataDic,playerID) =>

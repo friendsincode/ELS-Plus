@@ -23,13 +23,20 @@ This project is in early development stages. You should expect bugs and/or issue
 
 ### How to install
 1. Copy the `ELS-FiveM` folder to `cfx-server\resources\`
-2. Add `ELS-FiveM` near the top of `AutoStartResources`
+2. Add `ELS-FiveM` to `server.cfg`
+
+###How to add ELS Vehicles to ELS-FiveM
+1. Create add-on/replace Vehicle with stream folder and relevant files.
+2. In `__resource.lua` add the `VCF` xml file to the `files` list.
+3. Add `is_els 'true'` to bottom of `__resource.lua`.
+4. Restart Server
+5. Profit
 
 #### Important Notes
 
 - When running the rcon command `restart ELS-FiveM` or `start ELS-FiveM`.  
 Make sure you restart any resources that have ELS vehicles.
-- Make sure ELS-FiveM is located above all ELS enabled vehicle stream resources in the `AutoStartResources` section in the `citmp-server.yml` file.
+- Make sure ELS-FiveM is located below all ELS enabled vehicle stream resources in the `server.cfg` file.
 
 ## Contribute
 if you are a developer and  would like to contribute any help is welcome!   

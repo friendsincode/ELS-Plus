@@ -56,13 +56,13 @@ namespace ELS
                         //await Delay(500);
                         try
                         {
-                            _FileLoader.RunLoader(obj);
+                            //_FileLoader.RunLoader(obj);
                             //TODO: make a load files from all resouces.
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
                             SetupConnections();
                             TriggerServerEvent("ELS:VcfSync:Server", Game.Player.ServerId);
-                            TriggerServerEvent("ELS:FullSync:Request:All",Game.Player.ServerId);
-                            _eLSUiPanel.DisableUI();                            
+                            TriggerServerEvent("ELS:FullSync:Request:All", Game.Player.ServerId);
+                            _eLSUiPanel.DisableUI();
                         }
                         catch (Exception e)
                         {
@@ -90,7 +90,7 @@ namespace ELS
 
                     //_spotLight= new SpotLight();
                 });
-            
+
         }
         private void SetupConnections()
         {
@@ -107,28 +107,11 @@ namespace ELS
             //EventHandlers["ELS:SirenUpdated"] += new Action<string, int, int, bool>(_vehicleManager.UpdateRemoteSirens);
             EventHandlers["onPlayerJoining"] += new Action(() =>
             {
-               
-            });
-            EventHandlers["ELS:VcfSync:Client"] += new Action<List<object>>((a) =>
-            {
-                
-                foreach(object vcf in a)
-                {
-                    dynamic info = vcf;
-                    
-                    CitizenFX.Core.Debug.WriteLine($"VCF Server Entry: {vcf.GetType()}");
-                    //VCFEntry entry = new VCFEntry();
-                    //entry.filename = vcf.filename;
-                    //entry.modelHash = Game.GenerateHash(vcf.filename);
-                    //entry.root = vcf.root;
-                    // entry.resource = vcf.resource;
-                    //VCF.ELSVehicle.Add(entry);
-                }
 
-                foreach (VCFEntry e in VCF.ELSVehicle)
-                {
-                    CitizenFX.Core.Debug.WriteLine($"VCF is loaded for {e.filename} written by {e.root.Author} doing {e.root.Description}");
-                }
+            });
+            EventHandlers["ELS:VcfSync:Client"] += new Action<string,string,string>((a,b,c) =>
+            {
+                VCF.load(SettingsType.Type.VCF, b, c, a);
             });
             EventHandlers["ELS:FullSync:NewSpawnWithData"] += new Action<System.Dynamic.ExpandoObject>((a) =>
             {

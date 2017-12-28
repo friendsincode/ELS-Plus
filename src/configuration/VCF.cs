@@ -40,20 +40,6 @@ namespace ELS.configuration
         }
     }
 
-    internal struct VCFServerEntry
-    {
-        public string filename;
-        public string resource;
-        public Vcfroot root;        
-
-        public VCFServerEntry(string fn, string res, Vcfroot vcfroot)
-        {
-            filename = fn;
-            resource = res;
-            root = vcfroot;
-            
-        }
-    }
     public class VCF
     {
         internal static List<VCFEntry> ELSVehicle = new List<VCFEntry>();
