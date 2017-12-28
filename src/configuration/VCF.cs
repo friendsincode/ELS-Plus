@@ -31,7 +31,7 @@ namespace ELS.configuration
         public Vcfroot root;
         public Model modelHash;
 
-        public VCFEntry(string fn, string res, Model hash, Vcfroot vcfroot) 
+        public VCFEntry(string fn, string res, Model hash, Vcfroot vcfroot)
         {
             filename = fn;
             resource = res;
@@ -46,7 +46,7 @@ namespace ELS.configuration
         public VCF()
         {
         }
-        internal static void load(SettingsType.Type type, string name, string Data,string ResourceName)
+        internal static void load(SettingsType.Type type, string name, string Data, string ResourceName)
         {
             var bytes = Encoding.UTF8.GetBytes(Data);
             if (bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
@@ -56,7 +56,7 @@ namespace ELS.configuration
                 throw (ex);
             }
             Encoding.UTF8.GetPreamble();
-            var data = new VCFEntry(Path.GetFileNameWithoutExtension(name), ResourceName, Game.GenerateHash(Path.GetFileNameWithoutExtension(name)),new Vcfroot());
+            var data = new VCFEntry(Path.GetFileNameWithoutExtension(name), ResourceName, Game.GenerateHash(Path.GetFileNameWithoutExtension(name)), new Vcfroot());
             if (type == SettingsType.Type.VCF)
             {
                 CitizenFX.Core.Debug.WriteLine("Loading XML");
@@ -69,35 +69,288 @@ namespace ELS.configuration
                     CitizenFX.Core.Debug.WriteLine("Null issue");
                     return;
                 }
-                data.root.SOUNDS.ManTone1.AudioString = doc?["vcfroot"]?["SOUNDS"]?["ManTone1"]?.Attributes["AudioString"]?.Value;
+                #region VCF Info
+                CitizenFX.Core.Debug.WriteLine("Parsing VCF Info");
+                //VCF Description
+                data.root.Description = doc["vcfroot"].Attributes["Description"].Value;
+                //VCF Author
+                data.root.Author = doc["vcfroot"].Attributes["Author"].Value;
+                #endregion
+                #region Interface
+                CitizenFX.Core.Debug.WriteLine("Parsing Interface");
+                data.root.INTERFACE.LstgActivationType = doc["vcfroot"]["INTERFACE"]["LstgActivationType"].Value;
+                data.root.INTERFACE.DefaultSirenMode = doc["vcfroot"]["INTERFACE"]["DefaultSirenMode"].Value;
+                data.root.INTERFACE.InfoPanelHeaderColor = doc["vcfroot"]["INTERFACE"]["InfoPanelHeaderColor"].Value;
+                data.root.INTERFACE.InfoPanelButtonLightColor = doc["vcfroot"]["INTERFACE"]["InfoPanelButtonLightColor"].Value;
+                #endregion
+                #region Extras Override
+                CitizenFX.Core.Debug.WriteLine("Parsing Extras");
+                //Extra 01
+                data.root.EOVERRIDE.Extra01.IsElsControlled = doc["vcfroot"]["EOVERRIDE"]["Extra01"].Attributes["IsElsControlled"].Value;
+                data.root.EOVERRIDE.Extra01.AllowEnvLight = doc["vcfroot"]["EOVERRIDE"]["Extra01"].Attributes["AllowEnvLight"].Value;
+                data.root.EOVERRIDE.Extra01.Color = doc["vcfroot"]["EOVERRIDE"]["Extra01"].Attributes["Color"].Value;
+                data.root.EOVERRIDE.Extra01.OffsetX = doc["vcfroot"]["EOVERRIDE"]["Extra01"].Attributes["OffsetX"].Value;
+                data.root.EOVERRIDE.Extra01.OffsetY = doc["vcfroot"]["EOVERRIDE"]["Extra01"].Attributes["OffsetY"].Value;
+                data.root.EOVERRIDE.Extra01.OffsetZ = doc["vcfroot"]["EOVERRIDE"]["Extra01"].Attributes["OffsetZ"].Value;
+                //Extra 02
+                data.root.EOVERRIDE.Extra02.IsElsControlled = doc["vcfroot"]["EOVERRIDE"]["Extra02"].Attributes["IsElsControlled"].Value;
+                data.root.EOVERRIDE.Extra02.AllowEnvLight = doc["vcfroot"]["EOVERRIDE"]["Extra02"].Attributes["AllowEnvLight"].Value;
+                data.root.EOVERRIDE.Extra02.Color = doc["vcfroot"]["EOVERRIDE"]["Extra02"].Attributes["Color"].Value;
+                data.root.EOVERRIDE.Extra02.OffsetX = doc["vcfroot"]["EOVERRIDE"]["Extra02"].Attributes["OffsetX"].Value;
+                data.root.EOVERRIDE.Extra02.OffsetY = doc["vcfroot"]["EOVERRIDE"]["Extra02"].Attributes["OffsetY"].Value;
+                data.root.EOVERRIDE.Extra02.OffsetZ = doc["vcfroot"]["EOVERRIDE"]["Extra02"].Attributes["OffsetZ"].Value;
+                //Extra 03
+                data.root.EOVERRIDE.Extra03.IsElsControlled = doc["vcfroot"]["EOVERRIDE"]["Extra03"].Attributes["IsElsControlled"].Value;
+                data.root.EOVERRIDE.Extra03.AllowEnvLight = doc["vcfroot"]["EOVERRIDE"]["Extra03"].Attributes["AllowEnvLight"].Value;
+                data.root.EOVERRIDE.Extra03.Color = doc["vcfroot"]["EOVERRIDE"]["Extra03"].Attributes["Color"].Value;
+                data.root.EOVERRIDE.Extra03.OffsetX = doc["vcfroot"]["EOVERRIDE"]["Extra03"].Attributes["OffsetX"].Value;
+                data.root.EOVERRIDE.Extra03.OffsetY = doc["vcfroot"]["EOVERRIDE"]["Extra03"].Attributes["OffsetY"].Value;
+                data.root.EOVERRIDE.Extra03.OffsetZ = doc["vcfroot"]["EOVERRIDE"]["Extra03"].Attributes["OffsetZ"].Value;
+                //Extra 04
+                data.root.EOVERRIDE.Extra04.IsElsControlled = doc["vcfroot"]["EOVERRIDE"]["Extra04"].Attributes["IsElsControlled"].Value;
+                data.root.EOVERRIDE.Extra04.AllowEnvLight = doc["vcfroot"]["EOVERRIDE"]["Extra04"].Attributes["AllowEnvLight"].Value;
+                data.root.EOVERRIDE.Extra04.Color = doc["vcfroot"]["EOVERRIDE"]["Extra04"].Attributes["Color"].Value;
+                data.root.EOVERRIDE.Extra04.OffsetX = doc["vcfroot"]["EOVERRIDE"]["Extra04"].Attributes["OffsetX"].Value;
+                data.root.EOVERRIDE.Extra04.OffsetY = doc["vcfroot"]["EOVERRIDE"]["Extra04"].Attributes["OffsetY"].Value;
+                data.root.EOVERRIDE.Extra04.OffsetZ = doc["vcfroot"]["EOVERRIDE"]["Extra04"].Attributes["OffsetZ"].Value;
+                //Extra 05
+                data.root.EOVERRIDE.Extra05.IsElsControlled = doc["vcfroot"]["EOVERRIDE"]["Extra05"].Attributes["IsElsControlled"].Value;
+                data.root.EOVERRIDE.Extra05.AllowEnvLight = doc["vcfroot"]["EOVERRIDE"]["Extra05"].Attributes["AllowEnvLight"].Value;
+                data.root.EOVERRIDE.Extra05.Color = doc["vcfroot"]["EOVERRIDE"]["Extra05"].Attributes["Color"].Value;
+                data.root.EOVERRIDE.Extra05.OffsetX = doc["vcfroot"]["EOVERRIDE"]["Extra05"].Attributes["OffsetX"].Value;
+                data.root.EOVERRIDE.Extra05.OffsetY = doc["vcfroot"]["EOVERRIDE"]["Extra05"].Attributes["OffsetY"].Value;
+                data.root.EOVERRIDE.Extra05.OffsetZ = doc["vcfroot"]["EOVERRIDE"]["Extra05"].Attributes["OffsetZ"].Value;
+                //Extra 06
+                data.root.EOVERRIDE.Extra06.IsElsControlled = doc["vcfroot"]["EOVERRIDE"]["Extra06"].Attributes["IsElsControlled"].Value;
+                data.root.EOVERRIDE.Extra06.AllowEnvLight = doc["vcfroot"]["EOVERRIDE"]["Extra06"].Attributes["AllowEnvLight"].Value;
+                data.root.EOVERRIDE.Extra06.Color = doc["vcfroot"]["EOVERRIDE"]["Extra06"].Attributes["Color"].Value;
+                data.root.EOVERRIDE.Extra06.OffsetX = doc["vcfroot"]["EOVERRIDE"]["Extra06"].Attributes["OffsetX"].Value;
+                data.root.EOVERRIDE.Extra06.OffsetY = doc["vcfroot"]["EOVERRIDE"]["Extra06"].Attributes["OffsetY"].Value;
+                data.root.EOVERRIDE.Extra06.OffsetZ = doc["vcfroot"]["EOVERRIDE"]["Extra06"].Attributes["OffsetZ"].Value;
+                //Extra 07
+                data.root.EOVERRIDE.Extra07.IsElsControlled = doc["vcfroot"]["EOVERRIDE"]["Extra07"].Attributes["IsElsControlled"].Value;
+                data.root.EOVERRIDE.Extra07.AllowEnvLight = doc["vcfroot"]["EOVERRIDE"]["Extra07"].Attributes["AllowEnvLight"].Value;
+                data.root.EOVERRIDE.Extra07.Color = doc["vcfroot"]["EOVERRIDE"]["Extra07"].Attributes["Color"].Value;
+                data.root.EOVERRIDE.Extra07.OffsetX = doc["vcfroot"]["EOVERRIDE"]["Extra07"].Attributes["OffsetX"].Value;
+                data.root.EOVERRIDE.Extra07.OffsetY = doc["vcfroot"]["EOVERRIDE"]["Extra07"].Attributes["OffsetY"].Value;
+                data.root.EOVERRIDE.Extra07.OffsetZ = doc["vcfroot"]["EOVERRIDE"]["Extra07"].Attributes["OffsetZ"].Value;
+                //Extra 08
+                data.root.EOVERRIDE.Extra08.IsElsControlled = doc["vcfroot"]["EOVERRIDE"]["Extra08"].Attributes["IsElsControlled"].Value;
+                data.root.EOVERRIDE.Extra08.AllowEnvLight = doc["vcfroot"]["EOVERRIDE"]["Extra08"].Attributes["AllowEnvLight"].Value;
+                data.root.EOVERRIDE.Extra08.Color = doc["vcfroot"]["EOVERRIDE"]["Extra08"].Attributes["Color"].Value;
+                data.root.EOVERRIDE.Extra08.OffsetX = doc["vcfroot"]["EOVERRIDE"]["Extra08"].Attributes["OffsetX"].Value;
+                data.root.EOVERRIDE.Extra08.OffsetY = doc["vcfroot"]["EOVERRIDE"]["Extra08"].Attributes["OffsetY"].Value;
+                data.root.EOVERRIDE.Extra08.OffsetZ = doc["vcfroot"]["EOVERRIDE"]["Extra08"].Attributes["OffsetZ"].Value;
+                //Extra 09
+                data.root.EOVERRIDE.Extra09.IsElsControlled = doc["vcfroot"]["EOVERRIDE"]["Extra09"].Attributes["IsElsControlled"].Value;
+                data.root.EOVERRIDE.Extra09.AllowEnvLight = doc["vcfroot"]["EOVERRIDE"]["Extra09"].Attributes["AllowEnvLight"].Value;
+                data.root.EOVERRIDE.Extra09.Color = doc["vcfroot"]["EOVERRIDE"]["Extra09"].Attributes["Color"].Value;
+                data.root.EOVERRIDE.Extra09.OffsetX = doc["vcfroot"]["EOVERRIDE"]["Extra09"].Attributes["OffsetX"].Value;
+                data.root.EOVERRIDE.Extra09.OffsetY = doc["vcfroot"]["EOVERRIDE"]["Extra09"].Attributes["OffsetY"].Value;
+                data.root.EOVERRIDE.Extra09.OffsetZ = doc["vcfroot"]["EOVERRIDE"]["Extra09"].Attributes["OffsetZ"].Value;
+                //Extra 10
+                data.root.EOVERRIDE.Extra10.IsElsControlled = doc["vcfroot"]["EOVERRIDE"]["Extra10"].Attributes["IsElsControlled"].Value;
+                //Extra 11
+                data.root.EOVERRIDE.Extra11.IsElsControlled = doc["vcfroot"]["EOVERRIDE"]["Extra11"].Attributes["IsElsControlled"].Value;
+                //Extra 12
+                data.root.EOVERRIDE.Extra12.IsElsControlled = doc["vcfroot"]["EOVERRIDE"]["Extra12"].Attributes["IsElsControlled"].Value;
+                #endregion
+                #region MISC
+                CitizenFX.Core.Debug.WriteLine("Parsing Misc");
+                data.root.MISC.VehicleIsSlicktop = doc["vcfroot"]["MISC"]["VehicleIsSlicktop"].Value;
+                data.root.MISC.ArrowboardType = doc["vcfroot"]["MISC"]["ArrowboardType"].Value;
+                data.root.MISC.UseSteadyBurnLights = doc["vcfroot"]["MISC"]["UseSteadyBurnLights"].Value;
+                data.root.MISC.DfltSirenLtsActivateAtLstg = doc["vcfroot"]["MISC"]["DfltSirenLtsActivateAtLstg"].Value;
+                data.root.MISC.Takedowns.AllowUse = doc["vcfroot"]["MISC"]["Takedowns"].Attributes["AllowUse"].Value;
+                data.root.MISC.Takedowns.Mirrored = doc["vcfroot"]["MISC"]["Takedowns"].Attributes["Mirrored"].Value;
+                data.root.MISC.SceneLights.AllowUse = doc["vcfroot"]["MISC"]["SceneLights"].Attributes["AllowUse"].Value;
+                data.root.MISC.SceneLights.AllowUse = doc["vcfroot"]["MISC"]["SceneLights"].Attributes["IlluminateSidesOnly"].Value;
+                #endregion
+                #region Cruise
+                CitizenFX.Core.Debug.WriteLine("Parsing Cruise");
+                data.root.CRUISE.DisableAtLstg3 = bool.Parse(doc["vcfroot"]["CRUISE"]["DisableAtLstg3"].InnerText);
+                data.root.CRUISE.UseExtras.Extra1 = bool.Parse(doc["vcfroot"]["CRUISE"]["UseExtras"].Attributes["Extra1"].Value);
+                data.root.CRUISE.UseExtras.Extra2 = bool.Parse(doc["vcfroot"]["CRUISE"]["UseExtras"].Attributes["Extra2"].Value);
+                data.root.CRUISE.UseExtras.Extra3 = bool.Parse(doc["vcfroot"]["CRUISE"]["UseExtras"].Attributes["Extra3"].Value);
+                data.root.CRUISE.UseExtras.Extra4 = bool.Parse(doc["vcfroot"]["CRUISE"]["UseExtras"].Attributes["Extra4"].Value);
+                #endregion
+                #region Aux Coronas
+                CitizenFX.Core.Debug.WriteLine("Parsing Aux Coronas");
+                //Headlights
+                data.root.ACORONAS.Headlights.DfltPattern = int.Parse(doc["vcfroot"]["ACORONAS"]["Headlights"].Attributes["DfltPattern"].Value);
+                data.root.ACORONAS.Headlights.ColorL = doc["vcfroot"]["ACORONAS"]["Headlights"].Attributes["ColorL"].Value;
+                data.root.ACORONAS.Headlights.ColorR = doc["vcfroot"]["ACORONAS"]["Headlights"].Attributes["ColorR"].Value;
+                //TailLights
+                data.root.ACORONAS.TailLights.DfltPattern = int.Parse(doc["vcfroot"]["ACORONAS"]["TailLights"].Attributes["DfltPattern"].Value);
+                data.root.ACORONAS.TailLights.ColorL = doc["vcfroot"]["ACORONAS"]["TailLights"].Attributes["ColorL"].Value;
+                data.root.ACORONAS.TailLights.ColorR = doc["vcfroot"]["ACORONAS"]["TailLights"].Attributes["ColorR"].Value;
+                //IndicatorsF
+                data.root.ACORONAS.IndicatorsF.DfltPattern = int.Parse(doc["vcfroot"]["ACORONAS"]["IndicatorsF"].Attributes["DfltPattern"].Value);
+                data.root.ACORONAS.IndicatorsF.ColorL = doc["vcfroot"]["ACORONAS"]["IndicatorsF"].Attributes["ColorL"].Value;
+                data.root.ACORONAS.IndicatorsF.ColorR = doc["vcfroot"]["ACORONAS"]["IndicatorsF"].Attributes["ColorR"].Value;
+                //IndicatorsB
+                data.root.ACORONAS.IndicatorsB.DfltPattern = int.Parse(doc["vcfroot"]["ACORONAS"]["IndicatorsB"].Attributes["DfltPattern"].Value);
+                data.root.ACORONAS.IndicatorsB.ColorL = doc["vcfroot"]["ACORONAS"]["IndicatorsB"].Attributes["ColorL"].Value;
+                data.root.ACORONAS.IndicatorsB.ColorR = doc["vcfroot"]["ACORONAS"]["IndicatorsB"].Attributes["ColorR"].Value;
+                //ReverseLights
+                data.root.ACORONAS.ReverseLights.DfltPattern = int.Parse(doc["vcfroot"]["ACORONAS"]["ReverseLights"].Attributes["DfltPattern"].Value);
+                data.root.ACORONAS.ReverseLights.ColorL = doc["vcfroot"]["ACORONAS"]["ReverseLights"].Attributes["ColorL"].Value;
+                data.root.ACORONAS.ReverseLights.ColorR = doc["vcfroot"]["ACORONAS"]["ReverseLights"].Attributes["ColorR"].Value;
+                #endregion
+                #region Sounds
+                CitizenFX.Core.Debug.WriteLine("Parsing Sounds");
+                //Manual Tone 1
+                data.root.SOUNDS.ManTone1.AudioString = doc?["vcfroot"]["SOUNDS"]["ManTone1"].Attributes["AudioString"].Value;
                 data.root.SOUNDS.ManTone1.AllowUse = doc["vcfroot"]["SOUNDS"]["ManTone1"].Attributes["AllowUse"].Value;
-                
+                //Manual Tone 2
                 data.root.SOUNDS.ManTone2.AudioString = doc["vcfroot"]["SOUNDS"]["ManTone2"].Attributes["AudioString"].Value;
                 data.root.SOUNDS.ManTone2.AllowUse = doc["vcfroot"]["SOUNDS"]["ManTone2"].Attributes["AllowUse"].Value;
-                
-
+                //Main Horn
                 data.root.SOUNDS.MainHorn.AudioString = doc["vcfroot"]["SOUNDS"]["MainHorn"].Attributes["AudioString"].Value;
                 data.root.SOUNDS.MainHorn.InterruptsSiren = doc["vcfroot"]["SOUNDS"]["MainHorn"].Attributes["InterruptsSiren"].Value;
-                
+                //Siren Tone 1
                 data.root.SOUNDS.SrnTone1.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone1"].Attributes["AudioString"].Value;
                 data.root.SOUNDS.SrnTone1.AllowUse = doc["vcfroot"]["SOUNDS"]["SrnTone1"].Attributes["AllowUse"].Value;
-                
+                //Siren Tone 2
                 data.root.SOUNDS.SrnTone2.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone2"].Attributes["AudioString"].Value;
                 data.root.SOUNDS.SrnTone2.AllowUse = doc["vcfroot"]["SOUNDS"]["SrnTone2"].Attributes["AllowUse"].Value;
-                
+                //Siren Tone 3
                 data.root.SOUNDS.SrnTone3.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone3"].Attributes["AudioString"].Value;
                 data.root.SOUNDS.SrnTone3.AllowUse = doc["vcfroot"]["SOUNDS"]["SrnTone3"].Attributes["AllowUse"].Value;
-                
+                //Siren Tone 4
                 data.root.SOUNDS.SrnTone4.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone4"].Attributes["AudioString"].Value;
                 data.root.SOUNDS.SrnTone4.AllowUse = doc["vcfroot"]["SOUNDS"]["SrnTone4"].Attributes["AllowUse"].Value;
-                
+                //Aux Siren Tone
                 data.root.SOUNDS.AuxSiren.AllowUse = doc["vcfroot"]["SOUNDS"]["AuxSiren"].Attributes["AllowUse"].Value;
                 data.root.SOUNDS.AuxSiren.AudioString = doc["vcfroot"]["SOUNDS"]["AuxSiren"].Attributes["AudioString"].Value;
-                
+                //Panic Mode Tone
                 data.root.SOUNDS.PanicMde.AllowUse = doc["vcfroot"]["SOUNDS"]["PanicMde"].Attributes["AllowUse"].Value;
                 data.root.SOUNDS.PanicMde.AudioString = doc["vcfroot"]["SOUNDS"]["PanicMde"].Attributes["AudioString"].Value;
-                
-                data.root.Author = doc["vcfroot"].Attributes["Author"].Value;
+                #endregion
+
+                #region Warning Lights
+                CitizenFX.Core.Debug.WriteLine("Parsing Warning Lights");
+                data.root.WRNL.LightingFormat = doc["vcfroot"]["WRNL"].Attributes["LightingFormat"].Value;
+                data.root.WRNL.DisableAtLstg3 = doc["vcfroot"]["WRNL"].Attributes["DisableAtLstg3"]?.Value;
+                data.root.WRNL.ExtrasActiveAtLstg1 = doc["vcfroot"]["WRNL"].Attributes["ExtrasActiveAtLstg1"]?.Value;
+                data.root.WRNL.ExtrasActiveAtLstg2 = doc["vcfroot"]["WRNL"].Attributes["ExtrasActiveAtLstg2"]?.Value;
+                data.root.WRNL.ExtrasActiveAtLstg3 = doc["vcfroot"]["WRNL"].Attributes["ExtrasActiveAtLstg3"]?.Value;
+                //Preset Patterns
+                data.root.WRNL.PresetPatterns.Lstg1.Enabled = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg1"]?.Attributes["Enabled"].Value;
+                data.root.WRNL.PresetPatterns.Lstg1.Pattern = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg1"]?.Attributes["Pattern"].Value;
+                data.root.WRNL.PresetPatterns.Lstg2.Enabled = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg2"]?.Attributes["Enabled"].Value;
+                data.root.WRNL.PresetPatterns.Lstg2.Pattern = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg2"]?.Attributes["Pattern"].Value;
+                data.root.WRNL.PresetPatterns.Lstg3.Enabled = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg3"]?.Attributes["Enabled"].Value;
+                data.root.WRNL.PresetPatterns.Lstg3.Pattern = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg3"]?.Attributes["Pattern"].Value;
+                //Forced Patterns
+
+                data.root.WRNL.ForcedPatterns.MainHorn.Enabled = doc["vcfroot"]["WRNL"]["ForcedPatterns"]["MainHorn"].Attributes["Enabled"].Value;
+                data.root.WRNL.ForcedPatterns.MainHorn.Pattern = doc["vcfroot"]["WRNL"]["ForcedPatterns"]["MainHorn"].Attributes["Pattern"].Value;
+                data.root.WRNL.ForcedPatterns.SrnTone1.Enabled = doc["vcfroot"]["WRNL"]["ForcedPatterns"]["SrnTone1"].Attributes["Enabled"].Value;
+                data.root.WRNL.ForcedPatterns.SrnTone1.Pattern = doc["vcfroot"]["WRNL"]["ForcedPatterns"]["SrnTone1"].Attributes["Pattern"].Value;
+                data.root.WRNL.ForcedPatterns.SrnTone2.Enabled = doc["vcfroot"]["WRNL"]["ForcedPatterns"]["SrnTone2"].Attributes["Enabled"].Value;
+                data.root.WRNL.ForcedPatterns.SrnTone2.Pattern = doc["vcfroot"]["WRNL"]["ForcedPatterns"]["SrnTone2"].Attributes["Pattern"].Value;
+                data.root.WRNL.ForcedPatterns.SrnTone3.Enabled = doc["vcfroot"]["WRNL"]["ForcedPatterns"]["SrnTone3"].Attributes["Enabled"].Value;
+                data.root.WRNL.ForcedPatterns.SrnTone3.Pattern = doc["vcfroot"]["WRNL"]["ForcedPatterns"]["SrnTone3"].Attributes["Pattern"].Value;
+                data.root.WRNL.ForcedPatterns.SrnTone4.Enabled = doc["vcfroot"]["WRNL"]["ForcedPatterns"]["SrnTone4"].Attributes["Enabled"].Value;
+                data.root.WRNL.ForcedPatterns.SrnTone4.Pattern = doc["vcfroot"]["WRNL"]["ForcedPatterns"]["SrnTone4"].Attributes["Pattern"].Value;
+                data.root.WRNL.ForcedPatterns.PanicMde.Enabled = doc["vcfroot"]["WRNL"]["ForcedPatterns"]["PanicMde"].Attributes["Enabled"].Value;
+                data.root.WRNL.ForcedPatterns.PanicMde.Pattern = doc["vcfroot"]["WRNL"]["ForcedPatterns"]["PanicMde"].Attributes["Pattern"].Value;
+                data.root.WRNL.ForcedPatterns.OutOfVeh.Enabled = doc["vcfroot"]["WRNL"]["ForcedPatterns"]["OutOfVeh"].Attributes["Enabled"].Value;
+                data.root.WRNL.ForcedPatterns.OutOfVeh.Pattern = doc["vcfroot"]["WRNL"]["ForcedPatterns"]["OutOfVeh"].Attributes["Pattern"].Value;
+                //Scan Patterns Custom Pool
+                CitizenFX.Core.Debug.WriteLine("Parsing Warning Lights scan");
+                data.root.WRNL.ScanPatternCustomPool.Enabled = doc["vcfroot"]["WRNL"]["ScanPatternCustomPool"].Attributes["Enabled"].Value;
+                data.root.WRNL.ScanPatternCustomPool.Sequential = doc["vcfroot"]["WRNL"]["ScanPatternCustomPool"].Attributes["Sequential"].Value;
+
+                for (int i = 0; i < doc["vcfroot"]["WRNL"]["ScanPatternCustomPool"].ChildNodes.Count; i++)
+                {
+                    data.root.WRNL.ScanPatternCustomPool.Pattern.Add(doc["vcfroot"]["WRNL"]["ScanPatternCustomPool"].ChildNodes[i].InnerText);
+                }
+
+                #endregion
+
+                #region Primary Lights
+                CitizenFX.Core.Debug.WriteLine("Parsing Primary Lights");
+                data.root.PRML.LightingFormat = doc["vcfroot"]["PRML"].Attributes["LightingFormat"].Value;
+                data.root.PRML.DisableAtLstg3 = doc["vcfroot"]["PRML"].Attributes["DisableAtLstg3"]?.Value;
+                data.root.PRML.ExtrasActiveAtLstg1 = doc["vcfroot"]["PRML"].Attributes["ExtrasActiveAtLstg1"]?.Value;
+                data.root.PRML.ExtrasActiveAtLstg2 = doc["vcfroot"]["PRML"].Attributes["ExtrasActiveAtLstg2"]?.Value;
+                data.root.PRML.ExtrasActiveAtLstg3 = doc["vcfroot"]["PRML"].Attributes["ExtrasActiveAtLstg3"]?.Value;
+                //Preset Patterns
+                data.root.PRML.PresetPatterns.Lstg1.Enabled = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg1"]?.Attributes["Enabled"].Value;
+                data.root.PRML.PresetPatterns.Lstg1.Pattern = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg1"]?.Attributes["Pattern"].Value;
+                data.root.PRML.PresetPatterns.Lstg2.Enabled = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg2"]?.Attributes["Enabled"].Value;
+                data.root.PRML.PresetPatterns.Lstg2.Pattern = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg2"]?.Attributes["Pattern"].Value;
+                data.root.PRML.PresetPatterns.Lstg3.Enabled = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg3"]?.Attributes["Enabled"].Value;
+                data.root.PRML.PresetPatterns.Lstg3.Pattern = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg3"]?.Attributes["Pattern"].Value;
+                //Forced Patterns
+                data.root.PRML.ForcedPatterns.MainHorn.Enabled = doc["vcfroot"]["PRML"]["ForcedPatterns"]["MainHorn"].Attributes["Enabled"].Value;
+                data.root.PRML.ForcedPatterns.MainHorn.Pattern = doc["vcfroot"]["PRML"]["ForcedPatterns"]["MainHorn"].Attributes["Pattern"].Value;
+                data.root.PRML.ForcedPatterns.SrnTone1.Enabled = doc["vcfroot"]["PRML"]["ForcedPatterns"]["SrnTone1"].Attributes["Enabled"].Value;
+                data.root.PRML.ForcedPatterns.SrnTone1.Pattern = doc["vcfroot"]["PRML"]["ForcedPatterns"]["SrnTone1"].Attributes["Pattern"].Value;
+                data.root.PRML.ForcedPatterns.SrnTone2.Enabled = doc["vcfroot"]["PRML"]["ForcedPatterns"]["SrnTone2"].Attributes["Enabled"].Value;
+                data.root.PRML.ForcedPatterns.SrnTone2.Pattern = doc["vcfroot"]["PRML"]["ForcedPatterns"]["SrnTone2"].Attributes["Pattern"].Value;
+                data.root.PRML.ForcedPatterns.SrnTone3.Enabled = doc["vcfroot"]["PRML"]["ForcedPatterns"]["SrnTone3"].Attributes["Enabled"].Value;
+                data.root.PRML.ForcedPatterns.SrnTone3.Pattern = doc["vcfroot"]["PRML"]["ForcedPatterns"]["SrnTone3"].Attributes["Pattern"].Value;
+                data.root.PRML.ForcedPatterns.SrnTone4.Enabled = doc["vcfroot"]["PRML"]["ForcedPatterns"]["SrnTone4"].Attributes["Enabled"].Value;
+                data.root.PRML.ForcedPatterns.SrnTone4.Pattern = doc["vcfroot"]["PRML"]["ForcedPatterns"]["SrnTone4"].Attributes["Pattern"].Value;
+                data.root.PRML.ForcedPatterns.PanicMde.Enabled = doc["vcfroot"]["PRML"]["ForcedPatterns"]["PanicMde"].Attributes["Enabled"].Value;
+                data.root.PRML.ForcedPatterns.PanicMde.Pattern = doc["vcfroot"]["PRML"]["ForcedPatterns"]["PanicMde"].Attributes["Pattern"].Value;
+                data.root.PRML.ForcedPatterns.OutOfVeh.Enabled = doc["vcfroot"]["PRML"]["ForcedPatterns"]["OutOfVeh"].Attributes["Enabled"].Value;
+                data.root.PRML.ForcedPatterns.OutOfVeh.Pattern = doc["vcfroot"]["PRML"]["ForcedPatterns"]["OutOfVeh"].Attributes["Pattern"].Value;
+                //Scan Patterns Custom Pool
+                data.root.PRML.ScanPatternCustomPool.Enabled = doc["vcfroot"]["PRML"]["ScanPatternCustomPool"].Attributes["Enabled"].Value;
+                data.root.PRML.ScanPatternCustomPool.Sequential = doc["vcfroot"]["PRML"]["ScanPatternCustomPool"].Attributes["Sequential"].Value;
+
+                for (int i = 0; i < doc["vcfroot"]["WRNL"]["ScanPatternCustomPool"].ChildNodes.Count; i++)
+                {
+                    data.root.WRNL.ScanPatternCustomPool.Pattern.Add(doc["vcfroot"]["WRNL"]["ScanPatternCustomPool"].ChildNodes[i].InnerText);
+                }
+
+                #endregion
+
+                #region Secondary Lights
+                CitizenFX.Core.Debug.WriteLine("Parsing Secondary Lights");
+                data.root.SECL.LightingFormat = doc["vcfroot"]["SECL"].Attributes["LightingFormat"].Value;
+                data.root.SECL.DisableAtLstg3 = doc["vcfroot"]["SECL"].Attributes["DisableAtLstg3"]?.Value;
+                data.root.SECL.ExtrasActiveAtLstg1 = doc["vcfroot"]["SECL"].Attributes["ExtrasActiveAtLstg1"]?.Value;
+                data.root.SECL.ExtrasActiveAtLstg2 = doc["vcfroot"]["SECL"].Attributes["ExtrasActiveAtLstg2"]?.Value;
+                data.root.SECL.ExtrasActiveAtLstg3 = doc["vcfroot"]["SECL"].Attributes["ExtrasActiveAtLstg3"]?.Value;
+                //Preset Patterns
+                data.root.SECL.PresetPatterns.Lstg1.Enabled = doc["vcfroot"]["SECL"]["PresetPatterns"]["Lstg1"]?.Attributes["Enabled"].Value;
+                data.root.SECL.PresetPatterns.Lstg1.Pattern = doc["vcfroot"]["SECL"]["PresetPatterns"]["Lstg1"]?.Attributes["Pattern"].Value;
+                data.root.SECL.PresetPatterns.Lstg2.Enabled = doc["vcfroot"]["SECL"]["PresetPatterns"]["Lstg2"]?.Attributes["Enabled"].Value;
+                data.root.SECL.PresetPatterns.Lstg2.Pattern = doc["vcfroot"]["SECL"]["PresetPatterns"]["Lstg2"]?.Attributes["Pattern"].Value;
+                data.root.SECL.PresetPatterns.Lstg3.Enabled = doc["vcfroot"]["SECL"]["PresetPatterns"]["Lstg3"]?.Attributes["Enabled"].Value;
+                data.root.SECL.PresetPatterns.Lstg3.Pattern = doc["vcfroot"]["SECL"]["PresetPatterns"]["Lstg3"]?.Attributes["Pattern"].Value;
+                //Forced Patterns
+                data.root.SECL.ForcedPatterns.MainHorn.Enabled = doc["vcfroot"]["SECL"]["ForcedPatterns"]["MainHorn"].Attributes["Enabled"].Value;
+                data.root.SECL.ForcedPatterns.MainHorn.Pattern = doc["vcfroot"]["SECL"]["ForcedPatterns"]["MainHorn"].Attributes["Pattern"].Value;
+                data.root.SECL.ForcedPatterns.SrnTone1.Enabled = doc["vcfroot"]["SECL"]["ForcedPatterns"]["SrnTone1"].Attributes["Enabled"].Value;
+                data.root.SECL.ForcedPatterns.SrnTone1.Pattern = doc["vcfroot"]["SECL"]["ForcedPatterns"]["SrnTone1"].Attributes["Pattern"].Value;
+                data.root.SECL.ForcedPatterns.SrnTone2.Enabled = doc["vcfroot"]["SECL"]["ForcedPatterns"]["SrnTone2"].Attributes["Enabled"].Value;
+                data.root.SECL.ForcedPatterns.SrnTone2.Pattern = doc["vcfroot"]["SECL"]["ForcedPatterns"]["SrnTone2"].Attributes["Pattern"].Value;
+                data.root.SECL.ForcedPatterns.SrnTone3.Enabled = doc["vcfroot"]["SECL"]["ForcedPatterns"]["SrnTone3"].Attributes["Enabled"].Value;
+                data.root.SECL.ForcedPatterns.SrnTone3.Pattern = doc["vcfroot"]["SECL"]["ForcedPatterns"]["SrnTone3"].Attributes["Pattern"].Value;
+                data.root.SECL.ForcedPatterns.SrnTone4.Enabled = doc["vcfroot"]["SECL"]["ForcedPatterns"]["SrnTone4"].Attributes["Enabled"].Value;
+                data.root.SECL.ForcedPatterns.SrnTone4.Pattern = doc["vcfroot"]["SECL"]["ForcedPatterns"]["SrnTone4"].Attributes["Pattern"].Value;
+                data.root.SECL.ForcedPatterns.PanicMde.Enabled = doc["vcfroot"]["SECL"]["ForcedPatterns"]["PanicMde"].Attributes["Enabled"].Value;
+                data.root.SECL.ForcedPatterns.PanicMde.Pattern = doc["vcfroot"]["SECL"]["ForcedPatterns"]["PanicMde"].Attributes["Pattern"].Value;
+                data.root.SECL.ForcedPatterns.OutOfVeh.Enabled = doc["vcfroot"]["SECL"]["ForcedPatterns"]["OutOfVeh"].Attributes["Enabled"].Value;
+                data.root.SECL.ForcedPatterns.OutOfVeh.Pattern = doc["vcfroot"]["SECL"]["ForcedPatterns"]["OutOfVeh"].Attributes["Pattern"].Value;
+                //Scan Patterns Custom Pool
+                data.root.SECL.ScanPatternCustomPool.Enabled = doc["vcfroot"]["SECL"]["ScanPatternCustomPool"].Attributes["Enabled"].Value;
+                data.root.SECL.ScanPatternCustomPool.Sequential = doc["vcfroot"]["SECL"]["ScanPatternCustomPool"].Attributes["Sequential"].Value;
+
+                for (int i = 0; i < doc["vcfroot"]["SECL"]["ScanPatternCustomPool"].ChildNodes.Count; i++)
+                {
+                    data.root.SECL.ScanPatternCustomPool.Pattern.Add(doc["vcfroot"]["SECL"]["ScanPatternCustomPool"].ChildNodes[i].InnerText);
+                }
+
+                #endregion
+
+
                 //TODO: add method to remove old file or a file from ELSVehicle
                 if (ELSVehicle.Exists(veh => veh.resource == ResourceName))
                 {
@@ -197,7 +450,8 @@ namespace ELS.configuration
             Extra09 = new Extra();
             Extra10 = new Extra();
             Extra11 = new Extra();
-            Extra12 = new Extra();        }
+            Extra12 = new Extra();
+        }
     }
 
     [XmlRoot(ElementName = "Takedowns")]
@@ -245,20 +499,20 @@ namespace ELS.configuration
     public class UseExtras
     {
         [XmlAttribute(AttributeName = "Extra1")]
-        public string Extra1 { get; set; }
+        public bool Extra1 { get; set; }
         [XmlAttribute(AttributeName = "Extra2")]
-        public string Extra2 { get; set; }
+        public bool Extra2 { get; set; }
         [XmlAttribute(AttributeName = "Extra3")]
-        public string Extra3 { get; set; }
+        public bool Extra3 { get; set; }
         [XmlAttribute(AttributeName = "Extra4")]
-        public string Extra4 { get; set; }
+        public bool Extra4 { get; set; }
     }
 
     [XmlRoot(ElementName = "CRUISE")]
     public class CRUISE
     {
         [XmlElement(ElementName = "DisableAtLstg3")]
-        public string DisableAtLstg3 { get; set; }
+        public bool DisableAtLstg3 { get; set; }
         [XmlElement(ElementName = "UseExtras")]
         public UseExtras UseExtras { get; set; }
 
@@ -272,7 +526,7 @@ namespace ELS.configuration
     public class AcoronaLights
     {
         [XmlAttribute(AttributeName = "DfltPattern")]
-        public string DfltPattern { get; set; }
+        public int DfltPattern { get; set; }
         [XmlAttribute(AttributeName = "ColorL")]
         public string ColorL { get; set; }
         [XmlAttribute(AttributeName = "ColorR")]
@@ -408,6 +662,13 @@ namespace ELS.configuration
         public Lstg Lstg2 { get; set; }
         [XmlElement(ElementName = "Lstg1")]
         public Lstg Lstg1 { get; set; }
+
+        public PresetPatterns()
+        {
+            Lstg1 = new Lstg();
+            Lstg2 = new Lstg();
+            Lstg3 = new Lstg();
+        }
     }
 
     [XmlRoot(ElementName = "OutOfVeh")]
@@ -458,6 +719,11 @@ namespace ELS.configuration
         public string Enabled { get; set; }
         [XmlAttribute(AttributeName = "Sequential")]
         public string Sequential { get; set; }
+        
+        public ScanPatternCustomPool()
+        {
+            Pattern = new List<string>();
+        }
     }
 
     public class Lstg
@@ -482,6 +748,7 @@ namespace ELS.configuration
         public string ExtrasActiveAtLstg1 { get; set; }
         public string ExtrasActiveAtLstg2 { get; set; }
         public string ExtrasActiveAtLstg3 { get; set; }
+        public string DisableAtLstg3 { get; set; }
 
         public Lights()
         {
