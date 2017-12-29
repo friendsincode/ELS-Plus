@@ -109,6 +109,7 @@
     <Compile Include="FullSync\FullSync.cs" />
     <Compile Include="Light\Light.cs" />
     <Compile Include="Light\LightArray.cs" />
+    <Compile Include="Light\LightPattern.cs" />
     <Compile Include="Light\LightStage.cs" />
     <Compile Include="Light\SpotLight.cs" />
     <Compile Include="Manager\Manager.cs" />

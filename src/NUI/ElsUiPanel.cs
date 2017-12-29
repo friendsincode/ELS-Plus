@@ -14,7 +14,7 @@ namespace ELS.NUI
     internal class ElsUiPanel
     {
         public int _enabled = 0;
-
+        public bool _runPattern = false;
 
         //Enable full ui control and cursor
         public void EnableUI()
@@ -45,30 +45,74 @@ namespace ELS.NUI
             _enabled = 1;
         }
 
-        //Send UI Light Data to control light functions
+        /// <summary>
+        /// Send lighting data to display 
+        /// </summary>
+        /// <param name="state">True or false if light is on</param>
+        /// <param name="light">Corresponding light on NUI display</param>
+        /// <param name="color">Color of light</param>
         public void SendLightData(bool state, string light, string color)
-        { 
-            CitizenFX.Core.Debug.WriteLine("Sending Light Data");
+        {
+            //CitizenFX.Core.Debug.WriteLine("Sending Light Data");
             API.SendNuiMessage("{\"type\":\"lightControl\", \"state\":" + state.ToString().ToLower() + ", \"light\": \"" + light + "\", \"color\":\"" + color + "\" }");
         }
 
-        //Convert Dec number to Binary Pattern and execute on specified light in UI 
-        public async Task RunNuiLightPattern(uint patt, string light, string color) 
-        {            
-            char[] binary = Convert.ToString(patt, 2).ToCharArray();
-            foreach(char c in binary)
+        /// <summary>
+        /// Run a given pattern for lights on NUI
+        /// </summary>
+        /// <param name="patt">Dec representation of binary pattern</param>
+        /// <param name="light">Corresponding light on NUI display</param>
+        /// <param name="color">Color of light</param>
+        /// <returns></returns>        
+        public async Task RunNuiLightPattern(uint patt, string light, string color)
+        {
+            string patt2 = Convert.ToString(patt, 2);
+            char[] binary = patt2.ToCharArray();
+            do
             {
-                if (c.Equals('0'))
+                foreach (char c in binary)
                 {
-                    SendLightData(false, light, "");
+                    if (c.Equals('0'))
+                    {
+                        SendLightData(false, light, "");
+                    }
+                    else
+                    {
+                        SendLightData(true, light, color);
+                    }
+                    await ELS.Delay(75);
                 }
-                else
+                SendLightData(false, light, "");
+            } while (_runPattern);
+        }
+
+        /// <summary>
+        /// Run a given pattern for lights on NUI
+        /// </summary>
+        /// <param name="patt">Binary String of light pattern</param>
+        /// <param name="light">Corresponding light on NUI Display</param>
+        /// <param name="color">Color of light</param>
+        /// <returns></returns>
+        public async Task RunNuiLightPattern(string patt, string light, string color)
+        {
+            //string patt2 = Convert.ToString(patt, 2);
+            char[] binary = patt.ToCharArray();
+            do
+            {
+                foreach (char c in binary)
                 {
-                    SendLightData(true, light, color);
+                    if (c.Equals('0'))
+                    {
+                        SendLightData(false, light, "");
+                    }
+                    else
+                    {
+                        SendLightData(true, light, color);
+                    }
+                    await ELS.Delay(75);
                 }
-                await ELS.Delay(100);
-            }
-            SendLightData(false, light, "");
+                SendLightData(false, light, "");
+            } while (_runPattern);
         }
 
         public ElsUiPanel()
