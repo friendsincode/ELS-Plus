@@ -67,7 +67,7 @@ namespace ELS
                         OnSettingsLoaded?.Invoke(SettingsType.Type.GLOBAL, data);
                     }
                 }
-                else if (Path.GetExtension(filename).ToLower()==".xml")
+                /*else if (Path.GetExtension(filename).ToLower()==".xml")
                 {
 
                     if (VCF.isValidData(data))
@@ -84,7 +84,7 @@ namespace ELS
                         CitizenFX.Core.Debug.WriteLine($"XML data for {filename} is not valid");
 #endif
                     }
-                }
+                }*/
             }
         }
         internal void UnLoadFilesFromScript(string name)

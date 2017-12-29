@@ -109,7 +109,7 @@ namespace ELS.NUI
                     {
                         SendLightData(true, light, color);
                     }
-                    await ELS.Delay(75);
+                    await ELS.Delay(150);
                 }
                 SendLightData(false, light, "");
             } while (_runPattern);

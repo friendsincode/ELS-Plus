@@ -85,13 +85,17 @@ namespace ELS.Light
             return StringPatterns[rnd.Next() - 1];
         }
 
-        public static async void RunLightPattern(Vehicle vehicle, int extra, string patt, string color)
+        public static async void RunLightPattern(Vehicle vehicle, int extra, string patt, string color, int delay)
         {
             string light = $"#extra{extra}";
             do
             {
                foreach(char c in patt.ToCharArray())
                 {
+                    if (!ElsUiPanel._runPattern)
+                    {
+                        break;
+                    }
                     if (c.Equals('0'))
                     {
                         ElsUiPanel.SendLightData(false, light, "");
@@ -102,7 +106,36 @@ namespace ELS.Light
                         ElsUiPanel.SendLightData(true, light, color);
                         vehicle.ToggleExtra(extra, true);
                     }
-                    await ELS.Delay(75);
+                    await ELS.Delay(delay);
+                }
+            } while (ElsUiPanel._runPattern);
+            ElsUiPanel.SendLightData(false, light, "");
+            vehicle.ToggleExtra(extra, false);
+        }
+
+        public static async void RunLightPattern(Vehicle vehicle, int extra, uint upatt, string color, int delay)
+        {
+            string patt = Convert.ToString(upatt, 2);
+            string light = $"#extra{extra}";
+            do
+            {
+                foreach (char c in patt.ToCharArray())
+                {
+                    if (!ElsUiPanel._runPattern)
+                    {
+                        break;
+                    }
+                    if (c.Equals('0'))
+                    {
+                        ElsUiPanel.SendLightData(false, light, "");
+                        vehicle.ToggleExtra(extra, false);
+                    }
+                    else
+                    {
+                        ElsUiPanel.SendLightData(true, light, color);
+                        vehicle.ToggleExtra(extra, true);
+                    }
+                    await ELS.Delay(delay);
                 }
             } while (ElsUiPanel._runPattern);
             ElsUiPanel.SendLightData(false, light, "");

@@ -54,7 +54,7 @@ namespace ELS
                         //await Delay(500);
                         try
                         {
-                            //_FileLoader.RunLoader(obj);
+                            _FileLoader.RunLoader(obj);
                             //TODO: make a load files from all resouces.
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
                             SetupConnections();
@@ -75,14 +75,13 @@ namespace ELS
                     {
                         try
                         {
-                            //_FileLoader.RunLoader(obj);
+                            _FileLoader.RunLoader(obj);
                         }
                         catch (Exception e)
                         {
                             TriggerServerEvent($"ONDEBUG", e.ToString());
                             Screen.ShowNotification($"ERROR:{e.Message}");
                             Screen.ShowNotification($"ERROR:{e.StackTrace}");
-
                         }
                     }
 
