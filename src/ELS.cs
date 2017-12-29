@@ -161,7 +161,7 @@ namespace ELS
                  text.Draw();*/
                 //_sirenManager.Runtick();
                 //_spotLight.RunTick();
-                _vehicleManager.RunTick();
+                _vehicleManager.RunTickAsync();
                 if (Game.IsControlJustReleased(0, Control.MultiplayerInfo))
                 {
                     await Debug.Spawn();

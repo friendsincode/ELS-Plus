@@ -18,7 +18,7 @@ namespace ELS.Manager
             vehicleList = new VehicleList();
         }
 
-        internal void RunTick()
+        internal async void RunTickAsync()
         {
             //ELSVehicle _currentVehicle;
             if (Game.PlayerPed.IsSittingInELSVehicle() &&
@@ -26,10 +26,22 @@ namespace ELS.Manager
                     || Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Passenger) == Game.PlayerPed))
             {
                 //Screen.ShowNotification("adding vehicle");
-                API.SetEntityAsMissionEntity(Game.PlayerPed.CurrentVehicle.Handle, false, false);
+                if (!API.IsEntityAMissionEntity(Game.PlayerPed.CurrentVehicle.Handle))
+                {
+                    CitizenFX.Core.Debug.WriteLine("Not a mission entity");
+                }
                 Game.PlayerPed.CurrentVehicle.SetExistOnAllMachines(true);
                 if (vehicleList.MakeSureItExists(API.VehToNet(Game.PlayerPed.CurrentVehicle.Handle),vehicle: out ELSVehicle _currentVehicle )) {
                     _currentVehicle?.RunTick();
+                }
+                else
+                {
+                    var pos = Game.PlayerPed.CurrentVehicle.Position;
+                    var rot = Game.PlayerPed.CurrentVehicle.Rotation;
+                    var model = Game.PlayerPed.CurrentVehicle.Model;
+                    Game.PlayerPed.CurrentVehicle.Delete();
+                    var veh = await World.CreateVehicle(model, pos, rot.Z);
+                    Game.PlayerPed.SetIntoVehicle(veh,VehicleSeat.Driver);
                 }
 #if DEBUG
                 if (Game.IsControlJustPressed(0, Control.Cover))
