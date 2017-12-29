@@ -25,6 +25,11 @@ client_script 'System.Xml.net.dll'
 client_script 'SharpConfig.net.dll'
 client_script 'ELS-FiveM.net.dll'
 
+-- Debug symbols
+files({
+	'ELS-FiveM.net.dll.mdb',
+	'ELS-Server.net.dll.mdb'
+})
 -- NUI Stuff
 if NUIEnabled then
 

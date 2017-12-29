@@ -44,14 +44,16 @@ The contribution guide can be found [here](CONTRIBUTING.md).
 
 ### How to Build and Test
 
-1. `git clone https://github.com/FiveM-Scripts/ELS-FiveM.git`
+1. Add the enviroment variable `FXSERVERDATA` and set its value to the `resources` directory path.
 
-2. Open `ELS-FiveM\src\ELS-for-FiveM.sln` in Visual Studio
+2. `git clone https://github.com/FiveM-Scripts/ELS-FiveM.git`
 
-3. Select `Release` and `Any CPU`  next to the Start button
+3. Open `ELS-FiveM\src\ELS-for-FiveM.sln` in Visual Studio
 
-4. In the menu bar under Build click on `Build Solution`
+4. Select `Release` and `Any CPU`  next to the Start button
 
-5. Copy all the files from `ELS-FiveM\src\bin\Release` to `cfx-server\resources\ELS-FiveM`
+5. In the menu bar under Build click on `Build Solution`
 
-6. Add `ELS-FiveM` to `AutoStartResources` in `cfx-server\citmp-server.yml`
+6. Copy all the files from `ELS-FiveM\src\bin\Release` to `cfx-server\resources\ELS-FiveM`
+
+7. Add `ELS-FiveM` to `AutoStartResources` in `cfx-server\citmp-server.yml`
