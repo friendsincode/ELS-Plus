@@ -7,6 +7,8 @@ using CitizenFX.Core;
 using CitizenFX.Core.UI;
 using CitizenFX.Core.Native;
 using System.Drawing;
+using ELS.Light;
+using ELS.NUI;
 
 namespace ELS
 {
@@ -36,14 +38,18 @@ namespace ELS
             else //if (Game.PlayerPed.CurrentVehicle.IsEls())
             {
                 var veh = Game.PlayerPed.CurrentVehicle;
-                for(var x =0; x < 24; x++)
+                if (ElsUiPanel._runPattern)
                 {
-                    if (veh.ExtraExists(x))
-                    {
-                        veh.ToggleExtra(x, !veh.IsExtraOn(x));
-                    }
-                    }
-                veh.ToggleExtra(1, true);
+                    ElsUiPanel._runPattern = false;
+                }
+                else
+                {
+                    ElsUiPanel._runPattern = true;
+                    LightPattern.RunLightPattern(veh, 1, LightPattern.StringPatterns[15], "red");
+                    LightPattern.RunLightPattern(veh, 2, LightPattern.StringPatterns[16], "red");
+                    LightPattern.RunLightPattern(veh, 3, LightPattern.StringPatterns[15], "blue");
+                    LightPattern.RunLightPattern(veh, 4, LightPattern.StringPatterns[16], "blue");
+                }
             }
             // Game.Player.Character.SetIntoVehicle(veh, VehicleSeat.Any);
         }
