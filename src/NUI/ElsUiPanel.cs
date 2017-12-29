@@ -52,7 +52,7 @@ namespace ELS.NUI
         /// <param name="light">Corresponding light on NUI display</param>
         /// <param name="color">Color of light</param>
         public void SendLightData(bool state, string light, string color)
-        { 
+        {
             //CitizenFX.Core.Debug.WriteLine("Sending Light Data");
             API.SendNuiMessage("{\"type\":\"lightControl\", \"state\":" + state.ToString().ToLower() + ", \"light\": \"" + light + "\", \"color\":\"" + color + "\" }");
         }
@@ -64,7 +64,7 @@ namespace ELS.NUI
         /// <param name="light">Corresponding light on NUI display</param>
         /// <param name="color">Color of light</param>
         /// <returns></returns>        
-        public async Task RunNuiLightPattern(uint patt, string light, string color) 
+        public async Task RunNuiLightPattern(uint patt, string light, string color)
         {
             string patt2 = Convert.ToString(patt, 2);
             char[] binary = patt2.ToCharArray();
