@@ -9,9 +9,10 @@ namespace ELS
     public class ELSVehicle : PoolObject, FullSync.IFullSyncComponent
     {
         private Siren.Siren _siren;
-        private Light.Light _light;
+        private Light.Lights _light;
         private Vehicle _vehicle;
         private Vcfroot _vcf;
+        private Light.LightPatternSettings _lightPatternSettings;
         public ELSVehicle(int handle) : base(handle)
         {
             _vehicle = new Vehicle(handle);
@@ -34,7 +35,7 @@ namespace ELS
 
 #endif
                 _siren = new Siren.Siren(_vehicle,_vcf);
-                _light = new Light.Light(_vehicle, _vcf);
+                _light = new Light.Lights(_vehicle, _vcf);
            
 #if DEBUG
             CitizenFX.Core.Debug.WriteLine($"created vehicle");
@@ -55,7 +56,7 @@ namespace ELS
             }
             
                 _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data["Siren"]);
-                _light = new Light.Light(_vehicle, _vcf, (IDictionary<string, object>)data["Light"]);
+                _light = new Light.Lights(_vehicle, _vcf, (IDictionary<string, object>)data["Light"]);
             
                 //_vehicle.SetExistOnAllMachines(true);
 #if DEBUG

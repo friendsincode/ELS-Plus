@@ -28,10 +28,15 @@ namespace ELS.Extra
             } get {
                 return API.IsVehicleExtraTurnedOn(_vehicle.Handle, _Id);
             } }
-        internal Extra(Entity entity, bool state = false)
+        internal Extra(Entity entity,int id, bool state = false)
         {
             _state = state;
             _vehicle = entity;
+            _Id = id;
+            if (!API.DoesExtraExist(id, entity.Handle))
+            {
+                throw new Exception("extra does not exist");
+            }
         }
         internal void SetState(bool state)
         {

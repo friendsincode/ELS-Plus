@@ -103,6 +103,7 @@
     <Compile Include="ELS.cs" />
     <Compile Include="Decorator\EntityDecoration.cs" />
     <Compile Include="ELSStates\State.cs" />
+    <Compile Include="Light\LightPatternSettings.cs" />
     <Compile Include="Vehicle\ELSVehicle.cs" />
     <Compile Include="extentions.cs" />
     <Compile Include="FileLoader.cs" />
