@@ -25,7 +25,7 @@ This project is in early development stages. You should expect bugs and/or issue
 1. Copy the `ELS-FiveM` folder to `cfx-server\resources\`
 2. Add `ELS-FiveM` to `server.cfg`
 
-###How to add ELS Vehicles to ELS-FiveM
+### How to add ELS Vehicles to ELS-FiveM
 1. Create add-on/replace Vehicle with stream folder and relevant files.
 2. In `__resource.lua` add the `VCF` xml file to the `files` list.
 3. Add `is_els 'true'` to bottom of `__resource.lua`.

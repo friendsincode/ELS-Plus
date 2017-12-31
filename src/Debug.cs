@@ -45,10 +45,10 @@ namespace ELS
                 else
                 {
                     ElsUiPanel._runPattern = true;
-                    //LightPattern.RunLightPattern(veh, 1, LightPattern.StringPatterns[15], "red",75);
-                    //LightPattern.RunLightPattern(veh, 2, LightPattern.StringPatterns[16], "red",75);
-                    //LightPattern.RunLightPattern(veh, 3, LightPattern.StringPatterns[15], "blue",75);
-                    //LightPattern.RunLightPattern(veh, 4, LightPattern.StringPatterns[16], "blue",75);
+                    LightPattern.RunLightPattern(veh, 1, LightPattern.StringPatterns[15], "red",75);
+                    LightPattern.RunLightPattern(veh, 2, LightPattern.StringPatterns[16], "red",75);
+                    LightPattern.RunLightPattern(veh, 3, LightPattern.StringPatterns[15], "blue",75);
+                    LightPattern.RunLightPattern(veh, 4, LightPattern.StringPatterns[16], "blue",75);
                 }
             }
             // Game.Player.Character.SetIntoVehicle(veh, VehicleSeat.Any);

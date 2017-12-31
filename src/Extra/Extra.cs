@@ -33,7 +33,7 @@ namespace ELS.Extra
             _state = state;
             _vehicle = entity;
             _Id = id;
-            if (!API.DoesExtraExist(id, entity.Handle))
+            if (!API.DoesExtraExist(entity.Handle,id))
             {
                 CitizenFX.Core.Debug.WriteLine($"Extra id: {id} does not exsist");
             }

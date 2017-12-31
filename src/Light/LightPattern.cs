@@ -85,37 +85,33 @@ namespace ELS.Light
             return StringPatterns[rnd.Next() - 1];
         }
 
-        internal static async void RunLightPattern(Vehicle vehicle, string[] StringPatterns, string color, int delay)
+        internal static async void RunLightPattern(Vehicle vehicle, int extra, string patt, string color, int delay)
         {
-            foreach (var line in StringPatterns)
+            string light = $"#extra{extra}";
+            do
             {
-                
-                do
+                foreach (char c in patt.ToCharArray())
                 {
-                    for ( int x =0; x< line.Length;x++)
+                    if (!ElsUiPanel._runPattern)
                     {
-                        char c = line[x];
-                        string light = $"#extra{x}";
-                        if (!ElsUiPanel._runPattern)
-                        {
-                            break;
-                        }
-                        if (c.Equals('0'))
-                        {
-                            ElsUiPanel.SendLightData(false, light, "");
-                            vehicle.ToggleExtra(x, false);
-                        }
-                        else
-                        {
-                            ElsUiPanel.SendLightData(true, light, color);
-                            vehicle.ToggleExtra(x, true);
-                        }
-                        await ELS.Delay(delay);
-                        //ElsUiPanel.SendLightData(false, light, "");
+                        break;
                     }
-                } while (ElsUiPanel._runPattern);
-            }
-            
+                    if (c.Equals('0'))
+                    {
+                        ElsUiPanel.SendLightData(false, light, "");
+                        vehicle.ToggleExtra(extra, false);
+                    }
+                    else
+                    {
+                        ElsUiPanel.SendLightData(true, light, color);
+                        vehicle.ToggleExtra(extra, true);
+                    }
+                    await ELS.Delay(delay);
+                    //ElsUiPanel.SendLightData(false, light, "");
+                }
+            } while (ElsUiPanel._runPattern);
+            ElsUiPanel.SendLightData(false, light, "");
+            vehicle.ToggleExtra(extra, false);
         }
 
         public static async void RunLightPattern(Vehicle vehicle, int extra, uint upatt, string color, int delay)

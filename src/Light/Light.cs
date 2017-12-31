@@ -183,7 +183,7 @@ namespace ELS.Light
         {
             while (this.enabled)
             {
-                LightPattern.RunLightPattern(_vehicle, LightPattern.StringPatterns, null, 100);
+                LightPattern.RunLightPattern(_vehicle, 1,LightPattern.StringPatterns[int.Parse(_vcfroot.PRML.PresetPatterns.Lstg1.Pattern)],_vcfroot.EOVERRIDE.Extra01.Color, 100);
             }
             
         }
