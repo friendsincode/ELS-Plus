@@ -29,7 +29,10 @@ namespace ELS.Manager
                 {
                     CitizenFX.Core.Debug.WriteLine("Not a mission entity");
                 }
-                API.NetworkRegisterEntityAsNetworked(Game.PlayerPed.CurrentVehicle.Handle);
+                if (!API.NetworkGetEntityIsNetworked(Game.PlayerPed.CurrentVehicle.Handle))
+                {
+                    API.NetworkRegisterEntityAsNetworked(Game.PlayerPed.CurrentVehicle.Handle);
+                }
                 Game.PlayerPed.CurrentVehicle.SetExistOnAllMachines(true);
                 if (vehicleList.MakeSureItExists(API.VehToNet(Game.PlayerPed.CurrentVehicle.Handle),vehicle: out ELSVehicle _currentVehicle )) {
                     _currentVehicle?.RunTick();
