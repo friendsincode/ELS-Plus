@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 
 namespace ELS.Light
 {
-    class Light : IManagerEntry
+    internal class Light : Extra.Extra,IManagerEntry
     {
         private int _extraId;
         private Vehicle _vehicle;
