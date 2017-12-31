@@ -44,7 +44,10 @@ namespace ELS.Light
     {
         private Extras _extras = new Extras
         {
-
+            PRML = new Dictionary<int, Extra.Extra>(),
+            WRNL = new Dictionary<int, Extra.Extra>(),
+            SECL = new Dictionary<int, Extra.Extra>()
+            
         };
         private bool enabled = false;
         private Vcfroot _vcfroot;

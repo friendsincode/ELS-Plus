@@ -35,7 +35,7 @@ namespace ELS.Extra
             _Id = id;
             if (!API.DoesExtraExist(id, entity.Handle))
             {
-                throw new Exception("extra does not exist");
+                CitizenFX.Core.Debug.WriteLine($"Extra id: {id} does not exsist");
             }
         }
         internal void SetState(bool state)
