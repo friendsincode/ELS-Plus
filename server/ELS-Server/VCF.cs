@@ -37,11 +37,7 @@ namespace ELS_Server
             doc.LoadXml(data);
             //TODO change how below is detected to account for xml meta tag being before it.
             return doc.DocumentElement.Name == "vcfroot";
-        }
-
-        
-    }
-
-    
+        }        
+    }   
 
 }

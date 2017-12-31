@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CitizenFX.Core;
+using ELS.configuration;
+using ELS.NUI;
+using System;
+
 
 namespace ELS.Light
 {
@@ -26,6 +26,9 @@ namespace ELS.Light
             1347440720
         };
 
+        /// <summary>
+        /// List of patterns in binary string format
+        /// </summary>
         public static string[] StringPatterns =
         {
             "0101010101010101",//0
@@ -36,7 +39,7 @@ namespace ELS.Light
             "0111011101110111",//5
             "0001000100010001",//6
             "1000100010001000",//7
-            "1000100010001000",//8
+            "0100010001000100",//8
             "0110011001100110",//9
             "1011001100110011",//10
             "1001100110011001",//11
@@ -70,9 +73,73 @@ namespace ELS.Light
             Array.Reverse(charArray);
             return new string(charArray);
         }
+
+        public static string SweepPattern()
+        {
+            return StringPatterns[33] + Reverse(StringPatterns[33]);
+        }
+
+        public static string RandomPattern()
+        {
+            Random rnd = new Random(StringPatterns.Length);
+            return StringPatterns[rnd.Next() - 1];
+        }
+
+        public static async void RunLightPattern(Vehicle vehicle, int extra, string patt, string color, int delay)
+        {
+            string light = $"#extra{extra}";
+            do
+            {
+               foreach(char c in patt.ToCharArray())
+                {
+                    if (!ElsUiPanel._runPattern)
+                    {
+                        break;
+                    }
+                    if (c.Equals('0'))
+                    {
+                        ElsUiPanel.SendLightData(false, light, "");
+                        vehicle.ToggleExtra(extra, false);
+                    }
+                    else
+                    {
+                        ElsUiPanel.SendLightData(true, light, color);
+                        vehicle.ToggleExtra(extra, true);
+                    }
+                    await ELS.Delay(delay);
+                }
+            } while (ElsUiPanel._runPattern);
+            ElsUiPanel.SendLightData(false, light, "");
+            vehicle.ToggleExtra(extra, false);
+        }
+
+        public static async void RunLightPattern(Vehicle vehicle, int extra, uint upatt, string color, int delay)
+        {
+            string patt = Convert.ToString(upatt, 2);
+            string light = $"#extra{extra}";
+            do
+            {
+                foreach (char c in patt.ToCharArray())
+                {
+                    if (!ElsUiPanel._runPattern)
+                    {
+                        break;
+                    }
+                    if (c.Equals('0'))
+                    {
+                        ElsUiPanel.SendLightData(false, light, "");
+                        vehicle.ToggleExtra(extra, false);
+                    }
+                    else
+                    {
+                        ElsUiPanel.SendLightData(true, light, color);
+                        vehicle.ToggleExtra(extra, true);
+                    }
+                    await ELS.Delay(delay);
+                }
+            } while (ElsUiPanel._runPattern);
+            ElsUiPanel.SendLightData(false, light, "");
+            vehicle.ToggleExtra(extra, false);
+        }
     }
-
-
-
-
 }

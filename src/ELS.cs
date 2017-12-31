@@ -36,7 +36,6 @@ namespace ELS
     {
         private readonly FileLoader _FileLoader;
         private SpotLight _spotLight;
-        private ElsUiPanel _eLSUiPanel;
         private readonly VehicleManager _vehicleManager;
         private configuration.ControlConfiguration _controlConfiguration;
         panel.test _test = new test();
@@ -47,7 +46,6 @@ namespace ELS
             _controlConfiguration = new configuration.ControlConfiguration();
             _FileLoader = new FileLoader(this);
             _vehicleManager = new VehicleManager();
-            _eLSUiPanel = new ElsUiPanel();
             EventHandlers["onClientResourceStart"] += new Action<string>((string obj) =>
                 {
                     //TODO rewrite loader so that it 
@@ -56,13 +54,13 @@ namespace ELS
                         //await Delay(500);
                         try
                         {
-                            //_FileLoader.RunLoader(obj);
+                            _FileLoader.RunLoader(obj);
                             //TODO: make a load files from all resouces.
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
                             SetupConnections();
                             TriggerServerEvent("ELS:VcfSync:Server", Game.Player.ServerId);
                             TriggerServerEvent("ELS:FullSync:Request:All", Game.Player.ServerId);
-                            _eLSUiPanel.DisableUI();
+                            ElsUiPanel.DisableUI();
                         }
                         catch (Exception e)
                         {
@@ -77,14 +75,13 @@ namespace ELS
                     {
                         try
                         {
-                            //_FileLoader.RunLoader(obj);
+                            _FileLoader.RunLoader(obj);
                         }
                         catch (Exception e)
                         {
                             TriggerServerEvent($"ONDEBUG", e.ToString());
                             Screen.ShowNotification($"ERROR:{e.Message}");
                             Screen.ShowNotification($"ERROR:{e.StackTrace}");
-
                         }
                     }
 
@@ -126,8 +123,8 @@ namespace ELS
             });
             //Take in data and apply it
             EventHandlers["ELS:NewFullSyncData"] += new Action<IDictionary<string, object>>(_vehicleManager.SetVehicleSyncData);
-            RegisterNUICallback("escape", _eLSUiPanel.EscapeUI);
-            RegisterNUICallback("togglePrimary", _eLSUiPanel.TooglePrimary);
+            RegisterNUICallback("escape", ElsUiPanel.EscapeUI);
+            RegisterNUICallback("togglePrimary", ElsUiPanel.TooglePrimary);
         }
 
         public static string CurrentResourceName()
@@ -167,13 +164,13 @@ namespace ELS
                     await Debug.Spawn();
                 }
 
-                if (Game.PlayerPed.IsInPoliceVehicle && _eLSUiPanel._enabled == 0)
+                if (Game.PlayerPed.IsInPoliceVehicle && ElsUiPanel._enabled == 0)
                 {
-                    _eLSUiPanel.ShowUI();
+                    ElsUiPanel.ShowUI();
                 }
-                else if (!Game.PlayerPed.IsInPoliceVehicle && _eLSUiPanel._enabled == 1)
+                else if (!Game.PlayerPed.IsInPoliceVehicle && ElsUiPanel._enabled == 1)
                 {
-                    _eLSUiPanel.DisableUI();
+                    ElsUiPanel.DisableUI();
                 }
             }
             catch (Exception ex)
