@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using ELS.configuration;
+using ELS.NUI;
 
 namespace ELS.Extra
 {
@@ -14,9 +16,23 @@ namespace ELS.Extra
         Vector3 _posistion;
         Entity _vehicle;
         int _Id;
+        configuration.Extra _extraInfo;
         private bool _state;
-        internal bool state { private set {
-                _state=value;
+        private bool _pattRunning;
+        internal bool IsPatternRunning
+        {
+            get { return _pattRunning; }
+            set
+            {
+                _pattRunning = value;
+            }
+
+        }
+        internal bool state
+        {
+            private set
+            {
+                _state = value;
                 if (value)
                 {
                     SetTrue();
@@ -25,15 +41,19 @@ namespace ELS.Extra
                 {
                     SetFalse();
                 }
-            } get {
+            }
+            get
+            {
                 return API.IsVehicleExtraTurnedOn(_vehicle.Handle, _Id);
-            } }
-        internal Extra(Entity entity,int id, bool state = false)
+            }
+        }
+        internal Extra(Entity entity, int id, configuration.Extra ex, bool state = false)
         {
             _state = state;
             _vehicle = entity;
             _Id = id;
-            if (!API.DoesExtraExist(entity.Handle,id))
+            _extraInfo = ex;
+            if (!API.DoesExtraExist(entity.Handle, id))
             {
                 CitizenFX.Core.Debug.WriteLine($"Extra id: {id} does not exsist");
             }
@@ -43,7 +63,8 @@ namespace ELS.Extra
             if (_state == state) return;
             this.state = state;
         }
-        private void SetTrue() {
+        private void SetTrue()
+        {
             if (!state)
             {
                 API.SetVehicleExtra(_vehicle.Handle, _Id, true);
@@ -57,15 +78,40 @@ namespace ELS.Extra
         {
             if (state)
             {
-                API.SetVehicleExtra(_vehicle.Handle, _Id, true);
+                API.SetVehicleExtra(_vehicle.Handle, _Id, false);
             }
             else
             {
-                API.SetVehicleExtra(_vehicle.Handle, _Id, true);
+                API.SetVehicleExtra(_vehicle.Handle, _Id, false);
             }
         }
-        internal void CleanUp() {
 
+        internal async void RunPattern(string patt, int delay)
+        {
+            if (!IsPatternRunning)
+            {
+                return;
+            }
+            foreach (char c in patt.ToCharArray())
+            {
+                if (c.Equals('0'))
+                {
+                    ElsUiPanel.SendLightData(false, $"#extra{_Id}", "");
+                    SetFalse();
+                }
+                else
+                {
+                    ElsUiPanel.SendLightData(true, $"#extra{_Id}", _extraInfo.Color);
+                    SetTrue();
+                }
+                await ELS.Delay(delay);
+            }
+        }
+
+        internal void CleanUp()
+        {
+            SetFalse();
+            ElsUiPanel.SendLightData(false, $"#extra{_Id}", "");
         }
     }
 }
