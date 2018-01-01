@@ -49,7 +49,19 @@ namespace ELS.Light
             SECL = new Dictionary<int, Extra.Extra>()
             
         };
-        private bool enabled = false;
+        bool _enabled;
+        private bool enabled
+        {
+            get
+            {
+                return _enabled;
+            }
+            set
+            {
+                _enabled = value;
+                StartPatterns();
+            }
+        }
         private Vcfroot _vcfroot;
         private Vehicle _vehicle;
         private LightPatternSettings lightPatternSettings;
@@ -177,48 +189,11 @@ namespace ELS.Light
         public void CleanUP()
         {
             //throw new NotImplementedException();
+            enabled = false;
         }
 
         public async void ExternalTicker()
-        {
-            while (this.enabled)
-            {
-                //PRML
-                foreach(Extra.Extra ex in _extras.PRML.Values)
-                {
-                    if (ex.IsPatternRunning)
-                    {
-                        continue;
-                    } else
-                    {
-                        ex.RunPattern(LightPattern.StringPatterns[int.Parse(_vcfroot.PRML.PresetPatterns.Lstg3.Pattern)], 100);
-                    }
-                }
-                //SECL
-                foreach (Extra.Extra ex in _extras.SECL.Values)
-                {
-                    if (ex.IsPatternRunning)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        ex.RunPattern(LightPattern.StringPatterns[int.Parse(_vcfroot.SECL.PresetPatterns.Lstg3.Pattern)], 100);
-                    }
-                }
-                //WRNL
-                foreach (Extra.Extra ex in _extras.WRNL.Values)
-                {
-                    if (ex.IsPatternRunning)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        ex.RunPattern(LightPattern.StringPatterns[int.Parse(_vcfroot.WRNL.PresetPatterns.Lstg3.Pattern)], 100);
-                    }
-                }
-            }
+        { 
         }
 
         public void SirenControlsRemote(string sirenString, bool state)
@@ -233,6 +208,18 @@ namespace ELS.Light
             {
                 
             }
+
+            if (Game.IsControlJustPressed(0, Control.VehicleHorn))
+            {
+               if (enabled)
+                {
+                    enabled = false;
+                }
+                else
+                {
+                    enabled = true;
+                }
+            }
         }
 
         internal object GetData()
@@ -244,6 +231,48 @@ namespace ELS.Light
         internal void SetData(IDictionary<string, object> dictionary)
         {
             //throw new NotImplementedException();
+        }
+
+        internal async void StartPatterns()
+        {
+                foreach (Extra.Extra ex in _extras.PRML.Values)
+                {
+                    if (ex.IsPatternRunning)
+                    {
+                        ex.IsPatternRunning = false;
+                    }
+                    else
+                    {
+                    ex.IsPatternRunning = true;
+                    ex.RunPattern(Convert.ToString(LightPattern.Patterns[int.Parse(_vcfroot.PRML.PresetPatterns.Lstg3.Pattern)],2), 100);
+                    }
+                }
+                //SECL
+                foreach (Extra.Extra ex in _extras.SECL.Values)
+                {
+                    if (ex.IsPatternRunning)
+                    {
+                    ex.IsPatternRunning = false;
+                }
+                    else
+                    {
+                    ex.IsPatternRunning = true;
+                    ex.RunPattern(Convert.ToString(LightPattern.Patterns[int.Parse(_vcfroot.SECL.PresetPatterns.Lstg3.Pattern)],2), 100);
+                    }
+                }
+                //WRNL
+                foreach (Extra.Extra ex in _extras.WRNL.Values)
+                {
+                    if (ex.IsPatternRunning)
+                    {
+                    ex.IsPatternRunning = false;
+                }
+                    else
+                    {
+                    ex.IsPatternRunning = true;
+                    ex.RunPattern(Convert.ToString(LightPattern.Patterns[int.Parse(_vcfroot.WRNL.PresetPatterns.Lstg3.Pattern)],2), 100);
+                    }
+                }
         }
     }
 }

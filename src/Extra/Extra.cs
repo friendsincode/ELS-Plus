@@ -88,24 +88,25 @@ namespace ELS.Extra
 
         internal async void RunPattern(string patt, int delay)
         {
-            if (!IsPatternRunning)
+            while (IsPatternRunning)
             {
-                return;
-            }
-            foreach (char c in patt.ToCharArray())
-            {
-                if (c.Equals('0'))
+                foreach (char c in patt.ToCharArray())
                 {
-                    ElsUiPanel.SendLightData(false, $"#extra{_Id}", "");
-                    SetFalse();
+                    if (c.Equals('0'))
+                    {
+                        ElsUiPanel.SendLightData(false, $"#extra{_Id}", "");
+                        SetFalse();
+                    }
+                    else
+                    {
+                        ElsUiPanel.SendLightData(true, $"#extra{_Id}", _extraInfo.Color);
+                        SetTrue();
+                    }
+                    await ELS.Delay(delay);
                 }
-                else
-                {
-                    ElsUiPanel.SendLightData(true, $"#extra{_Id}", _extraInfo.Color);
-                    SetTrue();
-                }
-                await ELS.Delay(delay);
             }
+            CleanUp();
+
         }
 
         internal void CleanUp()
