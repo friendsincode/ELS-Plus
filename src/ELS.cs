@@ -164,11 +164,23 @@ namespace ELS
                     await Debug.Spawn();
                 }
 
-                if (Game.PlayerPed.IsInPoliceVehicle && ElsUiPanel._enabled == 0)
+                if (Game.PlayerPed.CurrentVehicle.IsEls())
                 {
-                    ElsUiPanel.ShowUI();
+                    Game.DisableControlThisFrame(0, Control.FrontendPause);
+                    if (Game.IsControlPressed(0, Control.VehicleMoveUpDown) && Game.IsDisabledControlJustReleased(0, Control.FrontendPause))
+                    {
+
+                        if (ElsUiPanel._enabled == 0)
+                        {
+                            ElsUiPanel.ShowUI();
+                        }
+                        else if (ElsUiPanel._enabled == 1)
+                        {
+                            ElsUiPanel.DisableUI();
+                        }
+                    }
                 }
-                else if (!Game.PlayerPed.IsInPoliceVehicle && ElsUiPanel._enabled == 1)
+                else
                 {
                     ElsUiPanel.DisableUI();
                 }

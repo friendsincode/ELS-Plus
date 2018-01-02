@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ELS.configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,36 @@ namespace ELS.Light
         internal void PrevousStage()
         {
 
+        }
+
+        internal Lstg GetPresetPrimaryLstg(ELightStage stage, Vcfroot root)
+        {
+            switch (stage)
+            {
+                case ELightStage.Lstg1:
+                    return root.PRML.PresetPatterns.Lstg1;
+                case ELightStage.Lstg2:
+                    return root.PRML.PresetPatterns.Lstg2;
+                case ELightStage.Lstg3:
+                    return root.PRML.PresetPatterns.Lstg3;
+                default:
+                    return new Lstg();
+            }
+        }
+
+        internal Lstg GetPresetSecondaryLstg(ELightStage stage, Vcfroot root)
+        {
+            switch (stage)
+            {
+                case ELightStage.Lstg1:
+                    return root.SECL.PresetPatterns.Lstg1;
+                case ELightStage.Lstg2:
+                    return root.SECL.PresetPatterns.Lstg2;
+                case ELightStage.Lstg3:
+                    return root.SECL.PresetPatterns.Lstg3;
+                default:
+                    return new Lstg();
+            }
         }
     }
 }

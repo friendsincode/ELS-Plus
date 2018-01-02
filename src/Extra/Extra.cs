@@ -19,6 +19,13 @@ namespace ELS.Extra
         configuration.Extra _extraInfo;
         private bool _state;
         private bool _pattRunning;
+        internal int Id
+        {
+            get
+            {
+                return _Id;
+            }
+        }
         internal bool IsPatternRunning
         {
             get { return _pattRunning; }
@@ -57,6 +64,7 @@ namespace ELS.Extra
             {
                 CitizenFX.Core.Debug.WriteLine($"Extra id: {id} does not exsist");
             }
+            SetFalse();
         }
         internal void SetState(bool state)
         {
@@ -65,25 +73,12 @@ namespace ELS.Extra
         }
         private void SetTrue()
         {
-            if (!state)
-            {
-                API.SetVehicleExtra(_vehicle.Handle, _Id, true);
-            }
-            else
-            {
-                API.SetVehicleExtra(_vehicle.Handle, _Id, true);
-            }
+            API.SetVehicleExtra(_vehicle.Handle, _Id, false);
         }
         private void SetFalse()
         {
-            if (state)
-            {
-                API.SetVehicleExtra(_vehicle.Handle, _Id, false);
-            }
-            else
-            {
-                API.SetVehicleExtra(_vehicle.Handle, _Id, false);
-            }
+            API.SetVehicleExtra(_vehicle.Handle, _Id, true);
+
         }
 
         internal async void RunPattern(string patt, int delay)
@@ -92,6 +87,10 @@ namespace ELS.Extra
             {
                 foreach (char c in patt.ToCharArray())
                 {
+                    if (!IsPatternRunning)
+                    {
+                        break;
+                    }
                     if (c.Equals('0'))
                     {
                         ElsUiPanel.SendLightData(false, $"#extra{_Id}", "");

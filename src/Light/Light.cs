@@ -18,6 +18,7 @@
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using ELS.configuration;
+using ELS.NUI;
 using ELS.Siren;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,9 @@ namespace ELS.Light
         public Dictionary<int, Extra.Extra> PRML;
         internal Dictionary<int, Extra.Extra> WRNL;
         internal Dictionary<int, Extra.Extra> SECL;
+        internal Extra.Extra SBRN;
+        internal Extra.Extra SCL;
+        internal Extra.Extra TDL;
     }
     internal class Lights : IManagerEntry
     {
@@ -46,8 +50,7 @@ namespace ELS.Light
         {
             PRML = new Dictionary<int, Extra.Extra>(),
             WRNL = new Dictionary<int, Extra.Extra>(),
-            SECL = new Dictionary<int, Extra.Extra>()
-            
+            SECL = new Dictionary<int, Extra.Extra>(),
         };
         bool _enabled;
         private bool enabled
@@ -75,7 +78,7 @@ namespace ELS.Light
 
         private void AddAllValidLightExtras()
         {
-            for (int x = 0; x < 12; x++)
+            for (int x = 1; x < 13; x++)
             {
                 switch (x)
                 {
@@ -107,7 +110,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 4) && bool.Parse(_vcfroot.EOVERRIDE.Extra04.IsElsControlled))
                             {
-                                this._extras.SECL.Add(4, new Extra.Extra(_vehicle,4,_vcfroot.EOVERRIDE.Extra04));
+                                this._extras.PRML.Add(4, new Extra.Extra(_vehicle,4,_vcfroot.EOVERRIDE.Extra04));
                             }
                         }
                         break;
@@ -131,7 +134,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 7) && bool.Parse(_vcfroot.EOVERRIDE.Extra07.IsElsControlled))
                             {
-                                this._extras.SECL.Add(7, new Extra.Extra(_vehicle,7, _vcfroot.EOVERRIDE.Extra07));
+                                this._extras.WRNL.Add(7, new Extra.Extra(_vehicle,7, _vcfroot.EOVERRIDE.Extra07));
                             }
                         }
                         break;
@@ -139,7 +142,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 8) && bool.Parse(_vcfroot.EOVERRIDE.Extra08.IsElsControlled))
                             {
-                                this._extras.SECL.Add(8, new Extra.Extra(_vehicle,8, _vcfroot.EOVERRIDE.Extra08));
+                                this._extras.WRNL.Add(8, new Extra.Extra(_vehicle,8, _vcfroot.EOVERRIDE.Extra08));
                             }
                         }
                         break;
@@ -147,7 +150,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 9) && bool.Parse(_vcfroot.EOVERRIDE.Extra09.IsElsControlled))
                             {
-                                this._extras.SECL.Add(9, new Extra.Extra(_vehicle,9, _vcfroot.EOVERRIDE.Extra09));
+                                this._extras.WRNL.Add(9, new Extra.Extra(_vehicle,9, _vcfroot.EOVERRIDE.Extra09));
                             }
                         }
                         break;
@@ -155,7 +158,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 10) && bool.Parse(_vcfroot.EOVERRIDE.Extra10.IsElsControlled))
                             {
-                                this._extras.SECL.Add(10, new Extra.Extra(_vehicle,10, _vcfroot.EOVERRIDE.Extra10));
+                                this._extras.SBRN = new Extra.Extra(_vehicle,10, _vcfroot.EOVERRIDE.Extra10);
                             }
                         }
                         break;
@@ -163,7 +166,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 11) && bool.Parse(_vcfroot.EOVERRIDE.Extra11.IsElsControlled))
                             {
-                                this._extras.SECL.Add(11, new Extra.Extra(_vehicle,11, _vcfroot.EOVERRIDE.Extra11));
+                                this._extras.SCL = new Extra.Extra(_vehicle,11, _vcfroot.EOVERRIDE.Extra11);
                             }
                         }
                         break;
@@ -171,7 +174,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 12) && bool.Parse(_vcfroot.EOVERRIDE.Extra12.IsElsControlled))
                             {
-                                this._extras.SECL.Add(12, new Extra.Extra(_vehicle,12, _vcfroot.EOVERRIDE.Extra12));
+                                this._extras.TDL = new Extra.Extra(_vehicle,12, _vcfroot.EOVERRIDE.Extra12);
                             }
                         }
                         break;
@@ -233,46 +236,70 @@ namespace ELS.Light
             //throw new NotImplementedException();
         }
 
+        int[] prmPatt = { 2, 3 };
+        int[] secPatt = { 3, 2 };
         internal async void StartPatterns()
         {
-                foreach (Extra.Extra ex in _extras.PRML.Values)
+            foreach(Extra.Extra ex in _extras.PRML.Values)
+            {
+                if (ex.IsPatternRunning)
                 {
-                    if (ex.IsPatternRunning)
-                    {
-                        ex.IsPatternRunning = false;
-                    }
-                    else
-                    {
-                    ex.IsPatternRunning = true;
-                    ex.RunPattern(Convert.ToString(LightPattern.Patterns[int.Parse(_vcfroot.PRML.PresetPatterns.Lstg3.Pattern)],2), 100);
-                    }
-                }
-                //SECL
-                foreach (Extra.Extra ex in _extras.SECL.Values)
-                {
-                    if (ex.IsPatternRunning)
-                    {
                     ex.IsPatternRunning = false;
-                }
+                    if (prmPatt[0] > 18)
+                    {
+                        prmPatt[0] = 2;
+                        prmPatt[1] = 3;
+                    }
                     else
                     {
-                    ex.IsPatternRunning = true;
-                    ex.RunPattern(Convert.ToString(LightPattern.Patterns[int.Parse(_vcfroot.SECL.PresetPatterns.Lstg3.Pattern)],2), 100);
+                        prmPatt[0]++;
+                        prmPatt[1]++;
                     }
                 }
-                //WRNL
-                foreach (Extra.Extra ex in _extras.WRNL.Values)
+                else
                 {
-                    if (ex.IsPatternRunning)
+                    ex.IsPatternRunning = true;
+                    ElsUiPanel.SetUiPatternNumber(prmPatt[0], "PRML");
+                    if (ex.Id > 2)
                     {
-                    ex.IsPatternRunning = false;
-                }
+                        ex.RunPattern(LightPattern.StringPatterns[prmPatt[1]], 50);
+                    }
                     else
                     {
-                    ex.IsPatternRunning = true;
-                    ex.RunPattern(Convert.ToString(LightPattern.Patterns[int.Parse(_vcfroot.WRNL.PresetPatterns.Lstg3.Pattern)],2), 100);
+                        ex.RunPattern(LightPattern.StringPatterns[prmPatt[0]], 50);
                     }
                 }
+            }
+            foreach (Extra.Extra ex in _extras.SECL.Values)
+            {
+                if (ex.IsPatternRunning)
+                {
+                    ex.IsPatternRunning = false;
+                    if (secPatt[0] > 18)
+                    {
+                        secPatt[0] = 3;
+                        secPatt[1] = 2;
+                    }
+                    else
+                    {
+                        secPatt[0]++;
+                        secPatt[1]++;
+                    }
+                }
+                else
+                {
+                    ex.IsPatternRunning = true;
+                    ElsUiPanel.SetUiPatternNumber(prmPatt[0], "SECL");
+                    if (ex.Id == 5)
+                    {
+                        ex.RunPattern(LightPattern.StringPatterns[secPatt[1]], 65);
+                    }
+                    else
+                    {
+                        ex.RunPattern(LightPattern.StringPatterns[secPatt[0]], 65);
+                    }
+                }
+            }
         }
     }
 }

@@ -115,6 +115,11 @@ namespace ELS.NUI
             } while (_runPattern);
         }
 
+        public static void SetUiPatternNumber(int patt, string lighttype)
+        {
+            API.SendNuiMessage($"{{\"type\":\"setpatternnumber\", \"lighttype\":\"{lighttype}\", \"pattern\":\"{patt.ToString().PadLeft(4,'0')}\" }}");
+        }
+
         static ElsUiPanel()
         {
             _enabled = 0;
