@@ -20,7 +20,7 @@ namespace ELS
         {
             if (!Game.PlayerPed.IsInVehicle())
             {
-                var polModel = new Model((VehicleHash)Game.GenerateHash("hwaycar11"));
+                var polModel = new Model((VehicleHash)Game.GenerateHash("policegt350r"));
                 await polModel.Request(-1);
                 Vehicle veh = await World.CreateVehicle(polModel, Game.PlayerPed.Position);
                 polModel.MarkAsNoLongerNeeded();
