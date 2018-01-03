@@ -103,12 +103,13 @@
     <Compile Include="ELS.cs" />
     <Compile Include="Decorator\EntityDecoration.cs" />
     <Compile Include="ELSStates\State.cs" />
+    <Compile Include="Light\Lights.FullSync.cs" />
     <Compile Include="Light\LightPatternSettings.cs" />
     <Compile Include="Vehicle\ELSVehicle.cs" />
     <Compile Include="extentions.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="FullSync\FullSync.cs" />
-    <Compile Include="Light\Light.cs" />
+    <Compile Include="Light\Lights.cs" />
     <Compile Include="Light\LightArray.cs" />
     <Compile Include="Light\LightPattern.cs" />
     <Compile Include="Light\LightStage.cs" />

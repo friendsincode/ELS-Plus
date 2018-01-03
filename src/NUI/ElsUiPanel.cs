@@ -120,6 +120,12 @@ namespace ELS.NUI
             API.SendNuiMessage($"{{\"type\":\"setpatternnumber\", \"lighttype\":\"{lighttype}\", \"pattern\":\"{patt.ToString().PadLeft(4,'0')}\" }}");
         }
 
+        public static void ToggleUiBtnState(bool state, string which)
+        {
+            CitizenFX.Core.Debug.WriteLine($"Setting {which} to {state}");
+            API.SendNuiMessage($"{{\"type\":\"togglestate\", \"which\":\"{which}\", \"state\":{state.ToString().ToLower()} }}");
+        }
+
         static ElsUiPanel()
         {
             _enabled = 0;

@@ -56,7 +56,8 @@ namespace ELS.configuration
                 throw (ex);
             }
             Encoding.UTF8.GetPreamble();
-            var data = new VCFEntry(Path.GetFileNameWithoutExtension(name), ResourceName, Game.GenerateHash(Path.GetFileNameWithoutExtension(name)), new Vcfroot());
+            Model hash = Game.GenerateHash(Path.GetFileNameWithoutExtension(name));
+            var data = new VCFEntry(Path.GetFileNameWithoutExtension(name), ResourceName, hash, new Vcfroot());
             if (type == SettingsType.Type.VCF)
             {
                 CitizenFX.Core.Debug.WriteLine("Loading XML");
@@ -352,19 +353,19 @@ namespace ELS.configuration
 
 
                 //TODO: add method to remove old file or a file from ELSVehicle
-                if (ELSVehicle.Exists(veh => veh.resource == ResourceName))
+                if (ELSVehicle.Exists(veh => veh.modelHash == hash))
                 {
                     CitizenFX.Core.Debug.WriteLine($"Removeing preexisting VCF for resource ${ResourceName}");
-                    ELSVehicle.RemoveAll(veh => veh.resource == ResourceName);
+                    ELSVehicle.RemoveAll(veh => veh.modelHash == hash);
                 }
                 ELSVehicle.Add(data);
                 CitizenFX.Core.Debug.WriteLine($"Added {data.filename}");
             }
         }
-        internal static void unload(string ResourceName)
+        internal static void unload(string hash)
         {
-            var count = ELSVehicle.RemoveAll(veh => veh.resource.Equals(ResourceName));
-            CitizenFX.Core.Debug.WriteLine($"Unloaded {count} VCF for {ResourceName}");
+            var count = ELSVehicle.RemoveAll(veh => veh.modelHash.Equals(hash));
+            CitizenFX.Core.Debug.WriteLine($"Unloaded {count} VCF for {hash}");
         }
 
         internal static bool isValidData(string data)

@@ -22,13 +22,25 @@ $(function () {
         } else if (event.data.type == "setpatternnumber") {
             switch (event.data.lighttype) {
                 case "PRML":
-                    $("#togPri").bootstrapSwitch("labelText", event.data.pattern);
+                    $("#togPri").bootstrapSwitch("labelWidth", 40).bootstrapSwitch("labelText", event.data.pattern);
                     break;
                 case "SECL":
-                    $("#togSec").bootstrapSwitch("labelText", event.data.pattern);
+                    $("#togSec").bootstrapSwitch("labelWidth", 40).bootstrapSwitch("labelText", event.data.pattern);
                     break;
                 case "WRNL":
-                    $("#togWrn").bootstrapSwitch("labelText", event.data.pattern);
+                    $("#togWrn").bootstrapSwitch("labelWidth", 40).bootstrapSwitch("labelText", event.data.pattern);
+                    break;
+            }
+        } else if (event.data.type == "togglestate") {
+            switch (event.data.which) {
+                case "PRML":
+                    $("#togPri").prop("checked", event.data.state);
+                    break;
+                case "SECL":
+                    $("#togSec").prop("checked", event.data.state);
+                    break;
+                case "WRNL":
+                    $("#togWrn").prop("checked", event.data.state);
                     break;
             }
         }
@@ -53,11 +65,11 @@ $(document).ready(function () {
     });
     $("#togPri").on("switchChange.bootstrapSwitch", function (event, state) {
         if (state) {
-            $("#togPri").bootstrapSwitch("labelText", "0000");
-            $.post("http://els-fivem/togglePrimary", JSON.stringify({ state: state }));
+            //$("#togPri").bootstrapSwitch("labelText", "0000");
+            //$.post("http://els-fivem/togglePrimary", JSON.stringify({ state: state }));
         } else {
-            $("#togPri").bootstrapSwitch("labelText", "0001");
-            $.post("http://els-fivem/togglePrimary", JSON.stringify({ state: state }));
+            //$("#togPri").bootstrapSwitch("labelText", "0001");
+            //$.post("http://els-fivem/togglePrimary", JSON.stringify({ state: state }));
         }
     });
     $("#togSec").bootstrapSwitch({

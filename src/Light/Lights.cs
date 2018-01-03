@@ -44,7 +44,7 @@ namespace ELS.Light
         internal Extra.Extra SCL;
         internal Extra.Extra TDL;
     }
-    internal class Lights : IManagerEntry
+    partial class Lights : IManagerEntry
     {
         private Extras _extras = new Extras
         {
@@ -217,44 +217,52 @@ namespace ELS.Light
                if (enabled)
                 {
                     enabled = false;
+                    ElsUiPanel.ToggleUiBtnState(false, "PRML");
                 }
                 else
                 {
                     enabled = true;
+                    ElsUiPanel.ToggleUiBtnState(true, "PRML");
                 }
             }
         }
 
-        internal object GetData()
-        {
-            return null;
-            //throw new NotImplementedException();
-        }
 
-        internal void SetData(IDictionary<string, object> dictionary)
-        {
-            //throw new NotImplementedException();
-        }
+        
 
         int[] prmPatt = { 2, 3 };
         int[] secPatt = { 3, 2 };
         internal async void StartPatterns()
         {
-            foreach(Extra.Extra ex in _extras.PRML.Values)
+            if (enabled)
+            {
+                if (prmPatt[0] > 18)
+                {
+                    prmPatt[0] = 2;
+                    prmPatt[1] = 3;
+                }
+                else
+                {
+                    prmPatt[0]++;
+                    prmPatt[1]++;
+                }
+                if (secPatt[0] > 18)
+                {
+                    secPatt[0] = 3;
+                    secPatt[1] = 2;
+                }
+                else
+                {
+                    secPatt[0]++;
+                    secPatt[1]++;
+                }
+            }
+            
+            foreach (Extra.Extra ex in _extras.PRML.Values)
             {
                 if (ex.IsPatternRunning)
                 {
                     ex.IsPatternRunning = false;
-                    if (prmPatt[0] > 18)
-                    {
-                        prmPatt[0] = 2;
-                        prmPatt[1] = 3;
-                    }
-                    else
-                    {
-                        prmPatt[0]++;
-                        prmPatt[1]++;
-                    }
                 }
                 else
                 {
@@ -275,16 +283,7 @@ namespace ELS.Light
                 if (ex.IsPatternRunning)
                 {
                     ex.IsPatternRunning = false;
-                    if (secPatt[0] > 18)
-                    {
-                        secPatt[0] = 3;
-                        secPatt[1] = 2;
-                    }
-                    else
-                    {
-                        secPatt[0]++;
-                        secPatt[1]++;
-                    }
+                    
                 }
                 else
                 {

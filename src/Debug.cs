@@ -20,7 +20,7 @@ namespace ELS
         {
             if (!Game.PlayerPed.IsInVehicle())
             {
-                var polModel = new Model((VehicleHash)Game.GenerateHash("policegt350r"));
+                var polModel = new Model((VehicleHash)Game.GenerateHash("hwaycar11"));
                 await polModel.Request(-1);
                 Vehicle veh = await World.CreateVehicle(polModel, Game.PlayerPed.Position);
                 polModel.MarkAsNoLongerNeeded();
@@ -28,9 +28,9 @@ namespace ELS
                 Screen.ShowNotification($"network status {Function.Call<bool>(Hash.NETWORK_GET_ENTITY_IS_NETWORKED, veh)}");
                 veh.SetExistOnAllMachines(true);
                 await CitizenFX.Core.BaseScript.Delay(10000);
-                CitizenFX.Core.Debug.WriteLine($"vehtonet{API.VehToNet(veh.Handle)} getnetworkidfromentity{API.NetworkGetNetworkIdFromEntity(veh.Handle)}");
-                CitizenFX.Core.Debug.WriteLine($"ModelName {veh.Model}" +
-                    $"DisplayName {veh.DisplayName}");
+                CitizenFX.Core.Debug.WriteLine($"vehtonet: {API.VehToNet(veh.Handle)} getnetworkidfromentity: {API.NetworkGetNetworkIdFromEntity(veh.Handle)}");
+                CitizenFX.Core.Debug.WriteLine($"ModelName: {veh.Model} DisplayName: {veh.DisplayName}");
+                CitizenFX.Core.Debug.WriteLine($"Is this ELS Vehicle {veh.IsEls()}");
                 if (veh == null)
                 {
                     CitizenFX.Core.Debug.WriteLine("failure to spawn");
@@ -40,7 +40,10 @@ namespace ELS
             else //if (Game.PlayerPed.CurrentVehicle.IsEls())
             {
                 var veh = Game.PlayerPed.CurrentVehicle;
-                
+                foreach (VCFEntry V in VCF.ELSVehicle)
+                {
+                    CitizenFX.Core.Debug.WriteLine($"Vehicle: {V.modelHash} as {V.filename} from {V.resource}");
+                }
             }
             // Game.Player.Character.SetIntoVehicle(veh, VehicleSeat.Any);
         }
