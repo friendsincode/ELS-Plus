@@ -20,7 +20,7 @@ namespace ELS
         {
             if (!Game.PlayerPed.IsInVehicle())
             {
-                var polModel = new Model((VehicleHash)Game.GenerateHash("policegt350r"));
+                var polModel = new Model((VehicleHash)Game.GenerateHash("sadot"));
                 await polModel.Request(-1);
                 Vehicle veh = await World.CreateVehicle(polModel, Game.PlayerPed.Position);
                 polModel.MarkAsNoLongerNeeded();
@@ -39,11 +39,9 @@ namespace ELS
             }
             else //if (Game.PlayerPed.CurrentVehicle.IsEls())
             {
-                var veh = Game.PlayerPed.CurrentVehicle;
-                foreach (VCFEntry V in VCF.ELSVehicle)
-                {
-                    CitizenFX.Core.Debug.WriteLine($"Vehicle: {V.modelHash} as {V.filename} from {V.resource}");
-                }
+                Vehicle veh = Game.PlayerPed.CurrentVehicle;
+                veh.RadioStation = RadioStation.RadioOff;
+                API.SetVehicleDoorOpen(veh.Handle,4, false, false);
             }
             // Game.Player.Character.SetIntoVehicle(veh, VehicleSeat.Any);
         }

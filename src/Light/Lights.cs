@@ -26,6 +26,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ELS.Light
 {
@@ -43,6 +44,8 @@ namespace ELS.Light
         internal Extra.Extra SBRN;
         internal Extra.Extra SCL;
         internal Extra.Extra TDL;
+        internal Board.ArrowBoard BRD;
+        
     }
     partial class Lights : IManagerEntry
     {
@@ -184,6 +187,25 @@ namespace ELS.Light
                 //11 scl scene lights
                 //12 takedown
             }
+            switch(_vcfroot.MISC.ArrowboardType)
+            {
+                case "bonnet":
+                    this._extras.BRD = new Board.ArrowBoard(_vehicle, _vcfroot.MISC);
+                    break;
+                case "boot":
+                    this._extras.BRD = new Board.ArrowBoard(_vehicle, _vcfroot.MISC);
+                    break;
+                case "boot2":
+                    this._extras.BRD = new Board.ArrowBoard(_vehicle, _vcfroot.MISC);
+                    break;
+                case "boots":
+                    this._extras.BRD = new Board.ArrowBoard(_vehicle, _vcfroot.MISC);
+                    break;
+                case "off":
+                    break;
+                default:
+                    break;
+            }
         }
 
 
@@ -206,7 +228,7 @@ namespace ELS.Light
 
         public void Ticker()
         {
-
+            ControlsTicker();
             if (Game.IsControlJustPressed(0, ControlConfiguration.KeyBindings.Sound_Ahorn))
             {
                 
@@ -217,12 +239,12 @@ namespace ELS.Light
                if (enabled)
                 {
                     enabled = false;
-                    ElsUiPanel.ToggleUiBtnState(false, "PRML");
+                   // ElsUiPanel.ToggleUiBtnState(false, "PRML");
                 }
                 else
                 {
                     enabled = true;
-                    ElsUiPanel.ToggleUiBtnState(true, "PRML");
+                    //ElsUiPanel.ToggleUiBtnState(true, "PRML");
                 }
             }
         }
@@ -233,31 +255,8 @@ namespace ELS.Light
         int[] prmPatt = { 2, 3 };
         int[] secPatt = { 3, 2 };
         internal async void StartPatterns()
-        {
-            if (enabled)
-            {
-                if (prmPatt[0] > 18)
-                {
-                    prmPatt[0] = 2;
-                    prmPatt[1] = 3;
-                }
-                else
-                {
-                    prmPatt[0]++;
-                    prmPatt[1]++;
-                }
-                if (secPatt[0] > 18)
-                {
-                    secPatt[0] = 3;
-                    secPatt[1] = 2;
-                }
-                else
-                {
-                    secPatt[0]++;
-                    secPatt[1]++;
-                }
-            }
-            
+        {            
+
             foreach (Extra.Extra ex in _extras.PRML.Values)
             {
                 if (ex.IsPatternRunning)
@@ -270,35 +269,15 @@ namespace ELS.Light
                     ElsUiPanel.SetUiPatternNumber(prmPatt[0], "PRML");
                     if (ex.Id > 2)
                     {
-                        ex.RunPattern(LightPattern.StringPatterns[prmPatt[1]], 50);
+                        ex.RunPattern(LightPattern.StringPatterns[prmPatt[1]]);
                     }
                     else
                     {
-                        ex.RunPattern(LightPattern.StringPatterns[prmPatt[0]], 50);
+                        ex.RunPattern(LightPattern.StringPatterns[prmPatt[0]]);
                     }
                 }
             }
-            foreach (Extra.Extra ex in _extras.SECL.Values)
-            {
-                if (ex.IsPatternRunning)
-                {
-                    ex.IsPatternRunning = false;
-                    
-                }
-                else
-                {
-                    ex.IsPatternRunning = true;
-                    ElsUiPanel.SetUiPatternNumber(prmPatt[0], "SECL");
-                    if (ex.Id == 5)
-                    {
-                        ex.RunPattern(LightPattern.StringPatterns[secPatt[1]], 65);
-                    }
-                    else
-                    {
-                        ex.RunPattern(LightPattern.StringPatterns[secPatt[0]], 65);
-                    }
-                }
-            }
+            
         }
     }
 }

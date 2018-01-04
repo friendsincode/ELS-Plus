@@ -102,6 +102,7 @@ namespace ELS
         {
             return _vehicle.Bones["door_dside_f"].Position;
         }
+
         public override bool Exists()
         {
             return CitizenFX.Core.Native.Function.Call<bool>(CitizenFX.Core.Native.Hash.DOES_ENTITY_EXIST, _vehicle);

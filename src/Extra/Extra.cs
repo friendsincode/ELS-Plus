@@ -10,6 +10,7 @@ using ELS.NUI;
 
 namespace ELS.Extra
 {
+
     internal class Extra
     {
 
@@ -19,6 +20,8 @@ namespace ELS.Extra
         configuration.Extra _extraInfo;
         private bool _state;
         private bool _pattRunning;
+        string _pattern;
+
         internal int Id
         {
             get
@@ -35,6 +38,9 @@ namespace ELS.Extra
             }
 
         }
+
+        
+        internal int Delay { get; set; }
         internal bool state
         {
             private set
@@ -60,11 +66,19 @@ namespace ELS.Extra
             _vehicle = entity;
             _Id = id;
             _extraInfo = ex;
+            Delay = 50;
             if (!API.DoesExtraExist(entity.Handle, id))
             {
                 CitizenFX.Core.Debug.WriteLine($"Extra id: {id} does not exsist");
             }
             SetFalse();
+            if (_Id == 7 || _Id == 8 || _Id == 9)
+            {
+                Delay = 100;
+            }
+#if DEBUG
+            CitizenFX.Core.Debug.WriteLine($"Registered extra_{_Id} successfully");    
+#endif
         }
         internal void SetState(bool state)
         {
@@ -81,7 +95,7 @@ namespace ELS.Extra
 
         }
 
-        internal async void RunPattern(string patt, int delay)
+        internal async void RunPattern(string patt)
         {
             while (IsPatternRunning)
             {
@@ -101,7 +115,7 @@ namespace ELS.Extra
                         ElsUiPanel.SendLightData(true, $"#extra{_Id}", _extraInfo.Color);
                         SetTrue();
                     }
-                    await ELS.Delay(delay);
+                    await ELS.Delay(Delay);
                 }
             }
             CleanUp();
