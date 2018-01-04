@@ -13,11 +13,11 @@ namespace ELS.NUI
 {
     internal static class ElsUiPanel
     {
-        public static int _enabled { get; set; }
-        public static bool _runPattern { get; set; }
+        internal static int _enabled { get; set; }
+        internal static bool _runPattern { get; set; }
 
         //Enable full ui control and cursor
-        public static void EnableUI()
+        internal static void EnableUI()
         {
             CitizenFX.Core.Debug.WriteLine("Enabling UI");
             API.SendNuiMessage("{\"type\":\"enableui\", \"enable\":true}");
@@ -27,7 +27,7 @@ namespace ELS.NUI
 
 
         //Disable the UI and cursor
-        public static void DisableUI()
+        internal static void DisableUI()
         {
             CitizenFX.Core.Debug.WriteLine("Disabling Ui");
             API.SendNuiMessage("{\"type\":\"enableui\", \"enable\":false}");
@@ -37,7 +37,7 @@ namespace ELS.NUI
 
 
         //Show only the UI without focus and cursor
-        public static void ShowUI()
+        internal static void ShowUI()
         {
             CitizenFX.Core.Debug.WriteLine("Showing Ui");
             API.SendNuiMessage("{\"type\":\"enableui\", \"enable\":true}");
@@ -51,7 +51,7 @@ namespace ELS.NUI
         /// <param name="state">True or false if light is on</param>
         /// <param name="light">Corresponding light on NUI display</param>
         /// <param name="color">Color of light</param>
-        public static void SendLightData(bool state, string light, string color)
+        internal static void SendLightData(bool state, string light, string color)
         {
             //CitizenFX.Core.Debug.WriteLine("Sending Light Data");
             API.SendNuiMessage("{\"type\":\"lightControl\", \"state\":" + state.ToString().ToLower() + ", \"light\": \"" + light + "\", \"color\":\"" + color + "\" }");
@@ -64,7 +64,7 @@ namespace ELS.NUI
         /// <param name="light">Corresponding light on NUI display</param>
         /// <param name="color">Color of light</param>
         /// <returns></returns>        
-        public static async Task RunNuiLightPattern(uint patt, string light, string color)
+        internal static async Task RunNuiLightPattern(uint patt, string light, string color)
         {
             string patt2 = Convert.ToString(patt, 2);
             char[] binary = patt2.ToCharArray();
@@ -93,7 +93,7 @@ namespace ELS.NUI
         /// <param name="light">Corresponding light on NUI Display</param>
         /// <param name="color">Color of light</param>
         /// <returns></returns>
-        public static async Task RunNuiLightPattern(string patt, string light, string color)
+        internal static async Task RunNuiLightPattern(string patt, string light, string color)
         {
             //string patt2 = Convert.ToString(patt, 2);
             char[] binary = patt.ToCharArray();
@@ -115,12 +115,12 @@ namespace ELS.NUI
             } while (_runPattern);
         }
 
-        public static void SetUiPatternNumber(int patt, string lighttype)
+        internal static void SetUiPatternNumber(int patt, string lighttype)
         {
             API.SendNuiMessage($"{{\"type\":\"setpatternnumber\", \"lighttype\":\"{lighttype}\", \"pattern\":\"{patt.ToString().PadLeft(4,'0')}\" }}");
         }
 
-        public static void ToggleUiBtnState(bool state, string which)
+        internal static void ToggleUiBtnState(bool state, string which)
         {
             CitizenFX.Core.Debug.WriteLine($"Setting {which} to {state}");
             API.SendNuiMessage($"{{\"type\":\"togglestate\", \"which\":\"{which}\", \"state\":{state.ToString().ToLower()} }}");
@@ -132,13 +132,13 @@ namespace ELS.NUI
             _runPattern = false;
         }
 
-        public static CallbackDelegate EscapeUI(IDictionary<string,Object> data, CallbackDelegate cb)
+        internal static CallbackDelegate EscapeUI(IDictionary<string,Object> data, CallbackDelegate cb)
         {
             CitizenFX.Core.Debug.WriteLine("Escape Executed");
             return cb;
         }
 
-        public static CallbackDelegate TooglePrimary(IDictionary<string,Object> data, CallbackDelegate cb)
+        internal static CallbackDelegate TooglePrimary(IDictionary<string,Object> data, CallbackDelegate cb)
         {
             CitizenFX.Core.Debug.WriteLine("Toggle Primary Executed");
             return cb;

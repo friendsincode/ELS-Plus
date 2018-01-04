@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ELS.configuration
 {
@@ -70,6 +71,14 @@ namespace ELS.configuration
                 t = u["CONTROL"]["Snd_SrnPnic"].IntValue;
                 KeyBindings.Snd_SrnPnic = (Control)t;
 
+                t = u["CONTROL"]["Toggle_SECL"].IntValue;
+                KeyBindings.ToggleSecL = (Control)t;
+
+                t = u["CONTROL"]["Toggle_WRNL"].IntValue;
+                KeyBindings.ToggleWrnL = (Control)t;
+
+
+
                 ControlsUpdated?.Invoke(KeyBindings);
 
             }
@@ -86,11 +95,19 @@ namespace ELS.configuration
             internal Control Sound_Manul { get; set; }
             internal Control Toggle_DSRN { get; set; }
             internal Control TogInfoPanl { get; set; }
+            internal Control ToggleBoard { get; set; }
+            internal Control ToggleSecL { get; set; }
+            internal Control ToggleWrnL { get; set; }
+           // internal  ChgPattPrmL { get; set; }
+            internal Control ChgPattSecL { get; set; }
+            internal Control ChgPattWrnL { get; set; }
         }
 
         internal static bool isValidData(string data)
         {
             return SharpConfig.Configuration.LoadFromString(data).Contains("CONTROL", "Toggle_WRNL");
         }
+
+        
     }
 }

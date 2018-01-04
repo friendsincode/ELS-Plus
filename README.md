@@ -1,4 +1,4 @@
-# DISCLAIMER  
+# DISCLAIMER
 This project is in early development stages. You should expect bugs and/or issues. To effectively combat these issues we ask that you submit issues to the Issues board in this repository. See: https://github.com/FiveM-Scripts/ELS-FiveM/issues to submit an issue. It is important that if you test ELS for FiveM that you submit issues so that we may work to resolve these. Here's some things to consider:
 
 - ELS vehicles are not yet supported.
@@ -19,7 +19,9 @@ This project is in early development stages. You should expect bugs and/or issue
 |Select Special Weapon | 5 Key | Toggles Dual Siren Mode|
 |Chat All| T Key|Goes to next tone or plays tone 1|
 |Throw Grenade| G Key|Toggles main siren|
-|Vehicle Horn | E Key | Toggles vehicle's emergency lights|
+|Vehicle Horn | E Key | Toggles vehicle's primary lights (will change)|
+|Replay Show Hot Key | K Key | Toggles vehicle's secondary lights|
+|Cinematic Slo Mo | L Key | Toggles vehicle's warning lights|
 
 ### How to install
 1. Copy the `ELS-FiveM` folder to `cfx-server\resources\`
@@ -34,12 +36,12 @@ This project is in early development stages. You should expect bugs and/or issue
 
 #### Important Notes
 
-- When running the rcon command `restart ELS-FiveM` or `start ELS-FiveM`.  
+- When running the rcon command `restart ELS-FiveM` or `start ELS-FiveM`.
 Make sure you restart any resources that have ELS vehicles.
 - Make sure ELS-FiveM is located below all ELS enabled vehicle stream resources in the `server.cfg` file.
 
 ## Contribute
-if you are a developer and  would like to contribute any help is welcome!   
+if you are a developer and  would like to contribute any help is welcome!
 The contribution guide can be found [here](CONTRIBUTING.md).
 
 ### How to Build and Test
