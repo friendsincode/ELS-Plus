@@ -158,10 +158,10 @@ namespace ELS.configuration
                 #endregion
                 #region MISC
                 CitizenFX.Core.Debug.WriteLine("Parsing Misc");
-                data.root.MISC.VehicleIsSlicktop = doc["vcfroot"]["MISC"]["VehicleIsSlicktop"].Value;
-                data.root.MISC.ArrowboardType = doc["vcfroot"]["MISC"]["ArrowboardType"].Value;
-                data.root.MISC.UseSteadyBurnLights = doc["vcfroot"]["MISC"]["UseSteadyBurnLights"].Value;
-                data.root.MISC.DfltSirenLtsActivateAtLstg = doc["vcfroot"]["MISC"]["DfltSirenLtsActivateAtLstg"].Value;
+                data.root.MISC.VehicleIsSlicktop = doc["vcfroot"]["MISC"]["VehicleIsSlicktop"].InnerText;
+                data.root.MISC.ArrowboardType = doc["vcfroot"]["MISC"]["ArrowboardType"].InnerText;
+                data.root.MISC.UseSteadyBurnLights = doc["vcfroot"]["MISC"]["UseSteadyBurnLights"].InnerText;
+                data.root.MISC.DfltSirenLtsActivateAtLstg = doc["vcfroot"]["MISC"]["DfltSirenLtsActivateAtLstg"].InnerText;
                 data.root.MISC.Takedowns.AllowUse = doc["vcfroot"]["MISC"]["Takedowns"].Attributes["AllowUse"].Value;
                 data.root.MISC.Takedowns.Mirrored = doc["vcfroot"]["MISC"]["Takedowns"].Attributes["Mirrored"].Value;
                 data.root.MISC.SceneLights.AllowUse = doc["vcfroot"]["MISC"]["SceneLights"].Attributes["AllowUse"].Value;

@@ -37,7 +37,15 @@ namespace ELS
             ManualTone4,
             ManualSound,
             DualSiren,
-            PanicAlarm
+            PanicAlarm,
+            ToggleWrnL,
+            ToggleSecL,
+            ToggleCrsL,
+            ToggleTDL,
+            ToggleSCL,
+            ChangePrmPatt,
+            ChangeSecPatt,
+            ChangeWrnPatt
         }
         internal enum MessageTypes
         {

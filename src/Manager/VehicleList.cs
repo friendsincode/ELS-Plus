@@ -27,9 +27,15 @@ namespace ELS.Manager
         }
         public void RunExternalTick()
         {
+            try { 
             foreach(var t in this)
             {
                 t.RunExternalTick();
+            }
+            }
+            catch (Exception e)
+            {
+                CitizenFX.Core.Debug.WriteLine($"VehicleList Error: {e.Message}");
             }
         }
         public bool MakeSureItExists(int NetworkID, [Optional]out ELSVehicle vehicle)
@@ -52,6 +58,9 @@ namespace ELS.Manager
                 }
                 catch (Exception ex)
                 {
+#if DEBUG 
+                    CitizenFX.Core.Debug.Write($"Exsits Error: {ex.Message}");
+#endif
                     vehicle = null;
                     return false;
                     throw ex;
@@ -84,6 +93,9 @@ namespace ELS.Manager
                 }
                 catch (Exception ex)
                 {
+#if DEBUG
+                    CitizenFX.Core.Debug.Write($"Exsits Error With Data: {ex.Message}");
+#endif
                     vehicle = null;
                     return false;
                     throw ex;

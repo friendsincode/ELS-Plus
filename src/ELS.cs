@@ -130,8 +130,12 @@ namespace ELS
             {
                 TriggerServerEvent("ELS:VcfSync:Server", Game.Player.ServerId);
             }), false);
+
+            API.RegisterCommand("elslist", new Action<int, List<object>, string>((source,args,raw) => {
+                
+            }),false);
 #if DEBUG
-            API.RegisterCommand("car", new Action<int, List<object>, string>((source, arguments, raw) =>
+            API.RegisterCommand("car", new Action<int, List<object>, string>(async (source, arguments, raw) =>
             {
                 if (Game.PlayerPed.IsInVehicle())
                 {
@@ -139,8 +143,8 @@ namespace ELS
                 }
                 CitizenFX.Core.Debug.WriteLine($"Attempting to spawn: {arguments[0]}");
                 var polModel = new Model((VehicleHash)Game.GenerateHash(arguments[0].ToString()));
-                polModel.Request(-1);
-                World.CreateVehicle(polModel, Game.PlayerPed.Position);
+                await polModel.Request(-1);
+                await World.CreateVehicle(polModel, Game.PlayerPed.Position);
             }), false);
 #endif
         }
@@ -182,7 +186,7 @@ namespace ELS
                     await Debug.Spawn();
                 }
 
-                if (Game.PlayerPed.CurrentVehicle.IsEls())
+                if (Game.PlayerPed.IsInVehicle() && Game.PlayerPed.CurrentVehicle.IsEls())
                 {
                     Game.DisableControlThisFrame(0, Control.FrontendPause);
                     if (Game.IsControlPressed(0, Control.VehicleMoveUpDown) && Game.IsDisabledControlJustReleased(0, Control.FrontendPause))

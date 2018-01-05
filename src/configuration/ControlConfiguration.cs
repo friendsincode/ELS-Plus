@@ -77,6 +77,17 @@ namespace ELS.configuration
                 t = u["CONTROL"]["Toggle_WRNL"].IntValue;
                 KeyBindings.ToggleWrnL = (Control)t;
 
+                t = u["CONTROL"]["Toggle_CRSL"].IntValue;
+                KeyBindings.ToggleCrsL = (Control)t;
+
+                t = u["CONTROL"]["ChgPat_PRML"].IntValue;
+                KeyBindings.ChgPattPrmL = (Control)t;
+
+                t = u["CONTROL"]["ChgPat_SECL"].IntValue;
+                KeyBindings.ChgPattSecL = (Control)t;
+
+                t = u["CONTROL"]["ChgPat_WRNL"].IntValue;
+                KeyBindings.ChgPattWrnL = (Control)t;
 
 
                 ControlsUpdated?.Invoke(KeyBindings);
@@ -98,7 +109,8 @@ namespace ELS.configuration
             internal Control ToggleBoard { get; set; }
             internal Control ToggleSecL { get; set; }
             internal Control ToggleWrnL { get; set; }
-           // internal  ChgPattPrmL { get; set; }
+            internal Control ToggleCrsL { get; set; }
+            internal Control ChgPattPrmL { get; set; }
             internal Control ChgPattSecL { get; set; }
             internal Control ChgPattWrnL { get; set; }
         }
