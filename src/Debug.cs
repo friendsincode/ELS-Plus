@@ -41,7 +41,6 @@ namespace ELS
             {
                 Vehicle veh = Game.PlayerPed.CurrentVehicle;
                 veh.RadioStation = RadioStation.RadioOff;
-                API.SetVehicleDoorOpen(veh.Handle,4, false, false);
             }
             // Game.Player.Character.SetIntoVehicle(veh, VehicleSeat.Any);
         }

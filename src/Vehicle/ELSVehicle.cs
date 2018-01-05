@@ -12,7 +12,6 @@ namespace ELS
         private Light.Lights _light;
         private Vehicle _vehicle;
         private Vcfroot _vcf;
-        private Light.LightPatternSettings _lightPatternSettings;
         public ELSVehicle(int handle) : base(handle)
         {
             _vehicle = new Vehicle(handle);
@@ -117,6 +116,12 @@ namespace ELS
         {
             _siren.SirenControlsRemote(command, state);
         }
+
+        internal void UpdateRemoteLights()
+        {
+            _light.LightsControlsRemote();
+        }
+
         internal int GetNetworkId()
         {
             return _vehicle.GetNetworkId();

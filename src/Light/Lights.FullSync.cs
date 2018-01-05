@@ -11,12 +11,24 @@ namespace ELS.Light
     {
         public Dictionary<string, object> GetData()
         {
-            throw new NotImplementedException();
+
+            var dic = new Dictionary<string, object>
+            {
+                {"_extras", _extras }
+            };
+            return dic;
         }
 
         public void SetData(IDictionary<string, object> data)
         {
-            throw new NotImplementedException();
+            if (data.ContainsKey("_extras"))
+            {
+               // SetExtrasData();
+            }
+            else if (data.TryGetValue("_enabled", out object res))
+            {
+              //  _enabled = (bool)res
+            }
         }
     }
 }

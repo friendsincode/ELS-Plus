@@ -20,45 +20,52 @@ namespace ELS.Manager
 
         internal async void RunTickAsync()
         {
-            //ELSVehicle _currentVehicle;
-            if (Game.PlayerPed.IsSittingInELSVehicle() &&
-                    (Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed
-                    || Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Passenger) == Game.PlayerPed))
+            try
             {
-                if (!API.IsEntityAMissionEntity(Game.PlayerPed.CurrentVehicle.Handle))
+                //ELSVehicle _currentVehicle;
+                if (Game.PlayerPed.IsSittingInELSVehicle() &&
+                        (Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed
+                        || Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Passenger) == Game.PlayerPed))
                 {
-                    CitizenFX.Core.Debug.WriteLine("Not a mission entity");
-                }
-                if (!API.NetworkGetEntityIsNetworked(Game.PlayerPed.CurrentVehicle.Handle))
-                {
-                    API.NetworkRegisterEntityAsNetworked(Game.PlayerPed.CurrentVehicle.Handle);
-                }
-                Game.PlayerPed.CurrentVehicle.SetExistOnAllMachines(true);
-                if (vehicleList.MakeSureItExists(API.VehToNet(Game.PlayerPed.CurrentVehicle.Handle),vehicle: out ELSVehicle _currentVehicle )) {
-                    _currentVehicle?.RunTick();
-                }
-                else
-                {
-                    //var pos = Game.PlayerPed.CurrentVehicle.Position;
-                    //var rot = Game.PlayerPed.CurrentVehicle.Rotation;
-                    //var model = Game.PlayerPed.CurrentVehicle.Model;
-                    Game.PlayerPed.CurrentVehicle.Delete();
-                    //var veh = await World.CreateVehicle(model, pos, rot.Z);
-                    //Game.PlayerPed.SetIntoVehicle(veh,VehicleSeat.Driver);
-                }
+                    if (!API.IsEntityAMissionEntity(Game.PlayerPed.CurrentVehicle.Handle))
+                    {
+                        CitizenFX.Core.Debug.WriteLine("Not a mission entity");
+                    }
+                    if (!API.NetworkGetEntityIsNetworked(Game.PlayerPed.CurrentVehicle.Handle))
+                    {
+                        API.NetworkRegisterEntityAsNetworked(Game.PlayerPed.CurrentVehicle.Handle);
+                    }
+                    Game.PlayerPed.CurrentVehicle.SetExistOnAllMachines(true);
+                    if (vehicleList.MakeSureItExists(API.VehToNet(Game.PlayerPed.CurrentVehicle.Handle), vehicle: out ELSVehicle _currentVehicle))
+                    {
+                        _currentVehicle?.RunTick();
+                    }
+                    else
+                    {
+                        //var pos = Game.PlayerPed.CurrentVehicle.Position;
+                        //var rot = Game.PlayerPed.CurrentVehicle.Rotation;
+                        //var model = Game.PlayerPed.CurrentVehicle.Model;
+                        Game.PlayerPed.CurrentVehicle.Delete();
+                        //var veh = await World.CreateVehicle(model, pos, rot.Z);
+                        //Game.PlayerPed.SetIntoVehicle(veh,VehicleSeat.Driver);
+                    }
 #if DEBUG
-                if (Game.IsControlJustPressed(0, Control.Cover))
-                {
-                    FullSync.FullSyncManager.SendDataBroadcast(
-                        _currentVehicle.GetData()
-                    );
-                    CitizenFX.Core.UI.Screen.ShowNotification("FullSync™ ran");
-                    CitizenFX.Core.Debug.WriteLine("FullSync™ ran");
-                }
+                    if (Game.IsControlJustPressed(0, Control.Cover))
+                    {
+                        FullSync.FullSyncManager.SendDataBroadcast(
+                            _currentVehicle.GetData()
+                        );
+                        CitizenFX.Core.UI.Screen.ShowNotification("FullSync™ ran");
+                        CitizenFX.Core.Debug.WriteLine("FullSync™ ran");
+                    }
 #endif
+                }
+                vehicleList.RunExternalTick();
+                Debug.DebugText();
+            } catch (Exception e)
+            {
+                CitizenFX.Core.Debug.WriteLine($"VehicleManager Error: {e.Message}");
             }
-            vehicleList.RunExternalTick();
-            Debug.DebugText();
 
             //TODO Chnage how I check for the panic alarm
         }

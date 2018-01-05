@@ -14,6 +14,7 @@ namespace ELS.Board
         configuration.MISC _misc;
         string _boardType;
         private bool _hasBoard;
+        int _speed = 2;
         public bool HasBoard
         {
             get
@@ -26,72 +27,84 @@ namespace ELS.Board
             }
         }
 
+        internal bool AnimateBoard
+        {
+            get; set;
+        }
+
+        internal int BoardDoorIndex
+        {
+            get; set;
+        }
+
+        internal bool BoardRaised
+        {
+            get; set;
+        }
+
         internal ArrowBoard(Entity entity, configuration.MISC misc)
         {
             _vehicle = entity;
             _misc = misc;
             _boardType = _misc.ArrowboardType.ToLower();
+            AnimateBoard = false;
+            BoardRaised = false;
             switch (_boardType)
             {
                 case "bonnet":
+                    BoardDoorIndex = 4;
                     HasBoard = true;
                     break;
                 case "boot":
+                    BoardDoorIndex = 5;
                     HasBoard = true;
                     break;
                 case "boot2":
+                    BoardDoorIndex = 6;
                     HasBoard = true;
                     break;
                 case "boots":
+                    BoardDoorIndex = 5;
                     HasBoard = true;
                     break;
                 case "off":
+                    BoardDoorIndex = -1;
                     HasBoard = false;
                     break;
                 default:
                     HasBoard = false;
                     break;
             }
+            CitizenFX.Core.Debug.WriteLine($"Added ArrowBoard of {_boardType}");
         }
 
         
 
         internal void RaiseBoard()
         {
-            if (HasBoard)
+            if (BoardRaised)
             {
-                Vehicle vehicle = (Vehicle)_vehicle;
-                foreach (VehicleDoor door in vehicle.Doors)
+                return;
+            }
+            var _angle = API.GetVehicleDoorAngleRatio(_vehicle.Handle, BoardDoorIndex);
+            if (!API.IsVehicleDoorFullyOpen(_vehicle.Handle,BoardDoorIndex))
+            {
+                API.SetVehicleDoorControl(_vehicle.Handle, BoardDoorIndex, _speed, _angle);
+                if (_boardType.Equals("boots"))
                 {
-                    if (door.Index.Equals(_boardType))
-                    {
-                        door.Close();
-                    }
+                    API.SetVehicleDoorControl(_vehicle.Handle, 6, _speed, _angle);
                 }
             }
-            else
+            if (API.IsVehicleDoorFullyOpen(_vehicle.Handle, BoardDoorIndex))
             {
-                CitizenFX.Core.Debug.WriteLine("Vehicle does not have an arrowboard");
+                BoardRaised = true;
             }
+            
         }
 
         internal void LowerBoard()
         {
-            if (HasBoard)
-            {
-                Vehicle vehicle = (Vehicle)_vehicle;
-                foreach(VehicleDoor door in vehicle.Doors)
-                {
-                    if(door.Index.Equals(_boardType))
-                    {
-                        door.Close();
-                    }
-                }
-            }
-            else
-            {
-                CitizenFX.Core.Debug.WriteLine("Vehicle does not have an arrowboard");
-            }
+            BoardRaised = false;
         }
     }
 }
