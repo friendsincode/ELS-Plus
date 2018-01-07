@@ -134,8 +134,8 @@ namespace ELS
             API.RegisterCommand("elslist", new Action<int, List<object>, string>((source,args,raw) => {
                 
             }),false);
-#if DEBUG
-            API.RegisterCommand("car", new Action<int, List<object>, string>(async (source, arguments, raw) =>
+
+            API.RegisterCommand("elscar", new Action<int, List<object>, string>(async (source, arguments, raw) =>
             {
                 if (Game.PlayerPed.IsInVehicle())
                 {
@@ -146,7 +146,6 @@ namespace ELS
                 await polModel.Request(-1);
                 await World.CreateVehicle(polModel, Game.PlayerPed.Position);
             }), false);
-#endif
         }
 
         public static string CurrentResourceName()
