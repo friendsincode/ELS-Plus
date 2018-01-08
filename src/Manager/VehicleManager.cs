@@ -31,6 +31,7 @@ namespace ELS.Manager
                     {
                         CitizenFX.Core.Debug.WriteLine("Not a mission entity");
                         API.SetEntityAsMissionEntity(Game.PlayerPed.CurrentVehicle.Handle, true, true);
+                        //possible memory leak.
                         Blip blip = new Blip(API.GetBlipFromEntity(Game.PlayerPed.CurrentVehicle.Handle));
                         API.SetBlipSprite(blip.Handle, 2);
                     }
