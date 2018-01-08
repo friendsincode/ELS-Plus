@@ -132,17 +132,26 @@ namespace ELS
             }), false);
 
             API.RegisterCommand("elslist", new Action<int, List<object>, string>((source,args,raw) => {
-                
+                var listString = "";
+                CitizenFX.Core.Debug.WriteLine($"{source}");
+                listString += $"Available ELS Vehicles\n" +
+                              $"----------------------\n";
+                foreach (var entry in VCF.ELSVehicle)
+                {
+                    listString += $"{System.IO.Path.GetFileNameWithoutExtension(entry.filename)}\n";
+                }
+                CitizenFX.Core.Debug.WriteLine(listString);
             }),false);
 
             API.RegisterCommand("elscar", new Action<int, List<object>, string>(async (source, arguments, raw) =>
             {
+                if (arguments.Count != 1) return;
                 if (Game.PlayerPed.IsInVehicle())
                 {
                     Game.PlayerPed.CurrentVehicle.Delete();
                 }
                 CitizenFX.Core.Debug.WriteLine($"Attempting to spawn: {arguments[0]}");
-                var polModel = new Model((VehicleHash)Game.GenerateHash(arguments[0].ToString()));
+                var polModel = new Model((VehicleHash)Game.GenerateHash((string)arguments[0]));
                 await polModel.Request(-1);
                 await World.CreateVehicle(polModel, Game.PlayerPed.Position);
             }), false);
