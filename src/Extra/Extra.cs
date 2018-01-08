@@ -44,13 +44,13 @@ namespace ELS.Extra
             set
             {
                 _pattern = value;
-                if (IsPatternRunning)
+               /* if (IsPatternRunning)
                 {
                     IsPatternRunning = false;
                     ELS.Delay(50);
                     IsPatternRunning = true;
                     RunPattern();
-                }
+                }*/
             }
         }
 
@@ -77,6 +77,10 @@ namespace ELS.Extra
             set
             {
                 _pattRunning = value;
+                if (!IsPatternRunning)
+                {
+                    SetFalse();
+                }
             }
 
         }
@@ -107,14 +111,12 @@ namespace ELS.Extra
             }
             get
             {
-                return API.IsVehicleExtraTurnedOn(_vehicle.Handle, _Id);
+                return _state;
             }
         }
 
         internal Extra(Entity entity, int id, configuration.Extra ex, bool state = false)
         {
-            
-            _state = state;
             _vehicle = entity;
             _Id = id;
             _extraInfo = ex;
@@ -138,12 +140,41 @@ namespace ELS.Extra
         private void SetTrue()
         {
             API.SetVehicleExtra(_vehicle.Handle, _Id, false);
+            ElsUiPanel.SendLightData(true, $"#extra{_Id}", _extraInfo.Color);
         }
 
         private void SetFalse()
         {
             API.SetVehicleExtra(_vehicle.Handle, _Id, true);
+            ElsUiPanel.SendLightData(false, $"#extra{_Id}", "");
+        }
 
+        int count = 0;
+        internal async void ExtraTicker()
+        {
+            if (IsPatternRunning)
+            {
+                await ELS.Delay(Delay);
+                if (!IsPatternRunning)
+                {
+                    CleanUp();
+                    return;
+                }
+                if (Pattern[count].Equals('0'))
+                {
+                    SetState(false);
+                }
+                else
+                {
+                    SetState(true);
+                    //DrawLight();
+                }
+                count++;
+                if (count > Pattern.Length - 1)
+                {
+                    count = 0;
+                }
+            }
         }
 
         internal async void RunPattern()
@@ -155,16 +186,15 @@ namespace ELS.Extra
                 {
                     if (!IsPatternRunning)
                     {
+                        CleanUp();
                         break;
                     }
                     if (c.Equals('0'))
-                    {
-                        ElsUiPanel.SendLightData(false, $"#extra{_Id}", "");
+                    { 
                         SetFalse();
                     }
                     else
                     {
-                        ElsUiPanel.SendLightData(true, $"#extra{_Id}", _extraInfo.Color);
                         DrawLight();
                         SetTrue();
                     }
@@ -206,48 +236,48 @@ namespace ELS.Extra
             {
                 case 1:
                     LightType = LightType.PRML;
-                    Delay = 50;
+                    Delay = 150;
                     PatternNum = 0;
                     break;
                 case 2:
                     LightType = LightType.PRML;
-                    Delay = 50;
+                    Delay = 150;
                     PatternNum = 0;
                     break;
                 case 3:
                     LightType = LightType.PRML;
-                    Delay = 50;
+                    Delay = 150;
                     PatternNum = 0;
                     break;
                 case 4:
                     LightType = LightType.PRML;
-                    Delay = 50;
+                    Delay = 150;
                     PatternNum = 0;
                     break;
                 case 5:
                     LightType = LightType.SECL;
-                    Delay = 50;
+                    Delay = 150;
                     PatternNum = 0;
                     break;
                 case 6:
                     LightType = LightType.SECL;
-                    Delay = 50;
+                    Delay = 150;
                     PatternNum = 0;
                     break;
                 case 7:
                     LightType = LightType.WRNL;
                     PatternNum = 0;
-                    Delay = 100;
+                    Delay = 200;
                     break;
                 case 8:
                     LightType = LightType.WRNL;
                     PatternNum = 0;
-                    Delay = 100;
+                    Delay = 200;
                     break;
                 case 9:
                     LightType = LightType.WRNL;
                     PatternNum = 0;
-                    Delay = 100;
+                    Delay = 200;
                     break;
                 case 10:
                     LightType = LightType.SBRN;
@@ -289,7 +319,6 @@ namespace ELS.Extra
         internal void CleanUp()
         {
             SetFalse();
-            ElsUiPanel.SendLightData(false, $"#extra{_Id}", "");
         }
     }
 }

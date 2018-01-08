@@ -30,6 +30,9 @@ namespace ELS.Manager
                     if (!API.IsEntityAMissionEntity(Game.PlayerPed.CurrentVehicle.Handle))
                     {
                         CitizenFX.Core.Debug.WriteLine("Not a mission entity");
+                        API.SetEntityAsMissionEntity(Game.PlayerPed.CurrentVehicle.Handle, true, true);
+                        Blip blip = new Blip(API.GetBlipFromEntity(Game.PlayerPed.CurrentVehicle.Handle));
+                        API.SetBlipSprite(blip.Handle, 2);
                     }
                     if (!API.NetworkGetEntityIsNetworked(Game.PlayerPed.CurrentVehicle.Handle))
                     {
@@ -38,6 +41,7 @@ namespace ELS.Manager
                     Game.PlayerPed.CurrentVehicle.SetExistOnAllMachines(true);
                     if (vehicleList.MakeSureItExists(API.VehToNet(Game.PlayerPed.CurrentVehicle.Handle), vehicle: out ELSVehicle _currentVehicle))
                     {
+                        
                         _currentVehicle?.RunTick();
                     }
                     else
@@ -48,6 +52,7 @@ namespace ELS.Manager
                         Game.PlayerPed.CurrentVehicle.Delete();
                         //var veh = await World.CreateVehicle(model, pos, rot.Z);
                         //Game.PlayerPed.SetIntoVehicle(veh,VehicleSeat.Driver);
+                        //vehicleList.Add(new ELSVehicle(Game.PlayerPed.CurrentVehicle.Handle));
                     }
 #if DEBUG
                     if (Game.IsControlJustPressed(0, Control.Cover))
