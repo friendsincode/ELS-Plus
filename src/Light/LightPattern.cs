@@ -58,7 +58,8 @@ namespace ELS.Light
             "1010000010100000",
             "0101000001010000",
             "0000000011111111",
-            Reverse("0000000011111111")
+            Reverse("0000000011111111"),
+            "0000111111110000"
         };
 
         public static string Reverse(string s)

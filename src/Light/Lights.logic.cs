@@ -1,4 +1,5 @@
 ﻿using CitizenFX.Core;
+using CitizenFX.Core.Native;
 using ELS.NUI;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,18 @@ namespace ELS.Light
             {
                 ToggleBrd();
             }
+            foreach(Extra.Extra prim in _extras.PRML.Values)
+            {
+                prim.ExtraTicker();
+            }
+            foreach (Extra.Extra sec in _extras.SECL.Values)
+            {
+                sec.ExtraTicker();
+            }
+            foreach (Extra.Extra wrn in _extras.WRNL.Values)
+            {
+                wrn.ExtraTicker();
+            }
         }
 
         internal void ToggleSecLKB()
@@ -36,16 +49,17 @@ namespace ELS.Light
 
         internal void ToggleSecLights()
         {
+            API.SetVehicleSiren(_vehicle.Handle, !API.IsVehicleSirenOn(_vehicle.Handle));
             foreach (Extra.Extra ex in _extras.SECL.Values)
             {
                 if (ex.IsPatternRunning)
                 {
                     ex.IsPatternRunning = false;
-
+                    ex.CleanUp();
                 }
                 else
                 {
-                    ex.IsPatternRunning = true;
+
                     if (ex.Id == 5)
                     {
                         ex.PatternNum = 4;
@@ -54,6 +68,7 @@ namespace ELS.Light
                     {
                         ex.PatternNum = 5;
                     }
+                    ex.IsPatternRunning = true;
                 }
             }
         }
@@ -75,24 +90,24 @@ namespace ELS.Light
                 if (ex.IsPatternRunning)
                 {
                     ex.IsPatternRunning = false;
-
+                    ex.CleanUp();
                 }
                 else
                 {
-                    ex.IsPatternRunning = true;
+                    
                     switch (ex.Id)
                     {
                         case 7:
                             ex.PatternNum = 25;
                             break;
                         case 8:
-                            ex.PatternNum = 26;
+                            ex.PatternNum = 27;
                             break;
                         case 9:
-                            ex.PatternNum = 25;
+                            ex.PatternNum = 26;
                             break;
                     }
-
+                    ex.IsPatternRunning = true;
                 }
             }
         }
@@ -134,7 +149,7 @@ namespace ELS.Light
         {
             foreach (Extra.Extra e in _extras.PRML.Values)
             {
-                e.SetState(true);
+                e.SetState(!e.state);
             }
         }
     }
