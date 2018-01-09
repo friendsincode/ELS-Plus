@@ -82,12 +82,16 @@ namespace ELS.Manager
         /// <param name="dataDic">data</param>
         async internal void SetVehicleSyncData(IDictionary<string, object> dataDic)
         {
-#if DEBUG
-            CitizenFX.Core.Debug.WriteLine($"creating vehicle with NETID of {(int)dataDic["NetworkID"]} LOCALID of {CitizenFX.Core.Native.API.NetToVeh((int)dataDic["NetworkID"])}");
-#endif
+
             var bo = vehicleList.MakeSureItExists((int)dataDic["NetworkID"]
                         , dataDic,out ELSVehicle veh1);
             veh1.SetData(dataDic);
+            if (bo)
+            {
+#if DEBUG
+                CitizenFX.Core.Debug.Write($" Applying vehicle data with NETID of {(int)dataDic["NetworkID"]} LOCALID of {CitizenFX.Core.Native.API.NetToVeh((int)dataDic["NetworkID"])}");
+#endif
+            }
         }
 
         internal static void SyncRequestReply(int NetworkId)
