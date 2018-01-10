@@ -3,7 +3,7 @@ This project is in early development stages. You should expect bugs and/or issue
 
 - ELS vehicles are not yet supported.
 - Lights are in progress. Currently sync is not working but you are able to use lights.
-- Custom cars will require VCF files to be created by following the [How to add custom Vehicles](docs/Add%20Cutom%20Vehicles.md) section.
+- Custom cars will require VCF files to be created by following the [How to add custom Vehicles](#how-to-add-els-vehicles-to-els-fivem) section.
 - You can spawn a vehicle using /elscar {model}
 - You can obtain a list of the vehicles ELS has detected by typing /elslist and pressing F8 to view console.
 
