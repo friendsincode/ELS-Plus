@@ -204,11 +204,6 @@ namespace ELS.Light
            
         }
 
-        public async void ExternalTicker()
-        {
-            
-        }
-
         public void LightsControlsRemote()
         {
             CitizenFX.Core.Debug.WriteLine("LightsControlsRemote");

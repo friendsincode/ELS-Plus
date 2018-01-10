@@ -11,10 +11,11 @@ namespace ELS.Extra
 
         public Dictionary<string, object> GetData()
         {
+            
             Dictionary<string, object> dic = new Dictionary<string, object>();
             dic.Add("pattern", PatternNum);
             dic.Add("patternrunning", IsPatternRunning);
-            dic.Add("state", state);
+            dic.Add("state", State);
             return dic;
         }
 

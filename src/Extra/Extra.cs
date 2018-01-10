@@ -44,6 +44,7 @@ namespace ELS.Extra
             set
             {
                 _pattern = value;
+
                /* if (IsPatternRunning)
                 {
                     IsPatternRunning = false;
@@ -61,6 +62,7 @@ namespace ELS.Extra
             {
                 _pattnum = value;
                 Pattern = LightPattern.StringPatterns[PatternNum];
+                ElsUiPanel.SetUiPatternNumber(PatternNum, LightType.ToString());
             }
         }
 
@@ -79,7 +81,7 @@ namespace ELS.Extra
                 _pattRunning = value;
                 if (!IsPatternRunning)
                 {
-                    SetFalse();
+                    CleanUp();
                 }
             }
 
@@ -95,7 +97,7 @@ namespace ELS.Extra
         }
 
         internal int Delay { get; set; }
-        internal bool state
+        internal bool State
         {
             private set
             {
@@ -133,8 +135,7 @@ namespace ELS.Extra
 
         internal void SetState(bool state)
         {
-            if (_state == state) return;
-            this.state = state;
+            this.State = state;
         }
 
         private void SetTrue()
@@ -152,6 +153,9 @@ namespace ELS.Extra
         int count = 0;
         internal async void ExtraTicker()
         {
+#if DEBUG
+            //CitizenFX.Core.Debug.WriteLine($"Running pattern: {IsPatternRunning}");
+#endif
             if (IsPatternRunning)
             {
                 await ELS.Delay(Delay);
@@ -163,16 +167,31 @@ namespace ELS.Extra
                 if (Pattern[count].Equals('0'))
                 {
                     SetState(false);
+                    if (!IsPatternRunning)
+                    {
+                        CleanUp();
+                        return;
+                    }
                 }
                 else
                 {
                     SetState(true);
+                    if (!IsPatternRunning)
+                    {
+                        CleanUp();
+                        return;
+                    }
                     //DrawLight();
                 }
                 count++;
                 if (count > Pattern.Length - 1)
                 {
                     count = 0;
+                }
+                if (!IsPatternRunning)
+                {
+                    CleanUp();
+                    return;
                 }
             }
         }
@@ -225,6 +244,7 @@ namespace ELS.Extra
             dirVector = destinationCoords - extraoffset;
             dirVector.Normalize();
             API.DrawSpotLightWithShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, dirVector.X, dirVector.Y, dirVector.Z, Color['r'], Color['g'], Color['b'], 100.0f, 1f, 0.0f, 13.0f, 1f, 100f);
+            API.DrawLightWithRangeAndShadow(GetBone().X + float.Parse(_extraInfo.OffsetX), GetBone().Y + float.Parse(_extraInfo.OffsetY), GetBone().Z + float.Parse(_extraInfo.OffsetZ), Color['r'], Color['g'], Color['b'], 5f, 1f, .5f);
         }
 
         internal Dictionary<char, int> Color;
@@ -319,7 +339,7 @@ namespace ELS.Extra
 
         internal void CleanUp()
         {
-            SetFalse();
+            SetState(false);
         }
     }
 }

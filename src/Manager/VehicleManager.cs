@@ -19,13 +19,13 @@ namespace ELS.Manager
         }
         private void makenetworked(Vehicle veh)
         {
-            if(!veh.Model.IsLoaded)veh.Model.Request(-1);
+            if (!veh.Model.IsLoaded) veh.Model.Request(-1);
             var net1 = API.VehToNet(veh.Handle);
             if (API.NetworkDoesNetworkIdExist(net1))
             {
                 if (true)
                 {
-                    API.NetworkSetEntityVisibleToNetwork(veh.Handle,true);
+                    API.NetworkSetEntityVisibleToNetwork(veh.Handle, true);
                 }
                 API.SetEntityRegister(veh.Handle, true);
                 API.SetEntitySomething(veh.Handle, true);
@@ -46,7 +46,7 @@ namespace ELS.Manager
                     if (!API.IsEntityAMissionEntity(Game.PlayerPed.CurrentVehicle.Handle))
                     {
                         CitizenFX.Core.Debug.WriteLine("Not a mission entity");
-                        API.SetEntityAsMissionEntity(Game.PlayerPed.CurrentVehicle.Handle, false, false);
+                        API.SetEntityAsMissionEntity(Game.PlayerPed.CurrentVehicle.Handle, true, true);
                         //possible memory leak.
                         Blip blip = new Blip(API.GetBlipFromEntity(Game.PlayerPed.CurrentVehicle.Handle));
                         API.SetBlipSprite(blip.Handle, 2);
@@ -55,12 +55,11 @@ namespace ELS.Manager
                     makenetworked(Game.PlayerPed.CurrentVehicle);
                     if (vehicleList.MakeSureItExists(API.VehToNet(Game.PlayerPed.CurrentVehicle.Handle), vehicle: out ELSVehicle _currentVehicle))
                     {
-
                         _currentVehicle?.RunTick();
                     }
                     else
                     {
-                        
+
                         //var pos = Game.PlayerPed.CurrentVehicle.Position;
                         //var rot = Game.PlayerPed.CurrentVehicle.Rotation;
                         //var model = Game.PlayerPed.CurrentVehicle.Model;
@@ -69,8 +68,8 @@ namespace ELS.Manager
                         //Game.PlayerPed.SetIntoVehicle(veh,VehicleSeat.Driver);
                         //vehicleList.Add(new ELSVehicle(Game.PlayerPed.CurrentVehicle.Handle));
                     }
-                    
-                    
+
+
 #if DEBUG
                     if (Game.IsControlJustPressed(0, Control.Cover))
                     {
@@ -84,14 +83,15 @@ namespace ELS.Manager
                 }
                 vehicleList.RunExternalTick();
                 Debug.DebugText();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 CitizenFX.Core.Debug.WriteLine($"VehicleManager Error: {e.Message}");
             }
 
             //TODO Chnage how I check for the panic alarm
         }
- 
+
         /// <summary>
         /// Proxies the sync data to a certain vehicle
         /// </summary>
@@ -100,7 +100,7 @@ namespace ELS.Manager
         {
 
             var bo = vehicleList.MakeSureItExists((int)dataDic["NetworkID"]
-                        , dataDic,out ELSVehicle veh1);
+                        , dataDic, out ELSVehicle veh1);
             if (bo)
             {
                 veh1.SetData(dataDic);
@@ -118,7 +118,7 @@ namespace ELS.Manager
                 CitizenFX.Core.Debug.WriteLine("ERROR NetwordID equals 0\n");
                 return;
             }
-            FullSync.FullSyncManager.SendDataBroadcast(     
+            FullSync.FullSyncManager.SendDataBroadcast(
                 (vehicleList.Find(o => o.GetNetworkId() == NetworkId)).GetData()
             );
         }
@@ -126,10 +126,10 @@ namespace ELS.Manager
         {
             dynamic k = data;
             var y = data.ToArray();
-            foreach ( var struct1 in y)
+            foreach (var struct1 in y)
             {
                 int netID = int.Parse(struct1.Key);
-                var vehData = (IDictionary<string,object>)struct1.Value;
+                var vehData = (IDictionary<string, object>)struct1.Value;
                 vehicleList.MakeSureItExists((int)vehData["NetworkID"],
                         vehData,
                         out ELSVehicle veh
