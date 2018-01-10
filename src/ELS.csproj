@@ -159,10 +159,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="extra-files\POLICE.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="NUI\app\css\app.css" />
     <Content Include="NUI\app\css\bootstrap-switch.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

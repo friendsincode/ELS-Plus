@@ -12,18 +12,23 @@ namespace ELS.Light
 {
     partial class Lights : IManagerEntry
     {
-        public void Ticker()
+        public async void Ticker()
         {
             ToggleSecLKB();
             ToggleWrnLKB();
             ToggleBrdKB();
             ToggleCrsKB();
 
+            ExternalTicker();
+        }
+
+        public async void ExternalTicker()
+        {
             if (_extras.BRD != null && _extras.BRD.AnimateBoard)
             {
                 ToggleBrd();
             }
-            foreach(Extra.Extra prim in _extras.PRML.Values)
+            foreach (Extra.Extra prim in _extras.PRML.Values)
             {
                 prim.ExtraTicker();
             }
@@ -149,7 +154,7 @@ namespace ELS.Light
         {
             foreach (Extra.Extra e in _extras.PRML.Values)
             {
-                e.SetState(!e.state);
+                e.SetState(!e.State);
             }
         }
     }

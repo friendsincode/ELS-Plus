@@ -17,8 +17,12 @@ namespace ELS
             _vehicle = new Vehicle(handle);
             ModelLoaded();
 
-            if (_vehicle.DisplayName == "CARNOTFOUND" || _vehicle.GetNetworkId()==0) {
+            if (_vehicle.DisplayName == "CARNOTFOUND") {
                 throw new Exception("Vehicle creation failure.");
+            }
+            else if (_vehicle.GetNetworkId() == 0)
+            {
+                throw new Exception("NetworkId is 0");
             }
             else if( VCF.ELSVehicle.Exists(item => item.modelHash == _vehicle.Model))
             {
@@ -45,9 +49,13 @@ namespace ELS
             _vehicle = new Vehicle(handle);
             ModelLoaded();
 
-            if (_vehicle.DisplayName == "CARNOTFOUND" || _vehicle.GetNetworkId() == 0)
+            if (_vehicle.DisplayName == "CARNOTFOUND")
             {
-                throw new Exception("Vehicle creation failure.");
+                throw new Exception("Vehicle not found");
+            } 
+            else if (_vehicle.GetNetworkId() == 0)
+            {
+                throw new Exception("NetworkId is 0");
             }
             else if (VCF.ELSVehicle.Exists(item => item.modelHash == _vehicle.Model))
             {
