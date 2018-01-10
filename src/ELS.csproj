@@ -106,6 +106,7 @@
     <Compile Include="ELS.cs" />
     <Compile Include="Decorator\EntityDecoration.cs" />
     <Compile Include="ELSStates\State.cs" />
+    <Compile Include="Extra\Extra.FullSync.cs" />
     <Compile Include="Light\IMangerEntry.cs" />
     <Compile Include="Light\Lights.FullSync.cs" />
     <Compile Include="Light\Lights.logic.cs" />

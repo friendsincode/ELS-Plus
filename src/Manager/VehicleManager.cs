@@ -39,9 +39,6 @@ namespace ELS.Manager
         {
             try
             {
-
-                
-
                 if (Game.PlayerPed.IsSittingInELSVehicle() &&
                         (Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed
                         || Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Passenger) == Game.PlayerPed))

@@ -1,4 +1,5 @@
-﻿using CitizenFX.Core;
+﻿
+using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,18 @@ namespace ELS.Board
         internal bool BoardRaised
         {
             get; set;
+        }
+
+        public Dictionary<string, object> GetData()
+        {
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+            dic.Add("raised", BoardRaised);
+            return dic;
+        }
+
+        public void SetData(IDictionary<string, object> data)
+        {
+            BoardRaised = (bool.Parse(data["raised"].ToString()));
         }
 
         internal ArrowBoard(Entity entity, configuration.MISC misc)
