@@ -44,7 +44,7 @@ namespace ELS.Light
         internal Extra.Extra SBRN;
         internal Extra.Extra SCL;
         internal Extra.Extra TDL;
-        internal Board.ArrowBoard BRD;        
+        internal Board.ArrowBoard BRD;
     }
     partial class Lights : IManagerEntry
     {
@@ -187,8 +187,10 @@ namespace ELS.Light
                         this._extras.BRD = new Board.ArrowBoard(_vehicle, _vcfroot.MISC);
                         break;
                     case "off":
+                        this._extras.BRD = new Board.ArrowBoard(_vehicle, _vcfroot.MISC);
                         break;
                     default:
+                        this._extras.BRD = new Board.ArrowBoard(_vehicle, _vcfroot.MISC);
                         break;
                 }
             }

@@ -22,7 +22,7 @@ namespace ELS.Extra
         TDL
     }
 
-    internal class Extra
+    internal partial class Extra
     {
 
         Vector3 _posistion;
@@ -176,6 +176,7 @@ namespace ELS.Extra
                 }
             }
         }
+
 
         internal async void RunPattern()
         {

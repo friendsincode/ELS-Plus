@@ -2,8 +2,10 @@
 This project is in early development stages. You should expect bugs and/or issues. To effectively combat these issues we ask that you submit issues to the Issues board in this repository. See: https://github.com/FiveM-Scripts/ELS-FiveM/issues to submit an issue. It is important that if you test ELS for FiveM that you submit issues so that we may work to resolve these. Here's some things to consider:
 
 - ELS vehicles are not yet supported.
-- Lights are not yet supported.
+- Lights are in progress. Currently sync is not working but you are able to use lights.
 - Custom cars will require VCF files to be created by following the [How to add custom Vehicles](docs/Add%20Cutom%20Vehicles.md) section.
+- You can spawn a vehicle using /elscar {model}
+- You can obtain a list of the vehicles ELS has detected by typing /elslist and pressing F8 to view console.
 
 # ELS FiveM
 
@@ -22,6 +24,8 @@ This project is in early development stages. You should expect bugs and/or issue
 |Vehicle Horn | E Key | Toggles vehicle's primary lights (will change)|
 |Replay Show Hot Key | K Key | Toggles vehicle's secondary lights|
 |Cinematic Slo Mo | L Key | Toggles vehicle's warning lights|
+|| [ Key | Toggles vehicle's Cruise Lights
+|| L Alt + [ | Toggles vehicles Arrowboard if equipped(Not fully working)
 
 ### How to install
 1. Copy the `ELS-FiveM` folder to `cfx-server\resources\`
