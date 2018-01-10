@@ -54,8 +54,8 @@ namespace ELS
                 _vcf = VCF.ELSVehicle.Find(item => item.modelHash == _vehicle.Model).root;
             }
             
-                _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data["Siren"]);
-                _light = new Light.Lights(_vehicle, _vcf, (IDictionary<string, object>)data["Light"]);
+                _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data["siren"]);
+                _light = new Light.Lights(_vehicle, _vcf, (IDictionary<string, object>)data["light"]);
             
                 //_vehicle.SetExistOnAllMachines(true);
 #if DEBUG

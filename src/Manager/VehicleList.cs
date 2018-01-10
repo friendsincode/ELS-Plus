@@ -88,6 +88,9 @@ namespace ELS.Manager
                 {
                     var veh = new ELSVehicle(API.NetToVeh(NetworkID),data);
                     Add(veh);
+#if DEBUG
+                    CitizenFX.Core.Debug.Write($"Adding Vehicle");
+#endif
                     vehicle = veh;
                     return true;
                 }
