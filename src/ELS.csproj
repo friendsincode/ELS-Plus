@@ -180,7 +180,6 @@
     <Content Include="NUI\app\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="NUI\app\js\app.js" />
     <Content Include="NUI\app\js\bootstrap-switch.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -196,7 +195,6 @@
     <Content Include="NUI\app\js\popper.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="NUI\app\js\vue.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />

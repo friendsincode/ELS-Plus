@@ -249,21 +249,7 @@ namespace ELS.Light
                         }
                         else
                         {
-                            switch (e.Id)
-                            {
-                                case 1:
-                                    e.PatternNum = 0;
-                                    break;
-                                case 2:
-                                    e.PatternNum = 1;
-                                    break;
-                                case 3:
-                                    e.PatternNum = 0;
-                                    break;
-                                case 4:
-                                    e.PatternNum = 1;
-                                    break;
-                            }
+                            Patterns.Leds.SetDefaultPattern(_extras);
                         }
                         e.IsPatternRunning = true;
                     }
@@ -275,21 +261,6 @@ namespace ELS.Light
                         {
                             e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg3.Pattern);
                         }
-                        else
-                        {
-                            switch (e.Id)
-                            {
-                                case 7:
-                                    e.PatternNum = 25;
-                                    break;
-                                case 8:
-                                    e.PatternNum = 27;
-                                    break;
-                                case 9:
-                                    e.PatternNum = 26;
-                                    break;
-                            }
-                        }
                         e.IsPatternRunning = true;
                     }
                     
@@ -299,24 +270,6 @@ namespace ELS.Light
                         {
                             e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg3.Pattern);
                         }
-                        else
-                        {
-                            switch (e.Id)
-                            {
-                                case 1:
-                                    e.PatternNum = 0;
-                                    break;
-                                case 2:
-                                    e.PatternNum = 1;
-                                    break;
-                                case 3:
-                                    e.PatternNum = 0;
-                                    break;
-                                case 4:
-                                    e.PatternNum = 1;
-                                    break;
-                            }
-                        }
                         e.IsPatternRunning = true;
                     }
                     foreach (Extra.Extra e in _extras.WRNL.Values)
@@ -324,18 +277,6 @@ namespace ELS.Light
                         if (bool.Parse(_stage.SECL.PresetPatterns.Lstg3.Enabled))
                         {
                             e.PatternNum = int.Parse(_stage.WRNL.PresetPatterns.Lstg3.Pattern);
-                        }
-                        else
-                        {
-                            switch (e.Id)
-                            {
-                                case 1:
-                                    e.PatternNum = 5;
-                                    break;
-                                case 2:
-                                    e.PatternNum = 6;
-                                    break;
-                            }
                         }
                         e.IsPatternRunning = true;
                     }

@@ -39,6 +39,7 @@ namespace ELS
         private readonly VehicleManager _vehicleManager;
         private configuration.ControlConfiguration _controlConfiguration;
         panel.test _test = new test();
+        private bool _firstTick = false;
 
         public ELS()
         {
@@ -104,7 +105,7 @@ namespace ELS
             //EventHandlers["ELS:SirenUpdated"] += new Action<string, int, int, bool>(_vehicleManager.UpdateRemoteSirens);
             EventHandlers["onPlayerJoining"] += new Action(() =>
             {
-
+                
             });
             EventHandlers["ELS:VcfSync:Client"] += new Action<string,string,string>((a,b,c) =>
             {
@@ -123,12 +124,24 @@ namespace ELS
             });
             //Take in data and apply it
             EventHandlers["ELS:NewFullSyncData"] += new Action<IDictionary<string, object>>(_vehicleManager.SetVehicleSyncData);
-            RegisterNUICallback("escape", ElsUiPanel.EscapeUI);
-            RegisterNUICallback("togglePrimary", ElsUiPanel.TooglePrimary);
+            
 
             API.RegisterCommand("vcfsync", new Action<int, List<object>, string>((source, arguments, raw) =>
             {
                 TriggerServerEvent("ELS:VcfSync:Server", Game.Player.ServerId);
+            }), false);
+
+            API.RegisterCommand("elsui", new Action<int, List<object>, string>((source, arguments, raw) =>
+            {
+                if (arguments.Count != 1) return;
+                if (arguments[0].Equals("enable"))
+                {
+                    ElsUiPanel.EnableUI();
+                }
+                else if (arguments[0].Equals("disable"))
+                {
+                    ElsUiPanel.DisableUI();
+                }
             }), false);
 
             API.RegisterCommand("elslist", new Action<int, List<object>, string>((source,args,raw) => {
@@ -162,26 +175,38 @@ namespace ELS
             return Function.Call<string>(Hash.GET_CURRENT_RESOURCE_NAME);
         }
 
-        #region Callbacks for GUI
+#region Callbacks for GUI
         public void RegisterNUICallback(string msg, Func<IDictionary<string, object>, CallbackDelegate, CallbackDelegate> callback)
         {
             CitizenFX.Core.Debug.WriteLine($"Registering NUI EventHandler for {msg}");
-            API.RegisterNuiCallbackType(msg); // Remember API calls must be executed on the first tick at the earliest!
-
-
+            API.RegisterNuiCallbackType(msg);
+            // Remember API calls must be executed on the first tick at the earliest!
+            //Function.Call(Hash.REGISTER_NUI_CALLBACK_TYPE, msg);
             EventHandlers[$"__cfx_nui:{msg}"] += new Action<ExpandoObject, CallbackDelegate>((body, resultCallback) =>
             {
-                Console.WriteLine("TogPri pressed state is " + body);
+                Console.WriteLine("We has event" + body);
+                callback.Invoke(body, resultCallback);
+            });
+            EventHandlers[$"{msg}"] += new Action<ExpandoObject, CallbackDelegate>((body, resultCallback) =>
+            {
+                Console.WriteLine("We has event without __cfx_nui" + body);
                 callback.Invoke(body, resultCallback);
             });
 
         }
-        #endregion
+#endregion
 
         private async Task Class1_Tick()
         {
             try
             {
+                if (!_firstTick)
+                {
+                    RegisterNUICallback("escape", ElsUiPanel.EscapeUI);
+                    RegisterNUICallback("togglePrimary", ElsUiPanel.TooglePrimary);
+                    RegisterNUICallback("keyPress", ElsUiPanel.KeyPress);
+                    _firstTick = true;
+                }
                 /* Text text = new Text($"ELS Build dev-v0.0.2.4\nhttp://ELS.ejb1123.tk", new PointF(640f, 10f), 0.5f);
                  text.Alignment = Alignment.Center;
                  text.Centered = true;

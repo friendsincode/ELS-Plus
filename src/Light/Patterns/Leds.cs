@@ -3,7 +3,7 @@ using CitizenFX.Core.Native;
 using ELS.configuration;
 using ELS.NUI;
 using System;
-
+using System.Collections.Generic;
 
 namespace ELS.Light.Patterns
 {
@@ -12,7 +12,7 @@ namespace ELS.Light.Patterns
         /// <summary>
         /// List of Patterns More to be added
         /// </summary>
-        public static uint[] Patterns = {
+        internal static uint[] Patterns = {
             858993459,
             859002155,
             2863311530,
@@ -30,14 +30,14 @@ namespace ELS.Light.Patterns
         /// <summary>
         /// List of patterns in binary string format
         /// </summary>
-        public static string[] StringPatterns =
+        internal static string[] StringPatterns =
         {
-            "001001001001000000000000",
-            Reverse("001001001001000000000000"),
-            "001001000000001001000000",
-            Reverse("001001000000001001000000"),
-            "001001001001001000000000000000",
-            Reverse("001001001001001000000000000000"),
+            "0101010100000000",
+            Reverse("0101010100000000"),
+            "0101000001010000",
+            Reverse("0101000001010000"),
+            "01010101010000000000",
+            Reverse("01010101010000000000"),
             "0101010101010101",
             "1010101010101010",
             "0011001100110011",
@@ -62,22 +62,41 @@ namespace ELS.Light.Patterns
             "0000111111110000"
         };
 
-        public static string Reverse(string s)
+        internal static string Reverse(string s)
         {
             char[] charArray = s.ToCharArray();
             Array.Reverse(charArray);
             return new string(charArray);
         }
 
-        public static string SweepPattern()
+        internal static string SweepPattern()
         {
             return StringPatterns[33] + Reverse(StringPatterns[33]);
         }
 
-        public static string RandomPattern()
+        internal static string RandomPattern()
         {
             Random rnd = new Random(StringPatterns.Length);
             return StringPatterns[rnd.Next() - 1];
+        }
+
+        internal static void SetDefaultPattern(Extras extras)
+        {
+            extras.PRML[1].PatternNum = 4;
+            
+            extras.PRML[2].PatternNum = 5;
+
+            extras.PRML[3].PatternNum = 4;
+
+            extras.PRML[4].PatternNum = 5;
+            ElsUiPanel.SetUiPatternNumber(0, "PRML");
+
+            extras.WRNL[5].PatternNum = 3;
+            extras.WRNL[5].Delay = 500;
+            extras.WRNL[6].PatternNum = 4;
+            extras.WRNL[6].Delay = 500;
+            ElsUiPanel.SetUiPatternNumber(0, "WRNL");
+
         }
 
         internal static async void RunLightPattern(Vehicle vehicle, int extra, string patt, string color, int delay)
@@ -109,7 +128,7 @@ namespace ELS.Light.Patterns
             vehicle.ToggleExtra(extra, false);
         }
 
-        public static async void RunLightPattern(Vehicle vehicle, int extra, uint upatt, string color, int delay)
+        internal static async void RunLightPattern(Vehicle vehicle, int extra, uint upatt, string color, int delay)
         {
             string patt = Convert.ToString(upatt, 2);
             string light = $"#extra{extra}";

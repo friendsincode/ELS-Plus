@@ -135,6 +135,7 @@ namespace ELS.NUI
         internal static CallbackDelegate EscapeUI(IDictionary<string,Object> data, CallbackDelegate cb)
         {
             CitizenFX.Core.Debug.WriteLine("Escape Executed");
+            ShowUI();
             return cb;
         }
 
@@ -144,7 +145,13 @@ namespace ELS.NUI
             return cb;
         }
 
+        internal static CallbackDelegate KeyPress(IDictionary<string, Object> data, CallbackDelegate cb)
+        {
+            CitizenFX.Core.Debug.WriteLine("J key pressed");
+            return cb;
+        }
 
-        
+
+
     }
 }
