@@ -173,9 +173,7 @@ namespace ELS.Light
         internal async void ToggleLightStage()
         {
             await _stage.NextStage();
-#if DEBUG
             Screen.ShowNotification($"Current Lightstage is {_stage.CurrentStage}");
-#endif
             switch(_stage.CurrentStage)
             {
                 case 0:
