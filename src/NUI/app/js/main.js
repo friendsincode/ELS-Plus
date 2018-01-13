@@ -46,9 +46,17 @@ $(function () {
         }
     });
 
+    window.addEventListener('keyup', function (e) {
+        console.log(event)
+
+        if (event.which == 74) {
+            $.post('http://els-fivem/keyPress', JSON.stringify({}));
+        }
+    });
+
     document.onkeyup = function (data) {
         if (data.which == 27) { // Escape key
-            $.post('http://ELS-FiveM/escape', JSON.stringify({}));
+            $.post('http://els-fivem/escape', JSON.stringify({}));
             //console.log("Escape pressed");
         }
     };
@@ -66,10 +74,10 @@ $(document).ready(function () {
     $("#togPri").on("switchChange.bootstrapSwitch", function (event, state) {
         if (state) {
             //$("#togPri").bootstrapSwitch("labelText", "0000");
-            //$.post("http://els-fivem/togglePrimary", JSON.stringify({ state: state }));
+            $.post("http://els-fivem/togglePrimary", JSON.stringify({ state: state }));
         } else {
             //$("#togPri").bootstrapSwitch("labelText", "0001");
-            //$.post("http://els-fivem/togglePrimary", JSON.stringify({ state: state }));
+            $.post("http://els-fivem/togglePrimary", JSON.stringify({ state: state }));
         }
     });
     $("#togSec").bootstrapSwitch({

@@ -64,7 +64,7 @@ namespace ELS.Extra
             {
                 _pattnum = value;
                 Pattern = Leds.StringPatterns[PatternNum];
-                ElsUiPanel.SetUiPatternNumber(PatternNum, LightType.ToString());
+                //ElsUiPanel.SetUiPatternNumber(PatternNum, LightType.ToString());
             }
         }
 
@@ -154,51 +154,65 @@ namespace ELS.Extra
         }
 
         int count = 0;
+        int flashrate;
+        int allowflash = 1;  
         internal async void ExtraTicker()
         {
+            flashrate = (int)Game.FPS / ((int)Game.FPS * 60 / Delay);
 #if DEBUG
-            //CitizenFX.Core.Debug.WriteLine($"Running pattern: {IsPatternRunning}");
+            //CitizenFX.Core.Debug.WriteLine($"Flash rate: {flashrate}");
+            //CitizenFX.Core.Debug.WriteLine($"Allow Flash: {allowflash}");
 #endif
-            if (IsPatternRunning)
+            if (Game.FPS < 25 || flashrate == allowflash)
             {
-                await ELS.Delay(Delay);
-                if (!IsPatternRunning)
+                allowflash = 1;
+                if (IsPatternRunning)
                 {
-                    CleanUp();
-                    return;
-                }
-                if (Pattern[count].Equals('0'))
-                {
-                    SetState(false);
                     if (!IsPatternRunning)
                     {
                         CleanUp();
                         return;
                     }
-                }
-                else
-                {
-                    SetState(true);
+                    if (Pattern[count].Equals('0'))
+                    {
+                        SetState(false);
+                        if (!IsPatternRunning)
+                        {
+                            CleanUp();
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        SetState(true);
+                        if (!IsPatternRunning)
+                        {
+                            CleanUp();
+                            return;
+                        }
+                        //DrawLight();
+                    }
+                    count++;
+                    if (count > Pattern.Length - 1)
+                    {
+                        count = 0;
+                    }
                     if (!IsPatternRunning)
                     {
                         CleanUp();
                         return;
                     }
-                    //DrawLight();
-                }
-                count++;
-                if (count > Pattern.Length - 1)
-                {
-                    count = 0;
-                }
-                if (!IsPatternRunning)
-                {
-                    CleanUp();
-                    return;
                 }
             }
+            else if (allowflash > flashrate)
+            {
+                allowflash = 1;
+            }
+            else
+            {
+                allowflash++;
+            }
         }
-
 
         internal async void RunPattern()
         {
@@ -258,32 +272,32 @@ namespace ELS.Extra
             {
                 case 1:
                     LightType = LightType.PRML;
-                    Delay = 150;
+                    Delay = 400;
                     PatternNum = 0;
                     break;
                 case 2:
                     LightType = LightType.PRML;
-                    Delay = 150;
+                    Delay = 400;
                     PatternNum = 0;
                     break;
                 case 3:
                     LightType = LightType.PRML;
-                    Delay = 150;
+                    Delay = 400;
                     PatternNum = 0;
                     break;
                 case 4:
                     LightType = LightType.PRML;
-                    Delay = 150;
+                    Delay = 400;
                     PatternNum = 0;
                     break;
                 case 5:
                     LightType = LightType.WRNL;
-                    Delay = 150;
+                    Delay = 400;
                     PatternNum = 0;
                     break;
                 case 6:
                     LightType = LightType.WRNL;
-                    Delay = 150;
+                    Delay = 400;
                     PatternNum = 0;
                     break;
                 case 7:

@@ -46,6 +46,7 @@ namespace ELS.Light
         internal Extra.Extra TDL;
         internal Board.ArrowBoard BRD;
     }
+
     partial class Lights : IManagerEntry
     {
         private Extras _extras = new Extras
