@@ -7,7 +7,7 @@ using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using ELS.configuration;
 using ELS.NUI;
-using ELS.Light;
+using ELS.Light.Patterns;
 
 namespace ELS.Extra
 {
@@ -34,6 +34,7 @@ namespace ELS.Extra
         private int _pattnum;
         private LightType LightType { get; set; }
         private string _pattern;
+        private string _pattType;
 
         internal string Pattern
         {
@@ -44,14 +45,15 @@ namespace ELS.Extra
             set
             {
                 _pattern = value;
+            }
+        }
 
-               /* if (IsPatternRunning)
-                {
-                    IsPatternRunning = false;
-                    ELS.Delay(50);
-                    IsPatternRunning = true;
-                    RunPattern();
-                }*/
+        internal string PatternType
+        {
+            get { return _pattType;  }
+            set
+            {
+                _pattType = value;
             }
         }
 
@@ -61,7 +63,7 @@ namespace ELS.Extra
             set
             {
                 _pattnum = value;
-                Pattern = LightPattern.StringPatterns[PatternNum];
+                Pattern = Leds.StringPatterns[PatternNum];
                 ElsUiPanel.SetUiPatternNumber(PatternNum, LightType.ToString());
             }
         }
@@ -117,13 +119,14 @@ namespace ELS.Extra
             }
         }
 
-        internal Extra(Entity entity, int id, configuration.Extra ex, bool state = false)
+        internal Extra(Entity entity, int id, configuration.Extra ex, string format = "", bool state = false)
         {
             _vehicle = entity;
             _Id = id;
             _extraInfo = ex;
             CleanUp();
             SetInfo();
+            PatternType = format;
             if (!API.DoesExtraExist(entity.Handle, id))
             {
                 CitizenFX.Core.Debug.WriteLine($"Extra id: {id} does not exsist");
@@ -247,9 +250,7 @@ namespace ELS.Extra
             API.DrawLightWithRangeAndShadow(GetBone().X + float.Parse(_extraInfo.OffsetX), GetBone().Y + float.Parse(_extraInfo.OffsetY), GetBone().Z + float.Parse(_extraInfo.OffsetZ), Color['r'], Color['g'], Color['b'], 5f, 1f, .5f);
         }
 
-        internal Dictionary<char, int> Color;
-
-        
+        internal Dictionary<char, int> Color;        
 
         internal void SetInfo()
         {
@@ -276,27 +277,27 @@ namespace ELS.Extra
                     PatternNum = 0;
                     break;
                 case 5:
-                    LightType = LightType.SECL;
+                    LightType = LightType.WRNL;
                     Delay = 150;
                     PatternNum = 0;
                     break;
                 case 6:
-                    LightType = LightType.SECL;
+                    LightType = LightType.WRNL;
                     Delay = 150;
                     PatternNum = 0;
                     break;
                 case 7:
-                    LightType = LightType.WRNL;
+                    LightType = LightType.SECL;
                     PatternNum = 0;
                     Delay = 200;
                     break;
                 case 8:
-                    LightType = LightType.WRNL;
+                    LightType = LightType.SECL;
                     PatternNum = 0;
                     Delay = 200;
                     break;
                 case 9:
-                    LightType = LightType.WRNL;
+                    LightType = LightType.SECL;
                     PatternNum = 0;
                     Delay = 200;
                     break;
@@ -310,6 +311,7 @@ namespace ELS.Extra
                     LightType = LightType.TDL;
                     break;
             }
+
 
             string hex = "0xFFFFFF";
             switch (_extraInfo.Color)

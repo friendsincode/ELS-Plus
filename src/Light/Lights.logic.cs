@@ -1,5 +1,6 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using CitizenFX.Core.UI;
 using ELS.NUI;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+
 
 namespace ELS.Light
 {
@@ -18,7 +20,7 @@ namespace ELS.Light
             ToggleWrnLKB();
             ToggleBrdKB();
             ToggleCrsKB();
-
+            ToggleLightStateKB();
             ExternalTicker();
         }
 
@@ -155,6 +157,189 @@ namespace ELS.Light
             foreach (Extra.Extra e in _extras.PRML.Values)
             {
                 e.SetState(!e.State);
+            }
+        }
+
+        internal void ToggleLightStateKB()
+        {
+            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ToggleLstg);
+            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleLstg))
+            {
+                ToggleLightStage();
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleLstg, _vehicle, true, Game.Player.ServerId);
+            }
+        }
+
+        internal async void ToggleLightStage()
+        {
+            await _stage.NextStage();
+#if DEBUG
+            Screen.ShowNotification($"Current Lightstage is {_stage.CurrentStage}");
+#endif
+            switch(_stage.CurrentStage)
+            {
+                case 0:
+                    foreach (Extra.Extra e in _extras.PRML.Values)
+                    {
+                        e.IsPatternRunning = false;
+                    }
+                    foreach (Extra.Extra e in _extras.SECL.Values)
+                    {
+                        e.IsPatternRunning = false;
+                    }
+                    foreach (Extra.Extra e in _extras.WRNL.Values)
+                    {
+                        e.IsPatternRunning = false;
+                    }
+                    break;
+                case 1:
+                    foreach (Extra.Extra e in _extras.SECL.Values)
+                    {
+                        if (bool.Parse(_stage.SECL.PresetPatterns.Lstg1.Enabled))
+                        {
+                            e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg1.Pattern);
+                        } else
+                        {
+                            switch (e.Id)
+                            {
+                                case 7:
+                                    e.PatternNum = 26;
+                                    break;
+                                case 8:
+                                    e.PatternNum = 27;
+                                    break;
+                                case 9:
+                                    e.PatternNum = 25;
+                                    break;
+                            }
+                        }
+                        e.IsPatternRunning = true;
+                    }
+                    break;
+                case 2:
+                    foreach (Extra.Extra e in _extras.SECL.Values)
+                    {
+                        if (bool.Parse(_stage.SECL.PresetPatterns.Lstg2.Enabled))
+                        {
+                            e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg2.Pattern);
+                        } else
+                        {
+                            switch (e.Id)
+                            {
+                                case 7:
+                                    e.PatternNum = 25;
+                                    break;
+                                case 8:
+                                    e.PatternNum = 27;
+                                    break;
+                                case 9:
+                                    e.PatternNum = 26;
+                                    break;
+                            }
+                        }
+                        e.IsPatternRunning = true;
+                    }
+                    int[] extras = _stage.GetStage2Extras();
+                    foreach (int i in extras)
+                    {
+                        Extra.Extra e = _extras.PRML[i];
+                        if (bool.Parse(_stage.SECL.PresetPatterns.Lstg1.Enabled))
+                        {
+                            e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg1.Pattern);
+                        }
+                        else
+                        {
+                            switch (e.Id)
+                            {
+                                case 1:
+                                    e.PatternNum = 0;
+                                    break;
+                                case 2:
+                                    e.PatternNum = 1;
+                                    break;
+                                case 3:
+                                    e.PatternNum = 0;
+                                    break;
+                                case 4:
+                                    e.PatternNum = 1;
+                                    break;
+                            }
+                        }
+                        e.IsPatternRunning = true;
+                    }
+                    break;
+                case 3:
+                    foreach (Extra.Extra e in _extras.SECL.Values)
+                    {
+                        if (bool.Parse(_stage.SECL.PresetPatterns.Lstg3.Enabled))
+                        {
+                            e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg3.Pattern);
+                        }
+                        else
+                        {
+                            switch (e.Id)
+                            {
+                                case 7:
+                                    e.PatternNum = 25;
+                                    break;
+                                case 8:
+                                    e.PatternNum = 27;
+                                    break;
+                                case 9:
+                                    e.PatternNum = 26;
+                                    break;
+                            }
+                        }
+                        e.IsPatternRunning = true;
+                    }
+                    
+                    foreach (Extra.Extra e in _extras.PRML.Values)
+                    { 
+                        if (bool.Parse(_stage.SECL.PresetPatterns.Lstg3.Enabled))
+                        {
+                            e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg3.Pattern);
+                        }
+                        else
+                        {
+                            switch (e.Id)
+                            {
+                                case 1:
+                                    e.PatternNum = 0;
+                                    break;
+                                case 2:
+                                    e.PatternNum = 1;
+                                    break;
+                                case 3:
+                                    e.PatternNum = 0;
+                                    break;
+                                case 4:
+                                    e.PatternNum = 1;
+                                    break;
+                            }
+                        }
+                        e.IsPatternRunning = true;
+                    }
+                    foreach (Extra.Extra e in _extras.WRNL.Values)
+                    {
+                        if (bool.Parse(_stage.SECL.PresetPatterns.Lstg3.Enabled))
+                        {
+                            e.PatternNum = int.Parse(_stage.WRNL.PresetPatterns.Lstg3.Pattern);
+                        }
+                        else
+                        {
+                            switch (e.Id)
+                            {
+                                case 1:
+                                    e.PatternNum = 5;
+                                    break;
+                                case 2:
+                                    e.PatternNum = 6;
+                                    break;
+                            }
+                        }
+                        e.IsPatternRunning = true;
+                    }
+                    break;
             }
         }
     }

@@ -89,6 +89,9 @@ namespace ELS.configuration
                 t = u["CONTROL"]["ChgPat_WRNL"].IntValue;
                 KeyBindings.ChgPattWrnL = (Control)t;
 
+                t = u["CONTROL"]["Toggle_LSTG"].IntValue;
+                KeyBindings.ToggleLstg = (Control)t;
+
 
                 ControlsUpdated?.Invoke(KeyBindings);
 
@@ -113,6 +116,7 @@ namespace ELS.configuration
             internal Control ChgPattPrmL { get; set; }
             internal Control ChgPattSecL { get; set; }
             internal Control ChgPattWrnL { get; set; }
+            internal Control ToggleLstg { get; set; }
         }
 
         internal static bool isValidData(string data)
