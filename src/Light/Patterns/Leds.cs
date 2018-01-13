@@ -5,9 +5,9 @@ using ELS.NUI;
 using System;
 
 
-namespace ELS.Light
+namespace ELS.Light.Patterns
 {
-    public class LightPattern
+    public class Leds
     {
         /// <summary>
         /// List of Patterns More to be added

@@ -45,7 +45,8 @@ namespace ELS
             ToggleSCL,
             ChangePrmPatt,
             ChangeSecPatt,
-            ChangeWrnPatt
+            ChangeWrnPatt,
+            ToggleLstg
         }
         internal enum MessageTypes
         {
