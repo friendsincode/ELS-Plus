@@ -177,6 +177,7 @@ namespace ELS.Light
             switch(_stage.CurrentStage)
             {
                 case 0:
+                    API.SetVehicleSiren(_vehicle.Handle, false);
                     foreach (Extra.Extra e in _extras.PRML.Values)
                     {
                         e.IsPatternRunning = false;
@@ -215,6 +216,7 @@ namespace ELS.Light
                     }
                     break;
                 case 2:
+                    API.SetVehicleSiren(_vehicle.Handle, true);
                     foreach (Extra.Extra e in _extras.SECL.Values)
                     {
                         if (bool.Parse(_stage.SECL.PresetPatterns.Lstg2.Enabled))
