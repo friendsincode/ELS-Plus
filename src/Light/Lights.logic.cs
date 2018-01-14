@@ -196,7 +196,14 @@ namespace ELS.Light
                     {
                         if (bool.Parse(_stage.SECL.PresetPatterns.Lstg1.Enabled))
                         {
-                            e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg1.Pattern);
+                            if (_stage.SECL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan"))
+                            {
+                                e.PatternNum = 15;
+                            }
+                            else
+                            {
+                                e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg1.Pattern);
+                            }
                         } else
                         {
                             switch (e.Id)
@@ -221,7 +228,14 @@ namespace ELS.Light
                     {
                         if (bool.Parse(_stage.SECL.PresetPatterns.Lstg2.Enabled))
                         {
-                            e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg2.Pattern);
+                            if (_stage.SECL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan"))
+                            {
+                                e.PatternNum = 15;
+                            }
+                            else
+                            {
+                                e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg2.Pattern);
+                            }
                         } else
                         {
                             switch (e.Id)
@@ -243,9 +257,16 @@ namespace ELS.Light
                     foreach (int i in extras)
                     {
                         Extra.Extra e = _extras.PRML[i];
-                        if (bool.Parse(_stage.SECL.PresetPatterns.Lstg1.Enabled))
+                        if (bool.Parse(_stage.PRML.PresetPatterns.Lstg2.Enabled))
                         {
-                            e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg1.Pattern);
+                            if (_stage.PRML.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan"))
+                            {
+                                e.PatternNum = 15;
+                            }
+                            else
+                            {
+                                e.PatternNum = int.Parse(_stage.PRML.PresetPatterns.Lstg2.Pattern);
+                            }
                         }
                         else
                         {
@@ -259,24 +280,45 @@ namespace ELS.Light
                     {
                         if (bool.Parse(_stage.SECL.PresetPatterns.Lstg3.Enabled))
                         {
-                            e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg3.Pattern);
+                            if (_stage.SECL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
+                            {
+                                e.PatternNum = 15;
+                            }
+                            else
+                            {
+                                e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg3.Pattern);
+                            }
                         }
                         e.IsPatternRunning = true;
                     }
                     
                     foreach (Extra.Extra e in _extras.PRML.Values)
                     { 
-                        if (bool.Parse(_stage.SECL.PresetPatterns.Lstg3.Enabled))
+                        if (bool.Parse(_stage.PRML.PresetPatterns.Lstg3.Enabled))
                         {
-                            e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg3.Pattern);
+                            if (_stage.PRML.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
+                            {
+                                e.PatternNum = 15;
+                            }
+                            else
+                            {
+                                e.PatternNum = int.Parse(_stage.PRML.PresetPatterns.Lstg1.Pattern);
+                            }
                         }
                         e.IsPatternRunning = true;
                     }
                     foreach (Extra.Extra e in _extras.WRNL.Values)
                     {
-                        if (bool.Parse(_stage.SECL.PresetPatterns.Lstg3.Enabled))
+                        if (bool.Parse(_stage.WRNL.PresetPatterns.Lstg3.Enabled))
                         {
-                            e.PatternNum = int.Parse(_stage.WRNL.PresetPatterns.Lstg3.Pattern);
+                            if (_stage.WRNL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
+                            {
+                                e.PatternNum = 15;
+                            }
+                            else
+                            {
+                                e.PatternNum = int.Parse(_stage.WRNL.PresetPatterns.Lstg3.Pattern);
+                            }
                         }
                         e.IsPatternRunning = true;
                     }
