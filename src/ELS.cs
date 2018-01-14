@@ -109,7 +109,13 @@ namespace ELS
             });
             EventHandlers["ELS:VcfSync:Client"] += new Action<string,string,string>((a,b,c) =>
             {
-                VCF.load(SettingsType.Type.VCF, b, c, a);
+                try
+                {
+                    VCF.load(SettingsType.Type.VCF, b, c, a);
+                } catch (Exception e)
+                {
+                    CitizenFX.Core.Debug.Write($"VCF for {b} due to {e.Message}");
+                }
             });
             EventHandlers["ELS:FullSync:NewSpawnWithData"] += new Action<System.Dynamic.ExpandoObject>((a) =>
             {

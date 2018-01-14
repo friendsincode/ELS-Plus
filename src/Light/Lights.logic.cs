@@ -174,7 +174,8 @@ namespace ELS.Light
         {
             await _stage.NextStage();
             Screen.ShowNotification($"Current Lightstage is {_stage.CurrentStage}");
-            switch(_stage.CurrentStage)
+            int[] extras = _stage.GetStage2Extras();
+            switch (_stage.CurrentStage)
             {
                 case 0:
                     API.SetVehicleSiren(_vehicle.Handle, false);
@@ -251,9 +252,9 @@ namespace ELS.Light
                                     break;
                             }
                         }
-                        e.IsPatternRunning = true;
+                        //e.IsPatternRunning = true;
                     }
-                    int[] extras = _stage.GetStage2Extras();
+                    
                     foreach (int i in extras)
                     {
                         Extra.Extra e = _extras.PRML[i];
@@ -289,7 +290,7 @@ namespace ELS.Light
                                 e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg3.Pattern);
                             }
                         }
-                        e.IsPatternRunning = true;
+                        //e.IsPatternRunning = true;
                     }
                     
                     foreach (Extra.Extra e in _extras.PRML.Values)
@@ -305,7 +306,14 @@ namespace ELS.Light
                                 e.PatternNum = int.Parse(_stage.PRML.PresetPatterns.Lstg1.Pattern);
                             }
                         }
-                        e.IsPatternRunning = true;
+                        foreach(int i in extras)
+                        {
+                            if (i != e.Id)
+                            {
+                                e.IsPatternRunning = true;
+                            }
+                        }
+                        
                     }
                     foreach (Extra.Extra e in _extras.WRNL.Values)
                     {

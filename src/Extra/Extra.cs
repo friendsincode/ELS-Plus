@@ -190,7 +190,7 @@ namespace ELS.Extra
                             CleanUp();
                             return;
                         }
-                        //DrawLight();
+                        //DrawEnvLight();
                     }
                     count++;
                     if (count > Pattern.Length - 1)
@@ -232,7 +232,7 @@ namespace ELS.Extra
                     }
                     else
                     {
-                        DrawLight();
+                        //DrawLight();
                         SetTrue();
                     }
                     await ELS.Delay(Delay);
@@ -245,7 +245,7 @@ namespace ELS.Extra
         private float anglehorizontal = 0f;
         private float anngleVirtical = 0f;
 
-        internal void DrawLight()
+        internal void DrawEnvLight()
         {
             var off = _vehicle.GetPositionOffset(GetBone());
             var extraoffset = _vehicle.GetOffsetPosition(off + new Vector3(0, 0.05f, 0));
@@ -260,7 +260,7 @@ namespace ELS.Extra
 
             dirVector = destinationCoords - extraoffset;
             dirVector.Normalize();
-            API.DrawSpotLightWithShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, dirVector.X, dirVector.Y, dirVector.Z, Color['r'], Color['g'], Color['b'], 100.0f, 1f, 0.0f, 13.0f, 1f, 100f);
+            //API.DrawSpotLightWithShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, dirVector.X, dirVector.Y, dirVector.Z, Color['r'], Color['g'], Color['b'], 100.0f, 1f, 0.0f, 13.0f, 1f, 100f);
             API.DrawLightWithRangeAndShadow(GetBone().X + float.Parse(_extraInfo.OffsetX), GetBone().Y + float.Parse(_extraInfo.OffsetY), GetBone().Z + float.Parse(_extraInfo.OffsetZ), Color['r'], Color['g'], Color['b'], 5f, 1f, .5f);
         }
 
