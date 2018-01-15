@@ -110,11 +110,14 @@
     <Compile Include="Light\IMangerEntry.cs" />
     <Compile Include="Light\Lights.FullSync.cs" />
     <Compile Include="Light\Lights.logic.cs" />
+    <Compile Include="Light\Lights.Patterns.cs" />
     <Compile Include="Light\Patterns\Arrow.cs" />
     <Compile Include="Light\Patterns\CHP.cs" />
     <Compile Include="Light\Patterns\DRO.cs" />
     <Compile Include="Light\Patterns\Euro.cs" />
     <Compile Include="Light\Patterns\Marquee.cs" />
+    <Compile Include="Light\Patterns\Pattern.cs" />
+    <Compile Include="Light\Patterns\PatternUtils.cs" />
     <Compile Include="Light\Patterns\Strobe.cs" />
     <Compile Include="Light\Patterns\TrafficAdvisor.cs" />
     <Compile Include="Light\Stage.cs" />

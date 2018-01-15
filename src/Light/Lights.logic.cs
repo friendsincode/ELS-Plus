@@ -1,6 +1,7 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using CitizenFX.Core.UI;
+using ELS.Light.Patterns;
 using ELS.NUI;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,8 @@ namespace ELS.Light
             ToggleWrnLKB();
             ToggleBrdKB();
             ToggleCrsKB();
-            ToggleLightStateKB();
+            ChgPrmPattKB();
+            ToggleLightStageKB();
             ExternalTicker();
         }
 
@@ -66,15 +68,6 @@ namespace ELS.Light
                 }
                 else
                 {
-
-                    if (ex.Id == 5)
-                    {
-                        ex.PatternNum = 4;
-                    }
-                    else
-                    {
-                        ex.PatternNum = 5;
-                    }
                     ex.IsPatternRunning = true;
                 }
             }
@@ -101,19 +94,6 @@ namespace ELS.Light
                 }
                 else
                 {
-                    
-                    switch (ex.Id)
-                    {
-                        case 7:
-                            ex.PatternNum = 25;
-                            break;
-                        case 8:
-                            ex.PatternNum = 27;
-                            break;
-                        case 9:
-                            ex.PatternNum = 26;
-                            break;
-                    }
                     ex.IsPatternRunning = true;
                 }
             }
@@ -151,7 +131,7 @@ namespace ELS.Light
             }
         }
 
-        bool test = false;
+
         internal async void ToggleCrs()
         {
             foreach (Extra.Extra e in _extras.PRML.Values)
@@ -160,7 +140,29 @@ namespace ELS.Light
             }
         }
 
-        internal void ToggleLightStateKB()
+        internal void ChgPrmPattKB()
+        {
+            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ChgPattPrmL);
+            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattPrmL))
+            {
+                ChgPrmPatt();
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChgPattPrmL, _vehicle, true, Game.Player.ServerId);
+            }
+        }
+
+        internal async void ChgPrmPatt()
+        {
+            if (CurrentPrmPattern == _prmPatterns.Count - 1)
+            {
+                CurrentPrmPattern = 0;
+            }
+            else
+            {
+                CurrentPrmPattern++;
+            }
+        }
+
+        internal void ToggleLightStageKB()
         {
             Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ToggleLstg);
             if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleLstg))
@@ -174,7 +176,8 @@ namespace ELS.Light
         {
             await _stage.NextStage();
             Screen.ShowNotification($"Current Lightstage is {_stage.CurrentStage}");
-            switch(_stage.CurrentStage)
+            int[] extras = _stage.GetStage2Extras();
+            switch (_stage.CurrentStage)
             {
                 case 0:
                     API.SetVehicleSiren(_vehicle.Handle, false);
@@ -198,26 +201,16 @@ namespace ELS.Light
                         {
                             if (_stage.SECL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan"))
                             {
-                                e.PatternNum = 15;
+                                //CurrentSecPattern = 15;
                             }
                             else
                             {
-                                e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg1.Pattern);
+                                //CurrentSecPattern = int.Parse(_stage.SECL.PresetPatterns.Lstg1.Pattern);
                             }
-                        } else
+                        }
+                        else
                         {
-                            switch (e.Id)
-                            {
-                                case 7:
-                                    e.PatternNum = 26;
-                                    break;
-                                case 8:
-                                    e.PatternNum = 27;
-                                    break;
-                                case 9:
-                                    e.PatternNum = 25;
-                                    break;
-                            }
+                            
                         }
                         e.IsPatternRunning = true;
                     }
@@ -230,30 +223,19 @@ namespace ELS.Light
                         {
                             if (_stage.SECL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan"))
                             {
-                                e.PatternNum = 15;
+                                //CurrentSecPattern = 15;
                             }
                             else
                             {
-                                e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg2.Pattern);
+                                //CurrentSecPattern = int.Parse(_stage.SECL.PresetPatterns.Lstg2.Pattern);
                             }
                         } else
                         {
-                            switch (e.Id)
-                            {
-                                case 7:
-                                    e.PatternNum = 25;
-                                    break;
-                                case 8:
-                                    e.PatternNum = 27;
-                                    break;
-                                case 9:
-                                    e.PatternNum = 26;
-                                    break;
-                            }
                         }
+                        e.IsPatternRunning = false;
                         e.IsPatternRunning = true;
                     }
-                    int[] extras = _stage.GetStage2Extras();
+                    
                     foreach (int i in extras)
                     {
                         Extra.Extra e = _extras.PRML[i];
@@ -261,17 +243,18 @@ namespace ELS.Light
                         {
                             if (_stage.PRML.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan"))
                             {
-                                e.PatternNum = 15;
+                                //CurrentPrmPattern = 15;
                             }
                             else
                             {
-                                e.PatternNum = int.Parse(_stage.PRML.PresetPatterns.Lstg2.Pattern);
+                                //CurrentPrmPattern = int.Parse(_stage.PRML.PresetPatterns.Lstg2.Pattern);
                             }
                         }
                         else
                         {
-                            Patterns.Leds.SetDefaultPattern(_extras);
+                            
                         }
+                        e.IsPatternRunning = false;
                         e.IsPatternRunning = true;
                     }
                     break;
@@ -282,13 +265,14 @@ namespace ELS.Light
                         {
                             if (_stage.SECL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
                             {
-                                e.PatternNum = 15;
+                                //CurrentSecPattern = 15;
                             }
                             else
                             {
-                                e.PatternNum = int.Parse(_stage.SECL.PresetPatterns.Lstg3.Pattern);
+                                //CurrentSecPattern = int.Parse(_stage.SECL.PresetPatterns.Lstg3.Pattern);
                             }
                         }
+                        e.IsPatternRunning = false;
                         e.IsPatternRunning = true;
                     }
                     
@@ -298,13 +282,17 @@ namespace ELS.Light
                         {
                             if (_stage.PRML.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
                             {
-                                e.PatternNum = 15;
+                                //CurrentPrmPattern = 15;
                             }
                             else
                             {
-                                e.PatternNum = int.Parse(_stage.PRML.PresetPatterns.Lstg1.Pattern);
+                                //CurrentPrmPattern = int.Parse(_stage.PRML.PresetPatterns.Lstg1.Pattern);
                             }
                         }
+                        else
+                        {
+                        }
+                        e.IsPatternRunning = false;
                         e.IsPatternRunning = true;
                     }
                     foreach (Extra.Extra e in _extras.WRNL.Values)
@@ -313,13 +301,14 @@ namespace ELS.Light
                         {
                             if (_stage.WRNL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
                             {
-                                e.PatternNum = 15;
+                                //CurrentWrnPattern = 15;
                             }
                             else
                             {
-                                e.PatternNum = int.Parse(_stage.WRNL.PresetPatterns.Lstg3.Pattern);
+                               //CurrentWrnPattern = int.Parse(_stage.WRNL.PresetPatterns.Lstg3.Pattern);
                             }
                         }
+                        e.IsPatternRunning = false;
                         e.IsPatternRunning = true;
                     }
                     break;

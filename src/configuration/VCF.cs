@@ -60,7 +60,7 @@ namespace ELS.configuration
             var data = new VCFEntry(Path.GetFileNameWithoutExtension(name), ResourceName, hash, new Vcfroot());
             if (type == SettingsType.Type.VCF)
             {
-                CitizenFX.Core.Debug.WriteLine("Loading XML");
+                CitizenFX.Core.Debug.WriteLine($"Loading XML for {name}");
                 System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
                 doc.LoadXml(Data);
                 bool res;
