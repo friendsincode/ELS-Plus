@@ -63,8 +63,6 @@ namespace ELS.Extra
             set
             {
                 _pattnum = value;
-                Pattern = Leds.StringPatterns[PatternNum];
-                //ElsUiPanel.SetUiPatternNumber(PatternNum, LightType.ToString());
             }
         }
 
@@ -84,6 +82,7 @@ namespace ELS.Extra
                 if (!IsPatternRunning)
                 {
                     CleanUp();
+                    count = 0;
                 }
             }
 
@@ -155,9 +154,15 @@ namespace ELS.Extra
 
         int count = 0;
         int flashrate;
-        int allowflash = 1;  
+        int allowflash = 1;
+        bool firstTick = false;
         internal async void ExtraTicker()
         {
+            if (firstTick)
+            {
+                Delay = 100;
+                firstTick = false;
+            }
             flashrate = (int)Game.FPS / ((int)Game.FPS * 60 / Delay);
 #if DEBUG
             //CitizenFX.Core.Debug.WriteLine($"Flash rate: {flashrate}");
@@ -248,7 +253,7 @@ namespace ELS.Extra
         internal void DrawEnvLight()
         {
             var off = _vehicle.GetPositionOffset(GetBone());
-            var extraoffset = _vehicle.GetOffsetPosition(off + new Vector3(0, 0.05f, 0));
+            var extraoffset = _vehicle.GetOffsetPosition(off + new Vector3(float.Parse(_extraInfo.OffsetX), float.Parse(_extraInfo.OffsetY), float.Parse(_extraInfo.OffsetZ)));
 
             
             float hx = (float)((double)extraoffset.X + 5 * Math.Cos(((double)anglehorizontal + Game.Player.Character.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
@@ -261,7 +266,7 @@ namespace ELS.Extra
             dirVector = destinationCoords - extraoffset;
             dirVector.Normalize();
             //API.DrawSpotLightWithShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, dirVector.X, dirVector.Y, dirVector.Z, Color['r'], Color['g'], Color['b'], 100.0f, 1f, 0.0f, 13.0f, 1f, 100f);
-            API.DrawLightWithRangeAndShadow(GetBone().X + float.Parse(_extraInfo.OffsetX), GetBone().Y + float.Parse(_extraInfo.OffsetY), GetBone().Z + float.Parse(_extraInfo.OffsetZ), Color['r'], Color['g'], Color['b'], 5f, 1f, .5f);
+            API.DrawLightWithRangeAndShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, Color['r'],Color['g'],Color['b'], 5f, 1f, .5f);
         }
 
         internal Dictionary<char, int> Color;        
@@ -272,57 +277,63 @@ namespace ELS.Extra
             {
                 case 1:
                     LightType = LightType.PRML;
-                    Delay = 400;
-                    PatternNum = 0;
+                    Delay = 100;
+                    Pattern = "";
                     break;
                 case 2:
                     LightType = LightType.PRML;
-                    Delay = 400;
-                    PatternNum = 0;
+                    Delay = 100;
+                    Pattern = "";
                     break;
                 case 3:
                     LightType = LightType.PRML;
-                    Delay = 400;
-                    PatternNum = 0;
+                    Delay = 100;
+                    Pattern = "";
                     break;
                 case 4:
                     LightType = LightType.PRML;
-                    Delay = 400;
-                    PatternNum = 0;
+                    Delay = 100;
+                    Pattern = "";
                     break;
                 case 5:
                     LightType = LightType.WRNL;
-                    Delay = 400;
-                    PatternNum = 0;
+                    Delay = 100;
+                    Pattern = "";
                     break;
                 case 6:
                     LightType = LightType.WRNL;
-                    Delay = 400;
-                    PatternNum = 0;
+                    Delay = 100;
+                    Pattern = "";
                     break;
                 case 7:
                     LightType = LightType.SECL;
-                    PatternNum = 0;
-                    Delay = 200;
+                    Delay = 100;
+                    Pattern = "";
                     break;
                 case 8:
                     LightType = LightType.SECL;
-                    PatternNum = 0;
-                    Delay = 200;
+                    Delay = 100;
+                    Pattern = "";
                     break;
                 case 9:
                     LightType = LightType.SECL;
-                    PatternNum = 0;
-                    Delay = 200;
+                    Delay = 100;
+                    Pattern = "";
                     break;
                 case 10:
                     LightType = LightType.SBRN;
+                    Delay = 100;
+                    Pattern = "";
                     break;
                 case 11:
                     LightType = LightType.SCL;
+                    Delay = 100;
+                    Pattern = "";
                     break;
                 case 12:
                     LightType = LightType.TDL;
+                    Delay = 100;
+                    Pattern = "";
                     break;
             }
 

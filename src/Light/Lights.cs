@@ -18,15 +18,9 @@
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using ELS.configuration;
-using ELS.NUI;
-using ELS.Siren;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace ELS.Light
 {
@@ -36,7 +30,7 @@ namespace ELS.Light
         WRNL,
         SECL
     }
-    internal struct Extras 
+    internal struct Extras
     {
         public Dictionary<int, Extra.Extra> PRML;
         internal Dictionary<int, Extra.Extra> WRNL;
@@ -55,25 +49,27 @@ namespace ELS.Light
             WRNL = new Dictionary<int, Extra.Extra>(),
             SECL = new Dictionary<int, Extra.Extra>(),
         };
-        
+
         private Vcfroot _vcfroot;
         private Vehicle _vehicle;
         private Stage _stage;
+       
+
         internal Lights(Vehicle vehicle, Vcfroot vcfroot, [Optional]IDictionary<string, object> data)
         {
             _vcfroot = vcfroot;
             _vehicle = vehicle;
             AddAllValidLightExtras();
             LightStagesSetup();
+            SetupPatternsPrm();
+            SetupSecPatterns();
+            SetupWrnPatterns();
         }
 
         private void LightStagesSetup()
         {
             _stage = new Stage(_vcfroot.PRML, _vcfroot.SECL, _vcfroot.WRNL);
-            
         }
-
-        
 
         private void AddAllValidLightExtras()
         {
@@ -85,7 +81,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 1) && bool.Parse(_vcfroot.EOVERRIDE.Extra01.IsElsControlled))
                             {
-                                this._extras.PRML.Add(1, new Extra.Extra(_vehicle,1,_vcfroot.EOVERRIDE.Extra01, _vcfroot.PRML.LightingFormat));
+                                this._extras.PRML.Add(1, new Extra.Extra(_vehicle, 1, _vcfroot.EOVERRIDE.Extra01, _vcfroot.PRML.LightingFormat));
                             }
                         }
                         break;
@@ -93,7 +89,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 2) && bool.Parse(_vcfroot.EOVERRIDE.Extra02.IsElsControlled))
                             {
-                                this._extras.PRML.Add(2, new Extra.Extra(_vehicle,2, _vcfroot.EOVERRIDE.Extra02, _vcfroot.PRML.LightingFormat));
+                                this._extras.PRML.Add(2, new Extra.Extra(_vehicle, 2, _vcfroot.EOVERRIDE.Extra02, _vcfroot.PRML.LightingFormat));
                             }
                         }
                         break;
@@ -101,7 +97,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 3) && bool.Parse(_vcfroot.EOVERRIDE.Extra03.IsElsControlled))
                             {
-                                this._extras.PRML.Add(3, new Extra.Extra(_vehicle,3, _vcfroot.EOVERRIDE.Extra03, _vcfroot.PRML.LightingFormat));
+                                this._extras.PRML.Add(3, new Extra.Extra(_vehicle, 3, _vcfroot.EOVERRIDE.Extra03, _vcfroot.PRML.LightingFormat));
                             }
                         }
                         break;
@@ -109,7 +105,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 4) && bool.Parse(_vcfroot.EOVERRIDE.Extra04.IsElsControlled))
                             {
-                                this._extras.PRML.Add(4, new Extra.Extra(_vehicle,4,_vcfroot.EOVERRIDE.Extra04, _vcfroot.PRML.LightingFormat));
+                                this._extras.PRML.Add(4, new Extra.Extra(_vehicle, 4, _vcfroot.EOVERRIDE.Extra04, _vcfroot.PRML.LightingFormat));
                             }
                         }
                         break;
@@ -117,7 +113,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 5) && bool.Parse(_vcfroot.EOVERRIDE.Extra05.IsElsControlled))
                             {
-                                this._extras.WRNL.Add(5, new Extra.Extra(_vehicle,5, _vcfroot.EOVERRIDE.Extra05, _vcfroot.WRNL.LightingFormat));
+                                this._extras.WRNL.Add(5, new Extra.Extra(_vehicle, 5, _vcfroot.EOVERRIDE.Extra05, _vcfroot.WRNL.LightingFormat));
                             }
                         }
                         break;
@@ -125,7 +121,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 6) && bool.Parse(_vcfroot.EOVERRIDE.Extra06.IsElsControlled))
                             {
-                                this._extras.WRNL.Add(6, new Extra.Extra(_vehicle,6, _vcfroot.EOVERRIDE.Extra06, _vcfroot.WRNL.LightingFormat));
+                                this._extras.WRNL.Add(6, new Extra.Extra(_vehicle, 6, _vcfroot.EOVERRIDE.Extra06, _vcfroot.WRNL.LightingFormat));
                             }
                         }
                         break;
@@ -133,7 +129,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 7) && bool.Parse(_vcfroot.EOVERRIDE.Extra07.IsElsControlled))
                             {
-                                this._extras.SECL.Add(7, new Extra.Extra(_vehicle,7, _vcfroot.EOVERRIDE.Extra07, _vcfroot.SECL.LightingFormat));
+                                this._extras.SECL.Add(7, new Extra.Extra(_vehicle, 7, _vcfroot.EOVERRIDE.Extra07, _vcfroot.SECL.LightingFormat));
                             }
                         }
                         break;
@@ -141,7 +137,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 8) && bool.Parse(_vcfroot.EOVERRIDE.Extra08.IsElsControlled))
                             {
-                                this._extras.SECL.Add(8, new Extra.Extra(_vehicle,8, _vcfroot.EOVERRIDE.Extra08, _vcfroot.SECL.LightingFormat));
+                                this._extras.SECL.Add(8, new Extra.Extra(_vehicle, 8, _vcfroot.EOVERRIDE.Extra08, _vcfroot.SECL.LightingFormat));
                             }
                         }
                         break;
@@ -149,7 +145,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 9) && bool.Parse(_vcfroot.EOVERRIDE.Extra09.IsElsControlled))
                             {
-                                this._extras.SECL.Add(9, new Extra.Extra(_vehicle,9, _vcfroot.EOVERRIDE.Extra09, _vcfroot.SECL.LightingFormat));
+                                this._extras.SECL.Add(9, new Extra.Extra(_vehicle, 9, _vcfroot.EOVERRIDE.Extra09, _vcfroot.SECL.LightingFormat));
                             }
                         }
                         break;
@@ -157,7 +153,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 10) && bool.Parse(_vcfroot.EOVERRIDE.Extra10.IsElsControlled))
                             {
-                                this._extras.SBRN = new Extra.Extra(_vehicle,10, _vcfroot.EOVERRIDE.Extra10);
+                                this._extras.SBRN = new Extra.Extra(_vehicle, 10, _vcfroot.EOVERRIDE.Extra10);
                             }
                         }
                         break;
@@ -165,7 +161,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 11) && bool.Parse(_vcfroot.EOVERRIDE.Extra11.IsElsControlled))
                             {
-                                this._extras.SCL = new Extra.Extra(_vehicle,11, _vcfroot.EOVERRIDE.Extra11);
+                                this._extras.SCL = new Extra.Extra(_vehicle, 11, _vcfroot.EOVERRIDE.Extra11);
                             }
                         }
                         break;
@@ -173,7 +169,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 12) && bool.Parse(_vcfroot.EOVERRIDE.Extra12.IsElsControlled))
                             {
-                                this._extras.TDL = new Extra.Extra(_vehicle,12, _vcfroot.EOVERRIDE.Extra12);
+                                this._extras.TDL = new Extra.Extra(_vehicle, 12, _vcfroot.EOVERRIDE.Extra12);
                             }
                         }
                         break;
@@ -210,7 +206,7 @@ namespace ELS.Light
 
         public void CleanUP()
         {
-           
+
         }
 
         public void LightsControlsRemote()
@@ -218,6 +214,6 @@ namespace ELS.Light
             CitizenFX.Core.Debug.WriteLine("LightsControlsRemote");
         }
 
-        
+
     }
 }

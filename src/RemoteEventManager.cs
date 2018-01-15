@@ -46,7 +46,8 @@ namespace ELS
             ChangePrmPatt,
             ChangeSecPatt,
             ChangeWrnPatt,
-            ToggleLstg
+            ToggleLstg,
+            ChgPattPrmL
         }
         internal enum MessageTypes
         {

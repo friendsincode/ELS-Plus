@@ -173,7 +173,7 @@ namespace ELS
                 var polModel = new Model((VehicleHash)Game.GenerateHash((string)arguments[0]));
                 await polModel.Request(-1);
                 await World.CreateVehicle(polModel, Game.PlayerPed.Position);
-            }), false);
+            }), true);
         }
 
         public static string CurrentResourceName()
