@@ -5,11 +5,14 @@ function controlLights(state, light, color) {
         $(light).removeClass("off").addClass(color);
     }
 }
-
+let resourceName = "";
 
 $(function () {
     window.addEventListener('message', function (event) {
-        if (event.data.type == "enableui") {
+        if (event.data.type == "initdata") {
+            resouceName = event.data.resourceName;
+        }
+        else if (event.data.type == "enableui") {
             //console.log("we are going to " + event.data.enable + " UI");
             //cursor.style.display = event.data.enable ? "block" : "none";
             document.body.style.display = event.data.enable ? "block" : "none";
@@ -50,13 +53,13 @@ $(function () {
         console.log(event)
 
         if (event.which == 74) {
-            $.post('http://els-fivem/keyPress', JSON.stringify({}));
+            $.post(`http://${resourceName}/keyPress`, JSON.stringify({}));
         }
     });
 
     document.onkeyup = function (data) {
         if (data.which == 27) { // Escape key
-            $.post('http://els-fivem/escape', JSON.stringify({}));
+            $.post(`http://${resourceName}/escape`, JSON.stringify({}));
             //console.log("Escape pressed");
         }
     };
@@ -74,10 +77,10 @@ $(document).ready(function () {
     $("#togPri").on("switchChange.bootstrapSwitch", function (event, state) {
         if (state) {
             //$("#togPri").bootstrapSwitch("labelText", "0000");
-            $.post("http://els-fivem/togglePrimary", JSON.stringify({ state: state }));
+            $.post(`http://${resourceName}/togglePrimary`, JSON.stringify({ state: state }));
         } else {
             //$("#togPri").bootstrapSwitch("labelText", "0001");
-            $.post("http://els-fivem/togglePrimary", JSON.stringify({ state: state }));
+            $.post(`http://${resourceName}/togglePrimary`, JSON.stringify({ state: state }));
         }
     });
     $("#togSec").bootstrapSwitch({
@@ -89,10 +92,10 @@ $(document).ready(function () {
     $("#togSec").on("switchChange.bootstrapSwitch", function (event, state) {
         if (state) {
             $("#togSec").bootstrapSwitch("labelText", "0000");
-            $.post("http://ELS-FiveM/toggleSecondary", JSON.stringify({ state: state }));
+            $.post(`http://${resourceName}/toggleSecondary`, JSON.stringify({ state: state }));
         } else {
             $("#togSec").bootstrapSwitch("labelText", "0001");
-            $.post("http://ELS-FiveM/toggleSecondary", JSON.stringify({ state: state }));
+            $.post(`http://${resourceName}/toggleSecondary`, JSON.stringify({ state: state }));
         }
     });
     $("#togWrn").bootstrapSwitch({
@@ -104,10 +107,10 @@ $(document).ready(function () {
     $("#togWrn").on("switchChange.bootstrapSwitch", function (event, state) {
         if (state) {
             $("#togWrn").bootstrapSwitch("labelText", "0000");
-            $.post("http://ELS-FiveM/toggleWarn", JSON.stringify({ state: state }));
+            $.post(`http://${resourceName}/toggleWarn`, JSON.stringify({ state: state }));
         } else {
             $("#togWrn").bootstrapSwitch("labelText", "0001");
-            $.post("http://ELS-FiveM/toggleWarn", JSON.stringify({ state: state }));
+            $.post(`http://${resourceName}/toggleWarn`, JSON.stringify({ state: state }));
         }
     });
     $("#togHrn").bootstrapSwitch({
