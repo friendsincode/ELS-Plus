@@ -19,20 +19,33 @@ namespace ELS.Manager
         }
         private void makenetworked(Vehicle veh)
         {
-            if (!veh.Model.IsLoaded) veh.Model.Request(-1);
+            //////////
+            ///
+            ///  THANKS to Antivirus-chan in the FiveM community for supplying this code
+            ///
+            //////////
+            //if (!veh.Model.IsLoaded) veh.Model.Request(-1);
             var net1 = API.VehToNet(veh.Handle);
-            if (API.NetworkDoesNetworkIdExist(net1))
+            var attempts = 0;
+            do
             {
-                if (true)
-                {
-                    API.NetworkSetEntityVisibleToNetwork(veh.Handle, true);
-                }
-                API.SetEntityRegister(veh.Handle, true);
-                API.SetEntitySomething(veh.Handle, true);
-                if (true)
-                {
-                    API.SetNetworkIdExistsOnAllMachines(net1, true);
-                }
+                BaseScript.Delay(500);
+                var netid = API.NetworkGetNetworkIdFromEntity(veh.Handle);
+                API.NetworkRegisterEntityAsNetworked(veh.Handle);
+                API.SetEntityAsMissionEntity(veh.Handle, false, false);
+                API.SetNetworkIdCanMigrate(netid, true);
+                API.SetNetworkIdExistsOnAllMachines(netid, true);
+                API.NetworkRequestControlOfEntity(veh.Handle);
+                attempts++;
+            }
+            while (!API.NetworkDoesEntityExistWithNetworkId(veh.Handle) && attempts < 10);
+            if (attempts == 10)
+            {
+                CitizenFX.Core.Debug.WriteLine("Failed to register entity on net");
+            }
+            else
+            {
+                CitizenFX.Core.Debug.WriteLine($"Registered  {veh.Handle} on net as {net1}");
             }
         }
         internal async void RunTickAsync()
@@ -43,14 +56,14 @@ namespace ELS.Manager
                         (Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed
                         || Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Passenger) == Game.PlayerPed))
                 {
-                    if (!API.IsEntityAMissionEntity(Game.PlayerPed.CurrentVehicle.Handle))
-                    {
-                        CitizenFX.Core.Debug.WriteLine("Not a mission entity");
-                        API.SetEntityAsMissionEntity(Game.PlayerPed.CurrentVehicle.Handle, true, true);
-                        //possible memory leak.
-                        Blip blip = new Blip(API.GetBlipFromEntity(Game.PlayerPed.CurrentVehicle.Handle));
-                        API.SetBlipSprite(blip.Handle, 2);
-                    }
+                    //if (!API.IsEntityAMissionEntity(Game.PlayerPed.CurrentVehicle.Handle))
+                    //{
+                    //    CitizenFX.Core.Debug.WriteLine("Not a mission entity");
+                    //    API.SetEntityAsMissionEntity(Game.PlayerPed.CurrentVehicle.Handle, true, true);
+                    //    //possible memory leak.
+                    //    Blip blip = new Blip(API.GetBlipFromEntity(Game.PlayerPed.CurrentVehicle.Handle));
+                    //    API.SetBlipSprite(blip.Handle, 2);
+                    //}
 
                     makenetworked(Game.PlayerPed.CurrentVehicle);
                     if (vehicleList.MakeSureItExists(API.VehToNet(Game.PlayerPed.CurrentVehicle.Handle), vehicle: out ELSVehicle _currentVehicle))
