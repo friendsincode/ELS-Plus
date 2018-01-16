@@ -152,12 +152,14 @@ namespace ELS
 
             API.RegisterCommand("elslist", new Action<int, List<object>, string>((source,args,raw) => {
                 var listString = "";
-                CitizenFX.Core.Debug.WriteLine($"{source}");
                 listString += $"Available ELS Vehicles\n" +
                               $"----------------------\n";
                 foreach (var entry in VCF.ELSVehicle)
                 {
-                    listString += $"{System.IO.Path.GetFileNameWithoutExtension(entry.filename)}\n";
+                    if (entry.modelHash.IsValid)
+                    {
+                        listString += $"{System.IO.Path.GetFileNameWithoutExtension(entry.filename)}\n";
+                    }
                 }
                 CitizenFX.Core.Debug.WriteLine(listString);
             }),false);
