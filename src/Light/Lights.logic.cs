@@ -22,6 +22,7 @@ namespace ELS.Light
             ToggleBrdKB();
             ToggleCrsKB();
             ChgPrmPattKB();
+            ToggleTdlKB();
             ToggleLightStageKB();
             ExternalTicker();
         }
@@ -138,6 +139,25 @@ namespace ELS.Light
             {
                 e.SetState(!e.State);
             }
+        }
+
+        internal void ToggleTdlKB()
+        {
+            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ToggleTdl);
+            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleTdl))
+            {
+                if (_extras.TDL != null)
+                {
+                    ToggleTdl();
+                }
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleTDL, _vehicle, true, Game.Player.ServerId);
+            }
+        }
+
+
+        internal void ToggleTdl()
+        {
+            _extras.TDL.SetState(!_extras.TDL.State);
         }
 
         internal void ChgPrmPattKB()
@@ -261,6 +281,7 @@ namespace ELS.Light
                 case 3:
                     foreach (Extra.Extra e in _extras.SECL.Values)
                     {
+                        
                         if (bool.Parse(_stage.SECL.PresetPatterns.Lstg3.Enabled))
                         {
                             if (_stage.SECL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
@@ -272,10 +293,17 @@ namespace ELS.Light
                                 //CurrentSecPattern = int.Parse(_stage.SECL.PresetPatterns.Lstg3.Pattern);
                             }
                         }
-                        e.IsPatternRunning = false;
-                        e.IsPatternRunning = true;
-                    }
-                    
+                        if (bool.Parse(_vcfroot.SECL.DisableAtLstg3))
+                        {
+                            e.IsPatternRunning = false;
+                        }
+                        else
+                        {
+                            e.IsPatternRunning = false;
+                            e.IsPatternRunning = true;
+                        }
+                    }                    
+
                     foreach (Extra.Extra e in _extras.PRML.Values)
                     { 
                         if (bool.Parse(_stage.PRML.PresetPatterns.Lstg3.Enabled))
@@ -295,6 +323,7 @@ namespace ELS.Light
                         e.IsPatternRunning = false;
                         e.IsPatternRunning = true;
                     }
+
                     foreach (Extra.Extra e in _extras.WRNL.Values)
                     {
                         if (bool.Parse(_stage.WRNL.PresetPatterns.Lstg3.Enabled))

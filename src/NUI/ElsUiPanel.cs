@@ -16,6 +16,14 @@ namespace ELS.NUI
         internal static int _enabled { get; set; }
         internal static bool _runPattern { get; set; }
 
+        //Sent current resource name to the ui
+        internal static void InitData()
+        {
+            string name = API.GetCurrentResourceName();
+            CitizenFX.Core.Debug.WriteLine($"Sending Current resouce name {name}");
+            API.SendNuiMessage($"{{\"type\":\"initdata\", \"name\":\"{name}\"}}");
+        }
+
         //Enable full ui control and cursor
         internal static void EnableUI()
         {

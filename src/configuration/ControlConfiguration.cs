@@ -92,13 +92,17 @@ namespace ELS.configuration
                 t = u["CONTROL"]["Toggle_LSTG"].IntValue;
                 KeyBindings.ToggleLstg = (Control)t;
 
+                t = u["CONTROL"]["Toggle_TKDL"].IntValue;
+                KeyBindings.ToggleTdl = (Control)t;
+
 
                 ControlsUpdated?.Invoke(KeyBindings);
-
+                global.EnabeTrafficControl = u["GENERAL"]["ElsTrafCtrlOn"].BoolValue;
             }
         }
         internal class ELSControls
         {
+            internal Control ToggleTdl { get; set; }
             internal Control Toggle_SIRN { get; set; }
             internal Control Sound_Ahorn { get; set; }
             internal Control Snd_SrnTon1 { get; set; }

@@ -121,6 +121,8 @@
     <Compile Include="Light\Patterns\Strobe.cs" />
     <Compile Include="Light\Patterns\TrafficAdvisor.cs" />
     <Compile Include="Light\Stage.cs" />
+    <Compile Include="TrafficControl\Vehicles.cs" />
+    <Compile Include="TrafficControl\Vehicles.logic.cs" />
     <Compile Include="Vehicle\ELSVehicle.cs" />
     <Compile Include="extentions.cs" />
     <Compile Include="FileLoader.cs" />
@@ -199,9 +201,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>powershell -ExecutionPolicy Bypass -File "$(SolutionDir)..\libs\copy.ps1" -projectName "$(SolutionName)" -assemblyname "$(TargetName)" -src "$(TargetDir) "</PostBuildEvent>

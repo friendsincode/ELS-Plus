@@ -61,6 +61,7 @@ namespace ELS
                             SetupConnections();
                             TriggerServerEvent("ELS:VcfSync:Server", Game.Player.ServerId);
                             TriggerServerEvent("ELS:FullSync:Request:All", Game.Player.ServerId);
+                            ElsUiPanel.InitData();
                             ElsUiPanel.DisableUI();
                         }
                         catch (Exception e)
@@ -147,6 +148,9 @@ namespace ELS
                 else if (arguments[0].Equals("disable"))
                 {
                     ElsUiPanel.DisableUI();
+                } else if (arguments[0].Equals("show"))
+                {
+                    ElsUiPanel.ShowUI();
                 }
             }), false);
 

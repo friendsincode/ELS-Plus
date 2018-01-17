@@ -13,9 +13,9 @@ namespace ELS.Extra
         {
             
             Dictionary<string, object> dic = new Dictionary<string, object>();
-            dic.Add("pattern", PatternNum);
+            //dic.Add("pattern", PatternNum);
             dic.Add("patternrunning", IsPatternRunning);
-            dic.Add("state", State);
+            //dic.Add("state", State);
             return dic;
         }
 
@@ -23,11 +23,10 @@ namespace ELS.Extra
         {
 #if DEBUG
             CitizenFX.Core.Debug.WriteLine($"Got data for {_Id} setting data");
-            CitizenFX.Core.Debug.WriteLine($"pattern: {data["pattern"]} running: {data["patternrunning"]} state: {data["state"]}");
 #endif
-            PatternNum = int.Parse(data["pattern"].ToString());
+            //PatternNum = int.Parse(data["pattern"].ToString());
             IsPatternRunning = bool.Parse(data["patternrunning"].ToString());
-            SetState(bool.Parse(data["state"].ToString()));
+            //SetState(bool.Parse(data["state"].ToString()));
 
         }
 

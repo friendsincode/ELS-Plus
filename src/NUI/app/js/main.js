@@ -1,16 +1,16 @@
 function controlLights(state, light, color) {
     if (!state) {
-        $(light).removeClass("red").removeClass("blue").addClass("off");
+        $(light).removeClass("red").removeClass("blue").removeClass("amber").removeClass("white").addClass("off");
     } else {
         $(light).removeClass("off").addClass(color);
     }
 }
-let resourceName = "";
+var resourceName = "";
 
 $(function () {
     window.addEventListener('message', function (event) {
         if (event.data.type == "initdata") {
-            resouceName = event.data.resourceName;
+            resourceName = event.data.name;
         }
         else if (event.data.type == "enableui") {
             //console.log("we are going to " + event.data.enable + " UI");
@@ -49,13 +49,13 @@ $(function () {
         }
     });
 
-    window.addEventListener('keyup', function (e) {
+    /*window.addEventListener('keyup', function (e) {
         console.log(event)
 
         if (event.which == 74) {
             $.post(`http://${resourceName}/keyPress`, JSON.stringify({}));
         }
-    });
+    });*/
 
     document.onkeyup = function (data) {
         if (data.which == 27) { // Escape key

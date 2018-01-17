@@ -1,6 +1,7 @@
 ﻿using System;
 using CitizenFX.Core;
 using ELS.configuration;
+using ELS.TrafficControl;
 
 namespace ELS.Siren
 {
@@ -14,7 +15,7 @@ namespace ELS.Siren
             {
 #if !REMOTETEST
                 AirHornLogic(true, true);
-
+                //Vehicles.MoveTraffic().Start();
 #endif
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle, true, Game.Player.ServerId);
 

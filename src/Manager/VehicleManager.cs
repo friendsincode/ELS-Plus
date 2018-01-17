@@ -13,6 +13,7 @@ namespace ELS.Manager
     class VehicleManager
     {
         static VehicleList vehicleList;
+        bool notified = false;
         public VehicleManager()
         {
             vehicleList = new VehicleList();
@@ -39,13 +40,15 @@ namespace ELS.Manager
                 attempts++;
             }
             while (!API.NetworkDoesEntityExistWithNetworkId(veh.Handle) && attempts < 10);
-            if (attempts == 10)
+            if (attempts == 10 && !notified)
             {
                 CitizenFX.Core.Debug.WriteLine("Failed to register entity on net");
+                notified = true;
             }
-            else
+            else if (!notified)
             {
                 CitizenFX.Core.Debug.WriteLine($"Registered  {veh.Handle} on net as {net1}");
+                notified = true;
             }
         }
         internal async void RunTickAsync()
