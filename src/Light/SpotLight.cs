@@ -32,10 +32,11 @@ namespace ELS.Light
         private float anngleVirtical = 0f;
 
         private Vector3 dirVector;
+        private int _id;
 
-        public SpotLight()
+        public SpotLight(int id)
         {
-            
+            _id = id;
         }
 
         public void RunTick()
@@ -60,13 +61,12 @@ namespace ELS.Light
             
             //var spotoffset = Game.Player.Character.CurrentVehicle.GetOffsetPosition(new Vector3(-0.9f, 1.15f, 0.5f));
 
-            var off = Game.Player.Character.CurrentVehicle.GetPositionOffset(
-                Game.Player.Character.CurrentVehicle.Bones["extra_1"].Position);
-            var spotoffset = Game.Player.Character.CurrentVehicle.GetOffsetPosition(off+new Vector3(0,0.05f,0));
+            var off = Game.PlayerPed.CurrentVehicle.GetPositionOffset(Game.PlayerPed.CurrentVehicle.Bones[$"extra_{_id}"].Position);
+            var spotoffset = Game.PlayerPed.CurrentVehicle.GetOffsetPosition(off+new Vector3(0,0.05f,0));
             
-            Vector3 myPos = Game.Player.Character.CurrentVehicle.Bones["extra_1"].Position;
-            float hx = (float)((double)spotoffset.X + 5 * Math.Cos(((double)anglehorizontal + Game.Player.Character.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
-            float hy = (float)((double)spotoffset.Y + 5 * Math.Sin(((double)anglehorizontal + Game.Player.Character.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
+            Vector3 myPos = Game.PlayerPed.CurrentVehicle.Bones[$"extra_{_id}"].Position;
+            float hx = (float)((double)spotoffset.X + 5 * Math.Cos(((double)anglehorizontal + Game.PlayerPed.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
+            float hy = (float)((double)spotoffset.Y + 5 * Math.Sin(((double)anglehorizontal + Game.PlayerPed.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
             float vz = (float)((double)spotoffset.Z + 5 * Math.Sin((double)anngleVirtical * Math.PI / 180.0));
 
             Vector3 destinationCoords = (new Vector3(hx,
@@ -75,7 +75,6 @@ namespace ELS.Light
             dirVector = destinationCoords - spotoffset;
             dirVector.Normalize();
             Function.Call(Hash._DRAW_SPOT_LIGHT_WITH_SHADOW, spotoffset.X, spotoffset.Y, spotoffset.Z, dirVector.X, dirVector.Y, dirVector.Z, 255, 255, 255, 100.0f, 1f, 0.0f, 13.0f, 1f,100f);
-
         }
 
     }

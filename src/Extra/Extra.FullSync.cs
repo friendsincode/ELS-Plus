@@ -13,9 +13,9 @@ namespace ELS.Extra
         {
             
             Dictionary<string, object> dic = new Dictionary<string, object>();
-            //dic.Add("pattern", PatternNum);
+           
             dic.Add("patternrunning", IsPatternRunning);
-            //dic.Add("state", State);
+            dic.Add("on", TurnedOn);
             return dic;
         }
 
@@ -26,7 +26,7 @@ namespace ELS.Extra
 #endif
             //PatternNum = int.Parse(data["pattern"].ToString());
             IsPatternRunning = bool.Parse(data["patternrunning"].ToString());
-            //SetState(bool.Parse(data["state"].ToString()));
+            TurnedOn = bool.Parse(data["on"].ToString());
 
         }
 

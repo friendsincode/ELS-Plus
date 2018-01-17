@@ -8,6 +8,7 @@ using CitizenFX.Core.Native;
 using ELS.configuration;
 using ELS.NUI;
 using ELS.Light.Patterns;
+using ELS.Light;
 
 namespace ELS.Extra
 {
@@ -35,6 +36,7 @@ namespace ELS.Extra
         private LightType LightType { get; set; }
         private string _pattern;
         private string _pattType;
+        private SpotLight spotLight;
 
         internal string Pattern
         {
@@ -71,6 +73,24 @@ namespace ELS.Extra
             get
             {
                 return _Id;
+            }
+        }
+
+        bool _on;
+        internal bool TurnedOn
+        {
+            get { return _on; }
+            set
+            {
+                _on = value;
+                if (TurnedOn)
+                {
+                    SetState(true);
+                } 
+                else
+                {
+                    SetState(false);
+                }
             }
         }
         internal bool IsPatternRunning
@@ -126,6 +146,7 @@ namespace ELS.Extra
             CleanUp();
             SetInfo();
             PatternType = format;
+            TurnedOn = false;
             if (!API.DoesExtraExist(entity.Handle, id))
             {
                 CitizenFX.Core.Debug.WriteLine($"Extra id: {id} does not exsist");
@@ -216,6 +237,10 @@ namespace ELS.Extra
             else
             {
                 allowflash++;
+            }
+            if (TurnedOn && spotLight != null)
+            {
+                spotLight.RunTick();
             }
         }
 
@@ -333,16 +358,21 @@ namespace ELS.Extra
                     LightType = LightType.SBRN;
                     Delay = 100;
                     Pattern = "";
+                    IsPatternRunning = false;
                     break;
                 case 11:
                     LightType = LightType.SCL;
                     Delay = 100;
                     Pattern = "";
+                    IsPatternRunning = false;
+                    spotLight = new SpotLight(_Id);
                     break;
                 case 12:
                     LightType = LightType.TDL;
                     Delay = 100;
                     Pattern = "";
+                    IsPatternRunning = false;
+                    spotLight = new SpotLight(_Id);
                     break;
             }
 

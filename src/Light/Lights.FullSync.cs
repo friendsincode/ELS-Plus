@@ -48,7 +48,7 @@ namespace ELS.Light
             {
                 dic.Add("SECL", sec);
 #if DEBUG
-                CitizenFX.Core.Debug.WriteLine($"addded secl data");
+                CitizenFX.Core.Debug.WriteLine($"added secl data");
 #endif
             }
             if (wrn != null && wrn.Count > 0)
@@ -62,21 +62,21 @@ namespace ELS.Light
             {
                 dic.Add("SBRN", _extras.SBRN.GetData());
 #if DEBUG
-                CitizenFX.Core.Debug.WriteLine($"Got SBRN data");
+                CitizenFX.Core.Debug.WriteLine($"added SBRN data");
 #endif
             }
             if (_extras.SCL != null)
             {
                 dic.Add("SCL", _extras.SCL.GetData());
 #if DEBUG
-                CitizenFX.Core.Debug.WriteLine($"Got SCL data");
+                CitizenFX.Core.Debug.WriteLine($"added SCL data");
 #endif
             }
             if (_extras.TDL != null)
             {
                 dic.Add("TDL", _extras.TDL.GetData());
 #if DEBUG
-                CitizenFX.Core.Debug.WriteLine($"Got TDL data");
+                CitizenFX.Core.Debug.WriteLine($"added TDL data");
 #endif
             }
             dic.Add("BRD", _extras.BRD.GetData());
@@ -133,33 +133,85 @@ namespace ELS.Light
 #endif
                 }
             }
-            if (data.ContainsKey("SBRN"))
+            try
             {
-                _extras.SBRN.SetData((IDictionary<string, object>)data["SBRN"]);
+                if (data.ContainsKey("SBRN"))
+                {
+                    _extras.SBRN.SetData((IDictionary<string, object>)data["SBRN"]);
+#if DEBUG
+                    CitizenFX.Core.Debug.WriteLine($"Added SBRN from sync data");
+#endif
+                }
             }
-            if (data.ContainsKey("SCL"))
+            catch (Exception e)
             {
-                _extras.SBRN.SetData((IDictionary<string, object>)data["SCL"]);
+                CitizenFX.Core.Debug.WriteLine($"SBRN error: {e.Message}");
             }
-            if (data.ContainsKey("TDL"))
+            try
             {
-                _extras.SBRN.SetData((IDictionary<string, object>)data["TDL"]);
+                if (data.ContainsKey("SCL"))
+                {
+                    _extras.SCL.SetData((IDictionary<string, object>)data["SCL"]);
+#if DEBUG
+                    CitizenFX.Core.Debug.WriteLine($"Added SCL from sync data");
+#endif
+                }
             }
-            if (data.ContainsKey("BRD"))
+            catch (Exception e)
             {
-                _extras.BRD.SetData((IDictionary<string, object>)data["BRD"]);
+                CitizenFX.Core.Debug.WriteLine($"SCL error: {e.Message}");
+            }
+            try
+            {
+                if (data.ContainsKey("TDL"))
+                {
+                    _extras.TDL.SetData((IDictionary<string, object>)data["TDL"]);
+#if DEBUG
+                    CitizenFX.Core.Debug.WriteLine($"Added TDL from sync data");
+#endif
+                }
+            }
+            catch (Exception e)
+            {
+                CitizenFX.Core.Debug.WriteLine($"TDL error: {e.Message}");
+            }
+            try
+            {
+                if (data.ContainsKey("BRD"))
+                {
+#if DEBUG
+                    CitizenFX.Core.Debug.WriteLine($"Got BRD from sync data");
+#endif
+                    _extras.BRD.SetData((IDictionary<string, object>)data["BRD"]);
+#if DEBUG
+                    CitizenFX.Core.Debug.WriteLine($"Added BRD from sync data");
+#endif
+                }
+            }
+            catch (Exception e)
+            {
+                CitizenFX.Core.Debug.WriteLine($"BRD error: {e.Message}");
             }
             if (data.ContainsKey("PrmPatt"))
             {
                 CurrentPrmPattern = int.Parse(data["PrmPatt"].ToString());
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine($"Added PrmPatt from sync data");
+#endif
             }
             if (data.ContainsKey("SecPatt"))
             {
                 CurrentSecPattern = int.Parse(data["SecPatt"].ToString());
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine($"Added SecPatt from sync data");
+#endif
             }
             if (data.ContainsKey("WrnPatt"))
             {
                 CurrentWrnPattern = int.Parse(data["WrnPatt"].ToString());
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine($"Added WrnPatt from sync data");
+#endif
             }
         }
     }
