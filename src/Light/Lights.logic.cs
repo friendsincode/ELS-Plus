@@ -137,7 +137,7 @@ namespace ELS.Light
         {
             foreach (Extra.Extra e in _extras.PRML.Values)
             {
-                e.SetState(!e.State);
+                e.TurnedOn = !e.State;
             }
         }
 
@@ -157,7 +157,7 @@ namespace ELS.Light
 
         internal void ToggleTdl()
         {
-            _extras.TDL.SetState(!_extras.TDL.State);
+            _extras.TDL.TurnedOn = !_extras.TDL.State;
         }
 
         internal void ChgPrmPattKB()

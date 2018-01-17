@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CitizenFX.Core;
+using CitizenFX.Core.Native;
 
 namespace ELS_Server
 {
@@ -15,6 +16,13 @@ namespace ELS_Server
         {
             
             Debug.WriteLine("Server Running");
+            API.RegisterCommand("vcfrefresh", new Action<int, List<object>, string>((source, arguments, raw) =>
+            {
+
+                foreach (Player p in Players) {
+                    TriggerEvent("ELS:VcfSync:Server", p.Handle);
+                }
+            }), false);
             EventHandlers["ELS:VcfSync:Server"] += new Action<int>((int source) =>
             {
                 _vcfSync = new VcfSync();
