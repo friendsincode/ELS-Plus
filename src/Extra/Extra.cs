@@ -168,7 +168,7 @@ namespace ELS.Extra
             //CitizenFX.Core.Debug.WriteLine($"Flash rate: {flashrate}");
             //CitizenFX.Core.Debug.WriteLine($"Allow Flash: {allowflash}");
 #endif
-            if (Game.FPS < 25 || flashrate == allowflash)
+            if (flashrate == allowflash)
             {
                 allowflash = 1;
                 if (IsPatternRunning)
@@ -195,7 +195,7 @@ namespace ELS.Extra
                             CleanUp();
                             return;
                         }
-                        //DrawEnvLight();
+                        DrawEnvLight();
                     }
                     count++;
                     if (count > Pattern.Length - 1)
@@ -252,21 +252,30 @@ namespace ELS.Extra
 
         internal void DrawEnvLight()
         {
+            if (_vehicle == null)
+            {
+                CitizenFX.Core.Debug.WriteLine("Vehicle is null!!!");
+                return;
+            }
             var off = _vehicle.GetPositionOffset(GetBone());
+            if (off == null)
+            {
+                CitizenFX.Core.Debug.WriteLine("Bone is null for some reason!!!");
+                return;
+            }
             var extraoffset = _vehicle.GetOffsetPosition(off + new Vector3(float.Parse(_extraInfo.OffsetX), float.Parse(_extraInfo.OffsetY), float.Parse(_extraInfo.OffsetZ)));
 
             
-            float hx = (float)((double)extraoffset.X + 5 * Math.Cos(((double)anglehorizontal + Game.Player.Character.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
-            float hy = (float)((double)extraoffset.Y + 5 * Math.Sin(((double)anglehorizontal + Game.Player.Character.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
-            float vz = (float)((double)extraoffset.Z + 5 * Math.Sin((double)anngleVirtical * Math.PI / 180.0));
+            //float hx = (float)((double)extraoffset.X + 5 * Math.Cos(((double)anglehorizontal + Game.Player.Character.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
+            //float hy = (float)((double)extraoffset.Y + 5 * Math.Sin(((double)anglehorizontal + Game.Player.Character.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
+            //float vz = (float)((double)extraoffset.Z + 5 * Math.Sin((double)anngleVirtical * Math.PI / 180.0));
 
-            Vector3 destinationCoords = (new Vector3(hx,
-           hy, vz));
+            //Vector3 destinationCoords = (new Vector3(hx, hy, vz));
 
-            dirVector = destinationCoords - extraoffset;
-            dirVector.Normalize();
+            //dirVector = destinationCoords - extraoffset;
+            //dirVector.Normalize();
             //API.DrawSpotLightWithShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, dirVector.X, dirVector.Y, dirVector.Z, Color['r'], Color['g'], Color['b'], 100.0f, 1f, 0.0f, 13.0f, 1f, 100f);
-            API.DrawLightWithRangeAndShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, Color['r'],Color['g'],Color['b'], 5f, 1f, .5f);
+            API.DrawLightWithRangeAndShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, Color['r'],Color['g'],Color['b'],50f,.40f,1f);
         }
 
         internal Dictionary<char, int> Color;        

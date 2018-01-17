@@ -110,7 +110,7 @@ namespace ELS.Light
         private void SetupPatternsPrm()
         {
             _prmPatterns = new Dictionary<int, Pattern>();
-            int delay = 500;
+            int delay = 400;
             int count = 0;
             int patt = 0;
             for (int i = 0; i < 64; i++)
@@ -122,7 +122,7 @@ namespace ELS.Light
                 }
                 if (delay < 200)
                 {
-                    delay = 500;
+                    delay = 400;
                     patt++;
                 }
                 _prmPatterns.Add(i, new Pattern(PatternType.PRML, delay, Leds.StringPatterns[patt], i, count));
@@ -134,7 +134,7 @@ namespace ELS.Light
         private void SetupSecPatterns()
         {
             _secPatterns = new Dictionary<int, Pattern>();
-            _secPatterns.Add(0, new Pattern(PatternType.SECL, 500, Leds.StringPatterns[22], 0));
+            _secPatterns.Add(0, new Pattern(PatternType.SECL, 700, Leds.StringPatterns[22], 0));
             CurrentSecPattern = 0;
             foreach (Extra.Extra e in _extras.SECL.Values)
             {

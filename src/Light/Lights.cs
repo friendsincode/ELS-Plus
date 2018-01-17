@@ -206,7 +206,21 @@ namespace ELS.Light
 
         public void CleanUP()
         {
-
+            foreach(Extra.Extra e in _extras.PRML.Values)
+            {
+                e.CleanUp();
+            }
+            foreach (Extra.Extra e in _extras.SECL.Values)
+            {
+                e.CleanUp();
+            }
+            foreach (Extra.Extra e in _extras.WRNL.Values)
+            {
+                e.CleanUp();
+            }
+            _extras.SBRN.CleanUp();
+            _extras.TDL.CleanUp();
+            _extras.SCL.CleanUp();
         }
 
         public void LightsControlsRemote()

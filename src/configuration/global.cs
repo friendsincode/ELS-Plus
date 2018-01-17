@@ -25,9 +25,11 @@ namespace ELS.configuration
 {
     class global
     {
+        internal static bool EnabeTrafficControl { get; set; }
+
         public global()
         {
-
+            
         }
     }
 }

@@ -117,6 +117,7 @@ namespace ELS
 
         public override void Delete()
         {
+            _light.CleanUP();
             _vehicle.Delete();
         }
 
