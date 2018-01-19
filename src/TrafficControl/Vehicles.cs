@@ -39,7 +39,7 @@ namespace ELS.TrafficControl
 
         static List<Ped> GetNearestPeds(float range)
         {
-            
+            //API.GetClosestVehicle()
             int handle = 0;
             List<Ped> peds = new List<Ped>();
             do

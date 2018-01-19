@@ -145,7 +145,7 @@ namespace ELS.Extra
             _extraInfo = ex;
             CleanUp();
             SetInfo();
-            PatternType = format;
+            PatternType = format;            
             TurnedOn = false;
             if (!API.DoesExtraExist(entity.Handle, id))
             {
@@ -164,7 +164,10 @@ namespace ELS.Extra
         private void SetTrue()
         {
             API.SetVehicleExtra(_vehicle.Handle, _Id, false);
-            ElsUiPanel.SendLightData(true, $"#extra{_Id}", _extraInfo.Color);
+            if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.Handle == _vehicle.Handle)
+            {
+                ElsUiPanel.SendLightData(true, $"#extra{_Id}", _extraInfo.Color);
+            }
         }
 
         private void SetFalse()

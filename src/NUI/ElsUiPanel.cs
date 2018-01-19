@@ -65,64 +65,6 @@ namespace ELS.NUI
             API.SendNuiMessage("{\"type\":\"lightControl\", \"state\":" + state.ToString().ToLower() + ", \"light\": \"" + light + "\", \"color\":\"" + color + "\" }");
         }
 
-        /// <summary>
-        /// Run a given pattern for lights on NUI
-        /// </summary>
-        /// <param name="patt">Dec representation of binary pattern</param>
-        /// <param name="light">Corresponding light on NUI display</param>
-        /// <param name="color">Color of light</param>
-        /// <returns></returns>        
-        internal static async Task RunNuiLightPattern(uint patt, string light, string color)
-        {
-            string patt2 = Convert.ToString(patt, 2);
-            char[] binary = patt2.ToCharArray();
-            do
-            {
-                foreach (char c in binary)
-                {
-                    if (c.Equals('0'))
-                    {
-                        SendLightData(false, light, "");
-                    }
-                    else
-                    {
-                        SendLightData(true, light, color);
-                    }
-                    await ELS.Delay(75);
-                }
-                SendLightData(false, light, "");
-            } while (_runPattern);
-        }
-
-        /// <summary>
-        /// Run a given pattern for lights on NUI
-        /// </summary>
-        /// <param name="patt">Binary String of light pattern</param>
-        /// <param name="light">Corresponding light on NUI Display</param>
-        /// <param name="color">Color of light</param>
-        /// <returns></returns>
-        internal static async Task RunNuiLightPattern(string patt, string light, string color)
-        {
-            //string patt2 = Convert.ToString(patt, 2);
-            char[] binary = patt.ToCharArray();
-            do
-            {
-                foreach (char c in binary)
-                {
-                    if (c.Equals('0'))
-                    {
-                        SendLightData(false, light, "");
-                    }
-                    else
-                    {
-                        SendLightData(true, light, color);
-                    }
-                    await ELS.Delay(150);
-                }
-                SendLightData(false, light, "");
-            } while (_runPattern);
-        }
-
         internal static void SetUiPatternNumber(int patt, string lighttype)
         {
             API.SendNuiMessage($"{{\"type\":\"setpatternnumber\", \"lighttype\":\"{lighttype}\", \"pattern\":\"{patt.ToString().PadLeft(4,'0')}\" }}");
