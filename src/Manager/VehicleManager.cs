@@ -95,10 +95,11 @@ namespace ELS.Manager
                         CitizenFX.Core.UI.Screen.ShowNotification("FullSync™ ran");
                         CitizenFX.Core.Debug.WriteLine("FullSync™ ran");
                     }
+                    Debug.DebugText();
 #endif
                 }
                 vehicleList.RunExternalTick();
-                Debug.DebugText();
+               
             }
             catch (Exception e)
             {
