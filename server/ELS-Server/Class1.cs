@@ -55,8 +55,8 @@ namespace ELS_Server
             
             foreach(var ply in Players)
             {
-                Debug.WriteLine($"comparing {ply} with {Players[SourcePlayerID]}");
-                if (ply.EndPoint.Equals(Players[SourcePlayerID].EndPoint))
+                Debug.WriteLine($"comparing {ply.EndPoint} with {Players[SourcePlayerID].EndPoint}");
+                if (!ply.EndPoint.Equals(Players[SourcePlayerID].EndPoint))
                 {
                     TriggerClientEvent("ELS:NewFullSyncData", dataDic);
                 }
