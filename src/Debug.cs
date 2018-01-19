@@ -18,6 +18,7 @@ namespace ELS
     {
         internal static async Task Spawn()
         {
+#if DEBUG
             if (!Game.PlayerPed.IsInVehicle())
             {
                 var polModel = new Model((VehicleHash)Game.GenerateHash("sadot"));
@@ -43,6 +44,7 @@ namespace ELS
                 veh.RadioStation = RadioStation.RadioOff;
             }
             // Game.Player.Character.SetIntoVehicle(veh, VehicleSeat.Any);
+#endif
         }
         internal static void DebugText()
         {
