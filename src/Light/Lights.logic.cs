@@ -25,13 +25,15 @@ namespace ELS.Light
             ToggleTdlKB();
             ToggleLightStageKB();
             ExternalTicker();
+            ToggleBrdKB();
         }
 
         public async void ExternalTicker()
         {
-            if (_extras.BRD != null && _extras.BRD.AnimateBoard)
+
+            if (_extras.BRD.HasBoard)
             {
-                ToggleBrd();
+                _extras.BRD.BoardTicker();
             }
             foreach (Extra.Extra prim in _extras.PRML.Values)
             {
@@ -102,30 +104,28 @@ namespace ELS.Light
 
         internal void ToggleBrdKB()
         {
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleCrsL) && Game.IsControlPressed(0, Control.CharacterWheel))
+            Game.DisableControlThisFrame(0, Control.CharacterWheel);
+            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleBoard) && Game.IsControlPressed(0, Control.CharacterWheel))
             {
-                _extras.BRD.AnimateBoard = !_extras.BRD.AnimateBoard;
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine($"Is Board raised  {_extras.BRD.BoardRaised}");
+#endif
+                if (_extras.BRD.BoardRaised)
+                {
+                    _extras.BRD.RaiseBoardNow = false;
+                }
+                else
+                {
+                    _extras.BRD.RaiseBoardNow = true;
+                }
                 //RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleWrnL, _vehicle, true, Game.Player.ServerId);
-            }
-        }
-
-        internal void ToggleBrd()
-        {
-            if (_extras.BRD.BoardRaised)
-            {
-                _extras.BRD.LowerBoard();
-            }
-            else
-            {
-                CitizenFX.Core.Debug.WriteLine("Raising Board");
-                _extras.BRD.RaiseBoard();
             }
         }
 
         internal void ToggleCrsKB()
         {
             Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ToggleCrsL);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleCrsL))
+            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleCrsL) && !Game.IsControlPressed(0, Control.CharacterWheel))
             {
                 ToggleCrs();
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleCrsL, _vehicle, true, Game.Player.ServerId);

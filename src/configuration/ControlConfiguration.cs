@@ -95,6 +95,9 @@ namespace ELS.configuration
                 t = u["CONTROL"]["Toggle_TKDL"].IntValue;
                 KeyBindings.ToggleTdl = (Control)t;
 
+                t = u["CONTROL"]["Toggle_BRD"].IntValue;
+                KeyBindings.ToggleBoard = (Control)t;
+
 
                 ControlsUpdated?.Invoke(KeyBindings);
                 global.EnabeTrafficControl = u["GENERAL"]["ElsTrafCtrlOn"].BoolValue;
