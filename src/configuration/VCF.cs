@@ -60,7 +60,6 @@ namespace ELS.configuration
             var data = new VCFEntry(Path.GetFileNameWithoutExtension(name), ResourceName, hash, new Vcfroot());
             if (type == SettingsType.Type.VCF)
             {
-                CitizenFX.Core.Debug.WriteLine($"Loading XML for {name}");
                 System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
                 doc.LoadXml(Data);
                 bool res;
@@ -71,11 +70,18 @@ namespace ELS.configuration
                     return;
                 }
                 #region VCF Info
-                CitizenFX.Core.Debug.WriteLine("Parsing VCF Info");
+                CitizenFX.Core.Debug.WriteLine($"Parsing VCF Info for vehicle {name}");
                 //VCF Description
-                data.root.Description = doc["vcfroot"].Attributes["Description"].Value;
+                if (doc["vcfroot"].Attributes["Description"] != null)
+                {
+                    data.root.Description = doc["vcfroot"].Attributes["Description"].Value;
+                }
+                
                 //VCF Author
-                data.root.Author = doc["vcfroot"].Attributes["Author"].Value;
+                if (doc["vcfroot"].Attributes["Author"] != null)
+                {
+                    data.root.Author = doc["vcfroot"].Attributes["Author"].Value;
+                }
                 #endregion
 #region Interface
 #if DEBUG
@@ -379,7 +385,7 @@ namespace ELS.configuration
                     ELSVehicle.RemoveAll(veh => veh.modelHash == hash);
                 }
                 ELSVehicle.Add(data);
-                CitizenFX.Core.Debug.WriteLine($"Added {data.filename}");
+                CitizenFX.Core.Debug.WriteLine($"Added vehicle {data.filename}");
             }
         }
         internal static void unload(string hash)
