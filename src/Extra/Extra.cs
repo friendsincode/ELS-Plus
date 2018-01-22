@@ -303,7 +303,7 @@ namespace ELS.Extra
             //dirVector = destinationCoords - extraoffset;
             //dirVector.Normalize();
             //API.DrawSpotLightWithShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, dirVector.X, dirVector.Y, dirVector.Z, Color['r'], Color['g'], Color['b'], 100.0f, 1f, 0.0f, 13.0f, 1f, 100f);
-            API.DrawLightWithRangeAndShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, Color['r'],Color['g'],Color['b'],50f,.40f,1f);
+            API.DrawLightWithRangeAndShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, Color['r'],Color['g'],Color['b'],50f,.28f,1f);
         }
 
         internal Dictionary<char, int> Color;        

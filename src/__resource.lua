@@ -56,5 +56,9 @@ server_script 'ELS-Server.net.dll'
 
 files({
 'extra-files/ELS.ini',
-'extra-files/POLICE.xml'
 })
+
+
+server_exports {
+	'SpawnCar'
+}

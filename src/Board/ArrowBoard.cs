@@ -102,7 +102,7 @@ namespace ELS.Board
         internal void BoardTicker()
         {
 #if DEBUG
-            CitizenFX.Core.Debug.WriteLine($"Raise board now: {RaiseBoardNow}");
+            //CitizenFX.Core.Debug.WriteLine($"Raise board now: {RaiseBoardNow}");
 #endif
             if (RaiseBoardNow)
             {

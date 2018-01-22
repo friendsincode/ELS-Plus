@@ -12,10 +12,11 @@ namespace ELS_Server
     public class VcfSync
     {
 
+        public static List<string> ElsResources = new List<string>();
 
         public VcfSync()
         {
-            Debug.WriteLine("Load VCF Sync Running");
+            Debug.WriteLine("Loading VCF Sync");
         }
 
         public void CheckVCF(Player player)
@@ -28,13 +29,17 @@ namespace ELS_Server
             }
         }
 
-        private static void LoadFilesPromScript(string name, Player player)
+        internal static void LoadFilesPromScript(string name, Player player)
         {
             int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "file");
             string isElsResource = API.GetResourceMetadata(name, "is_els", 0);
             if (!String.IsNullOrEmpty(isElsResource) && isElsResource.Equals("true"))
             {
-                CitizenFX.Core.Debug.WriteLine($"{num} files for {name}");
+
+#if DEBUG
+                Debug.WriteLine($"{num} files for {name}");
+#endif
+                ElsResources.Add(name);
                 for (int i = 0; i < num; i++)
                 {
                     var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
