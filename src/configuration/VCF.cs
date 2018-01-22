@@ -77,15 +77,19 @@ namespace ELS.configuration
                 //VCF Author
                 data.root.Author = doc["vcfroot"].Attributes["Author"].Value;
                 #endregion
-                #region Interface
+#region Interface
+#if DEBUG
                 CitizenFX.Core.Debug.WriteLine("Parsing Interface");
+#endif
                 data.root.INTERFACE.LstgActivationType = doc["vcfroot"]["INTERFACE"]["LstgActivationType"].Value;
                 data.root.INTERFACE.DefaultSirenMode = doc["vcfroot"]["INTERFACE"]["DefaultSirenMode"].Value;
                 data.root.INTERFACE.InfoPanelHeaderColor = doc["vcfroot"]["INTERFACE"]["InfoPanelHeaderColor"].Value;
                 data.root.INTERFACE.InfoPanelButtonLightColor = doc["vcfroot"]["INTERFACE"]["InfoPanelButtonLightColor"].Value;
                 #endregion
-                #region Extras Override
+#region Extras Override
+#if DEBUG
                 CitizenFX.Core.Debug.WriteLine("Parsing Extras");
+#endif
                 //Extra 01
                 data.root.EOVERRIDE.Extra01.IsElsControlled = doc["vcfroot"]["EOVERRIDE"]["Extra01"].Attributes["IsElsControlled"].Value;
                 data.root.EOVERRIDE.Extra01.AllowEnvLight = doc["vcfroot"]["EOVERRIDE"]["Extra01"].Attributes["AllowEnvLight"].Value;
@@ -156,8 +160,10 @@ namespace ELS.configuration
                 //Extra 12
                 data.root.EOVERRIDE.Extra12.IsElsControlled = doc["vcfroot"]["EOVERRIDE"]["Extra12"].Attributes["IsElsControlled"].Value;
                 #endregion
-                #region MISC
+#region MISC
+#if DEBUG
                 CitizenFX.Core.Debug.WriteLine("Parsing Misc");
+#endif
                 data.root.MISC.VehicleIsSlicktop = doc["vcfroot"]["MISC"]["VehicleIsSlicktop"].InnerText;
                 data.root.MISC.ArrowboardType = doc["vcfroot"]["MISC"]["ArrowboardType"].InnerText;
                 data.root.MISC.UseSteadyBurnLights = doc["vcfroot"]["MISC"]["UseSteadyBurnLights"].InnerText;
@@ -167,16 +173,20 @@ namespace ELS.configuration
                 data.root.MISC.SceneLights.AllowUse = doc["vcfroot"]["MISC"]["SceneLights"].Attributes["AllowUse"].Value;
                 data.root.MISC.SceneLights.AllowUse = doc["vcfroot"]["MISC"]["SceneLights"].Attributes["IlluminateSidesOnly"].Value;
                 #endregion
-                #region Cruise
+#region Cruise
+#if DEBUG
                 CitizenFX.Core.Debug.WriteLine("Parsing Cruise");
+#endif
                 data.root.CRUISE.DisableAtLstg3 = bool.Parse(doc["vcfroot"]["CRUISE"]["DisableAtLstg3"].InnerText);
                 data.root.CRUISE.UseExtras.Extra1 = bool.Parse(doc["vcfroot"]["CRUISE"]["UseExtras"].Attributes["Extra1"].Value);
                 data.root.CRUISE.UseExtras.Extra2 = bool.Parse(doc["vcfroot"]["CRUISE"]["UseExtras"].Attributes["Extra2"].Value);
                 data.root.CRUISE.UseExtras.Extra3 = bool.Parse(doc["vcfroot"]["CRUISE"]["UseExtras"].Attributes["Extra3"].Value);
                 data.root.CRUISE.UseExtras.Extra4 = bool.Parse(doc["vcfroot"]["CRUISE"]["UseExtras"].Attributes["Extra4"].Value);
                 #endregion
-                #region Aux Coronas
+#region Aux Coronas
+#if DEBUG
                 CitizenFX.Core.Debug.WriteLine("Parsing Aux Coronas");
+#endif
                 //Headlights
                 data.root.ACORONAS.Headlights.DfltPattern = int.Parse(doc["vcfroot"]["ACORONAS"]["Headlights"].Attributes["DfltPattern"].Value);
                 data.root.ACORONAS.Headlights.ColorL = doc["vcfroot"]["ACORONAS"]["Headlights"].Attributes["ColorL"].Value;
@@ -198,8 +208,10 @@ namespace ELS.configuration
                 data.root.ACORONAS.ReverseLights.ColorL = doc["vcfroot"]["ACORONAS"]["ReverseLights"].Attributes["ColorL"].Value;
                 data.root.ACORONAS.ReverseLights.ColorR = doc["vcfroot"]["ACORONAS"]["ReverseLights"].Attributes["ColorR"].Value;
                 #endregion
-                #region Sounds
+#region Sounds
+#if DEBUG
                 CitizenFX.Core.Debug.WriteLine("Parsing Sounds");
+#endif
                 //Manual Tone 1
                 data.root.SOUNDS.ManTone1.AudioString = doc?["vcfroot"]["SOUNDS"]["ManTone1"].Attributes["AudioString"].Value;
                 data.root.SOUNDS.ManTone1.AllowUse = doc["vcfroot"]["SOUNDS"]["ManTone1"].Attributes["AllowUse"].Value;
@@ -229,8 +241,10 @@ namespace ELS.configuration
                 data.root.SOUNDS.PanicMde.AudioString = doc["vcfroot"]["SOUNDS"]["PanicMde"].Attributes["AudioString"].Value;
                 #endregion
 
-                #region Warning Lights
+#region Warning Lights
+#if DEBUG
                 CitizenFX.Core.Debug.WriteLine("Parsing Warning Lights");
+#endif
                 data.root.WRNL.LightingFormat = doc["vcfroot"]["WRNL"].Attributes["LightingFormat"].Value;
                 data.root.WRNL.DisableAtLstg3 = doc["vcfroot"]["WRNL"].Attributes["DisableAtLstg3"]?.Value;
                 data.root.WRNL.ExtrasActiveAtLstg1 = doc["vcfroot"]["WRNL"].Attributes["ExtrasActiveAtLstg1"]?.Value;
@@ -271,8 +285,10 @@ namespace ELS.configuration
 
                 #endregion
 
-                #region Primary Lights
+#region Primary Lights
+#if DEBUG
                 CitizenFX.Core.Debug.WriteLine("Parsing Primary Lights");
+#endif
                 data.root.PRML.LightingFormat = doc["vcfroot"]["PRML"].Attributes["LightingFormat"].Value;
                 data.root.PRML.DisableAtLstg3 = doc["vcfroot"]["PRML"].Attributes["DisableAtLstg3"]?.Value;
                 data.root.PRML.ExtrasActiveAtLstg1 = doc["vcfroot"]["PRML"].Attributes["ExtrasActiveAtLstg1"]?.Value;
@@ -311,8 +327,10 @@ namespace ELS.configuration
 
                 #endregion
 
-                #region Secondary Lights
+#region Secondary Lights
+#if DEBUG
                 CitizenFX.Core.Debug.WriteLine("Parsing Secondary Lights");
+#endif
                 data.root.SECL.LightingFormat = doc["vcfroot"]["SECL"].Attributes["LightingFormat"].Value;
                 data.root.SECL.DisableAtLstg3 = doc["vcfroot"]["SECL"].Attributes["DisableAtLstg3"]?.Value;
                 data.root.SECL.ExtrasActiveAtLstg1 = doc["vcfroot"]["SECL"].Attributes["ExtrasActiveAtLstg1"]?.Value;
@@ -349,13 +367,15 @@ namespace ELS.configuration
                     data.root.SECL.ScanPatternCustomPool.Pattern.Add(doc["vcfroot"]["SECL"]["ScanPatternCustomPool"].ChildNodes[i].InnerText);
                 }
 
-                #endregion
+#endregion
 
 
                 //TODO: add method to remove old file or a file from ELSVehicle
                 if (ELSVehicle.Exists(veh => veh.modelHash == hash))
                 {
+#if DEBUG
                     CitizenFX.Core.Debug.WriteLine($"Removeing preexisting VCF for resource ${ResourceName}");
+#endif
                     ELSVehicle.RemoveAll(veh => veh.modelHash == hash);
                 }
                 ELSVehicle.Add(data);
@@ -365,7 +385,9 @@ namespace ELS.configuration
         internal static void unload(string hash)
         {
             var count = ELSVehicle.RemoveAll(veh => veh.modelHash.Equals(hash));
+#if DEBUG
             CitizenFX.Core.Debug.WriteLine($"Unloaded {count} VCF for {hash}");
+#endif
         }
 
         internal static bool isValidData(string data)

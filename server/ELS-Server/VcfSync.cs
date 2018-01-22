@@ -12,10 +12,11 @@ namespace ELS_Server
     public class VcfSync
     {
 
+        public static List<string> ElsResources = new List<string>();
 
         public VcfSync()
         {
-            Debug.WriteLine("Load VCF Sync Running");
+            Debug.WriteLine("Loading VCF Sync");
         }
 
         public void CheckVCF(Player player)
@@ -24,11 +25,12 @@ namespace ELS_Server
             for (int x = 0; x < numResources; x++)
             {
                 var name = Function.Call<string>(Hash.GET_RESOURCE_BY_FIND_INDEX, x);
+                ElsResources.Add(name);
                 LoadFilesPromScript(name, player);
             }
         }
 
-        private static void LoadFilesPromScript(string name, Player player)
+        internal static void LoadFilesPromScript(string name, Player player)
         {
             int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "file");
             string isElsResource = API.GetResourceMetadata(name, "is_els", 0);
