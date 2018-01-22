@@ -25,7 +25,6 @@ namespace ELS_Server
             for (int x = 0; x < numResources; x++)
             {
                 var name = Function.Call<string>(Hash.GET_RESOURCE_BY_FIND_INDEX, x);
-                ElsResources.Add(name);
                 LoadFilesPromScript(name, player);
             }
         }
@@ -36,7 +35,11 @@ namespace ELS_Server
             string isElsResource = API.GetResourceMetadata(name, "is_els", 0);
             if (!String.IsNullOrEmpty(isElsResource) && isElsResource.Equals("true"))
             {
-                CitizenFX.Core.Debug.WriteLine($"{num} files for {name}");
+
+#if DEBUG
+                Debug.WriteLine($"{num} files for {name}");
+#endif
+                ElsResources.Add(name);
                 for (int i = 0; i < num; i++)
                 {
                     var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
