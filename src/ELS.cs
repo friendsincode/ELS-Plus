@@ -113,10 +113,6 @@ namespace ELS
             {
                 SpawnCar(veh);
             });
-            EventHandlers["PFM:ChangeServer"] += new Action<string>((ip) =>
-            {
-                ChangeServer(ip);
-            });
             EventHandlers["ELS:VcfSync:Client"] += new Action<string, string, string>((a, b, c) =>
               {
                   try
@@ -215,11 +211,6 @@ namespace ELS
         public static string CurrentResourceName()
         {
             return Function.Call<string>(Hash.GET_CURRENT_RESOURCE_NAME);
-        }
-
-        public async Task ChangeServer(string ip)
-        {
-            API.ExecuteCommand($"connect {ip}");
         }
 
         #region Callbacks for GUI
