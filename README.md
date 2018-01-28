@@ -1,5 +1,5 @@
 # DISCLAIMER
-This project is in early development stages. You should expect bugs and/or issues. To effectively combat these issues we ask that you submit issues to the Issues board in this repository. See: https://github.com/FiveM-Scripts/ELS-FiveM/issues to submit an issue. It is important that if you test ELS for FiveM that you submit issues so that we may work to resolve these. Here's some things to consider:
+This project is in early development stages. You should expect bugs and/or issues. To effectively combat these issues we ask that you submit issues to the Issues board in this repository. See: https://github.com/ejb1123/ej/issues to submit an issue. It is important that if you test ELS for FiveM that you submit issues so that we may work to resolve these. Here's some things to consider:
 
 - ELS vehicles are not yet supported.
 - Lights are in progress. Currently sync is not working but you are able to use lights.
@@ -36,6 +36,9 @@ This project is in early development stages. You should expect bugs and/or issue
 ### How to install
 1. Copy the `ELS-FiveM` folder to `cfx-server\resources\`
 2. Add `ELS-FiveM` to `server.cfg`
+3. Add `add_ace resource.RESOURCE_NAME command.add_ace allow` to `server.cfg`  
+   remember to replace `RESOURCE_NAME` with the name of this resource.
+4. Add your user to the `group.admin` principle to allow you to use the elscar commmand to spawn a vehicle
 
 ### How to add ELS Vehicles to ELS-FiveM
 1. Create add-on/replace Vehicle with stream folder and relevant files.
