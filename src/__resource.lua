@@ -42,10 +42,10 @@ if NUIEnabled then
     'NUI/app/js/jquery-3.2.1.min.js',    
     'NUI/app/js/popper.js',
     'NUI/app/js/bootstrap.bundle.min.js',
-    'NUI/app/js/bootstrap-switch.js',
+    'NUI/app/js/bootstrap-toggle.min.js',
     'NUI/app/js/main.js',
     'NUI/app/css/bootstrap.min.css',
-    'NUI/app/css/bootstrap-switch.css',
+    'NUI/app/css/bootstrap-toggle.min.css',
     'NUI/app/css/main.css'
 })
 

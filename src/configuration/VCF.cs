@@ -257,12 +257,12 @@ namespace ELS.configuration
                 data.root.WRNL.ExtrasActiveAtLstg2 = doc["vcfroot"]["WRNL"].Attributes["ExtrasActiveAtLstg2"]?.Value;
                 data.root.WRNL.ExtrasActiveAtLstg3 = doc["vcfroot"]["WRNL"].Attributes["ExtrasActiveAtLstg3"]?.Value;
                 //Preset Patterns
-                data.root.WRNL.PresetPatterns.Lstg1.Enabled = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg1"]?.Attributes["Enabled"].Value;
-                data.root.WRNL.PresetPatterns.Lstg1.Pattern = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg1"]?.Attributes["Pattern"].Value;
-                data.root.WRNL.PresetPatterns.Lstg2.Enabled = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg2"]?.Attributes["Enabled"].Value;
-                data.root.WRNL.PresetPatterns.Lstg2.Pattern = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg2"]?.Attributes["Pattern"].Value;
-                data.root.WRNL.PresetPatterns.Lstg3.Enabled = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg3"]?.Attributes["Enabled"].Value;
-                data.root.WRNL.PresetPatterns.Lstg3.Pattern = doc["vcfroot"]["PRML"]["PresetPatterns"]["Lstg3"]?.Attributes["Pattern"].Value;
+                data.root.WRNL.PresetPatterns.Lstg1.Enabled = doc["vcfroot"]["WRNL"]["PresetPatterns"]["Lstg1"]?.Attributes["Enabled"].Value;
+                data.root.WRNL.PresetPatterns.Lstg1.Pattern = doc["vcfroot"]["WRNL"]["PresetPatterns"]["Lstg1"]?.Attributes["Pattern"].Value;
+                data.root.WRNL.PresetPatterns.Lstg2.Enabled = doc["vcfroot"]["WRNL"]["PresetPatterns"]["Lstg2"]?.Attributes["Enabled"].Value;
+                data.root.WRNL.PresetPatterns.Lstg2.Pattern = doc["vcfroot"]["WRNL"]["PresetPatterns"]["Lstg2"]?.Attributes["Pattern"].Value;
+                data.root.WRNL.PresetPatterns.Lstg3.Enabled = doc["vcfroot"]["WRNL"]["PresetPatterns"]["Lstg3"]?.Attributes["Enabled"].Value;
+                data.root.WRNL.PresetPatterns.Lstg3.Pattern = doc["vcfroot"]["WRNL"]["PresetPatterns"]["Lstg3"]?.Attributes["Pattern"].Value;
                 //Forced Patterns
 
                 data.root.WRNL.ForcedPatterns.MainHorn.Enabled = doc["vcfroot"]["WRNL"]["ForcedPatterns"]["MainHorn"].Attributes["Enabled"].Value;
@@ -326,9 +326,9 @@ namespace ELS.configuration
                 data.root.PRML.ScanPatternCustomPool.Enabled = doc["vcfroot"]["PRML"]["ScanPatternCustomPool"].Attributes["Enabled"].Value;
                 data.root.PRML.ScanPatternCustomPool.Sequential = doc["vcfroot"]["PRML"]["ScanPatternCustomPool"].Attributes["Sequential"].Value;
 
-                for (int i = 0; i < doc["vcfroot"]["WRNL"]["ScanPatternCustomPool"].ChildNodes.Count; i++)
+                for (int i = 0; i < doc["vcfroot"]["PRML"]["ScanPatternCustomPool"].ChildNodes.Count; i++)
                 {
-                    data.root.WRNL.ScanPatternCustomPool.Pattern.Add(doc["vcfroot"]["WRNL"]["ScanPatternCustomPool"].ChildNodes[i].InnerText);
+                    data.root.PRML.ScanPatternCustomPool.Pattern.Add(doc["vcfroot"]["PRML"]["ScanPatternCustomPool"].ChildNodes[i].InnerText);
                 }
 
                 #endregion

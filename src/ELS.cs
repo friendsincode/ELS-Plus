@@ -183,6 +183,7 @@ namespace ELS
             {
                 SpawnCar(veh);
             }));
+            
         }
 
         internal async Task SpawnCar(string veh)
@@ -199,12 +200,19 @@ namespace ELS
             }
             if (Game.PlayerPed.IsInVehicle())
             {
-                Game.PlayerPed.CurrentVehicle.Delete();
+                if (Game.PlayerPed.CurrentVehicle.IsEls())
+                {
+                    VehicleManager.vehicleList.Find(o => o.GetNetworkId() == Game.PlayerPed.CurrentVehicle.GetNetworkId()).Delete();
+                }
+                else
+                {
+                    Game.PlayerPed.CurrentVehicle.Delete();
+                }
             }
             CitizenFX.Core.Debug.WriteLine($"Attempting to spawn: {veh}");
             var polModel = new Model((VehicleHash)Game.GenerateHash(veh));
             await polModel.Request(-1);
-            Vehicle _veh = await World.CreateVehicle(polModel, Game.PlayerPed.Position);
+            Vehicle _veh = await World.CreateVehicle(polModel, Game.PlayerPed.Position + new Vector3(0f,10f,0f));
             Game.PlayerPed.SetIntoVehicle(_veh, VehicleSeat.Driver);
         }
 
@@ -254,7 +262,7 @@ namespace ELS
                 _vehicleManager.RunTickAsync();
                 if (Game.IsControlJustReleased(0, Control.MultiplayerInfo))
                 {
-                    await Debug.Spawn();
+                    //await Debug.Spawn();
                 }
 
                 if (Game.PlayerPed.IsInVehicle() && Game.PlayerPed.CurrentVehicle.IsEls())

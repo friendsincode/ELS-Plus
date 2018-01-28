@@ -23,58 +23,95 @@ using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using CitizenFX.Core.UI;
+using System.Drawing;
+using ELS.FullSync;
 
 namespace ELS.Light
 {
-    class SpotLight
+    class SpotLight : IFullSyncComponent
     {
         private float anglehorizontal = 90f;
-        private float anngleVirtical = 0f;
+        private float angleVertical = 0f;
 
         private Vector3 dirVector;
         private int _id;
+        private int _veh;
 
-        public SpotLight(int id)
+        public SpotLight(int id, int veh)
         {
             _id = id;
+            _veh = veh;
+        }
+
+        internal void SpotLightReset()
+        {
+            anglehorizontal = 90f;
+            angleVertical = 0f;
+        }
+
+        public Dictionary<string, object> GetData()
+        {
+
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+
+            dic.Add("horizontal", anglehorizontal);
+            dic.Add("vertical", angleVertical);
+            return dic;
+        }
+
+        public void SetData(IDictionary<string, object> data)
+        {
+            anglehorizontal = float.Parse(data["horizontal"].ToString());
+            angleVertical = float.Parse(data["vertical"].ToString());
+#if DEBUG
+            CitizenFX.Core.Debug.WriteLine($"Got spotlight data for {_id} set horizontal {anglehorizontal} and vertical {angleVertical}");
+#endif
         }
 
         public void RunTick()
         {
-
+            Vehicle veh = new Vehicle(API.NetworkGetEntityFromNetworkId(_veh));
             if (Game.IsControlPressed(0, Control.PhoneLeft))
             {
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightLeft, veh, true, Game.Player.ServerId);
                 anglehorizontal++;
+                
             }
-            if (Game.IsControlPressed(0, Control.PhoneRight))
+            if (Game.IsControlPressed(0, Control.PhoneRight)) 
             {
+                
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightRight, veh, true, Game.Player.ServerId);
                 anglehorizontal--;
             }
             if (Game.IsControlPressed(0, Control.PhoneUp))
             {
-                anngleVirtical++;
+                
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightUp, veh, true, Game.Player.ServerId);
+                angleVertical++;
             }
-            if (Game.IsControlPressed(0, Control.PhoneDown))
+            if (Game.IsControlPressed(0, Control.PhoneDown))   
             {
-                anngleVirtical--;
+                
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightDown, veh, true, Game.Player.ServerId);
+                angleVertical--;
             }
-            
+
             //var spotoffset = Game.Player.Character.CurrentVehicle.GetOffsetPosition(new Vector3(-0.9f, 1.15f, 0.5f));
-
-            var off = Game.PlayerPed.CurrentVehicle.GetPositionOffset(Game.PlayerPed.CurrentVehicle.Bones[$"extra_{_id}"].Position);
-            var spotoffset = Game.PlayerPed.CurrentVehicle.GetOffsetPosition(off+new Vector3(0,0.05f,0));
             
-            Vector3 myPos = Game.PlayerPed.CurrentVehicle.Bones[$"extra_{_id}"].Position;
-            float hx = (float)((double)spotoffset.X + 5 * Math.Cos(((double)anglehorizontal + Game.PlayerPed.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
-            float hy = (float)((double)spotoffset.Y + 5 * Math.Sin(((double)anglehorizontal + Game.PlayerPed.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
-            float vz = (float)((double)spotoffset.Z + 5 * Math.Sin((double)anngleVirtical * Math.PI / 180.0));
+            var off = veh.GetPositionOffset(veh.Bones[$"extra_{_id}"].Position);
+            var spotoffset = veh.GetOffsetPosition(off+new Vector3(0,0.05f,0));
+            
+            //Vector3 myPos = Game.PlayerPed.CurrentVehicle.Bones[$"extra_{_id}"].Position;
+            float hx = (float)((double)spotoffset.X + 5 * Math.Cos(((double)anglehorizontal + veh.Rotation.Z) * Math.PI / 180.0));
+            float hy = (float)((double)spotoffset.Y + 5 * Math.Sin(((double)anglehorizontal + veh.Rotation.Z) * Math.PI / 180.0));
+            float vz = (float)((double)spotoffset.Z + 5 * Math.Sin((double)angleVertical * Math.PI / 180.0));
 
-            Vector3 destinationCoords = (new Vector3(hx,
-           hy, vz));
+            Vector3 destinationCoords = (new Vector3(hx, hy, vz));
             
             dirVector = destinationCoords - spotoffset;
             dirVector.Normalize();
-            Function.Call(Hash._DRAW_SPOT_LIGHT_WITH_SHADOW, spotoffset.X, spotoffset.Y, spotoffset.Z, dirVector.X, dirVector.Y, dirVector.Z, 255, 255, 255, 100.0f, 1f, 0.0f, 13.0f, 1f,100f);
+            //Function.Call(Hash.DRAW_SPOT_LIGHT, spotoffset.X, spotoffset.Y, spotoffset.Z, dirVector.X, dirVector.Y, dirVector.Z, 255, 255, 255, 100.0f, 1f, 0.0f, 13.0f, 1f,100f);
+            API.DrawSpotLightWithShadow(spotoffset.X,spotoffset.Y,spotoffset.Z, dirVector.X,dirVector.Y,dirVector.Z, 255,255,255,255,1f,1f,13f,1f,100f);
         }
 
     }

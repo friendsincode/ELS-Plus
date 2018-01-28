@@ -59,7 +59,7 @@ namespace ELS.Manager
                 catch (Exception ex)
                 {
 #if DEBUG 
-                    CitizenFX.Core.Debug.Write($"Exsits Error: {ex.Message}");
+                    CitizenFX.Core.Debug.Write($"Exsits Error: {ex.Message} due to {ex.InnerException}");
 #endif
                     vehicle = null;
                     return false;

@@ -11,7 +11,7 @@ namespace ELS.Siren
         {
             internal bool _enable { get; private set; }
             internal bool interupted = false;
-            private Tone currentTone;
+            internal Tone currentTone;
 
             private List<Tone> MainTones;
             internal MainSiren(ref Tones tonesl)

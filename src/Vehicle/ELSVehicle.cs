@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using CitizenFX.Core;
 using ELS.configuration;
+using CitizenFX.Core.Native;
+using ELS.Manager;
+using System.Threading.Tasks;
 
 namespace ELS
 {
@@ -104,7 +107,43 @@ namespace ELS
         {
             _siren.ExternalTicker();
             _light.ExternalTicker();
+            if (!_vehicle.IsEngineRunning)
+            {
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine("Engine not running starting it");
+#endif
+                _vehicle.IsEngineRunning = true;
+            }
+            if (lastDeleteTime == 0)
+            {
+                lastDeleteTime = Game.GameTime;
+            }
+            if (Game.GameTime - lastDeleteTime >= 180000)
+            {
+                DeleteStale();
+                lastDeleteTime = Game.GameTime;
+            }
         }
+
+        int lastDeleteTime = 0;
+        private async Task DeleteStale()
+        {
+            PlayerList list = new PlayerList();
+#if DEBUG
+            CitizenFX.Core.Debug.WriteLine("Running Delete");
+#endif
+            foreach (Player p in list)
+            {
+                if (_vehicle.GetNetworkId() != p.Character.CurrentVehicle.GetNetworkId())
+                {
+#if DEBUG
+                    CitizenFX.Core.Debug.WriteLine($"Deleting {_vehicle.GetNetworkId()}");
+#endif
+                    Delete();
+                }
+            }
+        }
+
         internal Vector3 GetBonePosistion()
         {
             return _vehicle.Bones["door_dside_f"].Position;
@@ -117,8 +156,19 @@ namespace ELS
 
         public override void Delete()
         {
-            _light.CleanUP();
-            _vehicle.Delete();
+            try
+            {
+                VehicleManager.vehicleList.RemoveAt(VehicleManager.vehicleList.IndexOf(VehicleManager.vehicleList.Find(v => v.GetNetworkId() == _vehicle.GetNetworkId())));
+                _light.CleanUP();
+                _siren.CleanUP();
+                _vehicle.SetExistOnAllMachines(false);
+                API.SetEntityAsMissionEntity(_vehicle.Handle, false, false);
+                _vehicle.MarkAsNoLongerNeeded();
+                _vehicle.Delete();
+            } catch (Exception e)
+            {
+                CitizenFX.Core.Debug.WriteLine($"Delete error: {e.Message}");
+            }
         }
 
         internal void UpdateRemoteSiren(string command, bool state)

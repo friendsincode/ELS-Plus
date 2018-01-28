@@ -83,6 +83,7 @@ namespace ELS.Light
             dic.Add("PrmPatt", CurrentPrmPattern);
             dic.Add("SecPatt", CurrentSecPattern);
             dic.Add("WrnPatt", CurrentWrnPattern);
+            dic.Add("stage", _stage.CurrentStage);
             return dic;
         }
 
@@ -211,6 +212,13 @@ namespace ELS.Light
                 CurrentWrnPattern = int.Parse(data["WrnPatt"].ToString());
 #if DEBUG
                 CitizenFX.Core.Debug.WriteLine($"Added WrnPatt from sync data");
+#endif
+            }
+            if (data.ContainsKey("stage"))
+            {
+                _stage.SetStage(int.Parse(data["stage"].ToString()));
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine($"Added stage from sync data");
 #endif
             }
         }

@@ -7,6 +7,7 @@ using CitizenFX.Core.UI;
 using ELS.configuration;
 using System.Collections;
 using System.Collections.Generic;
+using ELS.NUI;
 
 namespace ELS.Siren
 {
@@ -26,7 +27,7 @@ namespace ELS.Siren
         {
             _vcf = vcfroot;
             _vehicle = vehicle;
-
+            
             Function.Call(Hash.DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, _vehicle, true);
 #if DEBUG
             CitizenFX.Core.Debug.WriteLine(_vehicle.DisplayName);
@@ -47,6 +48,8 @@ namespace ELS.Siren
             _mainSiren = new MainSiren(ref _tones);
 
             if (data != null) SetData(data);
+            ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
+            ElsUiPanel.SetUiDesc("--", "HRN");
         }
 
         public void CleanUP()

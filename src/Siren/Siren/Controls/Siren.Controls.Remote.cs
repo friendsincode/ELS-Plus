@@ -24,16 +24,16 @@ namespace ELS.Siren
                     AirHornLogic(state, disableHWInput);
                     break;
                 case RemoteEventManager.Commands.ManualTone1:
-                    ManualTone1Logic(state, disableHWInput);
+                    SirenTone1Logic(state, disableHWInput);
                     break;
                 case RemoteEventManager.Commands.ManualTone2:
-                    ManualTone2Logic(state, disableHWInput);
+                    SirenTone2Logic(state, disableHWInput);
                     break;
                 case RemoteEventManager.Commands.ManualTone3:
-                    ManualTone3Logic(state, disableHWInput);
+                    SirenTone3Logic(state, disableHWInput);
                     break;
                 case RemoteEventManager.Commands.ManualTone4:
-                    ManualTone4Logic(state, disableHWInput);
+                    SirenTone4Logic(state, disableHWInput);
                     break;
                 case RemoteEventManager.Commands.ManualSound:
                     ManualSoundLogic(state, disableHWInput);

@@ -65,15 +65,20 @@ namespace ELS.NUI
             API.SendNuiMessage("{\"type\":\"lightControl\", \"state\":" + state.ToString().ToLower() + ", \"light\": \"" + light + "\", \"color\":\"" + color + "\" }");
         }
 
-        internal static void SetUiPatternNumber(int patt, string lighttype)
+        internal static void SetUiDesc(string desc, string uielement)
         {
-            API.SendNuiMessage($"{{\"type\":\"setpatternnumber\", \"lighttype\":\"{lighttype}\", \"pattern\":\"{patt.ToString().PadLeft(4,'0')}\" }}");
+            API.SendNuiMessage($"{{\"type\":\"setuidesc\", \"uielement\":\"{uielement}\", \"desc\":\"{desc}\" }}"); 
         }
 
         internal static void ToggleUiBtnState(bool state, string which)
         {
             CitizenFX.Core.Debug.WriteLine($"Setting {which} to {state}");
             API.SendNuiMessage($"{{\"type\":\"togglestate\", \"which\":\"{which}\", \"state\":{state.ToString().ToLower()} }}");
+        }
+
+        internal static void ToggleStages(int stage)
+        {
+            API.SendNuiMessage($"{{\"type\":\"togglestage\", \"stage\":{stage}}}");
         }
 
         static ElsUiPanel()
@@ -100,8 +105,5 @@ namespace ELS.NUI
             CitizenFX.Core.Debug.WriteLine("J key pressed");
             return cb;
         }
-
-
-
     }
 }

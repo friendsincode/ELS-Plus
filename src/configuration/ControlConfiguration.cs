@@ -100,7 +100,8 @@ namespace ELS.configuration
 
 
                 ControlsUpdated?.Invoke(KeyBindings);
-                global.EnabeTrafficControl = u["GENERAL"]["ElsTrafCtrlOn"].BoolValue;
+                Global.EnabeTrafficControl = u["GENERAL"]["ElsTrafCtrlOn"].BoolValue;
+                Global.PrimDelay = u["LIGHTING"]["LightFlashDelayMainLts"].IntValue * 8;
             }
         }
         internal class ELSControls

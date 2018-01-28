@@ -12,7 +12,7 @@ namespace ELS.Manager
 {
     class VehicleManager
     {
-        static VehicleList vehicleList;
+        internal static VehicleList vehicleList;
         bool notified = false;
         public VehicleManager()
         {
@@ -39,8 +39,8 @@ namespace ELS.Manager
                 API.NetworkRequestControlOfEntity(veh.Handle);
                 attempts++;
             }
-            while (!API.NetworkDoesEntityExistWithNetworkId(veh.Handle) && attempts < 10);
-            if (attempts == 10 && !notified)
+            while (!API.NetworkDoesEntityExistWithNetworkId(veh.Handle) && attempts < 20);
+            if (attempts == 20 && !notified)
             {
                 CitizenFX.Core.Debug.WriteLine("Failed to register entity on net");
                 notified = true;
@@ -68,14 +68,14 @@ namespace ELS.Manager
                     //    API.SetBlipSprite(blip.Handle, 2);
                     //}
 
-                    makenetworked(Game.PlayerPed.CurrentVehicle);
+                   
                     if (vehicleList.MakeSureItExists(API.VehToNet(Game.PlayerPed.CurrentVehicle.Handle), vehicle: out ELSVehicle _currentVehicle))
                     {
                         _currentVehicle?.RunTick();
                     }
                     else
                     {
-
+                        makenetworked(Game.PlayerPed.CurrentVehicle);
                         //var pos = Game.PlayerPed.CurrentVehicle.Position;
                         //var rot = Game.PlayerPed.CurrentVehicle.Rotation;
                         //var model = Game.PlayerPed.CurrentVehicle.Model;
@@ -99,7 +99,6 @@ namespace ELS.Manager
 #endif
                 }
                 vehicleList.RunExternalTick();
-               
             }
             catch (Exception e)
             {
@@ -157,6 +156,11 @@ namespace ELS.Manager
         void GetAllVehicles()
         {
 
+        }
+
+        void RemoveStallVehicles()
+        {
+            
         }
         internal void CleanUP()
         {

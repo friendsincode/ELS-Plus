@@ -23,6 +23,7 @@ This project is in early development stages. You should expect bugs and/or issue
 |Throw Grenade| G Key|Toggles main siren|
 |Vehicle Horn | E Key | Toggles vehicle's Light Stages|
 |Cover | Q Key | Toggles vehicle's Takedown Lights|
+|Cover | Alt + Q Key | Toggles vehicle's Scene Lights|
 |Replay Show Hot Key | K Key | Toggles vehicle's secondary lights|
 |Cinematic Slo Mo | L Key | Toggles vehicle's warning lights|
 || [ Key | Toggles vehicle's Cruise Lights|
