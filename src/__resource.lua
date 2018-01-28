@@ -23,12 +23,12 @@ client_script 'System.Xml.net.dll'
 
 -- ELS-FiveM Requirements
 client_script 'SharpConfig.net.dll'
-client_script 'ELS-FiveM.net.dll'
+client_script 'els-plus.net.dll'
 
 -- Debug symbols
 files({
-	'ELS-FiveM.net.dll.mdb',
-	'ELS-Server.net.dll.mdb'
+	'els-plus.net.dll.mdb',
+	'els-server.net.dll.mdb'
 })
 -- NUI Stuff
 if NUIEnabled then
@@ -42,17 +42,17 @@ if NUIEnabled then
     'NUI/app/js/jquery-3.2.1.min.js',    
     'NUI/app/js/popper.js',
     'NUI/app/js/bootstrap.bundle.min.js',
-    'NUI/app/js/bootstrap-switch.js',
+    'NUI/app/js/bootstrap-toggle.min.js',
     'NUI/app/js/main.js',
     'NUI/app/css/bootstrap.min.css',
-    'NUI/app/css/bootstrap-switch.css',
+    'NUI/app/css/bootstrap-toggle.min.css',
     'NUI/app/css/main.css'
 })
 
 end
 
 -- Server Events
-server_script 'ELS-Server.net.dll'
+server_script 'els-server.net.dll'
 
 files({
 'extra-files/ELS.ini',

@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ELS</RootNamespace>
-    <AssemblyName>ELS-FiveM.net</AssemblyName>
+    <AssemblyName>els-plus.net</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -99,7 +99,7 @@
   <ItemGroup>
     <Compile Include="Board\ArrowBoard.cs" />
     <Compile Include="configuration\ControlConfiguration.cs" />
-    <Compile Include="configuration\global.cs" />
+    <Compile Include="configuration\Global.cs" />
     <Compile Include="configuration\SettingsType.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="Decorator\DecorManager.cs" />
@@ -108,16 +108,17 @@
     <Compile Include="ELSStates\State.cs" />
     <Compile Include="Extra\Extra.FullSync.cs" />
     <Compile Include="Light\IMangerEntry.cs" />
+    <Compile Include="Light\IPatterns.cs" />
+    <Compile Include="Light\Light.Loop.cs" />
     <Compile Include="Light\Lights.FullSync.cs" />
     <Compile Include="Light\Lights.logic.cs" />
     <Compile Include="Light\Lights.Patterns.cs" />
     <Compile Include="Light\Patterns\Arrow.cs" />
     <Compile Include="Light\Patterns\CHP.cs" />
     <Compile Include="Light\Patterns\DRO.cs" />
-    <Compile Include="Light\Patterns\Euro.cs" />
     <Compile Include="Light\Patterns\Marquee.cs" />
-    <Compile Include="Light\Patterns\Pattern.cs" />
     <Compile Include="Light\Patterns\PatternUtils.cs" />
+    <Compile Include="Light\Patterns\Rotary.cs" />
     <Compile Include="Light\Patterns\Strobe.cs" />
     <Compile Include="Light\Patterns\TrafficAdvisor.cs" />
     <Compile Include="Light\Stage.cs" />
@@ -155,8 +156,6 @@
     <Compile Include="Extra\Extra.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NUI\api.lua" />
-    <None Include="NUI\app\css\app.less" />
     <None Include="packages.config" />
     <None Include="extra-files\ELS.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -172,8 +171,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NUI\app\css\app.css" />
-    <Content Include="NUI\app\css\bootstrap-switch.css">
+    <Content Include="NUI\app\css\bootstrap-toggle.min.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="NUI\app\css\bootstrap.min.css">
@@ -185,7 +183,7 @@
     <Content Include="NUI\app\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="NUI\app\js\bootstrap-switch.js">
+    <Content Include="NUI\app\js\bootstrap-toggle.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="NUI\app\js\bootstrap.bundle.min.js">

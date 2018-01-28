@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ELS.configuration;
+using ELS.NUI;
+using CitizenFX.Core;
 
 namespace ELS.Light
 {
@@ -12,15 +14,19 @@ namespace ELS.Light
         internal configuration.Lights PRML;
         internal configuration.Lights SECL;
         internal configuration.Lights WRNL;
+        private int vehicleId;
 
-        internal Stage(configuration.Lights prml, configuration.Lights secl, configuration.Lights wrnl)
+        internal Stage(configuration.Lights prml, configuration.Lights secl, configuration.Lights wrnl, int veh)
         {
             PRML = prml;
             SECL = secl;
             WRNL = wrnl;
+            CurrentStage = 0;
+            vehicleId = veh;
         }
 
         internal int CurrentStage { get; private set; }
+        
 
         internal async Task NextStage()
         {
@@ -32,16 +38,19 @@ namespace ELS.Light
 #if DEBUG
                 CitizenFX.Core.Debug.WriteLine($"Light stage is 3 Disabling light stages");
 #endif
-                CurrentStage = 0;
+                SetStage(0);
                 return;
             }
-            CurrentStage = CurrentStage + 1;
-
+            SetStage(CurrentStage + 1);
         }
 
         internal void SetStage(int stage)
         {
             CurrentStage = stage;
+            if (Game.PlayerPed.IsInPoliceVehicle && vehicleId == Game.PlayerPed.CurrentVehicle.GetNetworkId())
+            {
+                ElsUiPanel.ToggleStages(CurrentStage);
+            }
         }
 
         internal int[] GetStage2Extras()

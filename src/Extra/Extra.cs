@@ -46,13 +46,18 @@ namespace ELS.Extra
             }
             set
             {
+                if (count > value.Length - 1)
+                {
+                    count = 0;
+                }
                 _pattern = value;
+
             }
         }
 
         internal string PatternType
         {
-            get { return _pattType;  }
+            get { return _pattType; }
             set
             {
                 _pattType = value;
@@ -86,10 +91,14 @@ namespace ELS.Extra
                 if (TurnedOn)
                 {
                     SetState(true);
-                } 
+                }
                 else
                 {
                     SetState(false);
+                    if (spotLight != null)
+                    {
+                        spotLight.SpotLightReset();
+                    }
                 }
             }
         }
@@ -145,7 +154,7 @@ namespace ELS.Extra
             _extraInfo = ex;
             CleanUp();
             SetInfo();
-            PatternType = format;            
+            PatternType = format;
             TurnedOn = false;
             if (!API.DoesExtraExist(entity.Handle, id))
             {
@@ -164,7 +173,7 @@ namespace ELS.Extra
         private void SetTrue()
         {
             API.SetVehicleExtra(_vehicle.Handle, _Id, false);
-            if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.Handle == _vehicle.Handle)
+            if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == _vehicle.GetNetworkId())
             {
                 ElsUiPanel.SendLightData(true, $"#extra{_Id}", _extraInfo.Color);
             }
@@ -214,12 +223,13 @@ namespace ELS.Extra
                     else
                     {
                         SetState(true);
+                        //DrawEnvLight();
                         if (!IsPatternRunning)
                         {
                             CleanUp();
                             return;
                         }
-                        DrawEnvLight();
+
                     }
                     count++;
                     if (count > Pattern.Length - 1)
@@ -243,13 +253,30 @@ namespace ELS.Extra
             }
             if (TurnedOn && spotLight != null)
             {
+#if DEBUG
+                //CitizenFX.Core.Debug.WriteLine("Spotlight tick ran");
+#endif
                 spotLight.RunTick();
+            }
+
+            if (IsPatternRunning)
+            {
+                if (Pattern[count].Equals('0'))
+                {
+                }
+                else
+                {
+                    if (bool.Parse(_extraInfo.AllowEnvLight))
+                    {
+                        DrawEnvLight();
+                    }
+                }
             }
         }
 
         internal async void RunPattern()
         {
-            ElsUiPanel.SetUiPatternNumber(PatternNum, LightType.ToString());
+            //ElsUiPanel.SetUiPatternNumber(PatternNum, LightType.ToString());
             while (IsPatternRunning)
             {
                 foreach (char c in Pattern.ToCharArray())
@@ -260,7 +287,7 @@ namespace ELS.Extra
                         break;
                     }
                     if (c.Equals('0'))
-                    { 
+                    {
                         SetFalse();
                     }
                     else
@@ -293,7 +320,7 @@ namespace ELS.Extra
             }
             var extraoffset = _vehicle.GetOffsetPosition(off + new Vector3(float.Parse(_extraInfo.OffsetX), float.Parse(_extraInfo.OffsetY), float.Parse(_extraInfo.OffsetZ)));
 
-            
+
             //float hx = (float)((double)extraoffset.X + 5 * Math.Cos(((double)anglehorizontal + Game.Player.Character.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
             //float hy = (float)((double)extraoffset.Y + 5 * Math.Sin(((double)anglehorizontal + Game.Player.Character.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
             //float vz = (float)((double)extraoffset.Z + 5 * Math.Sin((double)anngleVirtical * Math.PI / 180.0));
@@ -303,10 +330,10 @@ namespace ELS.Extra
             //dirVector = destinationCoords - extraoffset;
             //dirVector.Normalize();
             //API.DrawSpotLightWithShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, dirVector.X, dirVector.Y, dirVector.Z, Color['r'], Color['g'], Color['b'], 100.0f, 1f, 0.0f, 13.0f, 1f, 100f);
-            API.DrawLightWithRangeAndShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, Color['r'],Color['g'],Color['b'],50f,.28f,1f);
+            API.DrawLightWithRangeAndShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, Color['r'], Color['g'], Color['b'], 25f, .025f, 0);
         }
 
-        internal Dictionary<char, int> Color;        
+        internal Dictionary<char, int> Color;
 
         internal void SetInfo()
         {
@@ -368,14 +395,20 @@ namespace ELS.Extra
                     Delay = 100;
                     Pattern = "";
                     IsPatternRunning = false;
-                    spotLight = new SpotLight(_Id);
+                    spotLight = new SpotLight(_Id, _vehicle.GetNetworkId());
+#if DEBUG
+                    CitizenFX.Core.Debug.WriteLine("Scene lights setup");
+#endif
                     break;
                 case 12:
                     LightType = LightType.TDL;
                     Delay = 100;
                     Pattern = "";
                     IsPatternRunning = false;
-                    spotLight = new SpotLight(_Id);
+                    spotLight = new SpotLight(_Id,_vehicle.GetNetworkId());
+#if DEBUG
+                    CitizenFX.Core.Debug.WriteLine("Takedown lights setup");
+#endif
                     break;
             }
 
@@ -398,7 +431,7 @@ namespace ELS.Extra
             int r = Convert.ToInt32(hex.Substring(2, 2), 16);
             int g = Convert.ToInt32(hex.Substring(4, 2), 16);
             int b = Convert.ToInt32(hex.Substring(6, 2), 16);
-            Color =  new Dictionary<char, int>
+            Color = new Dictionary<char, int>
             {
                 { 'r', r },
                 { 'g', g },

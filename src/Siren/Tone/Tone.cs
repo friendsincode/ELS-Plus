@@ -24,13 +24,29 @@ namespace ELS.Siren
         private int soundId = Function.Call<int>(Hash.GET_SOUND_ID);
         private Entity _entity;
         private readonly ToneType _type;
+        internal string Type;
         internal bool _state { private set;  get; }
-        internal Tone(string file, Entity entity,ToneType type,bool state =false)
+        internal Tone(string file, Entity entity,ToneType type, bool state =false)
         {
             _entity = entity;
             _file = file;
             _type = type;
             SetState(state);
+            switch(type)
+            {
+                case ToneType.SrnTon1:
+                    Type = "WL";
+                    break;
+                case ToneType.SrnTon2:
+                    Type = "YP";
+                    break;
+                case ToneType.SrnTon3:
+                    Type = "A1";
+                    break;
+                case ToneType.SrnTon4:
+                    Type = "A2";
+                    break;
+            }
         }
 
         internal void SetState( bool state)

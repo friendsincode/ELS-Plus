@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ELS.FullSync;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ELS.Extra
 {
-    internal partial class Extra
+    internal partial class Extra : IFullSyncComponent
     {
 
         public Dictionary<string, object> GetData()
@@ -16,6 +17,10 @@ namespace ELS.Extra
            
             dic.Add("patternrunning", IsPatternRunning);
             dic.Add("on", TurnedOn);
+            if (spotLight != null)
+            {
+                dic.Add("spotlight", spotLight.GetData());
+            }
             return dic;
         }
 
@@ -27,7 +32,10 @@ namespace ELS.Extra
             //PatternNum = int.Parse(data["pattern"].ToString());
             IsPatternRunning = bool.Parse(data["patternrunning"].ToString());
             TurnedOn = bool.Parse(data["on"].ToString());
-
+            if (spotLight != null)
+            {
+                spotLight.SetData((IDictionary<string, object>)data["spotlight"]);
+            }
         }
 
     }

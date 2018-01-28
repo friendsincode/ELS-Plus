@@ -15,53 +15,11 @@ namespace ELS.Light
 {
     partial class Lights : IManagerEntry
     {
-        public async void Ticker()
-        {
-            ToggleSecLKB();
-            ToggleWrnLKB();
-            ToggleBrdKB();
-            ToggleCrsKB();
-            ChgPrmPattKB();
-            ToggleTdlKB();
-            ToggleLightStageKB();
-            ExternalTicker();
-            ToggleBrdKB();
-        }
+        internal bool _scan = false;
 
-        public async void ExternalTicker()
-        {
-
-            if (_extras.BRD.HasBoard)
-            {
-                _extras.BRD.BoardTicker();
-            }
-            foreach (Extra.Extra prim in _extras.PRML.Values)
-            {
-                prim.ExtraTicker();
-            }
-            foreach (Extra.Extra sec in _extras.SECL.Values)
-            {
-                sec.ExtraTicker();
-            }
-            foreach (Extra.Extra wrn in _extras.WRNL.Values)
-            {
-                wrn.ExtraTicker();
-            }
-        }
-
-        internal void ToggleSecLKB()
-        {
-            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ToggleSecL);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleSecL))
-            {
-                ToggleSecLights();
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleSecL, _vehicle, true, Game.Player.ServerId);
-            }
-        }
-
+        bool secLights = false;
         internal void ToggleSecLights()
         {
-            API.SetVehicleSiren(_vehicle.Handle, !API.IsVehicleSirenOn(_vehicle.Handle));
             foreach (Extra.Extra ex in _extras.SECL.Values)
             {
                 if (ex.IsPatternRunning)
@@ -74,18 +32,11 @@ namespace ELS.Light
                     ex.IsPatternRunning = true;
                 }
             }
+            secLights = !secLights;
+            ElsUiPanel.ToggleUiBtnState(secLights, "SECL");
         }
 
-        internal void ToggleWrnLKB()
-        {
-            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ToggleWrnL);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleWrnL))
-            {
-                ToggleWrnLights();
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleWrnL, _vehicle, true, Game.Player.ServerId);
-            }
-        }
-
+        bool wrnLights = false;
         internal void ToggleWrnLights()
         {
             foreach (Extra.Extra ex in _extras.WRNL.Values)
@@ -100,79 +51,84 @@ namespace ELS.Light
                     ex.IsPatternRunning = true;
                 }
             }
+            wrnLights = !wrnLights;
+            ElsUiPanel.ToggleUiBtnState(wrnLights, "WRNL");
         }
 
-        internal void ToggleBrdKB()
-        {
-            Game.DisableControlThisFrame(0, Control.CharacterWheel);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleBoard) && Game.IsControlPressed(0, Control.CharacterWheel))
-            {
-#if DEBUG
-                CitizenFX.Core.Debug.WriteLine($"Is Board raised  {_extras.BRD.BoardRaised}");
-#endif
-                if (_extras.BRD.BoardRaised)
-                {
-                    _extras.BRD.RaiseBoardNow = false;
-                }
-                else
-                {
-                    _extras.BRD.RaiseBoardNow = true;
-                }
-                //RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleWrnL, _vehicle, true, Game.Player.ServerId);
-            }
-        }
-
-        internal void ToggleCrsKB()
-        {
-            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ToggleCrsL);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleCrsL) && !Game.IsControlPressed(0, Control.CharacterWheel))
-            {
-                ToggleCrs();
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleCrsL, _vehicle, true, Game.Player.ServerId);
-            }
-        }
-
-
+        bool crsLights = false;
         internal async void ToggleCrs()
         {
+            if (_vcfroot.CRUISE.DisableAtLstg3 && _stage.CurrentStage == 3)
+            {
+                foreach (Extra.Extra e in _extras.PRML.Values)
+                {
+                    e.TurnedOn = false;
+                }
+            }
             foreach (Extra.Extra e in _extras.PRML.Values)
             {
-                e.TurnedOn = !e.State;
-            }
-        }
-
-        internal void ToggleTdlKB()
-        {
-            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ToggleTdl);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleTdl))
-            {
-                if (_extras.TDL != null)
+                switch (e.Id)
                 {
-                    ToggleTdl();
+                    case 1:
+                        if (_vcfroot.CRUISE.UseExtras.Extra1)
+                        {
+                            e.TurnedOn = !e.TurnedOn;
+                        } else
+                        {
+                            e.TurnedOn = false;
+                        }
+                        break;
+                    case 2:
+                        if (_vcfroot.CRUISE.UseExtras.Extra2)
+                        {
+                            e.TurnedOn = !e.TurnedOn;
+                        }
+                        else
+                        {
+                            e.TurnedOn = false;
+                        }
+                        break;
+                    case 3:
+                        if (_vcfroot.CRUISE.UseExtras.Extra3)
+                        {
+                            e.TurnedOn = !e.TurnedOn;
+                        }
+                        else
+                        {
+                            e.TurnedOn = false;
+                        }
+                        break;
+                    case 4:
+                        if (_vcfroot.CRUISE.UseExtras.Extra4)
+                        {
+                            e.TurnedOn = !e.TurnedOn;
+                        }
+                        else
+                        {
+                            e.TurnedOn = false;
+                        }
+                        break;
                 }
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleTDL, _vehicle, true, Game.Player.ServerId);
             }
+            crsLights = !crsLights;
+            ElsUiPanel.ToggleUiBtnState(crsLights, "CRS");
         }
-
 
         internal void ToggleTdl()
         {
             _extras.TDL.TurnedOn = !_extras.TDL.State;
+            ElsUiPanel.ToggleUiBtnState(_extras.TDL.TurnedOn, "TDL");
         }
 
-        internal void ChgPrmPattKB()
+        internal void ToggleScl()
         {
-            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ChgPattPrmL);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattPrmL))
-            {
-                ChgPrmPatt();
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChgPattPrmL, _vehicle, true, Game.Player.ServerId);
-            }
+            _extras.SCL.TurnedOn = !_extras.SCL.State;
+            ElsUiPanel.ToggleUiBtnState(_extras.SCL.TurnedOn, "SCL");
         }
 
         internal async void ChgPrmPatt()
         {
-            if (CurrentPrmPattern == _prmPatterns.Count - 1)
+            if (CurrentPrmPattern == _prmPatterns - 1)
             {
                 CurrentPrmPattern = 0;
             }
@@ -182,15 +138,250 @@ namespace ELS.Light
             }
         }
 
-        internal void ToggleLightStageKB()
+        internal async void ChgSecPatt()
         {
-            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ToggleLstg);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleLstg))
+            if (CurrentSecPattern == _secPatterns - 1)
             {
-                ToggleLightStage();
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleLstg, _vehicle, true, Game.Player.ServerId);
+                CurrentSecPattern = 0;
+            }
+            else
+            {
+                CurrentSecPattern++;
             }
         }
+
+        internal async void ChgWrnPatt()
+        {
+            if (CurrentWrnPattern == _wrnPatterns - 1)
+            {
+                CurrentWrnPattern = 0;
+            }
+            else
+            {
+                CurrentWrnPattern++;
+            }
+        }
+
+        int prmScan = 0;
+        int secScan = 0;
+        int wrnScan = 0;
+        internal async Task ToggleScanPattern()
+        {
+            switch (_stage.CurrentStage)
+            {
+                case 0:
+                    break;
+                case 1:
+                    if (bool.Parse(_stage.SECL.ScanPatternCustomPool.Enabled))
+                    {
+                        
+                        if (bool.Parse(_stage.SECL.ScanPatternCustomPool.Sequential))
+                        {
+                            CurrentSecPattern = SecScanPatts[secScan];
+                            secScan++;
+                            if (secScan > SecScanPatts.Count - 1)
+                            {
+                                secScan = 0;
+                            }
+                        }
+                        else
+                        {
+                            Random rand = new Random();
+                            CurrentSecPattern = SecScanPatts[rand.Next(0,SecScanPatts.Count -1)];
+                        }
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan"))
+                        {
+                            if (CurrentSecPattern == _secPatterns - 1)
+                            {
+                                CurrentSecPattern = 0;
+                            }
+                            else
+                            {
+                                CurrentSecPattern++;
+                            }
+                        }
+                    }                    
+                    break;
+                case 2:
+                    #region SECL
+                    if (bool.Parse(_stage.SECL.ScanPatternCustomPool.Enabled))
+                    {
+
+                        if (bool.Parse(_stage.SECL.ScanPatternCustomPool.Sequential))
+                        {
+                            CurrentSecPattern = SecScanPatts[secScan];
+                            secScan++;
+                            if (secScan > SecScanPatts.Count - 1)
+                            {
+                                secScan = 0;
+                            }
+                        }
+                        else
+                        {
+                            Random rand = new Random();
+                            CurrentSecPattern = SecScanPatts[rand.Next(0, SecScanPatts.Count - 1)];
+                        }
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan"))
+                        {
+                            if (CurrentSecPattern == _secPatterns - 1)
+                            {
+                                CurrentSecPattern = 0;
+                            }
+                            else
+                            {
+                                CurrentSecPattern++;
+                            }
+                        }
+                    }
+                    #endregion
+#region PRML
+                    if (bool.Parse(_stage.PRML.ScanPatternCustomPool.Enabled))
+                    {
+
+                        if (bool.Parse(_stage.PRML.ScanPatternCustomPool.Sequential))
+                        {
+                            CurrentPrmPattern = PrmScanPatts[prmScan];
+                            prmScan++;
+                            if (prmScan > PrmScanPatts.Count -1)
+                            {
+                                prmScan = 0;
+                            }
+                        }
+                        else
+                        {
+                            Random rand = new Random();
+                            CurrentPrmPattern = PrmScanPatts[rand.Next(0, PrmScanPatts.Count - 1)];
+                        }
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg2.Pattern) && _stage.PRML.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan"))
+                        {
+                            if (CurrentPrmPattern == _prmPatterns - 1)
+                            {
+                                CurrentPrmPattern = 0;
+                            }
+                            else
+                            {
+                                CurrentPrmPattern++;
+                            }
+                        }
+                    }
+#endregion
+                    break;
+                case 3:
+#region Wrn
+                    if (bool.Parse(_stage.WRNL.ScanPatternCustomPool.Enabled))
+                    {
+
+                        if (bool.Parse(_stage.WRNL.ScanPatternCustomPool.Sequential))
+                        {
+                            CurrentWrnPattern = WrnScanPatts[wrnScan];
+                            wrnScan++;
+                            if (wrnScan > WrnScanPatts.Count - 1)
+                            {
+                                wrnScan = 0;
+                            }
+                        }
+                        else
+                        {
+                            Random rand = new Random();
+                            CurrentWrnPattern = WrnScanPatts[rand.Next(0, WrnScanPatts.Count - 1)];
+                        }
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg3.Pattern) && _stage.WRNL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
+                        {
+                            if (CurrentWrnPattern == _wrnPatterns - 1)
+                            {
+                                CurrentWrnPattern = 0;
+                            }
+                            else
+                            {
+                                CurrentWrnPattern++;
+                            }
+                        }
+                    }
+                    #endregion
+                    #region SECL
+                    if (bool.Parse(_stage.SECL.ScanPatternCustomPool.Enabled))
+                    {
+
+                        if (bool.Parse(_stage.SECL.ScanPatternCustomPool.Sequential))
+                        {
+                            CurrentSecPattern = SecScanPatts[secScan];
+                            secScan++;
+                            if (secScan > SecScanPatts.Count - 1)
+                            {
+                                secScan = 0;
+                            }
+                        }
+                        else
+                        {
+                            Random rand = new Random();
+                            CurrentSecPattern = SecScanPatts[rand.Next(0, SecScanPatts.Count - 1)];
+                        }
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg3.Pattern) && _stage.SECL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
+                        {
+                            if (CurrentSecPattern == _secPatterns - 1)
+                            {
+                                CurrentSecPattern = 0;
+                            }
+                            else
+                            {
+                                CurrentSecPattern++;
+                            }
+                        }
+                    }
+                    #endregion
+#region PRML
+                    if (bool.Parse(_stage.PRML.ScanPatternCustomPool.Enabled))
+                    {
+
+                        if (bool.Parse(_stage.PRML.ScanPatternCustomPool.Sequential))
+                        {
+                            CurrentPrmPattern = PrmScanPatts[prmScan];
+                            prmScan++;
+                            if (prmScan > PrmScanPatts.Count - 1)
+                            {
+                                prmScan = 0;
+                            }
+                        }
+                        else
+                        {
+                            Random rand = new Random();
+                            CurrentPrmPattern = PrmScanPatts[rand.Next(0, PrmScanPatts.Count - 1)];
+                        }
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg3.Pattern) && _stage.PRML.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
+                        {
+                            if (CurrentPrmPattern == _prmPatterns - 1)
+                            {
+                                CurrentPrmPattern = 0;
+                            }
+                            else
+                            {
+                                CurrentPrmPattern++;
+                            }
+                        }
+                    }
+#endregion
+                    break;
+            }
+        }
+
 
         internal async void ToggleLightStage()
         {
@@ -200,7 +391,7 @@ namespace ELS.Light
             switch (_stage.CurrentStage)
             {
                 case 0:
-                    API.SetVehicleSiren(_vehicle.Handle, false);
+                    SetGTASirens(false);
                     foreach (Extra.Extra e in _extras.PRML.Values)
                     {
                         e.IsPatternRunning = false;
@@ -213,6 +404,11 @@ namespace ELS.Light
                     {
                         e.IsPatternRunning = false;
                     }
+                    ElsUiPanel.ToggleUiBtnState(false, "PRML");
+                    ElsUiPanel.ToggleUiBtnState(false, "SECL");
+                    ElsUiPanel.ToggleUiBtnState(false, "WRNL");
+                    secLights = false;
+                    wrnLights = false;
                     break;
                 case 1:
                     foreach (Extra.Extra e in _extras.SECL.Values)
@@ -221,41 +417,43 @@ namespace ELS.Light
                         {
                             if (_stage.SECL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan"))
                             {
-                                //CurrentSecPattern = 15;
+                                _scan = true;
                             }
                             else
                             {
-                                //CurrentSecPattern = int.Parse(_stage.SECL.PresetPatterns.Lstg1.Pattern);
+                                CurrentSecPattern = int.Parse(_stage.SECL.PresetPatterns.Lstg1.Pattern);
                             }
                         }
                         else
                         {
-                            
+
                         }
                         e.IsPatternRunning = true;
                     }
+                    ElsUiPanel.ToggleUiBtnState(true, "SECL");
+                    secLights = true;
                     break;
                 case 2:
-                    API.SetVehicleSiren(_vehicle.Handle, true);
                     foreach (Extra.Extra e in _extras.SECL.Values)
                     {
                         if (bool.Parse(_stage.SECL.PresetPatterns.Lstg2.Enabled))
                         {
                             if (_stage.SECL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan"))
                             {
-                                //CurrentSecPattern = 15;
+                                _scan = true;
                             }
                             else
                             {
-                                //CurrentSecPattern = int.Parse(_stage.SECL.PresetPatterns.Lstg2.Pattern);
+                                CurrentSecPattern = int.Parse(_stage.SECL.PresetPatterns.Lstg2.Pattern);
                             }
-                        } else
+                        }
+                        else
                         {
                         }
                         e.IsPatternRunning = false;
                         e.IsPatternRunning = true;
                     }
-                    
+                    secLights = true;
                     foreach (int i in extras)
                     {
                         Extra.Extra e = _extras.PRML[i];
@@ -263,58 +461,63 @@ namespace ELS.Light
                         {
                             if (_stage.PRML.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan"))
                             {
-                                //CurrentPrmPattern = 15;
+                                _scan = true;
                             }
                             else
                             {
-                                //CurrentPrmPattern = int.Parse(_stage.PRML.PresetPatterns.Lstg2.Pattern);
+                                CurrentPrmPattern = int.Parse(_stage.PRML.PresetPatterns.Lstg2.Pattern);
                             }
                         }
                         else
                         {
-                            
+
                         }
                         e.IsPatternRunning = false;
                         e.IsPatternRunning = true;
                     }
+                    ElsUiPanel.ToggleUiBtnState(true, "PRML");
+                    ElsUiPanel.ToggleUiBtnState(true, "SECL");
                     break;
                 case 3:
+                    SetGTASirens(true);
                     foreach (Extra.Extra e in _extras.SECL.Values)
                     {
-                        
+
                         if (bool.Parse(_stage.SECL.PresetPatterns.Lstg3.Enabled))
                         {
                             if (_stage.SECL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
                             {
-                                //CurrentSecPattern = 15;
+                                _scan = true;
                             }
                             else
                             {
-                                //CurrentSecPattern = int.Parse(_stage.SECL.PresetPatterns.Lstg3.Pattern);
+                                CurrentSecPattern = int.Parse(_stage.SECL.PresetPatterns.Lstg3.Pattern);
                             }
                         }
                         if (bool.Parse(_vcfroot.SECL.DisableAtLstg3))
                         {
                             e.IsPatternRunning = false;
+                            ElsUiPanel.ToggleUiBtnState(false, "SECL");
                         }
                         else
                         {
                             e.IsPatternRunning = false;
                             e.IsPatternRunning = true;
+                            ElsUiPanel.ToggleUiBtnState(true, "SECL");
                         }
-                    }                    
-
+                    }
+                    secLights = true;
                     foreach (Extra.Extra e in _extras.PRML.Values)
-                    { 
+                    {
                         if (bool.Parse(_stage.PRML.PresetPatterns.Lstg3.Enabled))
                         {
                             if (_stage.PRML.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
                             {
-                                //CurrentPrmPattern = 15;
+                                _scan = true;
                             }
                             else
                             {
-                                //CurrentPrmPattern = int.Parse(_stage.PRML.PresetPatterns.Lstg1.Pattern);
+                                CurrentPrmPattern = int.Parse(_stage.PRML.PresetPatterns.Lstg3.Pattern);
                             }
                         }
                         else
@@ -330,16 +533,19 @@ namespace ELS.Light
                         {
                             if (_stage.WRNL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
                             {
-                                //CurrentWrnPattern = 15;
+                                _scan = true;
                             }
                             else
                             {
-                               //CurrentWrnPattern = int.Parse(_stage.WRNL.PresetPatterns.Lstg3.Pattern);
+                                CurrentWrnPattern = int.Parse(_stage.WRNL.PresetPatterns.Lstg3.Pattern);
                             }
                         }
                         e.IsPatternRunning = false;
                         e.IsPatternRunning = true;
                     }
+                    wrnLights = true;
+                    ElsUiPanel.ToggleUiBtnState(true, "PRML");
+                    ElsUiPanel.ToggleUiBtnState(true, "WRNL");
                     break;
             }
         }

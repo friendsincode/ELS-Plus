@@ -14,19 +14,24 @@ This project is in early development stages. You should expect bugs and/or issue
 |Action Key|Default Key|Default Binding
 |---|---|---|
 |Team Text Chat | Y key | Horn control|
-|Select Unarmed Weapon | 1 Key | Manual tone 1
-|Select Melee Weapon | 2 Key | Manual tone 2|
-|Select Shotgun Weapon | 3 Key | Manual tone 3|
-|Select Heavy Weapon | 4 Key | Manual tone 4|
+|Select Unarmed Weapon | 1 Key | Wail tone |
+|Select Melee Weapon | 2 Key | Yelp tone |
+|Select Shotgun Weapon | 3 Key | Auxilary tone 1|
+|Select Heavy Weapon | 4 Key | Auxilary tone 2|
 |Select Special Weapon | 5 Key | Toggles Dual Siren Mode|
 |Chat All| T Key|Goes to next tone or plays tone 1|
 |Throw Grenade| G Key|Toggles main siren|
 |Vehicle Horn | E Key | Toggles vehicle's Light Stages|
+|Multiplayer Info | Z Key | Toggles vehicle's Primary Patterns|
+| | X Key | Toggles vehicle's Secondary Patterns|
+| | C Key | Toggles vehicle's Warning Patterns|
 |Cover | Q Key | Toggles vehicle's Takedown Lights|
+|Cover | Alt + Q Key | Toggles vehicle's Scene Lights|
 |Replay Show Hot Key | K Key | Toggles vehicle's secondary lights|
 |Cinematic Slo Mo | L Key | Toggles vehicle's warning lights|
 || [ Key | Toggles vehicle's Cruise Lights|
 || L Alt + [ | Toggles vehicles Arrowboard if equipped(Not fully working)|
+||Ctrl + P|Toggles UI Panel|
 
 ### How to install
 1. Copy the `ELS-FiveM` folder to `cfx-server\resources\`

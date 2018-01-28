@@ -23,11 +23,13 @@ using System.Threading.Tasks;
 
 namespace ELS.configuration
 {
-    class global
+    internal class Global
     {
         internal static bool EnabeTrafficControl { get; set; }
+        internal static int PrimDelay { get; set; }
+        internal static int EnvLightRng { get; set; }
 
-        public global()
+        public Global()
         {
             
         }

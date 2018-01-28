@@ -69,7 +69,11 @@ namespace ELS.Light
 
         private void LightStagesSetup()
         {
-            _stage = new Stage(_vcfroot.PRML, _vcfroot.SECL, _vcfroot.WRNL);
+            _stage = new Stage(_vcfroot.PRML, _vcfroot.SECL, _vcfroot.WRNL, _vehicle.GetNetworkId());
+        }
+
+        private void SetGTASirens(bool state) {
+            _vehicle.IsSirenActive = state;
         }
 
         private void AddAllValidLightExtras()
@@ -212,16 +216,27 @@ namespace ELS.Light
                 e.CleanUp();
             }
             foreach (Extra.Extra e in _extras.SECL.Values)
-            {
+            { 
                 e.CleanUp();
             }
             foreach (Extra.Extra e in _extras.WRNL.Values)
             {
                 e.CleanUp();
             }
-            _extras.SBRN.CleanUp();
-            _extras.TDL.CleanUp();
-            _extras.SCL.CleanUp();
+            if (_extras.SBRN != null)
+            {
+                _extras.SBRN.CleanUp();
+            }
+            if (_extras.TDL != null)
+            {
+               _extras.TDL.CleanUp();
+            }
+            if (_extras.SCL != null)
+            {
+               _extras.SCL.CleanUp();
+            }
+            
+            
         }
 
         public void LightsControlsRemote()

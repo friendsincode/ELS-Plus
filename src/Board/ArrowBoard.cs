@@ -1,6 +1,7 @@
 ﻿
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using ELS.FullSync;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ELS.Board
 {
-    internal class ArrowBoard
+    internal class ArrowBoard : IFullSyncComponent
     {
         Entity _vehicle;
         configuration.MISC _misc;
@@ -54,7 +55,7 @@ namespace ELS.Board
         public Dictionary<string, object> GetData()
         {
             Dictionary<string, object> dic = new Dictionary<string, object>();
-            dic.Add("raised", BoardRaised);
+            dic.Add("raised", RaiseBoardNow);
             return dic;
         }
 

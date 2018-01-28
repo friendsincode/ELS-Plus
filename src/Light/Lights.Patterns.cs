@@ -1,4 +1,5 @@
-﻿using ELS.Light.Patterns;
+﻿using ELS.configuration;
+using ELS.Light.Patterns;
 using ELS.NUI;
 using System;
 using System.Collections.Generic;
@@ -8,16 +9,20 @@ using System.Threading.Tasks;
 
 namespace ELS.Light
 {
-    partial class Lights
+    partial class Lights : IPatterns
     {
-        private Dictionary<int, Pattern> _prmPatterns;
-        private Dictionary<int, Pattern> _secPatterns;
-        private Dictionary<int, Pattern> _wrnPatterns;
         private int _prmPatt = 0;
         private int _secPatt = 0;
         private int _wrnPatt = 0;
+        private string _prefix;
+        private int _prmPatterns;
+        private int _secPatterns;
+        private int _wrnPatterns;
+        internal List<int> PrmScanPatts;
+        internal List<int> SecScanPatts;
+        internal List<int> WrnScanPatts;
 
-        private int CurrentPrmPattern
+        public int CurrentPrmPattern
         {
             get
             {
@@ -28,50 +33,94 @@ namespace ELS.Light
                 _prmPatt = value;
                 foreach (Extra.Extra e in _extras.PRML.Values)
                 {
-                    switch (_prmPatterns[CurrentPrmPattern].BasePattern)
+                    try
                     {
-                        case 0:
-                            if (e.Id == 1 || e.Id == 2)
-                            {
-                                e.Pattern = _prmPatterns[CurrentPrmPattern].StringPattern;
-                            }
-                            else
-                            {
-                                e.Pattern = PatternUtils.Reverse(_prmPatterns[CurrentPrmPattern].StringPattern);
-                            }
-                            break;
-                        case 1:
-                            if (e.Id == 1 || e.Id == 4)
-                            {
-                                e.Pattern = _prmPatterns[CurrentPrmPattern].StringPattern;
-                            }
-                            else
-                            {
-                                e.Pattern = PatternUtils.Reverse(_prmPatterns[CurrentPrmPattern].StringPattern);
-                            }
-                            break;
-                        case 2:
-                            if (e.Id == 1 || e.Id == 3)
-                            {
-                                e.Pattern = _prmPatterns[CurrentPrmPattern].StringPattern;
-                            }
-                            else
-                            {
-                                e.Pattern = PatternUtils.Reverse(_prmPatterns[CurrentPrmPattern].StringPattern);
-                            }
-                            break;
-                        case 3:
-                            e.Pattern = _prmPatterns[CurrentPrmPattern].StringPattern;
-                            break;
+                        switch (_vcfroot.PRML.LightingFormat.ToLower())
+                        {
+                            case "leds":
+                                e.Pattern = Leds.PrimaryPatterns[CurrentPrmPattern][e.Id];
+                                _prmPatterns = Leds.PrimaryPatterns.Count;
+                                _prefix = "L";
+                                break;
+                            case "strb":
+                                e.Pattern = Strobe.PrimaryPatterns[CurrentPrmPattern][e.Id];
+                                _prmPatterns = Strobe.PrimaryPatterns.Count;
+                                _prefix = "S";
+                                break;
+                            case "rota":
+                                e.Pattern = Rotary.PrimaryPatterns[CurrentPrmPattern][e.Id];
+                                _prmPatterns = Rotary.PrimaryPatterns.Count;
+                                _prefix = "R";
+                                break;
+                            case "dro1":
+                                if (e.Id == 1)
+                                {
+                                    e.SetState(true);
+                                }
+                                e.Pattern = DRO.PrimaryPatternsDro1[CurrentPrmPattern][e.Id];
+                                _prmPatterns = DRO.PrimaryPatternsDro1.Count;
+                                _prefix = "D";
+                                break;
+                            case "dro2":
+                                if (e.Id == 1)
+                                {
+                                    e.SetState(false);
+                                }
+                                e.Pattern = DRO.PrimaryPatternsDro2[CurrentPrmPattern][e.Id];
+                                _prmPatterns = DRO.PrimaryPatternsDro2.Count;
+                                _prefix = "D";
+                                break;
+                            case "dro3":
+                                if (e.Id == 1 || e.Id == 2)
+                                {
+                                    e.SetState(true);
+                                }
+                                e.Pattern = DRO.PrimaryPatternsDro3[CurrentPrmPattern][e.Id];
+                                _prmPatterns = DRO.PrimaryPatternsDro3.Count;
+                                _prefix = "D";
+                                break;
+                            case "chp":
+                                switch (_stage.CurrentStage)
+                                {
+                                    case 1:
+                                        e.Pattern = CHP.LightStage1[e.Id];
+                                        _prmPatterns = 1;
+                                        break;
+                                    case 2:
+                                        e.Pattern = CHP.LightStage2[CurrentSecPattern][e.Id];
+                                        _secPatterns = CHP.LightStage2.Count;
+                                        break;
+                                    case 3:
+                                        e.Pattern = CHP.LightStage3[CurrentWrnPattern][e.Id];
+                                        _wrnPatterns = CHP.LightStage3.Count;
+                                        break;
+                                    default:
+                                        e.Pattern = CHP.LightStage1[e.Id];
+                                        break;
+                                }
+                                _prefix = "C";
+                                break;
+                            default:
+                                e.Pattern = Leds.PrimaryPatterns[CurrentPrmPattern][e.Id];
+                                _prefix = "L";
+                                break;
+                        }
+                        e.PatternNum = CurrentPrmPattern;
+                        e.Delay = Global.PrimDelay;
                     }
-                    e.PatternNum = CurrentPrmPattern;
-                    e.Delay = _prmPatterns[CurrentPrmPattern].Delay;
+                    catch (Exception ex)
+                    {
+                        CitizenFX.Core.Debug.WriteLine($"{e.Id} error {ex.Message}");
+                    }
                 }
-                ElsUiPanel.SetUiPatternNumber(CurrentPrmPattern, ExtraEnum.PRML.ToString());
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine($"Current primary pattern is {CurrentPrmPattern}");
+#endif
+                ElsUiPanel.SetUiDesc(_prefix + CurrentPrmPattern.ToString().PadLeft(3,'0'), ExtraEnum.PRML.ToString());
             }
         }
 
-        private int CurrentSecPattern
+        public int CurrentSecPattern
         {
             get
             {
@@ -82,14 +131,73 @@ namespace ELS.Light
                 _secPatt = value;
                 foreach (Extra.Extra e in _extras.SECL.Values)
                 {
-                    e.PatternNum = CurrentSecPattern;
-                    e.Pattern = _secPatterns[CurrentSecPattern].StringPattern;
+                    try
+                    {
+                        switch (_vcfroot.SECL.LightingFormat.ToLower())
+                        {
+                            case "leds":
+                                e.Pattern = Leds.SecondaryPatterns[CurrentSecPattern][e.Id];
+                                _secPatterns = Leds.SecondaryPatterns.Count;
+                                _prefix = "L";
+                                break;
+                            case "strb":
+                                e.Pattern = Strobe.SecondaryPatterns[CurrentSecPattern][e.Id];
+                                _secPatterns = Strobe.SecondaryPatterns.Count;
+                                _prefix = "S";
+                                break;
+                            case "traf":
+                                e.Pattern = TrafficAdvisor.SecondaryPatterns[CurrentSecPattern][e.Id];
+                                _secPatterns = TrafficAdvisor.SecondaryPatterns.Count;
+                                _prefix = "T";
+                                break;
+                            case "arrw":
+                                e.Pattern = Arrow.SecondaryPatterns[CurrentSecPattern][e.Id];
+                                _secPatterns = Arrow.SecondaryPatterns.Count;
+                                _prefix = "A";
+                                break;
+                            case "marq":
+                                e.Pattern = Marquee.SecondaryPatterns[CurrentSecPattern][e.Id];
+                                _prefix = "M";
+                                break;
+                            case "chp":
+                                switch (_stage.CurrentStage)
+                                {
+                                    case 1:
+                                        e.Pattern = CHP.LightStage1[e.Id];
+                                        break;
+                                    case 2:
+                                        e.Pattern = CHP.LightStage2[CurrentSecPattern][e.Id];
+                                        break;
+                                    case 3:
+                                        e.Pattern = CHP.LightStage3[CurrentWrnPattern][e.Id];
+                                        break;
+                                    default:
+                                        e.Pattern = CHP.LightStage1[e.Id];
+                                        break;
+                                }
+                                _prefix = "C";
+                                break;
+                            default:
+                                e.Pattern = Leds.PrimaryPatterns[CurrentSecPattern][e.Id];
+                                _prefix = "L";
+                                break;
+                        }
+                        e.PatternNum = CurrentSecPattern;
+                        e.Delay = Global.PrimDelay;
+                    }
+                    catch (Exception ex)
+                    {
+                        CitizenFX.Core.Debug.WriteLine($"{e.Id} error {ex.Message}");
+                    }
                 }
-                ElsUiPanel.SetUiPatternNumber(CurrentSecPattern, ExtraEnum.SECL.ToString());
+                ElsUiPanel.SetUiDesc(_prefix + CurrentSecPattern.ToString().PadLeft(3,'0'), ExtraEnum.SECL.ToString());
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine($"Current secondary pattern is {CurrentSecPattern}");
+#endif
             }
         }
 
-        private int CurrentWrnPattern
+        public int CurrentWrnPattern
         {
             get
             {
@@ -100,77 +208,116 @@ namespace ELS.Light
                 _wrnPatt = value;
                 foreach (Extra.Extra e in _extras.WRNL.Values)
                 {
-                    e.PatternNum = CurrentWrnPattern;
-                    e.Pattern = _wrnPatterns[CurrentWrnPattern].StringPattern;
+                    try
+                    {
+                        switch (_vcfroot.WRNL.LightingFormat.ToLower())
+                        {
+                            case "leds":
+                                e.Pattern = Leds.WarningPatterns[CurrentWrnPattern][e.Id];
+                                _prefix = "L";
+                                break;
+                            case "strb":
+                                e.Pattern = Strobe.WarningPatterns[CurrentWrnPattern][e.Id];
+                                _prefix = "S";
+                                break;
+                            case "chp":
+                                switch (_stage.CurrentStage)
+                                {
+                                    case 1:
+                                        e.Pattern = CHP.LightStage1[e.Id];
+                                        break;
+                                    case 2:
+                                        e.Pattern = CHP.LightStage2[CurrentSecPattern][e.Id];
+                                        break;
+                                    case 3:
+                                        e.Pattern = CHP.LightStage3[CurrentWrnPattern][e.Id];
+                                        break;
+                                    default:
+                                        e.Pattern = CHP.LightStage1[e.Id];
+                                        break;
+                                }
+                                _prefix = "C";
+                                break;
+                            default:
+                                e.Pattern = Leds.WarningPatterns[CurrentWrnPattern][e.Id];
+                                _prefix = "L";
+                                break;
+                        }
+                        e.PatternNum = CurrentWrnPattern;
+                        e.Delay = Global.PrimDelay;
+                    }
+                    catch (Exception ex)
+                    {
+                        CitizenFX.Core.Debug.WriteLine($"{e.Id} error {ex.Message}");
+                    }
                 }
-                ElsUiPanel.SetUiPatternNumber(CurrentWrnPattern, ExtraEnum.WRNL.ToString());
+                ElsUiPanel.SetUiDesc(_prefix + CurrentWrnPattern.ToString().PadLeft(3,'0'), ExtraEnum.WRNL.ToString());
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine($"Current warning pattern is {CurrentWrnPattern}");
+#endif
             }
         }
 
         private void SetupPatternsPrm()
         {
-            _prmPatterns = new Dictionary<int, Pattern>();
-            int delay = 400;
-            int count = 0;
-            int patt = 0;
-            for (int i = 0; i < 64; i++)
-            {
-                if (count == 4)
-                {
-                    count = 0;
-                    delay = delay - 50;
-                }
-                if (delay < 200)
-                {
-                    delay = 400;
-                    patt++;
-                }
-                _prmPatterns.Add(i, new Pattern(PatternType.PRML, delay, Leds.StringPatterns[patt], i, count));
-                count++;
-            }
             CurrentPrmPattern = 0;
+            PrmScanPatts = new List<int>();
+            if (bool.Parse(_stage.PRML.ScanPatternCustomPool.Enabled)) {
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine($"Adding Primary Scan pool patterns");
+#endif
+                foreach (string p in _stage.PRML.ScanPatternCustomPool.Pattern)
+                {
+                    PrmScanPatts.Add(int.Parse(p));
+#if DEBUG
+                    CitizenFX.Core.Debug.WriteLine($"Added {p} to primary scan patterns");
+#endif
+                }
+                CurrentPrmPattern = PrmScanPatts[0];
+            }
+            else
+            {
+
+            }
         }
 
         private void SetupSecPatterns()
         {
-            _secPatterns = new Dictionary<int, Pattern>();
-            _secPatterns.Add(0, new Pattern(PatternType.SECL, 700, Leds.StringPatterns[22], 0));
             CurrentSecPattern = 0;
-            foreach (Extra.Extra e in _extras.SECL.Values)
+            SecScanPatts = new List<int>();
+            if (bool.Parse(_stage.SECL.ScanPatternCustomPool.Enabled))
             {
-                switch (e.Id)
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine($"Adding Secondary Scan pool patterns");
+#endif
+                foreach (string p in _stage.SECL.ScanPatternCustomPool.Pattern)
                 {
-                    case 7:
-                        e.Pattern = _secPatterns[CurrentSecPattern].StringPattern;
-                        break;
-                    case 8:
-                        e.Pattern = PatternUtils.Reverse(_secPatterns[CurrentSecPattern].StringPattern);
-                        break;
-                    case 9:
-                        e.Pattern = _secPatterns[CurrentSecPattern].StringPattern;
-                        break;
+                    SecScanPatts.Add(int.Parse(p));
+#if DEBUG
+                    CitizenFX.Core.Debug.WriteLine($"Added {p} to secondary scan patterns");
+#endif
                 }
-                e.Delay = _secPatterns[CurrentSecPattern].Delay;
+                CurrentSecPattern = SecScanPatts[0];
             }
         }
 
         private void SetupWrnPatterns()
         {
-            _wrnPatterns = new Dictionary<int, Pattern>();
-            _wrnPatterns.Add(0, new Pattern(PatternType.SECL, 300, Leds.StringPatterns[2], 0));
             CurrentWrnPattern = 0;
-            foreach (Extra.Extra e in _extras.WRNL.Values)
+            WrnScanPatts = new List<int>();
+            if (bool.Parse(_stage.WRNL.ScanPatternCustomPool.Enabled))
             {
-                switch (e.Id)
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine($"Adding Warning Scan pool patterns");
+#endif
+                foreach (string p in _stage.WRNL.ScanPatternCustomPool.Pattern)
                 {
-                    case 5:
-                        e.Pattern = _secPatterns[CurrentWrnPattern].StringPattern;
-                        break;
-                    case 6:
-                        e.Pattern = PatternUtils.Reverse(_secPatterns[CurrentWrnPattern].StringPattern);
-                        break;
+                    WrnScanPatts.Add(int.Parse(p));
+#if DEBUG
+                    CitizenFX.Core.Debug.WriteLine($"Added {p} to warning scan patterns");
+#endif
                 }
-                e.Delay = _wrnPatterns[CurrentWrnPattern].Delay;
+                CurrentWrnPattern = WrnScanPatts[0];
             }
         }
     }

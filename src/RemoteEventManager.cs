@@ -47,7 +47,12 @@ namespace ELS
             ChangeSecPatt,
             ChangeWrnPatt,
             ToggleLstg,
-            ChgPattPrmL
+            ChgPattPrmL,
+            ChgPattWrnL,
+            MoveSpotlightUp,
+            MoveSpotlightDown,
+            MoveSpotlightLeft,
+            MoveSpotlightRight
         }
         internal enum MessageTypes
         {

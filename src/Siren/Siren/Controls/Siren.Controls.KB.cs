@@ -35,7 +35,7 @@ namespace ELS.Siren
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon1))
             {
 #if !REMOTETEST
-                ManualTone1Logic(true, true);
+                SirenTone1Logic(true, true);
 #endif
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone1, _vehicle, true, Game.Player.ServerId);
             }
@@ -45,7 +45,7 @@ namespace ELS.Siren
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon2))
             {
 #if !REMOTETEST
-                ManualTone2Logic(true, true);
+                SirenTone2Logic(true, true);
 #endif
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone2, _vehicle, true, Game.Player.ServerId);
             }
@@ -55,7 +55,7 @@ namespace ELS.Siren
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon3))
             {
 #if !REMOTETEST
-                ManualTone3Logic(true, true);
+                SirenTone3Logic(true, true);
 #endif
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone3, _vehicle, true, Game.Player.ServerId);
             }
@@ -65,7 +65,7 @@ namespace ELS.Siren
             if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon4))
             {
 #if !REMOTETEST
-                ManualTone4Logic(true, true);
+                SirenTone4Logic(true, true);
 #endif
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualTone4, _vehicle, true, Game.Player.ServerId);
             }
