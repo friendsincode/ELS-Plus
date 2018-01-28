@@ -124,6 +124,7 @@
     <Compile Include="Light\Stage.cs" />
     <Compile Include="TrafficControl\Vehicles.cs" />
     <Compile Include="TrafficControl\Vehicles.logic.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="Vehicle\ELSVehicle.cs" />
     <Compile Include="extentions.cs" />
     <Compile Include="FileLoader.cs" />

@@ -90,7 +90,8 @@ namespace ELS.Manager
                     if (Game.IsControlJustPressed(0, Control.Cover))
                     {
                         FullSync.FullSyncManager.SendDataBroadcast(
-                            _currentVehicle.GetData()
+                            _currentVehicle.GetData(),
+                            Game.Player.ServerId
                         );
                         CitizenFX.Core.UI.Screen.ShowNotification("FullSync™ ran");
                         CitizenFX.Core.Debug.WriteLine("FullSync™ ran");
@@ -112,9 +113,9 @@ namespace ELS.Manager
         /// Proxies the sync data to a certain vehicle
         /// </summary>
         /// <param name="dataDic">data</param>
-        async internal void SetVehicleSyncData(IDictionary<string, object> dataDic)
+        async internal void SetVehicleSyncData(IDictionary<string, object> dataDic,int PlayerId)
         {
-
+            if (Game.Player.ServerId == PlayerId) return;
             var bo = vehicleList.MakeSureItExists((int)dataDic["NetworkID"]
                         , dataDic, out ELSVehicle veh1);
             if (bo)
@@ -127,15 +128,16 @@ namespace ELS.Manager
             }
         }
 
-        internal static void SyncRequestReply(int NetworkId)
+        internal static void SyncRequestReply(int NetworkId,int PlayerId)
         {
             if (NetworkId == 0)
             {
-                CitizenFX.Core.Debug.WriteLine("ERROR NetwordID equals 0\n");
+                CitizenFX.Core.Debug.WriteLine("ERROR sending vehicle data NetwordID equals 0\n");
                 return;
             }
             FullSync.FullSyncManager.SendDataBroadcast(
-                (vehicleList.Find(o => o.GetNetworkId() == NetworkId)).GetData()
+                (vehicleList.Find(o => o.GetNetworkId() == NetworkId)).GetData(),
+                PlayerId
             );
         }
         internal void SyncAllVehiclesOnFirstSpawn(System.Dynamic.ExpandoObject data)

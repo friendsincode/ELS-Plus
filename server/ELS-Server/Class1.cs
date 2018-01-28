@@ -10,7 +10,7 @@ namespace ELS_Server
 {
     public class Class1 : BaseScript
     {
-        Dictionary<int, object> _cachedData = new Dictionary<int,object>();
+        Dictionary<int, object> _cachedData = new Dictionary<int, object>();
         VcfSync _vcfSync;
         public Class1()
         {
@@ -21,7 +21,8 @@ namespace ELS_Server
             API.RegisterCommand("vcfrefresh", new Action<int, List<object>, string>((source, arguments, raw) =>
             {
                 Debug.WriteLine($"{Players[source].Name} has activated a VCF Refresh");
-                foreach (Player p in Players) {
+                foreach (Player p in Players)
+                {
                     TriggerEvent("ELS:VcfSync:Server", p.Handle);
                 }
             }), false);
@@ -31,7 +32,7 @@ namespace ELS_Server
                 Debug.WriteLine($"{Players[source].Name} has attempted to spawn {arguments[0]}");
                 TriggerClientEvent(Players[source], "ELS:SpawnCar", arguments[0]);
             }), true);
-           
+
             EventHandlers["ELS:VcfSync:Server"] += new Action<int>((int source) =>
             {
                 _vcfSync = new VcfSync();
@@ -48,15 +49,15 @@ namespace ELS_Server
                 }
             }));
             EventHandlers["ELS:FullSync:Unicast"] += new Action(() => { });
-            EventHandlers["ELS:FullSync:Broadcast"] += new Action<System.Dynamic.ExpandoObject,int>((dataDic,playerID) =>
-            {
-                var dd = (IDictionary<string,object> )dataDic;
+            EventHandlers["ELS:FullSync:Broadcast"] += new Action<System.Dynamic.ExpandoObject, int>((dataDic, playerID) =>
+             {
+                 var dd = (IDictionary<string, object>)dataDic;
 #if DEBUG
-                Debug.WriteLine($"NetworkID {dd["NetworkID"]}");
+                 Debug.WriteLine($"NetworkID {dd["NetworkID"]}");
 #endif
-                _cachedData[(int)dd["NetworkID"]] = dd;
-                BroadcastMessage(dataDic, playerID);
-            });
+                 _cachedData[(int)dd["NetworkID"]] = dd;
+                 BroadcastMessage(dataDic, playerID);
+             });
             EventHandlers["ELS:FullSync:Request:All"] += new Action<int>((int source) =>
             {
 #if DEBUG
@@ -64,30 +65,21 @@ namespace ELS_Server
 #endif
                 TriggerClientEvent(Players[source], "ELS:FullSync:NewSpawnWithData", _cachedData);
             });
-            API.RegisterCommand("resync", new Action<int, System.Collections.IList, string>((a,b,c)=> {
+            API.RegisterCommand("resync", new Action<int, System.Collections.IList, string>((a, b, c) =>
+            {
 #if DEBUG
                 Debug.WriteLine($"{a}, {b}, {c}");
 #endif
                 TriggerClientEvent(Players[(int.Parse((string)b[0]))], "ELS:FullSync:NewSpawnWithData", _cachedData);
             }), false);
 
-            
 
-            
+
+
         }
         void BroadcastMessage(System.Dynamic.ExpandoObject dataDic, int SourcePlayerID)
         {
-            
-            foreach(var ply in Players)
-            {
-#if DEBUG
-                Debug.WriteLine($"comparing {ply.EndPoint} with {Players[SourcePlayerID].EndPoint}");
-#endif
-                if (!ply.EndPoint.Equals(Players[SourcePlayerID].EndPoint))
-                {
-                    TriggerClientEvent("ELS:NewFullSyncData", dataDic);
-                }
-            }
+            TriggerClientEvent("ELS:NewFullSyncData", dataDic,SourcePlayerID);
         }
     }
 }

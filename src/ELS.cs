@@ -57,7 +57,7 @@ namespace ELS
                         {
                             _FileLoader.RunLoader(obj);
                             //TODO: make a load files from all resouces.
-                            Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS Plus\n\n ELS Plus is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
+                            Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS Plus\n\n ELS Plus is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://els.friendsincode.com");
                             SetupConnections();
                             TriggerServerEvent("ELS:VcfSync:Server", Game.Player.ServerId);
                             TriggerServerEvent("ELS:FullSync:Request:All", Game.Player.ServerId);
@@ -136,7 +136,7 @@ namespace ELS
                 Tick += Class1_Tick;
             });
             //Take in data and apply it
-            EventHandlers["ELS:NewFullSyncData"] += new Action<IDictionary<string, object>>(_vehicleManager.SetVehicleSyncData);
+            EventHandlers["ELS:NewFullSyncData"] += new Action<IDictionary<string, object>,int>(_vehicleManager.SetVehicleSyncData);
 
 
             API.RegisterCommand("vcfsync", new Action<int, List<object>, string>((source, arguments, raw) =>
