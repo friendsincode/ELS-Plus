@@ -157,6 +157,9 @@
     <Compile Include="Extra\Extra.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="COPYING.LESSER">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <None Include="extra-files\ELS.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -172,6 +175,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="LICENSE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="NUI\app\css\bootstrap-toggle.min.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
