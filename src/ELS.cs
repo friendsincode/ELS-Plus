@@ -57,7 +57,7 @@ namespace ELS
                         {
                             _FileLoader.RunLoader(obj);
                             //TODO: make a load files from all resouces.
-                            Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS FiveM\n\n ELS FiveM is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
+                            Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS Plus\n\n ELS Plus is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://fivem-scripts.net");
                             SetupConnections();
                             TriggerServerEvent("ELS:VcfSync:Server", Game.Player.ServerId);
                             TriggerServerEvent("ELS:FullSync:Request:All", Game.Player.ServerId);
