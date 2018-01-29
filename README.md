@@ -1,5 +1,6 @@
-# DISCLAIMER
-This project is in early development stages. You should expect bugs and/or issues. To effectively combat these issues we ask that you submit issues to the Issues board in this repository. See: https://github.com/ejb1123/ej/issues to submit an issue. It is important that if you test ELS for FiveM that you submit issues so that we may work to resolve these. Here's some things to consider:
+# ELS-Plus
+
+See: https://github.com/ejb1123/ELS-Plus/issues to submit an issue. It is important that if you test ELS for FiveM that you submit issues so that we may work to resolve these. Here's some things to consider:
 
 - ELS vehicles are not yet supported.
 - Lights are in progress. Currently sync is not working but you are able to use lights.
@@ -7,7 +8,7 @@ This project is in early development stages. You should expect bugs and/or issue
 - You can spawn a vehicle using /elscar {model}
 - You can obtain a list of the vehicles ELS has detected by typing /elslist and pressing F8 to view console.
 
-# ELS FiveM
+
 
 ### Default Controls
 
