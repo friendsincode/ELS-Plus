@@ -20,14 +20,14 @@ namespace ELS.NUI
         internal static void InitData()
         {
             string name = API.GetCurrentResourceName();
-            CitizenFX.Core.Debug.WriteLine($"Sending Current resouce name {name}");
+            Utils.DebugWriteLine($"Sending Current resouce name {name}");
             API.SendNuiMessage($"{{\"type\":\"initdata\", \"name\":\"{name}\"}}");
         }
 
         //Enable full ui control and cursor
         internal static void EnableUI()
         {
-            CitizenFX.Core.Debug.WriteLine("Enabling UI");
+            Utils.DebugWriteLine("Enabling UI");
             API.SendNuiMessage("{\"type\":\"enableui\", \"enable\":true}");
             API.SetNuiFocus(true, true);
             _enabled = 2;
@@ -37,7 +37,7 @@ namespace ELS.NUI
         //Disable the UI and cursor
         internal static void DisableUI()
         {
-            CitizenFX.Core.Debug.WriteLine("Disabling Ui");
+            Utils.DebugWriteLine("Disabling Ui");
             API.SendNuiMessage("{\"type\":\"enableui\", \"enable\":false}");
             API.SetNuiFocus(false, false);
             _enabled = 0;
@@ -47,7 +47,7 @@ namespace ELS.NUI
         //Show only the UI without focus and cursor
         internal static void ShowUI()
         {
-            CitizenFX.Core.Debug.WriteLine("Showing Ui");
+            Utils.DebugWriteLine("Showing Ui");
             API.SendNuiMessage("{\"type\":\"enableui\", \"enable\":true}");
             API.SetNuiFocus(false, false);
             _enabled = 1;
@@ -72,7 +72,7 @@ namespace ELS.NUI
 
         internal static void ToggleUiBtnState(bool state, string which)
         {
-            CitizenFX.Core.Debug.WriteLine($"Setting {which} to {state}");
+            Utils.DebugWriteLine($"Setting {which} to {state}");
             API.SendNuiMessage($"{{\"type\":\"togglestate\", \"which\":\"{which}\", \"state\":{state.ToString().ToLower()} }}");
         }
 
@@ -89,20 +89,20 @@ namespace ELS.NUI
 
         internal static CallbackDelegate EscapeUI(IDictionary<string,Object> data, CallbackDelegate cb)
         {
-            CitizenFX.Core.Debug.WriteLine("Escape Executed");
+            Utils.DebugWriteLine("Escape Executed");
             ShowUI();
             return cb;
         }
 
         internal static CallbackDelegate TooglePrimary(IDictionary<string,Object> data, CallbackDelegate cb)
         {
-            CitizenFX.Core.Debug.WriteLine("Toggle Primary Executed");
+            Utils.DebugWriteLine("Toggle Primary Executed");
             return cb;
         }
 
         internal static CallbackDelegate KeyPress(IDictionary<string, Object> data, CallbackDelegate cb)
         {
-            CitizenFX.Core.Debug.WriteLine("J key pressed");
+            Utils.DebugWriteLine("J key pressed");
             return cb;
         }
     }

@@ -106,42 +106,7 @@ namespace ELS
         internal void RunExternalTick()
         {
             _siren.ExternalTicker();
-            _light.ExternalTicker();
-            if (!_vehicle.IsEngineRunning)
-            {
-#if DEBUG
-                CitizenFX.Core.Debug.WriteLine("Engine not running starting it");
-#endif
-                _vehicle.IsEngineRunning = true;
-            }
-            if (lastDeleteTime == 0)
-            {
-                lastDeleteTime = Game.GameTime;
-            }
-            if (Game.GameTime - lastDeleteTime >= 180000)
-            {
-                DeleteStale();
-                lastDeleteTime = Game.GameTime;
-            }
-        }
-
-        int lastDeleteTime = 0;
-        private async Task DeleteStale()
-        {
-            PlayerList list = new PlayerList();
-#if DEBUG
-            CitizenFX.Core.Debug.WriteLine("Running Delete");
-#endif
-            foreach (Player p in list)
-            {
-                if (_vehicle.GetNetworkId() != p.Character.CurrentVehicle.GetNetworkId())
-                {
-#if DEBUG
-                    CitizenFX.Core.Debug.WriteLine($"Deleting {_vehicle.GetNetworkId()}");
-#endif
-                    Delete();
-                }
-            }
+            _light.ExternalTicker(); 
         }
 
         internal Vector3 GetBonePosistion()

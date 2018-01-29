@@ -28,6 +28,7 @@ namespace ELS.configuration
         internal static bool EnabeTrafficControl { get; set; }
         internal static int PrimDelay { get; set; }
         internal static int EnvLightRng { get; set; }
+        internal static float DeleteInterval { get; set; }
 
         public Global()
         {

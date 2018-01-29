@@ -19,7 +19,7 @@ namespace ELS.TrafficControl
             {
                 if (ped.Handle != Game.PlayerPed.Handle)
                 {
-                    API.TaskSmartFleePed(ped.Handle, Game.PlayerPed.Handle, 1f, 10, true, false);
+                    API.TaskVehicleTempAction(ped.Handle,ped.CurrentVehicle.Handle,32, 0x64);
                     Screen.ShowNotification("Move Bitch Get out the way");
                 }
             }

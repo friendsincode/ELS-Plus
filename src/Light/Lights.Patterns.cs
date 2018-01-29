@@ -88,14 +88,21 @@ namespace ELS.Light
                                         break;
                                     case 2:
                                         e.Pattern = CHP.LightStage2[CurrentSecPattern][e.Id];
+                                        _prmPatterns = 1;
+                                        _wrnPatterns = 1;
                                         _secPatterns = CHP.LightStage2.Count;
                                         break;
                                     case 3:
                                         e.Pattern = CHP.LightStage3[CurrentWrnPattern][e.Id];
+                                        _prmPatterns = 1;
+                                        _secPatterns = 1;
                                         _wrnPatterns = CHP.LightStage3.Count;
                                         break;
                                     default:
                                         e.Pattern = CHP.LightStage1[e.Id];
+                                        _prmPatterns = 1;
+                                        _wrnPatterns = 1;
+                                        _secPatterns = 1;
                                         break;
                                 }
                                 _prefix = "C";
@@ -113,9 +120,9 @@ namespace ELS.Light
                         CitizenFX.Core.Debug.WriteLine($"{e.Id} error {ex.Message}");
                     }
                 }
-#if DEBUG
-                CitizenFX.Core.Debug.WriteLine($"Current primary pattern is {CurrentPrmPattern}");
-#endif
+
+               Utils.DebugWriteLine($"Current primary pattern is {CurrentPrmPattern}");
+
                 ElsUiPanel.SetUiDesc(_prefix + CurrentPrmPattern.ToString().PadLeft(3,'0'), ExtraEnum.PRML.ToString());
             }
         }
@@ -157,6 +164,7 @@ namespace ELS.Light
                                 break;
                             case "marq":
                                 e.Pattern = Marquee.SecondaryPatterns[CurrentSecPattern][e.Id];
+                                _secPatterns = Marquee.SecondaryPatterns.Count;
                                 _prefix = "M";
                                 break;
                             case "chp":
@@ -191,9 +199,7 @@ namespace ELS.Light
                     }
                 }
                 ElsUiPanel.SetUiDesc(_prefix + CurrentSecPattern.ToString().PadLeft(3,'0'), ExtraEnum.SECL.ToString());
-#if DEBUG
-                CitizenFX.Core.Debug.WriteLine($"Current secondary pattern is {CurrentSecPattern}");
-#endif
+                 Utils.DebugWriteLine($"Current secondary pattern is {CurrentSecPattern}");
             }
         }
 
@@ -214,10 +220,12 @@ namespace ELS.Light
                         {
                             case "leds":
                                 e.Pattern = Leds.WarningPatterns[CurrentWrnPattern][e.Id];
+                                _wrnPatterns = Leds.WarningPatterns.Count;
                                 _prefix = "L";
                                 break;
                             case "strb":
                                 e.Pattern = Strobe.WarningPatterns[CurrentWrnPattern][e.Id];
+                                _wrnPatterns = Strobe.WarningPatterns.Count;
                                 _prefix = "S";
                                 break;
                             case "chp":
@@ -252,9 +260,7 @@ namespace ELS.Light
                     }
                 }
                 ElsUiPanel.SetUiDesc(_prefix + CurrentWrnPattern.ToString().PadLeft(3,'0'), ExtraEnum.WRNL.ToString());
-#if DEBUG
-                CitizenFX.Core.Debug.WriteLine($"Current warning pattern is {CurrentWrnPattern}");
-#endif
+                Utils.DebugWriteLine($"Current warning pattern is {CurrentWrnPattern}");
             }
         }
 
@@ -319,6 +325,13 @@ namespace ELS.Light
                 }
                 CurrentWrnPattern = WrnScanPatts[0];
             }
+        }
+
+        internal void SetCHP()
+        {
+            CurrentPrmPattern = 0;
+            CurrentSecPattern = 0;
+            CurrentWrnPattern = 0;
         }
     }
 }

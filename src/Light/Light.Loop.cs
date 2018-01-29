@@ -306,9 +306,14 @@ namespace ELS.Light
         internal void ChgPrmPattKB()
         {
             Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ChgPattPrmL);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattPrmL))
+            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattPrmL) && !Game.IsControlPressed(0, Control.CharacterWheel))
             {
-                ChgPrmPatt();
+                ChgPrmPatt(false);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChgPattPrmL, _vehicle, true, Game.Player.ServerId);
+            }
+            else if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattPrmL) && Game.IsControlPressed(0, Control.CharacterWheel))
+            {
+                ChgPrmPatt(true);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChgPattPrmL, _vehicle, true, Game.Player.ServerId);
             }
         }
@@ -316,9 +321,14 @@ namespace ELS.Light
         internal void ChgSecPattKB()
         {
             Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ChgPattSecL);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattSecL))
+            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattSecL) && !Game.IsControlPressed(0, Control.CharacterWheel))
             {
-                ChgSecPatt();
+                ChgSecPatt(false);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChangeSecPatt, _vehicle, true, Game.Player.ServerId);
+            }
+            else if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattSecL) && Game.IsControlPressed(0, Control.CharacterWheel))
+            {
+                ChgSecPatt(true);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChangeSecPatt, _vehicle, true, Game.Player.ServerId);
             }
         }
@@ -326,9 +336,14 @@ namespace ELS.Light
         internal void ChgWrnPattKB()
         {
             Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ChgPattWrnL);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattWrnL))
+            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattWrnL) && !Game.IsControlPressed(0, Control.CharacterWheel))
             {
-                ChgWrnPatt();
+                ChgWrnPatt(false);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChgPattWrnL, _vehicle, true, Game.Player.ServerId);
+            }
+            else if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattWrnL) && Game.IsControlPressed(0, Control.CharacterWheel))
+            {
+                ChgWrnPatt(true);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChgPattWrnL, _vehicle, true, Game.Player.ServerId);
             }
         }
