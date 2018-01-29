@@ -126,39 +126,81 @@ namespace ELS.Light
             ElsUiPanel.ToggleUiBtnState(_extras.SCL.TurnedOn, "SCL");
         }
 
-        internal async void ChgPrmPatt()
+        internal async void ChgPrmPatt(bool decrement)
         {
-            if (CurrentPrmPattern == _prmPatterns - 1)
+            if (decrement)
             {
-                CurrentPrmPattern = 0;
+                if (CurrentPrmPattern == 0)
+                {
+                    CurrentPrmPattern = _prmPatterns -1;
+                }
+                else
+                {
+                    CurrentPrmPattern--;
+                }
             }
             else
             {
-                CurrentPrmPattern++;
+                if (CurrentPrmPattern == _prmPatterns - 1)
+                {
+                    CurrentPrmPattern = 0;
+                }
+                else
+                {
+                    CurrentPrmPattern++;
+                }
             }
         }
 
-        internal async void ChgSecPatt()
+        internal async void ChgSecPatt(bool decrement)
         {
-            if (CurrentSecPattern == _secPatterns - 1)
+            if (decrement)
             {
-                CurrentSecPattern = 0;
+                if (CurrentSecPattern == 0)
+                {
+                    CurrentSecPattern = _secPatterns - 1;
+                }
+                else
+                {
+                    CurrentSecPattern--;
+                }
             }
             else
             {
-                CurrentSecPattern++;
+                if (CurrentSecPattern == _secPatterns - 1)
+                {
+                    CurrentSecPattern = 0;
+                }
+                else
+                {
+                    CurrentSecPattern++;
+                }
             }
         }
 
-        internal async void ChgWrnPatt()
+        internal async void ChgWrnPatt(bool decrement)
         {
-            if (CurrentWrnPattern == _wrnPatterns - 1)
+            if (decrement)
             {
-                CurrentWrnPattern = 0;
+                if (CurrentWrnPattern == 0)
+                {
+                    CurrentWrnPattern = _wrnPatterns - 1;
+                }
+                else
+                {
+                    CurrentWrnPattern--;
+                }
             }
             else
             {
-                CurrentWrnPattern++;
+                if (CurrentWrnPattern == _wrnPatterns - 1)
+                {
+                    CurrentWrnPattern = 0;
+                }
+                else
+                {
+                    CurrentWrnPattern++;
+                }
             }
         }
 
@@ -404,6 +446,10 @@ namespace ELS.Light
                     {
                         e.IsPatternRunning = false;
                     }
+                    if (_vcfroot.SECL.LightingFormat.ToLower().Equals("chp"))
+                    {
+                        _extras.SBRN.IsPatternRunning = false;
+                    }
                     ElsUiPanel.ToggleUiBtnState(false, "PRML");
                     ElsUiPanel.ToggleUiBtnState(false, "SECL");
                     ElsUiPanel.ToggleUiBtnState(false, "WRNL");
@@ -429,6 +475,12 @@ namespace ELS.Light
 
                         }
                         e.IsPatternRunning = true;
+                    }
+                    if (_vcfroot.SECL.LightingFormat.ToLower().Equals("chp"))
+                    {
+                        SetCHP();
+                        _extras.SBRN.Pattern = CHP.LightStage1[10];
+                        _extras.SBRN.IsPatternRunning = true;
                     }
                     ElsUiPanel.ToggleUiBtnState(true, "SECL");
                     secLights = true;
@@ -474,6 +526,12 @@ namespace ELS.Light
                         }
                         e.IsPatternRunning = false;
                         e.IsPatternRunning = true;
+                    }
+                    if (_vcfroot.PRML.LightingFormat.ToLower().Equals("chp"))
+                    {
+                        SetCHP();
+                        _extras.SBRN.Pattern = CHP.LightStage2[CurrentSecPattern][10];
+                        _extras.SBRN.IsPatternRunning = true;
                     }
                     ElsUiPanel.ToggleUiBtnState(true, "PRML");
                     ElsUiPanel.ToggleUiBtnState(true, "SECL");
@@ -544,6 +602,12 @@ namespace ELS.Light
                         e.IsPatternRunning = true;
                     }
                     wrnLights = true;
+                    if (_vcfroot.PRML.LightingFormat.ToLower().Equals("chp"))
+                    {
+                        SetCHP();
+                        _extras.SBRN.Pattern = CHP.LightStage3[CurrentWrnPattern][10];
+                        _extras.SBRN.IsPatternRunning = true;
+                    }
                     ElsUiPanel.ToggleUiBtnState(true, "PRML");
                     ElsUiPanel.ToggleUiBtnState(true, "WRNL");
                     break;

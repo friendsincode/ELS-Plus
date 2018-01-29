@@ -242,6 +242,9 @@ namespace ELS.Extra
                         return;
                     }
                 }
+#if DEBUG
+                //CitizenFX.Core.Debug.WriteLine($"Allow flash ran on extra {Id}");
+#endif
             }
             else if (allowflash > flashrate)
             {
@@ -266,7 +269,7 @@ namespace ELS.Extra
                 }
                 else
                 {
-                    if (bool.Parse(_extraInfo.AllowEnvLight))
+                    if (!String.IsNullOrEmpty(_extraInfo.AllowEnvLight) && bool.Parse(_extraInfo.AllowEnvLight))
                     {
                         DrawEnvLight();
                     }

@@ -7,6 +7,8 @@ using CitizenFX.Core.Native;
 using CitizenFX.Core.UI;
 using System.Drawing;
 using System.Collections;
+using System.Threading.Tasks;
+using ELS.configuration;
 
 namespace ELS.Manager
 {
@@ -100,6 +102,15 @@ namespace ELS.Manager
 #endif
                 }
                 vehicleList.RunExternalTick();
+                if (lastDeleteTime == 0)
+                {
+                    lastDeleteTime = Game.GameTime;
+                }
+                if (Game.GameTime - lastDeleteTime >= Global.DeleteInterval)
+                {
+                    DeleteStale();
+                    lastDeleteTime = Game.GameTime;
+                }
             }
             catch (Exception e)
             {
@@ -107,6 +118,29 @@ namespace ELS.Manager
             }
 
             //TODO Chnage how I check for the panic alarm
+        }
+
+        int lastDeleteTime = 0;
+        private async Task DeleteStale()
+        {
+            PlayerList list = new PlayerList();
+#if DEBUG
+            CitizenFX.Core.Debug.WriteLine("Running Delete");
+#endif
+           foreach (ELSVehicle v in vehicleList.ToList())
+            {
+                foreach (Player p in list)
+                {
+                    if (p.Character.IsSittingInELSVehicle() && p.Character.CurrentVehicle.GetNetworkId() == v.GetNetworkId())
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        v.Delete();
+                    }
+                }
+            }
         }
 
         /// <summary>
