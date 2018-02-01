@@ -20,19 +20,20 @@ namespace ELS
             _vehicle = new Vehicle(handle);
             ModelLoaded();
 
-            if (_vehicle.DisplayName == "CARNOTFOUND") {
+            if (_vehicle.DisplayName == "CARNOTFOUND")
+            {
                 throw new Exception("Vehicle creation failure.");
             }
             else if (_vehicle.GetNetworkId() == 0)
             {
                 throw new Exception("NetworkId is 0");
             }
-            else if( VCF.ELSVehicle.Exists(item => item.modelHash == _vehicle.Model))
+            else if (VCF.ELSVehicle.Exists(item => item.modelHash == _vehicle.Model))
             {
                 _vcf = VCF.ELSVehicle.Find(item => item.modelHash == _vehicle.Model).root;
             }
- 
-                //_vehicle.SetExistOnAllMachines(true);
+
+            //_vehicle.SetExistOnAllMachines(true);
 #if DEBUG
                 CitizenFX.Core.Debug.WriteLine(CitizenFX.Core.Native.API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
 
@@ -40,9 +41,10 @@ namespace ELS
                     $"Does entity belong to this script: {CitizenFX.Core.Native.API.DoesEntityBelongToThisScript(_vehicle.Handle, false)}");
 
 #endif
-                _siren = new Siren.Siren(_vehicle,_vcf);
-                _light = new Light.Lights(_vehicle, _vcf);
-           
+            Function.Call((Hash)0x5f3a3574, _vehicle.Handle, true);
+            _siren = new Siren.Siren(_vehicle, _vcf);
+            _light = new Light.Lights(_vehicle, _vcf);
+
 #if DEBUG
             CitizenFX.Core.Debug.WriteLine($"created vehicle");
 #endif
@@ -55,7 +57,7 @@ namespace ELS
             if (_vehicle.DisplayName == "CARNOTFOUND")
             {
                 throw new Exception("Vehicle not found");
-            } 
+            }
             else if (_vehicle.GetNetworkId() == 0)
             {
                 throw new Exception("NetworkId is 0");
@@ -64,11 +66,12 @@ namespace ELS
             {
                 _vcf = VCF.ELSVehicle.Find(item => item.modelHash == _vehicle.Model).root;
             }
-            
-                _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data["siren"]);
-                _light = new Light.Lights(_vehicle, _vcf, (IDictionary<string, object>)data["light"]);
-            
-                //_vehicle.SetExistOnAllMachines(true);
+
+            Function.Call((Hash)0x5f3a3574, _vehicle.Handle, true);
+            _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data["siren"]);
+            _light = new Light.Lights(_vehicle, _vcf, (IDictionary<string, object>)data["light"]);
+
+            //_vehicle.SetExistOnAllMachines(true);
 #if DEBUG
                 CitizenFX.Core.Debug.WriteLine(CitizenFX.Core.Native.API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
 
@@ -81,7 +84,7 @@ namespace ELS
             CitizenFX.Core.Debug.WriteLine($"created vehicle");
 #endif
         }
-        private async void  ModelLoaded()
+        private async void ModelLoaded()
         {
             while (_vehicle.DisplayName == "CARNOTFOUND")
             {
@@ -106,7 +109,7 @@ namespace ELS
         internal void RunExternalTick()
         {
             _siren.ExternalTicker();
-            _light.ExternalTicker(); 
+            _light.ExternalTicker();
         }
 
         internal Vector3 GetBonePosistion()
@@ -130,7 +133,8 @@ namespace ELS
                 API.SetEntityAsMissionEntity(_vehicle.Handle, false, false);
                 _vehicle.MarkAsNoLongerNeeded();
                 _vehicle.Delete();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 CitizenFX.Core.Debug.WriteLine($"Delete error: {e.Message}");
             }
