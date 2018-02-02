@@ -31,7 +31,7 @@ namespace ELS.Manager
             {
                 foreach (var t in this)
                 {
-                    if (vehicle == null ||  t!=vehicle)
+                    if (vehicle == null ||  t.Handle!=vehicle.Handle)
                     t.RunExternalTick();
                 }
             }
