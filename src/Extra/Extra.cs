@@ -188,7 +188,7 @@ namespace ELS.Extra
         int count = 0;
         int flashrate;
         int allowflash = 1;
-        bool firstTick = false;
+        bool firstTick = true;
         internal async void ExtraTicker()
         {
             if (firstTick)
