@@ -12,7 +12,7 @@ namespace ELS.Manager
     class VehicleList : List<ELSVehicle>
     {
         public new void Add(ELSVehicle veh)
-        { 
+        {
             base.Add(veh);
         }
         public void Add(int NetworkID)
@@ -25,13 +25,15 @@ namespace ELS.Manager
         {
 
         }
-        public void RunExternalTick()
+        public void RunExternalTick([Optional] ELSVehicle vehicle)
         {
-            try { 
-            foreach(var t in this)
+            try
             {
-                t.RunExternalTick();
-            }
+                foreach (var t in this)
+                {
+                    if (vehicle == null ||  t!=vehicle)
+                    t.RunExternalTick();
+                }
             }
             catch (Exception e)
             {
@@ -86,7 +88,7 @@ namespace ELS.Manager
             {
                 try
                 {
-                    var veh = new ELSVehicle(API.NetToVeh(NetworkID),data);
+                    var veh = new ELSVehicle(API.NetToVeh(NetworkID), data);
                     Add(veh);
 #if DEBUG
                     CitizenFX.Core.Debug.Write($"Adding Vehicle");
@@ -113,7 +115,7 @@ namespace ELS.Manager
         }
         public void CleanUP()
         {
-            ForEach((veh) => { veh.CleanUP();});
+            ForEach((veh) => { veh.CleanUP(); });
         }
         ~VehicleList()
         {

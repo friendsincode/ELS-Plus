@@ -71,10 +71,11 @@ namespace ELS.Manager
                     //    API.SetBlipSprite(blip.Handle, 2);
                     //}
 
-                   
+
                     if (vehicleList.MakeSureItExists(API.VehToNet(Game.PlayerPed.CurrentVehicle.Handle), vehicle: out ELSVehicle _currentVehicle))
                     {
                         _currentVehicle?.RunTick();
+                        vehicleList.RunExternalTick(_currentVehicle);
                     }
                     else
                     {
@@ -102,7 +103,10 @@ namespace ELS.Manager
                     Debug.DebugText();
 #endif
                 }
-                vehicleList.RunExternalTick();
+                else
+                {
+                    vehicleList.RunExternalTick();
+                }
                 if (lastDeleteTime == 0)
                 {
                     lastDeleteTime = Game.GameTime;
