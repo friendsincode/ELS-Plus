@@ -9,7 +9,7 @@ namespace ELS.Siren
     {
         void AirHornControlsKB()
         {
-            if ((Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) &&
+            if ((Game.IsControlJustPressed(0, ElsConfiguration.KeyBindings.Sound_Ahorn) &&
                  Game.CurrentInputMode == InputMode.MouseAndKeyboard) ||
                 (Game.IsControlJustPressed(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
             {
@@ -20,7 +20,7 @@ namespace ELS.Siren
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle, true, Game.Player.ServerId);
 
             }
-            if ((Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Ahorn) &&
+            if ((Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Sound_Ahorn) &&
                  Game.CurrentInputMode == InputMode.MouseAndKeyboard)
                 || (Game.IsControlJustReleased(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
             {
@@ -32,7 +32,7 @@ namespace ELS.Siren
         }
         void ManualTone1ControlsKB()
         {
-            if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon1))
+            if (Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Snd_SrnTon1))
             {
 #if !REMOTETEST
                 SirenTone1Logic(true, true);
@@ -42,7 +42,7 @@ namespace ELS.Siren
         }
         void ManualTone2ControlsKB()
         {
-            if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon2))
+            if (Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Snd_SrnTon2))
             {
 #if !REMOTETEST
                 SirenTone2Logic(true, true);
@@ -52,7 +52,7 @@ namespace ELS.Siren
         }
         void ManualTone3ControlsKB()
         {
-            if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon3))
+            if (Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Snd_SrnTon3))
             {
 #if !REMOTETEST
                 SirenTone3Logic(true, true);
@@ -62,7 +62,7 @@ namespace ELS.Siren
         }
         void ManualTone4ControlsKB()
         {
-            if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Snd_SrnTon4))
+            if (Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Snd_SrnTon4))
             {
 #if !REMOTETEST
                 SirenTone4Logic(true, true);
@@ -73,7 +73,7 @@ namespace ELS.Siren
 
         void MainSirenToggleControlsKB()
         {
-            if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Toggle_SIRN))
+            if (Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Toggle_SIRN))
             {
 #if !REMOTETEST
                 MainSirenToggleLogic(true, true);
@@ -84,14 +84,14 @@ namespace ELS.Siren
 
         void ManualSoundControlsKB()
         {
-            if (Game.IsControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.Sound_Manul))
+            if (Game.IsControlJustPressed(0, ElsConfiguration.KeyBindings.Sound_Manul))
             {
 #if !REMOTETEST
                 ManualSoundLogic(true, true);
 #endif
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualSound, _vehicle, true, Game.Player.ServerId);
             }
-            if (Game.IsControlJustReleased(0, configuration.ControlConfiguration.KeyBindings.Sound_Manul))
+            if (Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Sound_Manul))
             {
 #if !REMOTETEST
                 ManualSoundLogic(false, true);
@@ -102,7 +102,7 @@ namespace ELS.Siren
 
         void DualSirenControlsKB()
         {
-            if (Game.IsControlJustReleased(0, ControlConfiguration.KeyBindings.Toggle_DSRN))
+            if (Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Toggle_DSRN))
             {
 #if !REMOTETEST
                 DualSirenLogic(true, true);
@@ -122,11 +122,11 @@ namespace ELS.Siren
             {
                 return;
             }
-            if (Game.IsControlJustPressed(0, ControlConfiguration.KeyBindings.Snd_SrnPnic))
+            if (Game.IsControlJustPressed(0, ElsConfiguration.KeyBindings.Snd_SrnPnic))
             {
                 pressedTime = Game.GameTime;
             }
-            if (Game.IsControlPressed(0, ControlConfiguration.KeyBindings.Snd_SrnPnic))
+            if (Game.IsControlPressed(0, ElsConfiguration.KeyBindings.Snd_SrnPnic))
             {
                 if (pressedTime != -1 && Game.GameTime - pressedTime >= 499)
                 {
@@ -138,7 +138,7 @@ namespace ELS.Siren
                     RemoteEventManager.SendEvent(RemoteEventManager.Commands.PanicAlarm, _vehicle, state, Game.Player.ServerId);
                 }
             }
-            if (Game.IsControlJustReleased(0, ControlConfiguration.KeyBindings.Snd_SrnPnic))
+            if (Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Snd_SrnPnic))
             {
                 pressedTime = -1;
             }

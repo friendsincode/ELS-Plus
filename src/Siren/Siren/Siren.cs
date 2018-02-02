@@ -61,5 +61,10 @@ namespace ELS.Siren
             _tones.tone4.CleanUp();
             _tones.panicAlarm.CleanUp();
         }
+
+        internal void SyncUi()
+        {
+            
+        }
     }
 }

@@ -1,3 +1,6 @@
+var resourceName = "";
+var euro = false;
+
 function controlLights(state, light, color) {
     if (!state) {
         $(light).removeClass("red").removeClass("blue").removeClass("amber").removeClass("white").addClass("off");
@@ -12,19 +15,31 @@ function ToggleStage(stage) {
             $('#stage1').removeClass('badge-primary').addClass('badge-secondary');
             $('#stage2').removeClass('badge-primary').addClass('badge-secondary');
             $('#stage3').removeClass('badge-primary').addClass('badge-secondary');
+            if (euro) {
+                $('#euro').removeClass('badge-primary').addClass('badge-secondary');
+            }
             break;
         case 1:
             $('#stage1').removeClass('badge-secondary').addClass('badge-primary');
+            $('#stage2').removeClass('badge-primary').addClass('badge-secondary');
+            $('#stage3').removeClass('badge-primary').addClass('badge-secondary');
             break;
         case 2:
+            $('#stage1').removeClass('badge-secondary').addClass('badge-primary');
             $('#stage2').removeClass('badge-secondary').addClass('badge-primary');
+            $('#stage3').removeClass('badge-primary').addClass('badge-secondary');
             break;
         case 3:
+            $('#stage1').removeClass('badge-secondary').addClass('badge-primary');
+            $('#stage2').removeClass('badge-secondary').addClass('badge-primary');
             $('#stage3').removeClass('badge-secondary').addClass('badge-primary');
+            if (euro) {
+                $('#euro').removeClass('badge-secondary').addClass('badge-primary');
+            }
             break;
     }
 }
-var resourceName = "";
+
 
 $(function () {
     window.addEventListener('message', function (event) {
@@ -87,6 +102,13 @@ $(function () {
             }
         } else if (event.data.type == "togglestage") {
             ToggleStage(event.data.stage);
+        } else if (event.data.type == "seteuro") {
+            euro = event.data.euro;
+            if (euro) {
+                $("#euro").show();
+            } else {
+                $("#euro").hide();
+            }
         }
     });
 
@@ -107,4 +129,5 @@ $(document).ready(function () {
     $("#togHrn").bootstrapToggle({ on: 'HRN', off: 'HRN' });
     $("#togSrn").bootstrapToggle({ on: 'SRN', off: 'SRN' });
     $("#togSrm").bootstrapToggle({ on: 'SRM', off: 'SRM' });
+    $("#euro").hide();
 });

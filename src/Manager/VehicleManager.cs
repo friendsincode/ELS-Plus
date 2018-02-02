@@ -49,7 +49,8 @@ namespace ELS.Manager
             }
             else if (!notified)
             {
-                CitizenFX.Core.Debug.WriteLine($"Registered  {veh.Handle} on net as {net1}");
+                CitizenFX.Core.Debug.WriteLine($"Registered {veh.Handle} on net as {net1}");
+                ELS.TriggerEvent("ELS:VehicleEntered");
                 notified = true;
             }
         }
@@ -160,6 +161,16 @@ namespace ELS.Manager
                 CitizenFX.Core.Debug.Write($" Applying vehicle data with NETID of {(int)dataDic["NetworkID"]} LOCALID of {CitizenFX.Core.Native.API.NetToVeh((int)dataDic["NetworkID"])}");
 #endif
             }
+        }
+
+        internal static void SyncUI(int netId)
+        {
+            if (netId == 0)
+            {
+                Utils.DebugWriteLine("Vehicle net ID is empty");
+                return;
+            }
+            (vehicleList.Find(o => o.GetNetworkId() == netId)).SyncUi();
         }
 
         internal static void SyncRequestReply(int NetworkId,int PlayerId)

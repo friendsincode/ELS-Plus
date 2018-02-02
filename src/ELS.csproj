@@ -99,7 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Board\ArrowBoard.cs" />
-    <Compile Include="configuration\ControlConfiguration.cs" />
+    <Compile Include="configuration\ElsConfiguration.cs" />
     <Compile Include="configuration\Global.cs" />
     <Compile Include="configuration\SettingsType.cs" />
     <Compile Include="Debug.cs" />

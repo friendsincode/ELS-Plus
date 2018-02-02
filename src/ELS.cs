@@ -37,14 +37,15 @@ namespace ELS
         private readonly FileLoader _FileLoader;
         private SpotLight _spotLight;
         private readonly VehicleManager _vehicleManager;
-        private configuration.ControlConfiguration _controlConfiguration;
+        private ElsConfiguration _controlConfiguration;
         panel.test _test = new test();
         private bool _firstTick = false;
 
         public ELS()
         {
             bool Loaded = false;
-            _controlConfiguration = new configuration.ControlConfiguration();
+            _controlConfiguration = new ElsConfiguration();
+            
             _FileLoader = new FileLoader(this);
             _vehicleManager = new VehicleManager();
             EventHandlers["onClientResourceStart"] += new Action<string>((string obj) =>
@@ -134,6 +135,17 @@ namespace ELS
             {
                 Tick -= Class1_Tick;
                 Tick += Class1_Tick;
+            });
+
+            EventHandlers["ELS:VehicleEntered"] += new Action<int>((veh) =>
+            {
+                Utils.DebugWriteLine("Vehicle entered");
+                Vehicle vehicle = new Vehicle(veh);
+                if (vehicle.IsEls())
+                {
+                    Utils.DebugWriteLine("ELS Vehicle entered syncing UI");
+                    VehicleManager.SyncUI(vehicle.GetNetworkId());
+                }
             });
             //Take in data and apply it
             EventHandlers["ELS:NewFullSyncData"] += new Action<IDictionary<string, object>,int>(_vehicleManager.SetVehicleSyncData);

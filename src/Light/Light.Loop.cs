@@ -1,4 +1,5 @@
 ﻿using CitizenFX.Core;
+using ELS.configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,76 +42,85 @@ namespace ELS.Light
             foreach (Extra.Extra prim in _extras.PRML.Values)
             {
                 prim.ExtraTicker();
-                switch (_stage.CurrentStage)
+                if (_stage != null)
                 {
-                    case 1:
-                        if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
-                    case 2:
-                        if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
-                    case 3:
-                        if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
+                    switch (_stage.CurrentStage)
+                    {
+                        case 1:
+                            if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                        case 2:
+                            if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                        case 3:
+                            if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                    }
                 }
             }
             foreach (Extra.Extra sec in _extras.SECL.Values)
             {
                 sec.ExtraTicker();
-                switch (_stage.CurrentStage)
+                if (_stage != null)
                 {
-                    case 1:
-                        if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
-                    case 2:
-                        if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
-                    case 3:
-                        if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
+                    switch (_stage.CurrentStage)
+                    {
+                        case 1:
+                            if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                        case 2:
+                            if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                        case 3:
+                            if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                    }
                 }
             }
             foreach (Extra.Extra wrn in _extras.WRNL.Values)
             {
                 wrn.ExtraTicker();
-                switch (_stage.CurrentStage)
+                if (_stage != null)
                 {
-                    case 1:
-                        if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
-                    case 2:
-                        if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
-                    case 3:
-                        if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
+                    switch (_stage.CurrentStage)
+                    {
+                        case 1:
+                            if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                        case 2:
+                            if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                        case 3:
+                            if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                    }
                 }
             }
         }
@@ -125,8 +135,8 @@ namespace ELS.Light
             {
                 _extras.SBRN.ExtraTicker();
             }
-            if (_extras.SCL != null) 
-                {
+            if (_extras.SCL != null)
+            {
                 _extras.SCL.ExtraTicker();
             }
             if (_extras.TDL != null)
@@ -136,76 +146,85 @@ namespace ELS.Light
             foreach (Extra.Extra prim in _extras.PRML.Values)
             {
                 prim.ExtraTicker();
-                switch (_stage.CurrentStage)
+                if (_stage != null)
                 {
-                    case 1:
-                        if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
-                    case 2:
-                        if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
-                    case 3:
-                        if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
+                    switch (_stage.CurrentStage)
+                    {
+                        case 1:
+                            if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                        case 2:
+                            if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                        case 3:
+                            if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                    }
                 }
             }
             foreach (Extra.Extra sec in _extras.SECL.Values)
             {
                 sec.ExtraTicker();
-                switch (_stage.CurrentStage)
+                if (_stage != null)
                 {
-                    case 1:
-                        if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
-                    case 2:
-                        if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
-                    case 3:
-                        if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
+                    switch (_stage.CurrentStage)
+                    {
+                        case 1:
+                            if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                        case 2:
+                            if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                        case 3:
+                            if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                    }
                 }
             }
             foreach (Extra.Extra wrn in _extras.WRNL.Values)
             {
                 wrn.ExtraTicker();
-                switch (_stage.CurrentStage)
+                if (_stage != null)
                 {
-                    case 1:
-                        if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
-                    case 2:
-                        if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
-                    case 3:
-                        if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
-                        {
-                            ScanPatternTicker();
-                        }
-                        break;
+                    switch (_stage.CurrentStage)
+                    {
+                        case 1:
+                            if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                        case 2:
+                            if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                        case 3:
+                            if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
+                            {
+                                ScanPatternTicker();
+                            }
+                            break;
+                    }
                 }
             }
         }
@@ -213,7 +232,7 @@ namespace ELS.Light
         int _patternStart = 0;
         internal void ScanPatternTicker()
         {
-           if (Game.GameTime - _patternStart > 15000)
+            if (Game.GameTime - _patternStart > 15000)
             {
                 _patternStart = Game.GameTime;
 #if DEBUG
@@ -229,8 +248,8 @@ namespace ELS.Light
 
         internal void ToggleSecLKB()
         {
-            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ToggleSecL);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleSecL))
+            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleSecL);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleSecL))
             {
                 ToggleSecLights();
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleSecL, _vehicle, true, Game.Player.ServerId);
@@ -239,8 +258,8 @@ namespace ELS.Light
 
         internal void ToggleWrnLKB()
         {
-            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ToggleWrnL);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleWrnL))
+            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleWrnL);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleWrnL))
             {
                 ToggleWrnLights();
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleWrnL, _vehicle, true, Game.Player.ServerId);
@@ -250,7 +269,7 @@ namespace ELS.Light
         internal void ToggleBrdKB()
         {
             Game.DisableControlThisFrame(0, Control.CharacterWheel);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleBoard) && Game.IsControlPressed(0, Control.CharacterWheel))
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleBoard) && Game.IsControlPressed(0, Control.CharacterWheel))
             {
 #if DEBUG
                 CitizenFX.Core.Debug.WriteLine($"Is Board raised  {_extras.BRD.BoardRaised}");
@@ -269,8 +288,8 @@ namespace ELS.Light
 
         internal void ToggleCrsKB()
         {
-            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ToggleCrsL);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleCrsL) && !Game.IsControlPressed(0, Control.CharacterWheel))
+            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleCrsL);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleCrsL) && !Game.IsControlPressed(0, Control.CharacterWheel))
             {
                 ToggleCrs();
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleCrsL, _vehicle, true, Game.Player.ServerId);
@@ -279,8 +298,8 @@ namespace ELS.Light
 
         internal void ToggleTdlKB()
         {
-            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ToggleTdl);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleTdl) && !Game.IsControlPressed(0, Control.CharacterWheel))
+            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleTdl);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleTdl) && !Game.IsControlPressed(0, Control.CharacterWheel))
             {
                 if (_extras.TDL != null)
                 {
@@ -292,8 +311,8 @@ namespace ELS.Light
 
         internal void ToggleSclKB()
         {
-            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ToggleTdl);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleTdl) && Game.IsControlPressed(0, Control.CharacterWheel))
+            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleTdl);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleTdl) && Game.IsControlPressed(0, Control.CharacterWheel))
             {
                 if (_extras.SCL != null)
                 {
@@ -305,13 +324,13 @@ namespace ELS.Light
 
         internal void ChgPrmPattKB()
         {
-            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ChgPattPrmL);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattPrmL) && !Game.IsControlPressed(0, Control.CharacterWheel))
+            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ChgPattPrmL);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ChgPattPrmL) && !Game.IsControlPressed(0, Control.CharacterWheel))
             {
                 ChgPrmPatt(false);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChgPattPrmL, _vehicle, true, Game.Player.ServerId);
             }
-            else if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattPrmL) && Game.IsControlPressed(0, Control.CharacterWheel))
+            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ChgPattPrmL) && Game.IsControlPressed(0, Control.CharacterWheel))
             {
                 ChgPrmPatt(true);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChgPattPrmL, _vehicle, true, Game.Player.ServerId);
@@ -320,13 +339,13 @@ namespace ELS.Light
 
         internal void ChgSecPattKB()
         {
-            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ChgPattSecL);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattSecL) && !Game.IsControlPressed(0, Control.CharacterWheel))
+            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ChgPattSecL);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ChgPattSecL) && !Game.IsControlPressed(0, Control.CharacterWheel))
             {
                 ChgSecPatt(false);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChangeSecPatt, _vehicle, true, Game.Player.ServerId);
             }
-            else if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattSecL) && Game.IsControlPressed(0, Control.CharacterWheel))
+            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ChgPattSecL) && Game.IsControlPressed(0, Control.CharacterWheel))
             {
                 ChgSecPatt(true);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChangeSecPatt, _vehicle, true, Game.Player.ServerId);
@@ -335,13 +354,13 @@ namespace ELS.Light
 
         internal void ChgWrnPattKB()
         {
-            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ChgPattWrnL);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattWrnL) && !Game.IsControlPressed(0, Control.CharacterWheel))
+            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ChgPattWrnL);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ChgPattWrnL) && !Game.IsControlPressed(0, Control.CharacterWheel))
             {
                 ChgWrnPatt(false);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChgPattWrnL, _vehicle, true, Game.Player.ServerId);
             }
-            else if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ChgPattWrnL) && Game.IsControlPressed(0, Control.CharacterWheel))
+            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ChgPattWrnL) && Game.IsControlPressed(0, Control.CharacterWheel))
             {
                 ChgWrnPatt(true);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChgPattWrnL, _vehicle, true, Game.Player.ServerId);
@@ -350,10 +369,17 @@ namespace ELS.Light
 
         internal void ToggleLightStageKB()
         {
-            Game.DisableControlThisFrame(0, configuration.ControlConfiguration.KeyBindings.ToggleLstg);
-            if (Game.IsDisabledControlJustPressed(0, configuration.ControlConfiguration.KeyBindings.ToggleLstg))
+            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleLstg);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleLstg) && !Game.IsControlPressed(0, Control.CharacterWheel))
             {
+                Utils.DebugWriteLine("Light stage");
                 ToggleLightStage();
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleLstg, _vehicle, true, Game.Player.ServerId);
+            }
+            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleLstg) && Game.IsControlPressed(0, Control.CharacterWheel))
+            {
+                Utils.DebugWriteLine("Light stage Inverse");
+                ToggleLightStageInverse();
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleLstg, _vehicle, true, Game.Player.ServerId);
             }
         }

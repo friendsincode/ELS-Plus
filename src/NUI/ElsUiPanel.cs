@@ -53,6 +53,12 @@ namespace ELS.NUI
             _enabled = 1;
         }
 
+        internal static void SetEuro(bool euro)
+        {
+            Utils.DebugWriteLine("Got Euro");
+            API.SendNuiMessage($"{{\"type\":\"seteuro\", \"euro\":{euro.ToString().ToLower()}}}");
+        }
+
         /// <summary>
         /// Send lighting data to display 
         /// </summary>

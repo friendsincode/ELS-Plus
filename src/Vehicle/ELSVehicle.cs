@@ -6,6 +6,7 @@ using ELS.configuration;
 using CitizenFX.Core.Native;
 using ELS.Manager;
 using System.Threading.Tasks;
+using ELS.NUI;
 
 namespace ELS
 {
@@ -35,13 +36,20 @@ namespace ELS
 
             //_vehicle.SetExistOnAllMachines(true);
 #if DEBUG
-                CitizenFX.Core.Debug.WriteLine(CitizenFX.Core.Native.API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
+            CitizenFX.Core.Debug.WriteLine(CitizenFX.Core.Native.API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
 
-                CitizenFX.Core.Debug.WriteLine($"registering netid:{_vehicle.GetNetworkId()}\n" +
-                    $"Does entity belong to this script: {CitizenFX.Core.Native.API.DoesEntityBelongToThisScript(_vehicle.Handle, false)}");
+            CitizenFX.Core.Debug.WriteLine($"registering netid:{_vehicle.GetNetworkId()}\n" +
+                $"Does entity belong to this script: {CitizenFX.Core.Native.API.DoesEntityBelongToThisScript(_vehicle.Handle, false)}");
 
 #endif
-            Function.Call((Hash)0x5f3a3574, _vehicle.Handle, true);
+            try
+            {
+                Function.Call((Hash)0x5f3a3574, _vehicle.Handle, true);
+            }
+            catch (Exception e)
+            {
+                Utils.ReleaseWriteLine("Repair Fix is not enabled on this client");
+            }
             _siren = new Siren.Siren(_vehicle, _vcf);
             _light = new Light.Lights(_vehicle, _vcf);
 
@@ -66,21 +74,23 @@ namespace ELS
             {
                 _vcf = VCF.ELSVehicle.Find(item => item.modelHash == _vehicle.Model).root;
             }
-
-            Function.Call((Hash)0x5f3a3574, _vehicle.Handle, true);
+            try
+            {
+                Function.Call((Hash)0x5f3a3574, _vehicle.Handle, true);
+            }
+            catch (Exception e)
+            {
+                Utils.ReleaseWriteLine("Repair Fix is not enabled on this client");
+            }
             _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data["siren"]);
             _light = new Light.Lights(_vehicle, _vcf, (IDictionary<string, object>)data["light"]);
 
             //_vehicle.SetExistOnAllMachines(true);
 #if DEBUG
-                CitizenFX.Core.Debug.WriteLine(CitizenFX.Core.Native.API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
+            CitizenFX.Core.Debug.WriteLine(CitizenFX.Core.Native.API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
 
-                CitizenFX.Core.Debug.WriteLine($"registering netid:{_vehicle.GetNetworkId()}\n" +
-                    $"Does entity belong to this script:{CitizenFX.Core.Native.API.DoesEntityBelongToThisScript(_vehicle.Handle, false)}");
-
-#endif
-
-#if DEBUG
+            CitizenFX.Core.Debug.WriteLine($"registering netid:{_vehicle.GetNetworkId()}\n" +
+                $"Does entity belong to this script:{CitizenFX.Core.Native.API.DoesEntityBelongToThisScript(_vehicle.Handle, false)}");
             CitizenFX.Core.Debug.WriteLine($"created vehicle");
 #endif
         }
@@ -95,8 +105,8 @@ namespace ELS
         {
             _siren.CleanUP();
             _light.CleanUP();
-            CitizenFX.Core.Debug.WriteLine("running vehicle deconstructor");
-            CitizenFX.Core.Native.API.NetworkUnregisterNetworkedEntity(_vehicle.Handle);
+            Utils.DebugWriteLine("running vehicle deconstructor");
+            API.NetworkUnregisterNetworkedEntity(_vehicle.Handle);
             //CitizenFX.Core.Native.API.NetworkSetMissionFinished();
             //_vehicle.MarkAsNoLongerNeeded();
         }
@@ -115,6 +125,12 @@ namespace ELS
         internal Vector3 GetBonePosistion()
         {
             return _vehicle.Bones["door_dside_f"].Position;
+        }
+
+        internal void SyncUi()
+        {
+            _light.SyncUi();
+            _siren.SyncUi();
         }
 
         public override bool Exists()

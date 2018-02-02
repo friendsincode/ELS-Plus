@@ -122,8 +122,7 @@ namespace ELS.Light
                 }
 
                Utils.DebugWriteLine($"Current primary pattern is {CurrentPrmPattern}");
-
-                ElsUiPanel.SetUiDesc(_prefix + CurrentPrmPattern.ToString().PadLeft(3,'0'), ExtraEnum.PRML.ToString());
+               ElsUiPanel.SetUiDesc(_prefix + CurrentPrmPattern.ToString().PadLeft(3,'0'), ExtraEnum.PRML.ToString());
             }
         }
 
