@@ -13,6 +13,7 @@ namespace ELS.Light
 
         public async void Ticker()
         {
+            //KB Controls
             ToggleSecLKB();
             ToggleWrnLKB();
             ToggleBrdKB();
@@ -23,6 +24,8 @@ namespace ELS.Light
             ToggleTdlKB();
             ToggleSclKB();
             ToggleLightStageKB();
+            
+            //Part that runs the ticks
             if (_extras.BRD.HasBoard)
             {
                 _extras.BRD.BoardTicker();
