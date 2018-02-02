@@ -14,6 +14,7 @@ namespace ELS_Server
         VcfSync _vcfSync;
         public Class1()
         {
+            
             API.ExecuteCommand("add_ace group.admin command.elscar allow");
             API.ExecuteCommand("add_ace group.superadmin command.elscar allow");
             Debug.WriteLine("Welcome to ELS for FiveM");
@@ -29,15 +30,27 @@ namespace ELS_Server
 
             API.RegisterCommand("elscar", new Action<int, List<object>, string>(async (source, arguments, raw) =>
             {
-                Debug.WriteLine($"{Players[source].Name} has attempted to spawn {arguments[0]}");
+                if (String.IsNullOrEmpty(arguments[0].ToString()))
+                {
+                    Utils.ReleaseWriteLine("No vehicle specified please try again");
+                    return;
+                }
+                Utils.ReleaseWriteLine($"{Players[source].Name} has attempted to spawn {arguments[0]}");
                 TriggerClientEvent(Players[source], "ELS:SpawnCar", arguments[0]);
-            }), true);
+            }), Configuration.ElsCarAdminOnly);
 
             EventHandlers["ELS:VcfSync:Server"] += new Action<int>((int source) =>
             {
                 _vcfSync = new VcfSync();
                 _vcfSync.CheckVCF(Players[source]);
             });
+
+            EventHandlers["baseevents:enteredVehicle"] += new Action<int,int,string>((veh,seat,name) =>
+            {
+                Utils.DebugWriteLine("Vehicle Entered");
+                TriggerClientEvent("ELS:VehicleEntered", veh);
+            });
+
             EventHandlers.Add("onResourceStart", new Action<string>((resource) =>
             {
                 if (VcfSync.ElsResources.Exists(res => res.Equals(resource)))

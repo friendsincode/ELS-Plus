@@ -69,7 +69,35 @@ namespace ELS.Light
 
         private void LightStagesSetup()
         {
-            _stage = new Stage(_vcfroot.PRML, _vcfroot.SECL, _vcfroot.WRNL, _vehicle.GetNetworkId());
+            _stage = new Stage(_vcfroot.PRML, _vcfroot.SECL, _vcfroot.WRNL, _vehicle.GetNetworkId(), _vcfroot.INTERFACE.LstgActivationType);
+        }
+
+        internal void SyncUi()
+        {
+            ElsUiPanel.ToggleStages(_stage.CurrentStage);
+            if (_vcfroot.INTERFACE.LstgActivationType.ToLower().Equals("euro"))
+            {
+                ElsUiPanel.SetEuro(true);
+            }
+            else
+            {
+                ElsUiPanel.SetEuro(false);
+            }
+            ElsUiPanel.SetUiDesc(_prefix + CurrentPrmPattern.ToString().PadLeft(3, '0'), ExtraEnum.PRML.ToString());
+            ElsUiPanel.SetUiDesc(_prefix + CurrentSecPattern.ToString().PadLeft(3, '0'), ExtraEnum.SECL.ToString());
+            ElsUiPanel.SetUiDesc(_prefix + CurrentWrnPattern.ToString().PadLeft(3, '0'), ExtraEnum.WRNL.ToString());
+            ElsUiPanel.ToggleUiBtnState(prmLights, "PRML");
+            ElsUiPanel.ToggleUiBtnState(secLights, "SECL");
+            ElsUiPanel.ToggleUiBtnState(wrnLights, "WRNL");
+            ElsUiPanel.ToggleUiBtnState(crsLights, "CRS");
+            if (_extras.SCL != null)
+            {
+                ElsUiPanel.ToggleUiBtnState(_extras.SCL.TurnedOn, "SCL");
+            }
+            if (_extras.TDL != null)
+            {
+                ElsUiPanel.ToggleUiBtnState(_extras.TDL.TurnedOn, "TDL");
+            }
         }
 
         private void SetGTASirens(bool state) {

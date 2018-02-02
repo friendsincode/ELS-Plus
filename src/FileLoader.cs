@@ -62,7 +62,7 @@ namespace ELS
 #endif
                 if (filename.Equals("extra-files/ELS.ini"))
                 {
-                    if (configuration.ControlConfiguration.isValidData(data))
+                    if (configuration.ElsConfiguration.isValidData(data))
                     {
                         OnSettingsLoaded?.Invoke(SettingsType.Type.GLOBAL, data);
                     }

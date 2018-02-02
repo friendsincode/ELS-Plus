@@ -15,27 +15,42 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+using CitizenFX.Core;
+using CitizenFX.Core.Native;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
-namespace ELS.configuration
+namespace ELS_Server
 {
-    internal class Global
+    internal class Configuration
     {
-        internal static bool EnabeTrafficControl { get; set; }
-        internal static int PrimDelay { get; set; }
-        internal static float EnvLightRng { get; set; }
-        internal static float DeleteInterval { get; set; }
-        internal static float EnvLightInt { get; set; }
-        internal static float TkdnInt { get; set; }
-        internal static float TkdnRng { get; set; }
 
-        public Global()
+        internal static bool ElsCarAdminOnly
         {
-            
+            get; private set;
         }
+
+        static Configuration()
+        {
+            var data = API.LoadResourceFile(API.GetCurrentResourceName(), "extra-files/ELS.ini");
+            if (isValidData(data))
+            {
+                var u = SharpConfig.Configuration.LoadFromString(data);
+                ElsCarAdminOnly = u["ADMIN"]["ElsCarAdminOnly"].BoolValue;
+            }
+        }
+
+
+
+        internal static bool isValidData(string data)
+        {
+            return SharpConfig.Configuration.LoadFromString(data).Contains("ADMIN", "VcfContainerFolder");
+        }
+
+
     }
 }
