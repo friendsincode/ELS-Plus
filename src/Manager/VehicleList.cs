@@ -44,7 +44,7 @@ namespace ELS.Manager
         {
             if (NetworkID == 0)
             {
-                CitizenFX.Core.Debug.WriteLine("ERROR Try to add vehicle\nNetwordID equals 0\n");
+                CitizenFX.Core.Debug.WriteLine("ERROR Try to add vehicle\nNetwordID equals 0");
                 vehicle = null;
                 return false;
             }

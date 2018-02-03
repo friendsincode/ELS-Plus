@@ -16,47 +16,7 @@ namespace ELS
         private Light.Lights _light;
         private Vehicle _vehicle;
         private Vcfroot _vcf;
-        public ELSVehicle(int handle) : base(handle)
-        {
-            _vehicle = new Vehicle(handle);
-            ModelLoaded();
 
-            if (_vehicle.DisplayName == "CARNOTFOUND")
-            {
-                throw new Exception("Vehicle creation failure.");
-            }
-            else if (_vehicle.GetNetworkId() == 0)
-            {
-                throw new Exception("NetworkId is 0");
-            }
-            else if (VCF.ELSVehicle.Exists(item => item.modelHash == _vehicle.Model))
-            {
-                _vcf = VCF.ELSVehicle.Find(item => item.modelHash == _vehicle.Model).root;
-            }
-
-            //_vehicle.SetExistOnAllMachines(true);
-#if DEBUG
-            CitizenFX.Core.Debug.WriteLine(CitizenFX.Core.Native.API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
-
-            CitizenFX.Core.Debug.WriteLine($"registering netid:{_vehicle.GetNetworkId()}\n" +
-                $"Does entity belong to this script: {CitizenFX.Core.Native.API.DoesEntityBelongToThisScript(_vehicle.Handle, false)}");
-
-#endif
-            try
-            {
-                Function.Call((Hash)0x5f3a3574, _vehicle.Handle, true);
-            }
-            catch (Exception e)
-            {
-                Utils.ReleaseWriteLine("Repair Fix is not enabled on this client");
-            }
-            _siren = new Siren.Siren(_vehicle, _vcf);
-            _light = new Light.Lights(_vehicle, _vcf);
-
-#if DEBUG
-            CitizenFX.Core.Debug.WriteLine($"created vehicle");
-#endif
-        }
         public ELSVehicle(int handle, [Optional]IDictionary<string, object> data) : base(handle)
         {
             _vehicle = new Vehicle(handle);
@@ -64,11 +24,11 @@ namespace ELS
 
             if (_vehicle.DisplayName == "CARNOTFOUND")
             {
-                throw new Exception("Vehicle not found");
+                throw new Exception("ELSVehicle.cs:Vehicle not found");
             }
             else if (_vehicle.GetNetworkId() == 0)
             {
-                throw new Exception("NetworkId is 0");
+                throw new Exception("ELSVehicle.cs:NetworkId is 0");
             }
             else if (VCF.ELSVehicle.Exists(item => item.modelHash == _vehicle.Model))
             {
@@ -80,18 +40,19 @@ namespace ELS
             }
             catch (Exception e)
             {
-                Utils.ReleaseWriteLine("Repair Fix is not enabled on this client");
+                Utils.ReleaseWriteLine("ELSVehicle.cs:Repair Fix is not enabled on this client");
             }
-            _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data["siren"]);
-            _light = new Light.Lights(_vehicle, _vcf, (IDictionary<string, object>)data["light"]);
+            
+            _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data?["siren"]);
+            _light = new Light.Lights(_vehicle, _vcf, (IDictionary<string, object>)data?["light"]);
 
             //_vehicle.SetExistOnAllMachines(true);
 #if DEBUG
             CitizenFX.Core.Debug.WriteLine(CitizenFX.Core.Native.API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
 
-            CitizenFX.Core.Debug.WriteLine($"registering netid:{_vehicle.GetNetworkId()}\n" +
+            CitizenFX.Core.Debug.WriteLine($"ELSVehicle.cs:registering netid:{_vehicle.GetNetworkId()}\n" +
                 $"Does entity belong to this script:{CitizenFX.Core.Native.API.DoesEntityBelongToThisScript(_vehicle.Handle, false)}");
-            CitizenFX.Core.Debug.WriteLine($"created vehicle");
+            CitizenFX.Core.Debug.WriteLine($"ELSVehicle.cs:created vehicle");
 #endif
         }
         private async void ModelLoaded()
@@ -105,7 +66,7 @@ namespace ELS
         {
             _siren.CleanUP();
             _light.CleanUP();
-            Utils.DebugWriteLine("running vehicle deconstructor");
+            Utils.DebugWriteLine("ELSVehicle.cs:running vehicle deconstructor");
             API.NetworkUnregisterNetworkedEntity(_vehicle.Handle);
             //CitizenFX.Core.Native.API.NetworkSetMissionFinished();
             //_vehicle.MarkAsNoLongerNeeded();
@@ -152,7 +113,7 @@ namespace ELS
             }
             catch (Exception e)
             {
-                CitizenFX.Core.Debug.WriteLine($"Delete error: {e.Message}");
+                CitizenFX.Core.Debug.WriteLine($"ELSVehicle.cs:Delete error: {e.Message}");
             }
         }
 
