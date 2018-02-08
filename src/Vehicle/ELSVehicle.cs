@@ -21,7 +21,8 @@ namespace ELS
         {
             _vehicle = new Vehicle(handle);
             ModelLoaded();
-
+            API.SetVehRadioStation(_vehicle.Handle, "OFF");
+            API.SetVehicleRadioEnabled(_vehicle.Handle, false);
             if (_vehicle.DisplayName == "CARNOTFOUND")
             {
                 throw new Exception("ELSVehicle.cs:Vehicle not found");

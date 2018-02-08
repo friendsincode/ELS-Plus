@@ -32,6 +32,7 @@ namespace ELS.configuration
         internal static float EnvLightInt { get; set; }
         internal static float TkdnInt { get; set; }
         internal static float TkdnRng { get; set; }
+        internal static bool AllowController { get; set; }
 
         public Global()
         {

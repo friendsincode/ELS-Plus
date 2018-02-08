@@ -13,7 +13,7 @@ See: https://github.com/ejb1123/ELS-Plus/issues to submit an issue. It is import
 ### Default Controls
 
 |Action Key|Default Key|Default Binding
-|---|---|---|
+|---|Keyboard and mouse|---|
 |Team Text Chat | Y key | Horn control|
 |Select Unarmed Weapon | 1 Key | Wail tone |
 |Select Melee Weapon | 2 Key | Yelp tone |
@@ -26,18 +26,27 @@ See: https://github.com/ejb1123/ELS-Plus/issues to submit an issue. It is import
 |Multiplayer Info | Z Key | Toggles vehicle's Primary Patterns|
 | | X Key | Toggles vehicle's Secondary Patterns|
 | | C Key | Toggles vehicle's Warning Patterns|
-|Cover | Q Key | Toggles vehicle's Takedown Lights|
-|Cover | Alt + Q Key | Toggles vehicle's Scene Lights|
+|Cover | Q Key | Toggles vehicle's Takedown Lights (Extra 12)|
+|Cover | Alt + Q Key | Toggles vehicle's Scene Lights (Extra 11)|
 |Replay Show Hot Key | K Key | Toggles vehicle's secondary lights|
 |Cinematic Slo Mo | L Key | Toggles vehicle's warning lights|
 || [ Key | Toggles vehicle's Cruise Lights|
 || L Alt + [ | Toggles vehicles Arrowboard if equipped(Not fully working)|
 ||Ctrl + P|Toggles UI Panel|
+|---|Controller(if enabled)|---|
+|Sniper Zoom in secondary|DPad Up|Toggle Auxilary Tone 1|
+|Sniper Zoom out secondary|DPad Down|Toggle Main Siren|
+|Detonate|DPad Left|Toggle Light Stages|
+|Talk|DPad Right|Toggle Takedownlights (Extra 12)|
+|Duck|L3(Press left stick)|Horn Control|
+|Reload|B(XBox) or O/Circle (PS)|Wail Tone|
+|Reload and Duck|L3(Press left stick) + B(XBox) or O/Circle (PS)|Yelp Tone|
+
 
 ### How to install
 1. Copy the `ELS-FiveM` folder to `cfx-server\resources\`
 2. Add `ELS-FiveM` to `server.cfg`
-3. Add `add_ace resource.RESOURCE_NAME command.add_ace allow` to `server.cfg`  
+3. Add `add_ace resource.RESOURCE_NAME command.add_ace allow` to `server.cfg`
    remember to replace `RESOURCE_NAME` with the name of this resource.
 4. Add your user to the `group.admin` principle to allow you to use the elscar commmand to spawn a vehicle
 

@@ -73,7 +73,8 @@ namespace ELS.Light
                         if (_vcfroot.CRUISE.UseExtras.Extra1)
                         {
                             e.TurnedOn = !e.TurnedOn;
-                        } else
+                        }
+                        else
                         {
                             e.TurnedOn = false;
                         }
@@ -132,7 +133,7 @@ namespace ELS.Light
             {
                 if (CurrentPrmPattern == 0)
                 {
-                    CurrentPrmPattern = _prmPatterns -1;
+                    CurrentPrmPattern = _prmPatterns - 1;
                 }
                 else
                 {
@@ -214,10 +215,10 @@ namespace ELS.Light
                 case 0:
                     break;
                 case 1:
-                    if (bool.Parse(_stage.SECL.ScanPatternCustomPool.Enabled))
+                    if (_stage.SECL.ScanPatternCustomPool.Enabled)
                     {
-                        
-                        if (bool.Parse(_stage.SECL.ScanPatternCustomPool.Sequential))
+
+                        if (_stage.SECL.ScanPatternCustomPool.Sequential)
                         {
                             CurrentSecPattern = SecScanPatts[secScan];
                             secScan++;
@@ -229,7 +230,7 @@ namespace ELS.Light
                         else
                         {
                             Random rand = new Random();
-                            CurrentSecPattern = SecScanPatts[rand.Next(0,SecScanPatts.Count -1)];
+                            CurrentSecPattern = SecScanPatts[rand.Next(0, SecScanPatts.Count - 1)];
                         }
                     }
                     else
@@ -245,14 +246,14 @@ namespace ELS.Light
                                 CurrentSecPattern++;
                             }
                         }
-                    }                    
+                    }
                     break;
                 case 2:
                     #region SECL
-                    if (bool.Parse(_stage.SECL.ScanPatternCustomPool.Enabled))
+                    if (_stage.SECL.ScanPatternCustomPool.Enabled)
                     {
 
-                        if (bool.Parse(_stage.SECL.ScanPatternCustomPool.Sequential))
+                        if (_stage.SECL.ScanPatternCustomPool.Sequential)
                         {
                             CurrentSecPattern = SecScanPatts[secScan];
                             secScan++;
@@ -282,15 +283,15 @@ namespace ELS.Light
                         }
                     }
                     #endregion
-#region PRML
-                    if (bool.Parse(_stage.PRML.ScanPatternCustomPool.Enabled))
+                    #region PRML
+                    if (_stage.PRML.ScanPatternCustomPool.Enabled)
                     {
 
-                        if (bool.Parse(_stage.PRML.ScanPatternCustomPool.Sequential))
+                        if (_stage.PRML.ScanPatternCustomPool.Sequential)
                         {
                             CurrentPrmPattern = PrmScanPatts[prmScan];
                             prmScan++;
-                            if (prmScan > PrmScanPatts.Count -1)
+                            if (prmScan > PrmScanPatts.Count - 1)
                             {
                                 prmScan = 0;
                             }
@@ -315,14 +316,14 @@ namespace ELS.Light
                             }
                         }
                     }
-#endregion
+                    #endregion
                     break;
                 case 3:
-#region Wrn
-                    if (bool.Parse(_stage.WRNL.ScanPatternCustomPool.Enabled))
+                    #region Wrn
+                    if (_stage.WRNL.ScanPatternCustomPool.Enabled)
                     {
 
-                        if (bool.Parse(_stage.WRNL.ScanPatternCustomPool.Sequential))
+                        if (_stage.WRNL.ScanPatternCustomPool.Sequential)
                         {
                             CurrentWrnPattern = WrnScanPatts[wrnScan];
                             wrnScan++;
@@ -353,10 +354,10 @@ namespace ELS.Light
                     }
                     #endregion
                     #region SECL
-                    if (bool.Parse(_stage.SECL.ScanPatternCustomPool.Enabled))
+                    if (_stage.SECL.ScanPatternCustomPool.Enabled)
                     {
 
-                        if (bool.Parse(_stage.SECL.ScanPatternCustomPool.Sequential))
+                        if (_stage.SECL.ScanPatternCustomPool.Sequential)
                         {
                             CurrentSecPattern = SecScanPatts[secScan];
                             secScan++;
@@ -386,11 +387,11 @@ namespace ELS.Light
                         }
                     }
                     #endregion
-#region PRML
-                    if (bool.Parse(_stage.PRML.ScanPatternCustomPool.Enabled))
+                    #region PRML
+                    if (_stage.PRML.ScanPatternCustomPool.Enabled)
                     {
 
-                        if (bool.Parse(_stage.PRML.ScanPatternCustomPool.Sequential))
+                        if (_stage.PRML.ScanPatternCustomPool.Sequential)
                         {
                             CurrentPrmPattern = PrmScanPatts[prmScan];
                             prmScan++;
@@ -419,7 +420,7 @@ namespace ELS.Light
                             }
                         }
                     }
-#endregion
+                    #endregion
                     break;
             }
         }
@@ -472,7 +473,7 @@ namespace ELS.Light
                 case 1:
                     foreach (Extra.Extra e in _extras.SECL.Values)
                     {
-                        if (bool.Parse(_stage.SECL.PresetPatterns.Lstg1.Enabled))
+                        if (_stage.SECL.PresetPatterns.Lstg1.Enabled)
                         {
                             if (_stage.SECL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan"))
                             {
@@ -521,7 +522,7 @@ namespace ELS.Light
                     }
                     foreach (Extra.Extra e in _extras.SECL.Values)
                     {
-                        if (bool.Parse(_stage.SECL.PresetPatterns.Lstg2.Enabled))
+                        if (_stage.SECL.PresetPatterns.Lstg2.Enabled)
                         {
                             if (_stage.SECL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan"))
                             {
@@ -542,7 +543,7 @@ namespace ELS.Light
                     foreach (int i in extras)
                     {
                         Extra.Extra e = _extras.PRML[i];
-                        if (bool.Parse(_stage.PRML.PresetPatterns.Lstg2.Enabled))
+                        if (_stage.PRML.PresetPatterns.Lstg2.Enabled)
                         {
                             if (_stage.PRML.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan"))
                             {
@@ -578,7 +579,7 @@ namespace ELS.Light
                     foreach (Extra.Extra e in _extras.SECL.Values)
                     {
 
-                        if (bool.Parse(_stage.SECL.PresetPatterns.Lstg3.Enabled))
+                        if (_stage.SECL.PresetPatterns.Lstg3.Enabled)
                         {
                             if (_stage.SECL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
                             {
@@ -589,7 +590,7 @@ namespace ELS.Light
                                 CurrentSecPattern = int.Parse(_stage.SECL.PresetPatterns.Lstg3.Pattern);
                             }
                         }
-                        if (bool.Parse(_vcfroot.SECL.DisableAtLstg3))
+                        if (_vcfroot.SECL.DisableAtLstg3)
                         {
                             e.IsPatternRunning = false;
                             secLights = false;
@@ -603,10 +604,9 @@ namespace ELS.Light
                             ElsUiPanel.ToggleUiBtnState(secLights, "SECL");
                         }
                     }
-                    secLights = true;
                     foreach (Extra.Extra e in _extras.PRML.Values)
                     {
-                        if (bool.Parse(_stage.PRML.PresetPatterns.Lstg3.Enabled))
+                        if (_stage.PRML.PresetPatterns.Lstg3.Enabled)
                         {
                             if (_stage.PRML.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
                             {
@@ -617,16 +617,24 @@ namespace ELS.Light
                                 CurrentPrmPattern = int.Parse(_stage.PRML.PresetPatterns.Lstg3.Pattern);
                             }
                         }
+                        if (_vcfroot.PRML.DisableAtLstg3)
+                        {
+                            e.IsPatternRunning = false;
+                            prmLights = false;
+                            ElsUiPanel.ToggleUiBtnState(prmLights, "PRML");
+                        }
                         else
                         {
+                            e.IsPatternRunning = false;
+                            e.IsPatternRunning = true;
+                            prmLights = true;
+                            ElsUiPanel.ToggleUiBtnState(prmLights, "PRML");
                         }
-                        e.IsPatternRunning = false;
-                        e.IsPatternRunning = true;
                     }
 
                     foreach (Extra.Extra e in _extras.WRNL.Values)
                     {
-                        if (bool.Parse(_stage.WRNL.PresetPatterns.Lstg3.Enabled))
+                        if (_stage.WRNL.PresetPatterns.Lstg3.Enabled)
                         {
                             if (_stage.WRNL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
                             {
@@ -637,20 +645,27 @@ namespace ELS.Light
                                 CurrentWrnPattern = int.Parse(_stage.WRNL.PresetPatterns.Lstg3.Pattern);
                             }
                         }
-                        e.IsPatternRunning = false;
-                        e.IsPatternRunning = true;
+                        if (_vcfroot.WRNL.DisableAtLstg3)
+                        {
+                            e.IsPatternRunning = false;
+                            wrnLights = false;
+                            ElsUiPanel.ToggleUiBtnState(wrnLights, "WRNL");
+                        }
+                        else
+                        {
+                            e.IsPatternRunning = false;
+                            e.IsPatternRunning = true;
+                            wrnLights = true;
+                            ElsUiPanel.ToggleUiBtnState(wrnLights, "WRNL");
+                        }
                     }
-                    wrnLights = true;
                     if (_vcfroot.PRML.LightingFormat.ToLower().Equals("chp"))
                     {
                         SetCHP();
                         _extras.SBRN.Pattern = CHP.LightStage3[CurrentWrnPattern][10];
                         _extras.SBRN.IsPatternRunning = true;
                     }
-                    prmLights = true;
-                    wrnLights = true;
-                    ElsUiPanel.ToggleUiBtnState(prmLights, "PRML");
-                    ElsUiPanel.ToggleUiBtnState(wrnLights, "WRNL");
+                    
                     break;
             }
         }

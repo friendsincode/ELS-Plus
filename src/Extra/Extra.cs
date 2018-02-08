@@ -112,6 +112,11 @@ namespace ELS.Extra
                 {
                     CleanUp();
                     count = 0;
+                    flashrate = 0;
+                }
+                else
+                {
+                    flashrate = Game.GameTime;
                 }
             }
 
@@ -186,22 +191,24 @@ namespace ELS.Extra
         }
 
         int count = 0;
-        int flashrate;
+        int flashrate = 0;
         int allowflash = 1;
         bool firstTick = true;
         internal async void ExtraTicker()
         {
-            if (firstTick)
-            {
-                Delay = 100;
-                firstTick = false;
-            }
-            flashrate = (int)Game.FPS / ((int)Game.FPS * 60 / Delay);
+            /*if (firstTick)
+           {
+               Delay = 100;
+               firstTick = false;
+           }
+          flashrate = (int)Game.FPS / ((int)Game.FPS * 60 / Delay);
 #if DEBUG
-            //CitizenFX.Core.Debug.WriteLine($"Flash rate: {flashrate}");
-            //CitizenFX.Core.Debug.WriteLine($"Allow Flash: {allowflash}");
+           //CitizenFX.Core.Debug.WriteLine($"Flash rate: {flashrate}");
+           //CitizenFX.Core.Debug.WriteLine($"Allow Flash: {allowflash}");
 #endif
-            if (flashrate == allowflash)
+           if (flashrate == allowflash)
+           {*/
+            if (flashrate != 0 && Game.GameTime - flashrate >= Global.PrimDelay)
             {
                 allowflash = 1;
                 if (IsPatternRunning)
@@ -223,7 +230,6 @@ namespace ELS.Extra
                     else
                     {
                         SetState(true);
-                        //DrawEnvLight();
                         if (!IsPatternRunning)
                         {
                             CleanUp();
@@ -242,18 +248,19 @@ namespace ELS.Extra
                         return;
                     }
                 }
+                flashrate = Game.GameTime;
 #if DEBUG
                 //CitizenFX.Core.Debug.WriteLine($"Allow flash ran on extra {Id}");
 #endif
             }
-            else if (allowflash > flashrate)
+            /*else if (allowflash > flashrate)
             {
                 allowflash = 1;
             }
             else
             {
                 allowflash++;
-            }
+            }*/
             if (TurnedOn && spotLight != null)
             {
 #if DEBUG
@@ -269,39 +276,12 @@ namespace ELS.Extra
                 }
                 else
                 {
-                    if (!String.IsNullOrEmpty(_extraInfo.AllowEnvLight) && bool.Parse(_extraInfo.AllowEnvLight))
+                    if (_extraInfo.AllowEnvLight)
                     {
                         DrawEnvLight();
                     }
                 }
             }
-        }
-
-        internal async void RunPattern()
-        {
-            //ElsUiPanel.SetUiPatternNumber(PatternNum, LightType.ToString());
-            while (IsPatternRunning)
-            {
-                foreach (char c in Pattern.ToCharArray())
-                {
-                    if (!IsPatternRunning)
-                    {
-                        CleanUp();
-                        break;
-                    }
-                    if (c.Equals('0'))
-                    {
-                        SetFalse();
-                    }
-                    else
-                    {
-                        //DrawLight();
-                        SetTrue();
-                    }
-                    await ELS.Delay(Delay);
-                }
-            }
-            CleanUp();
         }
 
         private Vector3 dirVector;
@@ -310,6 +290,10 @@ namespace ELS.Extra
 
         internal void DrawEnvLight()
         {
+            if (!IsPatternRunning)
+            {
+                return;
+            }
             if (_vehicle == null)
             {
                 CitizenFX.Core.Debug.WriteLine("Vehicle is null!!!");
@@ -321,7 +305,7 @@ namespace ELS.Extra
                 CitizenFX.Core.Debug.WriteLine("Bone is null for some reason!!!");
                 return;
             }
-            var extraoffset = _vehicle.GetOffsetPosition(off + new Vector3(float.Parse(_extraInfo.OffsetX), float.Parse(_extraInfo.OffsetY), float.Parse(_extraInfo.OffsetZ)));
+            var extraoffset = _vehicle.GetOffsetPosition(off + new Vector3(_extraInfo.OffsetX, _extraInfo.OffsetY, _extraInfo.OffsetZ));
 
 
             //float hx = (float)((double)extraoffset.X + 5 * Math.Cos(((double)anglehorizontal + Game.Player.Character.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
@@ -333,7 +317,7 @@ namespace ELS.Extra
             //dirVector = destinationCoords - extraoffset;
             //dirVector.Normalize();
             //API.DrawSpotLightWithShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, dirVector.X, dirVector.Y, dirVector.Z, Color['r'], Color['g'], Color['b'], 100.0f, 1f, 0.0f, 13.0f, 1f, 100f);
-            API.DrawLightWithRangeAndShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, Color['r'], Color['g'], Color['b'], Global.EnvLightRng, Global.EnvLightInt, 0);
+            API.DrawLightWithRangeAndShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, Color['r'], Color['g'], Color['b'], Global.EnvLightRng, Global.EnvLightInt, 0.01f);
         }
 
         internal Dictionary<char, int> Color;
@@ -408,7 +392,7 @@ namespace ELS.Extra
                     Delay = 100;
                     Pattern = "";
                     IsPatternRunning = false;
-                    spotLight = new SpotLight(_Id,_vehicle.GetNetworkId());
+                    spotLight = new SpotLight(_Id, _vehicle.GetNetworkId());
 #if DEBUG
                     CitizenFX.Core.Debug.WriteLine("Takedown lights setup");
 #endif

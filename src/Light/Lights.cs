@@ -112,7 +112,7 @@ namespace ELS.Light
                 {
                     case 1:
                         {
-                            if (API.DoesExtraExist(_vehicle.Handle, 1) && bool.Parse(_vcfroot.EOVERRIDE.Extra01.IsElsControlled))
+                            if (API.DoesExtraExist(_vehicle.Handle, 1) && _vcfroot.EOVERRIDE.Extra01.IsElsControlled)
                             {
                                 this._extras.PRML.Add(1, new Extra.Extra(_vehicle, 1, _vcfroot.EOVERRIDE.Extra01, _vcfroot.PRML.LightingFormat));
                             }
@@ -120,7 +120,7 @@ namespace ELS.Light
                         break;
                     case 2:
                         {
-                            if (API.DoesExtraExist(_vehicle.Handle, 2) && bool.Parse(_vcfroot.EOVERRIDE.Extra02.IsElsControlled))
+                            if (API.DoesExtraExist(_vehicle.Handle, 2) && _vcfroot.EOVERRIDE.Extra02.IsElsControlled)
                             {
                                 this._extras.PRML.Add(2, new Extra.Extra(_vehicle, 2, _vcfroot.EOVERRIDE.Extra02, _vcfroot.PRML.LightingFormat));
                             }
@@ -128,7 +128,7 @@ namespace ELS.Light
                         break;
                     case 3:
                         {
-                            if (API.DoesExtraExist(_vehicle.Handle, 3) && bool.Parse(_vcfroot.EOVERRIDE.Extra03.IsElsControlled))
+                            if (API.DoesExtraExist(_vehicle.Handle, 3) && _vcfroot.EOVERRIDE.Extra03.IsElsControlled)
                             {
                                 this._extras.PRML.Add(3, new Extra.Extra(_vehicle, 3, _vcfroot.EOVERRIDE.Extra03, _vcfroot.PRML.LightingFormat));
                             }
@@ -136,7 +136,7 @@ namespace ELS.Light
                         break;
                     case 4:
                         {
-                            if (API.DoesExtraExist(_vehicle.Handle, 4) && bool.Parse(_vcfroot.EOVERRIDE.Extra04.IsElsControlled))
+                            if (API.DoesExtraExist(_vehicle.Handle, 4) && _vcfroot.EOVERRIDE.Extra04.IsElsControlled)
                             {
                                 this._extras.PRML.Add(4, new Extra.Extra(_vehicle, 4, _vcfroot.EOVERRIDE.Extra04, _vcfroot.PRML.LightingFormat));
                             }
@@ -144,7 +144,7 @@ namespace ELS.Light
                         break;
                     case 5:
                         {
-                            if (API.DoesExtraExist(_vehicle.Handle, 5) && bool.Parse(_vcfroot.EOVERRIDE.Extra05.IsElsControlled))
+                            if (API.DoesExtraExist(_vehicle.Handle, 5) && _vcfroot.EOVERRIDE.Extra05.IsElsControlled)
                             {
                                 this._extras.WRNL.Add(5, new Extra.Extra(_vehicle, 5, _vcfroot.EOVERRIDE.Extra05, _vcfroot.WRNL.LightingFormat));
                             }
@@ -152,7 +152,7 @@ namespace ELS.Light
                         break;
                     case 6:
                         {
-                            if (API.DoesExtraExist(_vehicle.Handle, 6) && bool.Parse(_vcfroot.EOVERRIDE.Extra06.IsElsControlled))
+                            if (API.DoesExtraExist(_vehicle.Handle, 6) && _vcfroot.EOVERRIDE.Extra06.IsElsControlled)
                             {
                                 this._extras.WRNL.Add(6, new Extra.Extra(_vehicle, 6, _vcfroot.EOVERRIDE.Extra06, _vcfroot.WRNL.LightingFormat));
                             }
@@ -160,7 +160,7 @@ namespace ELS.Light
                         break;
                     case 7:
                         {
-                            if (API.DoesExtraExist(_vehicle.Handle, 7) && bool.Parse(_vcfroot.EOVERRIDE.Extra07.IsElsControlled))
+                            if (API.DoesExtraExist(_vehicle.Handle, 7) && _vcfroot.EOVERRIDE.Extra07.IsElsControlled)
                             {
                                 this._extras.SECL.Add(7, new Extra.Extra(_vehicle, 7, _vcfroot.EOVERRIDE.Extra07, _vcfroot.SECL.LightingFormat));
                             }
@@ -168,7 +168,7 @@ namespace ELS.Light
                         break;
                     case 8:
                         {
-                            if (API.DoesExtraExist(_vehicle.Handle, 8) && bool.Parse(_vcfroot.EOVERRIDE.Extra08.IsElsControlled))
+                            if (API.DoesExtraExist(_vehicle.Handle, 8) && _vcfroot.EOVERRIDE.Extra08.IsElsControlled)
                             {
                                 this._extras.SECL.Add(8, new Extra.Extra(_vehicle, 8, _vcfroot.EOVERRIDE.Extra08, _vcfroot.SECL.LightingFormat));
                             }
@@ -176,7 +176,7 @@ namespace ELS.Light
                         break;
                     case 9:
                         {
-                            if (API.DoesExtraExist(_vehicle.Handle, 9) && bool.Parse(_vcfroot.EOVERRIDE.Extra09.IsElsControlled))
+                            if (API.DoesExtraExist(_vehicle.Handle, 9) && _vcfroot.EOVERRIDE.Extra09.IsElsControlled)
                             {
                                 this._extras.SECL.Add(9, new Extra.Extra(_vehicle, 9, _vcfroot.EOVERRIDE.Extra09, _vcfroot.SECL.LightingFormat));
                             }
@@ -184,7 +184,7 @@ namespace ELS.Light
                         break;
                     case 10:
                         {
-                            if (API.DoesExtraExist(_vehicle.Handle, 10) && bool.Parse(_vcfroot.EOVERRIDE.Extra10.IsElsControlled))
+                            if (API.DoesExtraExist(_vehicle.Handle, 10) && _vcfroot.EOVERRIDE.Extra10.IsElsControlled)
                             {
                                 this._extras.SBRN = new Extra.Extra(_vehicle, 10, _vcfroot.EOVERRIDE.Extra10);
                             }
@@ -192,7 +192,7 @@ namespace ELS.Light
                         break;
                     case 11:
                         {
-                            if (API.DoesExtraExist(_vehicle.Handle, 11) && bool.Parse(_vcfroot.EOVERRIDE.Extra11.IsElsControlled))
+                            if (API.DoesExtraExist(_vehicle.Handle, 11) && _vcfroot.EOVERRIDE.Extra11.IsElsControlled)
                             {
                                 this._extras.SCL = new Extra.Extra(_vehicle, 11, _vcfroot.EOVERRIDE.Extra11);
                             }
@@ -200,7 +200,7 @@ namespace ELS.Light
                         break;
                     case 12:
                         {
-                            if (API.DoesExtraExist(_vehicle.Handle, 12) && bool.Parse(_vcfroot.EOVERRIDE.Extra12.IsElsControlled))
+                            if (API.DoesExtraExist(_vehicle.Handle, 12) && _vcfroot.EOVERRIDE.Extra12.IsElsControlled)
                             {
                                 this._extras.TDL = new Extra.Extra(_vehicle, 12, _vcfroot.EOVERRIDE.Extra12);
                             }

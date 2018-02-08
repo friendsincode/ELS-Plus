@@ -130,6 +130,10 @@ namespace ELS.Light
 
         public async void ExternalTicker()
         {
+            if (crsLights || prmLights || secLights || wrnLights || _extras.TDL.TurnedOn || _extras.SCL.TurnedOn && !_vehicle.IsEngineRunning)
+            {
+                _vehicle.IsEngineRunning = true;
+            }
             if (_extras.BRD.HasBoard)
             {
                 _extras.BRD.BoardTicker();
@@ -302,7 +306,7 @@ namespace ELS.Light
         internal void ToggleTdlKB()
         {
             Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleTdl);
-            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleTdl) && !Game.IsControlPressed(0, Control.CharacterWheel))
+            if ((Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleTdl) && !Game.IsControlPressed(0, Control.CharacterWheel)) || (Global.AllowController && Game.IsControlJustReleased(2, Control.Talk) && Game.CurrentInputMode == InputMode.GamePad))
             {
                 if (_extras.TDL != null)
                 {
@@ -373,15 +377,15 @@ namespace ELS.Light
         internal void ToggleLightStageKB()
         {
             Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleLstg);
-            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleLstg) && !Game.IsControlPressed(0, Control.CharacterWheel))
+            if ((Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleLstg) && !Game.IsControlPressed(0, Control.CharacterWheel)) || (Global.AllowController && Game.IsControlJustReleased(2, Control.Detonate) && Game.CurrentInputMode == InputMode.GamePad))
             {
-                Utils.DebugWriteLine("Light stage");
+                Utils.DebugWriteLine("Toggle Light stage");
                 ToggleLightStage();
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleLstg, _vehicle, true, Game.Player.ServerId);
             }
             else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleLstg) && Game.IsControlPressed(0, Control.CharacterWheel))
             {
-                Utils.DebugWriteLine("Light stage Inverse");
+                Utils.DebugWriteLine("Toggle Light stage Inverse");
                 ToggleLightStageInverse();
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleLstg, _vehicle, true, Game.Player.ServerId);
             }
