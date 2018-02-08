@@ -30,7 +30,7 @@ namespace ELS_Server
 
             API.RegisterCommand("elscar", new Action<int, List<object>, string>(async (source, arguments, raw) =>
             {
-                if (String.IsNullOrEmpty(arguments[0].ToString()))
+                if (arguments.Count < 1 || String.IsNullOrEmpty(arguments[0].ToString()))
                 {
                     Utils.ReleaseWriteLine("No vehicle specified please try again");
                     return;

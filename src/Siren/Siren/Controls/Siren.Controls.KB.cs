@@ -11,7 +11,7 @@ namespace ELS.Siren
         {
             if ((Game.IsControlJustPressed(0, ElsConfiguration.KeyBindings.Sound_Ahorn) &&
                  Game.CurrentInputMode == InputMode.MouseAndKeyboard) ||
-                (Game.IsControlJustPressed(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
+                (Game.IsControlJustPressed(2, Control.SpecialAbility) && Game.CurrentInputMode == InputMode.GamePad && Global.AllowController))
             {
 #if !REMOTETEST
                 AirHornLogic(true, true);
@@ -22,7 +22,7 @@ namespace ELS.Siren
             }
             if ((Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Sound_Ahorn) &&
                  Game.CurrentInputMode == InputMode.MouseAndKeyboard)
-                || (Game.IsControlJustReleased(2, Control.ScriptPadDown) && Game.CurrentInputMode == InputMode.GamePad))
+                || (Game.IsControlJustReleased(2, Control.SpecialAbility) && Game.CurrentInputMode == InputMode.GamePad && Global.AllowController))
             {
 #if !REMOTETEST
                 AirHornLogic(false, true);
@@ -32,7 +32,7 @@ namespace ELS.Siren
         }
         void ManualTone1ControlsKB()
         {
-            if (Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Snd_SrnTon1))
+            if ((Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Snd_SrnTon1) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) || (Global.AllowController && Game.IsControlJustReleased(2,Control.Reload) && Game.CurrentInputMode == InputMode.GamePad))
             {
 #if !REMOTETEST
                 SirenTone1Logic(true, true);
@@ -42,7 +42,7 @@ namespace ELS.Siren
         }
         void ManualTone2ControlsKB()
         {
-            if (Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Snd_SrnTon2))
+            if ((Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Snd_SrnTon2) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) || (Global.AllowController && Game.IsControlPressed(2,Control.SpecialAbility) && Game.IsControlJustPressed(2,Control.Reload) && Game.CurrentInputMode == InputMode.GamePad))
             {
 #if !REMOTETEST
                 SirenTone2Logic(true, true);
@@ -52,7 +52,7 @@ namespace ELS.Siren
         }
         void ManualTone3ControlsKB()
         {
-            if (Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Snd_SrnTon3))
+            if ((Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Snd_SrnTon3) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) || (Global.AllowController && Game.IsControlJustReleased(2, Control.SniperZoomInSecondary) && Game.CurrentInputMode == InputMode.GamePad))
             {
 #if !REMOTETEST
                 SirenTone3Logic(true, true);
@@ -73,7 +73,7 @@ namespace ELS.Siren
 
         void MainSirenToggleControlsKB()
         {
-            if (Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Toggle_SIRN))
+            if ((Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Toggle_SIRN) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) || (Global.AllowController && Game.IsControlJustReleased(2, Control.HUDSpecial) && Game.CurrentInputMode == InputMode.GamePad))
             {
 #if !REMOTETEST
                 MainSirenToggleLogic(true, true);

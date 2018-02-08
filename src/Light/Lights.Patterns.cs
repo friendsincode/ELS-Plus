@@ -1,4 +1,5 @@
-﻿using ELS.configuration;
+﻿using CitizenFX.Core;
+using ELS.configuration;
 using ELS.Light.Patterns;
 using ELS.NUI;
 using System;
@@ -122,7 +123,10 @@ namespace ELS.Light
                 }
 
                Utils.DebugWriteLine($"Current primary pattern is {CurrentPrmPattern}");
-               ElsUiPanel.SetUiDesc(_prefix + CurrentPrmPattern.ToString().PadLeft(3,'0'), ExtraEnum.PRML.ToString());
+                if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == _vehicle.GetNetworkId())
+                {
+                    ElsUiPanel.SetUiDesc(_prefix + CurrentPrmPattern.ToString().PadLeft(3, '0'), ExtraEnum.PRML.ToString());
+                }
             }
         }
 
@@ -197,7 +201,10 @@ namespace ELS.Light
                         CitizenFX.Core.Debug.WriteLine($"{e.Id} error {ex.Message}");
                     }
                 }
-                ElsUiPanel.SetUiDesc(_prefix + CurrentSecPattern.ToString().PadLeft(3,'0'), ExtraEnum.SECL.ToString());
+                if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == _vehicle.GetNetworkId())
+                {
+                    ElsUiPanel.SetUiDesc(_prefix + CurrentSecPattern.ToString().PadLeft(3, '0'), ExtraEnum.SECL.ToString());
+                }
                  Utils.DebugWriteLine($"Current secondary pattern is {CurrentSecPattern}");
             }
         }
@@ -258,7 +265,10 @@ namespace ELS.Light
                         CitizenFX.Core.Debug.WriteLine($"{e.Id} error {ex.Message}");
                     }
                 }
-                ElsUiPanel.SetUiDesc(_prefix + CurrentWrnPattern.ToString().PadLeft(3,'0'), ExtraEnum.WRNL.ToString());
+                if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == _vehicle.GetNetworkId())
+                {
+                    ElsUiPanel.SetUiDesc(_prefix + CurrentWrnPattern.ToString().PadLeft(3, '0'), ExtraEnum.WRNL.ToString());
+                }
                 Utils.DebugWriteLine($"Current warning pattern is {CurrentWrnPattern}");
             }
         }
@@ -267,13 +277,13 @@ namespace ELS.Light
         {
             CurrentPrmPattern = 0;
             PrmScanPatts = new List<int>();
-            if (bool.Parse(_stage.PRML.ScanPatternCustomPool.Enabled)) {
+            if (_stage.PRML.ScanPatternCustomPool.Enabled) {
 #if DEBUG
                 CitizenFX.Core.Debug.WriteLine($"Adding Primary Scan pool patterns");
 #endif
-                foreach (string p in _stage.PRML.ScanPatternCustomPool.Pattern)
+                foreach (int p in _stage.PRML.ScanPatternCustomPool.Pattern)
                 {
-                    PrmScanPatts.Add(int.Parse(p));
+                    PrmScanPatts.Add(p);
 #if DEBUG
                     CitizenFX.Core.Debug.WriteLine($"Added {p} to primary scan patterns");
 #endif
@@ -290,14 +300,14 @@ namespace ELS.Light
         {
             CurrentSecPattern = 0;
             SecScanPatts = new List<int>();
-            if (bool.Parse(_stage.SECL.ScanPatternCustomPool.Enabled))
+            if (_stage.SECL.ScanPatternCustomPool.Enabled)
             {
 #if DEBUG
                 CitizenFX.Core.Debug.WriteLine($"Adding Secondary Scan pool patterns");
 #endif
-                foreach (string p in _stage.SECL.ScanPatternCustomPool.Pattern)
+                foreach (int p in _stage.SECL.ScanPatternCustomPool.Pattern)
                 {
-                    SecScanPatts.Add(int.Parse(p));
+                    SecScanPatts.Add(p);
 #if DEBUG
                     CitizenFX.Core.Debug.WriteLine($"Added {p} to secondary scan patterns");
 #endif
@@ -310,14 +320,14 @@ namespace ELS.Light
         {
             CurrentWrnPattern = 0;
             WrnScanPatts = new List<int>();
-            if (bool.Parse(_stage.WRNL.ScanPatternCustomPool.Enabled))
+            if (_stage.WRNL.ScanPatternCustomPool.Enabled)
             {
 #if DEBUG
                 CitizenFX.Core.Debug.WriteLine($"Adding Warning Scan pool patterns");
 #endif
-                foreach (string p in _stage.WRNL.ScanPatternCustomPool.Pattern)
+                foreach (int p in _stage.WRNL.ScanPatternCustomPool.Pattern)
                 {
-                    WrnScanPatts.Add(int.Parse(p));
+                    WrnScanPatts.Add(p);
 #if DEBUG
                     CitizenFX.Core.Debug.WriteLine($"Added {p} to warning scan patterns");
 #endif

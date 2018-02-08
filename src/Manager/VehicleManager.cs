@@ -62,20 +62,11 @@ namespace ELS.Manager
                         (Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed
                         || Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Passenger) == Game.PlayerPed))
                 {
-                    //if (!API.IsEntityAMissionEntity(Game.PlayerPed.CurrentVehicle.Handle))
-                    //{
-                    //    CitizenFX.Core.Debug.WriteLine("Not a mission entity");
-                    //    API.SetEntityAsMissionEntity(Game.PlayerPed.CurrentVehicle.Handle, true, true);
-                    //    //possible memory leak.
-                    //    Blip blip = new Blip(API.GetBlipFromEntity(Game.PlayerPed.CurrentVehicle.Handle));
-                    //    API.SetBlipSprite(blip.Handle, 2);
-                    //}
-
-
                     if (vehicleList.MakeSureItExists(API.VehToNet(Game.PlayerPed.CurrentVehicle.Handle), vehicle: out ELSVehicle _currentVehicle))
                     {
                         _currentVehicle?.RunTick();
                         vehicleList.RunExternalTick(_currentVehicle);
+                        Game.PlayerPed.CurrentVehicle.SetExistOnAllMachines(true);
                     }
                     else
                     {
@@ -107,15 +98,6 @@ namespace ELS.Manager
                 {
                     vehicleList.RunExternalTick();
                 }
-                if (lastDeleteTime == 0)
-                {
-                    lastDeleteTime = Game.GameTime;
-                }
-                if (Game.GameTime - lastDeleteTime >= Global.DeleteInterval)
-                {
-                    DeleteStale();
-                    lastDeleteTime = Game.GameTime;
-                }
             }
             catch (Exception e)
             {
@@ -123,29 +105,6 @@ namespace ELS.Manager
             }
 
             //TODO Chnage how I check for the panic alarm
-        }
-
-        int lastDeleteTime = 0;
-        private async Task DeleteStale()
-        {
-            PlayerList list = new PlayerList();
-#if DEBUG
-            CitizenFX.Core.Debug.WriteLine("Running Delete");
-#endif
-           foreach (ELSVehicle v in vehicleList.ToList())
-            {
-                foreach (Player p in list)
-                {
-                    if (p.Character.IsSittingInELSVehicle() && p.Character.CurrentVehicle.GetNetworkId() == v.GetNetworkId())
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        v.Delete();
-                    }
-                }
-            }
         }
 
         /// <summary>

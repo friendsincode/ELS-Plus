@@ -97,7 +97,7 @@ namespace ELS.Board
                     HasBoard = false;
                     break;
             }
-            CitizenFX.Core.Debug.WriteLine($"Added ArrowBoard of {_boardType}");
+            Utils.DebugWriteLine($"Added ArrowBoard of {_boardType}");
         }
 
         internal void BoardTicker()

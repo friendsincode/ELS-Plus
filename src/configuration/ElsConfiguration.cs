@@ -101,12 +101,13 @@ namespace ELS.configuration
 
                 ControlsUpdated?.Invoke(KeyBindings);
                 Global.EnabeTrafficControl = u["GENERAL"]["ElsTrafCtrlOn"].BoolValue;
-                Global.PrimDelay = u["LIGHTING"]["LightFlashDelayMainLts"].IntValue * 8;
+                Global.PrimDelay = u["LIGHTING"]["LightFlashDelayMainLts"].IntValue;
                 Global.DeleteInterval = u["Admin"]["VehicleDeleteInterval"].FloatValue * 60 * 1000;
                 Global.EnvLightRng = u["LIGHTING"]["EnvLtMultExtraLts_Rng"].FloatValue * 25f;
                 Global.EnvLightInt = u["LIGHTING"]["EnvLtMultExtraLts_Int"].FloatValue * .02f;
                 Global.TkdnRng = u["LIGHTING"]["EnvLtMultTakedwns_Rng"].FloatValue * 25f;
                 Global.TkdnInt = u["LIGHTING"]["EnvLtMultTakedwns_Int"].FloatValue * 1f;
+                Global.AllowController = u["CONTROL"]["AllowController"].BoolValue;
                 Utils.DebugWrite($"Configuration ran \n ---------------------- \n Traffic Control: {Global.EnabeTrafficControl} \n Delay: {Global.PrimDelay} \n Delete Interval: {Global.DeleteInterval} \n Env Lighting Range: {Global.EnvLightRng}");
             }
         }
