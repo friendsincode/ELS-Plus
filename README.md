@@ -13,7 +13,7 @@ See: https://github.com/ejb1123/ELS-Plus/issues to submit an issue. It is import
 ### Default Controls
 
 |Action Key|Default Key|Default Binding
-|---|Keyboard and mouse|---|
+|---|---|---|
 |Team Text Chat | Y key | Horn control|
 |Select Unarmed Weapon | 1 Key | Wail tone |
 |Select Melee Weapon | 2 Key | Yelp tone |
@@ -33,7 +33,7 @@ See: https://github.com/ejb1123/ELS-Plus/issues to submit an issue. It is import
 || [ Key | Toggles vehicle's Cruise Lights|
 || L Alt + [ | Toggles vehicles Arrowboard if equipped(Not fully working)|
 ||Ctrl + P|Toggles UI Panel|
-|---|Controller(if enabled)|---|
+|---|---|---|
 |Sniper Zoom in secondary|DPad Up|Toggle Auxilary Tone 1|
 |Sniper Zoom out secondary|DPad Down|Toggle Main Siren|
 |Detonate|DPad Left|Toggle Light Stages|
