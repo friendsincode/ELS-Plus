@@ -130,7 +130,9 @@ namespace ELS.Light
 
         public async void ExternalTicker()
         {
-            if (crsLights || prmLights || secLights || wrnLights || _extras.TDL.TurnedOn || _extras.SCL.TurnedOn && !_vehicle.IsEngineRunning)
+            if (crsLights || prmLights || secLights || wrnLights || 
+                (_extras.TDL != null && _extras.TDL.TurnedOn) || (_extras.SCL != null && _extras.SCL.TurnedOn) 
+                && !_vehicle.IsEngineRunning)
             {
                 _vehicle.IsEngineRunning = true;
             }
