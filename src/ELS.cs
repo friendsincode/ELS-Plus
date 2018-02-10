@@ -195,20 +195,19 @@ namespace ELS
             {
                 SpawnCar(veh);
             }));
-            
         }
 
-        internal async Task SpawnCar(string veh)
+        internal async Task<Vehicle> SpawnCar(string veh)
         {
             if (String.IsNullOrEmpty(veh))
             {
                 Screen.ShowNotification("Vehicle not found please try again");
-                return;
+                return null;
             }
             if (!VCF.ELSVehicle.Exists(elscar => elscar.modelHash == Game.GenerateHash(veh)))
             {
                 Screen.ShowNotification("Vehicle not ELS please try again");
-                return;
+                return null;
             }
             if (Game.PlayerPed.IsInVehicle())
             {
@@ -226,6 +225,7 @@ namespace ELS
             await polModel.Request(-1);
             Vehicle _veh = await World.CreateVehicle(polModel, Game.PlayerPed.Position + new Vector3(0f,10f,0f));
             Game.PlayerPed.SetIntoVehicle(_veh, VehicleSeat.Driver);
+            return _veh;
         }
 
         public static string CurrentResourceName()
