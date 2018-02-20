@@ -55,7 +55,7 @@ end
 server_script 'els-server.net.dll'
 
 files({
-'extra-files/ELS.ini',
+'ELS.ini',
 })
 
 

@@ -60,31 +60,13 @@ namespace ELS
 #if DEBUG
                 CitizenFX.Core.Debug.WriteLine($"Checking {filename}");
 #endif
-                if (filename.Equals("extra-files/ELS.ini"))
+                if (filename.Equals("ELS.ini"))
                 {
                     if (configuration.ElsConfiguration.isValidData(data))
                     {
                         OnSettingsLoaded?.Invoke(SettingsType.Type.GLOBAL, data);
                     }
                 }
-                /*else if (Path.GetExtension(filename).ToLower()==".xml")
-                {
-
-                    if (VCF.isValidData(data))
-                    {
-#if DEBUG
-                        CitizenFX.Core.Debug.WriteLine("Sending data to XML parser");
-                        CitizenFX.Core.Debug.WriteLine($"VCF.load({SettingsType.Type.VCF}, {filename}, data,{name})");
-#endif
-                        VCF.load(SettingsType.Type.VCF, filename, data,name);
-                    }
-                    else
-                    {
-#if DEBUG
-                        CitizenFX.Core.Debug.WriteLine($"XML data for {filename} is not valid");
-#endif
-                    }
-                }*/
             }
         }
         internal void UnLoadFilesFromScript(string name)
