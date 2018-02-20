@@ -36,7 +36,7 @@ namespace ELS_Server
 
         static Configuration()
         {
-            var data = API.LoadResourceFile(API.GetCurrentResourceName(), "extra-files/ELS.ini");
+            var data = API.LoadResourceFile(API.GetCurrentResourceName(), "ELS.ini");
             if (isValidData(data))
             {
                 var u = SharpConfig.Configuration.LoadFromString(data);
