@@ -50,6 +50,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="CustomPatterns.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Updater.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="VCF.cs" />
     <Compile Include="VcfSync.cs" />

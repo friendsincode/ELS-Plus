@@ -14,7 +14,8 @@ namespace ELS_Server
         VcfSync _vcfSync;
         public Class1()
         {
-            
+            //Utils.DebugWriteLine(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            Updater.GetCurrentVersion();
             API.ExecuteCommand("add_ace group.admin command.elscar allow");
             API.ExecuteCommand("add_ace group.superadmin command.elscar allow");
             Debug.WriteLine("Welcome to ELS for FiveM");
