@@ -1,4 +1,4 @@
---[[
+ --[[
     ELS FiveM - A ELS implementation for FiveM
     Copyright (C) 2017  E.J. Bevenour
 
@@ -18,8 +18,6 @@
 resource_manifest_version '05cfa83c-a124-4cfa-a768-c24a5811d8f9'
 local NUIEnabled = true
 
--- XML Processing Requirements
-client_script 'System.Xml.net.dll'
 
 -- ELS-FiveM Requirements
 client_script 'SharpConfig.net.dll'
@@ -32,8 +30,6 @@ files({
 })
 -- NUI Stuff
 if NUIEnabled then
-
-	--client_script 'NUI/api.lua'
 
 	ui_page('NUI/app/index.html')
 
@@ -57,8 +53,3 @@ server_script 'els-server.net.dll'
 files({
 'ELS.ini',
 })
-
-
-server_exports {
-	'SpawnCar'
-}

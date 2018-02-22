@@ -14,11 +14,11 @@ namespace ELS_Server
         VcfSync _vcfSync;
         public Class1()
         {
-            
-            API.ExecuteCommand("add_ace group.admin command.elscar allow");
-            API.ExecuteCommand("add_ace group.superadmin command.elscar allow");
-            Debug.WriteLine("Welcome to ELS for FiveM");
-
+            Debug.WriteLine("Welcome to ELS+ for FiveM");
+            foreach(string s in Configuration.ElsVehicleGroups)
+            {
+                API.ExecuteCommand($"add_ace group.{s} command.elscar allow");
+            }
             API.RegisterCommand("vcfrefresh", new Action<int, List<object>, string>((source, arguments, raw) =>
             {
                 Debug.WriteLine($"{Players[source].Name} has activated a VCF Refresh");
@@ -39,10 +39,12 @@ namespace ELS_Server
                 TriggerClientEvent(Players[source], "ELS:SpawnCar", arguments[0]);
             }), Configuration.ElsCarAdminOnly);
 
-            EventHandlers["ELS:VcfSync:Server"] += new Action<int>((int source) =>
+            EventHandlers["ELS:VcfSync:Server"] += new Action<int>(async (int source) =>
             {
+                Utils.DebugWriteLine($"Sending Data to {Players[source].Name}");
                 _vcfSync = new VcfSync();
-                _vcfSync.CheckVCF(Players[source]);
+                await _vcfSync.CheckVCF(Players[source]);
+                await CustomPatterns.CheckCustomPatterns(Players[source]);
             });
 
             EventHandlers["baseevents:enteredVehicle"] += new Action<int,int,string>((veh,seat,name) =>
@@ -51,7 +53,7 @@ namespace ELS_Server
                 TriggerClientEvent("ELS:VehicleEntered", veh);
             });
 
-            EventHandlers.Add("onResourceStart", new Action<string>((resource) =>
+            /*EventHandlers.Add("onResourceStart", new Action<string>((resource) =>
             {
                 if (VcfSync.ElsResources.Exists(res => res.Equals(resource)))
                 {
@@ -60,7 +62,7 @@ namespace ELS_Server
                         VcfSync.LoadFilesPromScript(resource, p);
                     }
                 }
-            }));
+            }));*/
             EventHandlers["ELS:FullSync:Unicast"] += new Action(() => { });
             EventHandlers["ELS:FullSync:Broadcast"] += new Action<System.Dynamic.ExpandoObject, int>((dataDic, playerID) =>
              {

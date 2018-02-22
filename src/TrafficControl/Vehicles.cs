@@ -14,15 +14,10 @@ namespace ELS.TrafficControl
         
         internal static async Task MoveTraffic()
         {
-            List<Ped> peds = GetNearestPeds(1f);
-            foreach (Ped ped in peds)
-            {
-                if (ped.Handle != Game.PlayerPed.Handle)
-                {
-                    API.TaskVehicleTempAction(ped.Handle,ped.CurrentVehicle.Handle,32, 0x64);
-                    Screen.ShowNotification("Move Bitch Get out the way");
-                }
-            }
+            int veh = API.GetClosestVehicle(Game.PlayerPed.CurrentVehicle.Position.X, Game.PlayerPed.CurrentVehicle.Position.Y, Game.PlayerPed.CurrentVehicle.Position.Z, 50f, 0, 70);
+            API.TaskVehicleTempAction(Ped.FromHandle(API.GetPedInVehicleSeat(veh,-1)).Handle,veh,32, 1000);
+            Screen.ShowNotification("Move Bitch Get out the way");
+
         }
 
         static bool doesEntityExistsAndIsNotNull(Entity entity)
@@ -37,13 +32,12 @@ namespace ELS.TrafficControl
             return API.GetDistanceBetweenCoords(entity1Coords.X, entity1Coords.Y, entity1Coords.Z, entity2Coords.X, entity2Coords.Y, entity2Coords.Z, true);
         }
 
-        static List<Ped> GetNearestPeds(float range)
+        static List<Ped> GetNearestVehicles(float range)
         {
-            //API.GetClosestVehicle()
+            
             int handle = 0;
             List<Ped> peds = new List<Ped>();
-            do
-            {
+            //API.isentityin
                 ELS.Delay(10);
                 if (handle == 0)
                 {
@@ -57,7 +51,6 @@ namespace ELS.TrafficControl
                 {
                     peds.Add(ped);
                 }
-            } while (peds.Count < 6);
             return peds;
         }
     }

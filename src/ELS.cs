@@ -23,7 +23,6 @@ using Control = CitizenFX.Core.Control;
 using CitizenFX.Core.Native;
 using System;
 using ELS.Light;
-using ELS.panel;
 using System.Collections.Generic;
 using ELS.Manager;
 using ELS.NUI;
@@ -38,7 +37,6 @@ namespace ELS
         private SpotLight _spotLight;
         private readonly VehicleManager _vehicleManager;
         private ElsConfiguration _controlConfiguration;
-        panel.test _test = new test();
         private bool _firstTick = false;
 
         public ELS()
@@ -57,7 +55,6 @@ namespace ELS
                         try
                         {
                             _FileLoader.RunLoader(obj);
-                            //TODO: make a load files from all resouces.
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS Plus\n\n ELS Plus is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://els.friendsincode.com");
                             SetupConnections();
                             TriggerServerEvent("ELS:VcfSync:Server", Game.Player.ServerId);
@@ -88,8 +85,6 @@ namespace ELS
                             Screen.ShowNotification($"ERROR:{e.StackTrace}");
                         }
                     }
-
-                    //_spotLight= new SpotLight();
                 });
 
         }
@@ -106,25 +101,19 @@ namespace ELS
             //command that siren state has changed.
             //recieves a command
             //EventHandlers["ELS:SirenUpdated"] += new Action<string, int, int, bool>(_vehicleManager.UpdateRemoteSirens);
-            EventHandlers["onPlayerJoining"] += new Action(() =>
-            {
-
-            });
             EventHandlers["ELS:SpawnCar"] += new Action<string>((veh) =>
             {
                 SpawnCar(veh);
             });
-            EventHandlers["ELS:VcfSync:Client"] += new Action<string, string, string>((a, b, c) =>
+            EventHandlers["ELS:VcfSync:Client"] += new Action<List<dynamic>>((vcfs) =>
               {
-                  try
-                  {
-                      VCF.load(SettingsType.Type.VCF, b, c, a);
-                  }
-                  catch (Exception e)
-                  {
-                      CitizenFX.Core.Debug.Write($"VCF for {b} due to {e.Message}");
-                  }
+                  VCF.ParseVcfs(vcfs);
               });
+            EventHandlers.Add("ELS:PatternSync:Client", new Action<List<dynamic>>((patterns) =>
+            {
+
+                VCF.ParsePatterns(patterns);
+            }));
             EventHandlers["ELS:FullSync:NewSpawnWithData"] += new Action<System.Dynamic.ExpandoObject>((a) =>
             {
                 _vehicleManager.SyncAllVehiclesOnFirstSpawn(a);
@@ -141,7 +130,7 @@ namespace ELS
             {
                 Utils.DebugWriteLine("Vehicle entered");
                 Vehicle vehicle = new Vehicle(veh);
-                if (vehicle.IsEls())
+                if (vehicle.IsEls() && VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()))
                 {
                     Utils.DebugWriteLine("ELS Vehicle entered syncing UI");
                     VehicleManager.SyncUI(vehicle.GetNetworkId());
@@ -178,7 +167,7 @@ namespace ELS
                 var listString = "";
                 listString += $"Available ELS Vehicles\n" +
                               $"----------------------\n";
-                foreach (var entry in VCF.ELSVehicle)
+                foreach (var entry in VCF.ELSVehicle.Values)
                 {
                     if (entry.modelHash.IsValid)
                     {
@@ -189,22 +178,15 @@ namespace ELS
             }), false);
         }
 
-        private void SetupExports()
-        {
-            Exports.Add("SpawnCar", new Action<string>(async (veh) =>
-            {
-                SpawnCar(veh);
-            }));
-        }
-
         internal async Task<Vehicle> SpawnCar(string veh)
         {
+            Model hash = Game.GenerateHash(veh);
             if (String.IsNullOrEmpty(veh))
             {
                 Screen.ShowNotification("Vehicle not found please try again");
                 return null;
             }
-            if (!VCF.ELSVehicle.Exists(elscar => elscar.modelHash == Game.GenerateHash(veh)))
+            if (!VCF.ELSVehicle.ContainsKey(hash))
             {
                 Screen.ShowNotification("Vehicle not ELS please try again");
                 return null;
@@ -213,7 +195,7 @@ namespace ELS
             {
                 if (Game.PlayerPed.CurrentVehicle.IsEls())
                 {
-                    VehicleManager.vehicleList.Find(o => o.GetNetworkId() == Game.PlayerPed.CurrentVehicle.GetNetworkId()).Delete();
+                    VehicleManager.vehicleList[Game.PlayerPed.CurrentVehicle.GetNetworkId()].Delete();
                 }
                 else
                 {
@@ -221,9 +203,43 @@ namespace ELS
                 }
             }
             CitizenFX.Core.Debug.WriteLine($"Attempting to spawn: {veh}");
-            var polModel = new Model((VehicleHash)Game.GenerateHash(veh));
+            var polModel = new Model((VehicleHash)hash);
             await polModel.Request(-1);
-            Vehicle _veh = await World.CreateVehicle(polModel, Game.PlayerPed.Position + new Vector3(0f,10f,0f));
+            Vehicle _veh = await World.CreateVehicle(polModel, Game.PlayerPed.Position + new Vector3(0f,5f,0f));
+            Game.PlayerPed.SetIntoVehicle(_veh, VehicleSeat.Driver);
+            return _veh;
+        }
+
+        internal async Task<Vehicle> SpawnCar(string veh, dynamic coords)
+        {
+            Model hash = Game.GenerateHash(veh);
+            if (String.IsNullOrEmpty(veh))
+            {
+                Screen.ShowNotification("Vehicle not found please try again");
+                return null;
+            }
+            if (!VCF.ELSVehicle.ContainsKey(hash))
+            {
+                Screen.ShowNotification("Vehicle not ELS please try again");
+                return null;
+            }
+            if (Game.PlayerPed.IsInVehicle())
+            {
+                if (Game.PlayerPed.CurrentVehicle.IsEls())
+                {
+                    VehicleManager.vehicleList[Game.PlayerPed.CurrentVehicle.GetNetworkId()].Delete();
+                }
+                else
+                {
+                    Game.PlayerPed.CurrentVehicle.Delete();
+                }
+            }
+            CitizenFX.Core.Debug.WriteLine($"Attempting to spawn: {veh}");
+            var polModel = new Model((VehicleHash)hash);
+            await polModel.Request(-1);
+            Vehicle _veh = await World.CreateVehicle(polModel, coords);
+            polModel.MarkAsNoLongerNeeded();
+            _veh.PlaceOnGround();
             Game.PlayerPed.SetIntoVehicle(_veh, VehicleSeat.Driver);
             return _veh;
         }
@@ -265,17 +281,7 @@ namespace ELS
                     RegisterNUICallback("keyPress", ElsUiPanel.KeyPress);
                     _firstTick = true;
                 }
-                /* Text text = new Text($"ELS Build dev-v0.0.2.4\nhttp://ELS.ejb1123.tk", new PointF(640f, 10f), 0.5f);
-                 text.Alignment = Alignment.Center;
-                 text.Centered = true;
-                 text.Draw();*/
-                //_sirenManager.Runtick();
-                //_spotLight.RunTick();
                 _vehicleManager.RunTickAsync();
-                if (Game.IsControlJustReleased(0, Control.MultiplayerInfo))
-                {
-                    //await Debug.Spawn();
-                }
 
                 if (Game.PlayerPed.IsInVehicle() && Game.PlayerPed.CurrentVehicle.IsEls())
                 {

@@ -16,11 +16,13 @@ namespace ELS
         private Light.Lights _light;
         private Vehicle _vehicle;
         private Vcfroot _vcf;
+        int lastdrivetime;
 
         public ELSVehicle(int handle, [Optional]IDictionary<string, object> data) : base(handle)
         {
             _vehicle = new Vehicle(handle);
             ModelLoaded();
+            lastdrivetime = Game.GameTime;
             API.SetVehRadioStation(_vehicle.Handle, "OFF");
             API.SetVehicleRadioEnabled(_vehicle.Handle, false);
             if (_vehicle.DisplayName == "CARNOTFOUND")
@@ -31,9 +33,9 @@ namespace ELS
             {
                 throw new Exception("ELSVehicle.cs:NetworkId is 0");
             }
-            else if (VCF.ELSVehicle.Exists(item => item.modelHash == _vehicle.Model))
+            else if (VCF.ELSVehicle.ContainsKey(_vehicle.Model))
             {
-                _vcf = VCF.ELSVehicle.Find(item => item.modelHash == _vehicle.Model).root;
+                _vcf = VCF.ELSVehicle[_vehicle.Model].root;
             }
             try
             {
@@ -44,8 +46,9 @@ namespace ELS
                 Utils.ReleaseWriteLine("ELSVehicle.cs:Repair Fix is not enabled on this client");
             }
             
-            _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data?["siren"]);
+            
             _light = new Light.Lights(_vehicle, _vcf, (IDictionary<string, object>)data?["light"]);
+            _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data?["siren"],_light);
 
             //_vehicle.SetExistOnAllMachines(true);
 #if DEBUG
@@ -75,13 +78,40 @@ namespace ELS
 
         internal void RunTick()
         {
-            _siren.Ticker();
-            _light.Ticker();
+            if (_vehicle.IsDead || !_vehicle.Exists())
+            {
+                Delete();
+            }
+            else
+            {
+                _siren.Ticker();
+                _light.Ticker();
+                if (_siren._mainSiren._enable && _light._stage.CurrentStage != 3)
+                {
+                    _siren._mainSiren.SetEnable(false);
+                    RemoteEventManager.SendEvent(RemoteEventManager.Commands.MainSiren, _vehicle, true, Game.Player.ServerId);
+                }
+            }
+            if (_vehicle.GetPedOnSeat(VehicleSeat.Any).IsPlayer)
+            {
+                lastdrivetime = Game.GameTime;
+            }
+            if (Game.GameTime - lastdrivetime >= Global.DeleteInterval)
+            {
+                //Delete();
+            }
         }
         internal void RunExternalTick()
         {
-            _siren.ExternalTicker();
-            _light.ExternalTicker();
+            if (_vehicle.IsDead || !_vehicle.Exists())
+            {
+                Delete();
+            }
+            else
+            {
+                _siren.ExternalTicker();
+                _light.ExternalTicker();
+            }
         }
 
         internal Vector3 GetBonePosistion()
@@ -95,6 +125,8 @@ namespace ELS
             _siren.SyncUi();
         }
 
+        internal int GetStage() => _light._stage.CurrentStage;
+
         public override bool Exists()
         {
             return CitizenFX.Core.Native.Function.Call<bool>(CitizenFX.Core.Native.Hash.DOES_ENTITY_EXIST, _vehicle);
@@ -104,12 +136,12 @@ namespace ELS
         {
             try
             {
-                VehicleManager.vehicleList.RemoveAt(VehicleManager.vehicleList.IndexOf(VehicleManager.vehicleList.Find(v => v.GetNetworkId() == _vehicle.GetNetworkId())));
+                VehicleManager.vehicleList.Remove(_vehicle.GetNetworkId());
                 _light.CleanUP();
                 _siren.CleanUP();
                 _vehicle.SetExistOnAllMachines(false);
-                API.SetEntityAsMissionEntity(_vehicle.Handle, false, false);
-                _vehicle.MarkAsNoLongerNeeded();
+                //_vehicle.MarkAsNoLongerNeeded();
+                API.SetEntityAsMissionEntity(_vehicle.Handle, true, true);
                 _vehicle.Delete();
             }
             catch (Exception e)
@@ -140,7 +172,6 @@ namespace ELS
         {
             _siren.SetData((IDictionary<string, object>)data["siren"]);
             _light.SetData((IDictionary<string, object>)data["light"]);
-
         }
 
         public Dictionary<string, object> GetData()

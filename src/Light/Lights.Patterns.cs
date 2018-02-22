@@ -108,13 +108,19 @@ namespace ELS.Light
                                 }
                                 _prefix = "C";
                                 break;
+                            case "custom":
+                                e.Pattern = _vcfroot.CustomPatterns.Values.ElementAt(CurrentPrmPattern).PatternData[e.Id];
+                                e.Delay = _vcfroot.CustomPatterns.Values.ElementAt(CurrentPrmPattern).PrmDelay;
+                                _prmPatterns = _vcfroot.CustomPatterns.Count;
+                                Utils.DebugWriteLine($"Got custom patterns for extra {e.Id} with {e.Pattern}  at {e.Delay}");
+                                break;
                             default:
                                 e.Pattern = Leds.PrimaryPatterns[CurrentPrmPattern][e.Id];
                                 _prefix = "L";
                                 break;
                         }
                         e.PatternNum = CurrentPrmPattern;
-                        e.Delay = Global.PrimDelay;
+                        
                     }
                     catch (Exception ex)
                     {
@@ -125,7 +131,15 @@ namespace ELS.Light
                Utils.DebugWriteLine($"Current primary pattern is {CurrentPrmPattern}");
                 if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == _vehicle.GetNetworkId())
                 {
-                    ElsUiPanel.SetUiDesc(_prefix + CurrentPrmPattern.ToString().PadLeft(3, '0'), ExtraEnum.PRML.ToString());
+                    if (_vcfroot.PRML.LightingFormat.Equals("custom"))
+                    {
+                        string input = _vcfroot.CustomPatterns.Keys.ElementAt(CurrentPrmPattern);
+                        ElsUiPanel.SetUiDesc(input.First().ToString().ToUpper() + input.Substring(1), ExtraEnum.PRML.ToString());
+                    }
+                    else
+                    {
+                        ElsUiPanel.SetUiDesc(_prefix + CurrentPrmPattern.ToString().PadLeft(3, '0'), ExtraEnum.PRML.ToString());
+                    }
                 }
             }
         }
@@ -188,13 +202,18 @@ namespace ELS.Light
                                 }
                                 _prefix = "C";
                                 break;
+                            case "custom":
+                                e.Pattern = _vcfroot.CustomPatterns.Values.ElementAt(CurrentSecPattern).PatternData[e.Id];
+                                e.Delay = _vcfroot.CustomPatterns.Values.ElementAt(CurrentSecPattern).SecDelay;
+                                _secPatterns = _vcfroot.CustomPatterns.Count;
+                                Utils.DebugWriteLine($"Got custom patterns for extra {e.Id} with {e.Pattern}  at {e.Delay}");
+                                break;
                             default:
                                 e.Pattern = Leds.PrimaryPatterns[CurrentSecPattern][e.Id];
                                 _prefix = "L";
                                 break;
                         }
                         e.PatternNum = CurrentSecPattern;
-                        e.Delay = Global.PrimDelay;
                     }
                     catch (Exception ex)
                     {
@@ -203,7 +222,15 @@ namespace ELS.Light
                 }
                 if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == _vehicle.GetNetworkId())
                 {
-                    ElsUiPanel.SetUiDesc(_prefix + CurrentSecPattern.ToString().PadLeft(3, '0'), ExtraEnum.SECL.ToString());
+                    if (_vcfroot.SECL.LightingFormat.Equals("custom"))
+                    {
+                        string input = _vcfroot.CustomPatterns.Keys.ElementAt(CurrentSecPattern);
+                        ElsUiPanel.SetUiDesc(input.First().ToString().ToUpper() + input.Substring(1), ExtraEnum.SECL.ToString());
+                    }
+                    else
+                    {
+                        ElsUiPanel.SetUiDesc(_prefix + CurrentSecPattern.ToString().PadLeft(3, '0'), ExtraEnum.SECL.ToString());
+                    }
                 }
                  Utils.DebugWriteLine($"Current secondary pattern is {CurrentSecPattern}");
             }
@@ -252,13 +279,18 @@ namespace ELS.Light
                                 }
                                 _prefix = "C";
                                 break;
+                            case "custom":
+                                e.Pattern = _vcfroot.CustomPatterns.Values.ElementAt(CurrentWrnPattern).PatternData[e.Id];
+                                e.Delay = _vcfroot.CustomPatterns.Values.ElementAt(CurrentWrnPattern).SecDelay * 1000;
+                                _wrnPatterns = _vcfroot.CustomPatterns.Count;
+                                Utils.DebugWriteLine($"Got custom patterns for extra {e.Id} with {e.Pattern}  at {e.Delay}");
+                                break;
                             default:
                                 e.Pattern = Leds.WarningPatterns[CurrentWrnPattern][e.Id];
                                 _prefix = "L";
                                 break;
                         }
                         e.PatternNum = CurrentWrnPattern;
-                        e.Delay = Global.PrimDelay;
                     }
                     catch (Exception ex)
                     {
@@ -267,32 +299,40 @@ namespace ELS.Light
                 }
                 if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == _vehicle.GetNetworkId())
                 {
-                    ElsUiPanel.SetUiDesc(_prefix + CurrentWrnPattern.ToString().PadLeft(3, '0'), ExtraEnum.WRNL.ToString());
+                    if (_vcfroot.SECL.LightingFormat.Equals("custom"))
+                    {
+                        string input = _vcfroot.CustomPatterns.Keys.ElementAt(CurrentWrnPattern);
+                        ElsUiPanel.SetUiDesc(input.First().ToString().ToUpper() + input.Substring(1), ExtraEnum.WRNL.ToString());
+                    }
+                    else
+                    {
+                        ElsUiPanel.SetUiDesc(_prefix + CurrentWrnPattern.ToString().PadLeft(3, '0'), ExtraEnum.WRNL.ToString());
+                    }
                 }
                 Utils.DebugWriteLine($"Current warning pattern is {CurrentWrnPattern}");
             }
         }
+
+        public int CurrentStage
+        { get { return _stage.CurrentStage; } }
 
         private void SetupPatternsPrm()
         {
             CurrentPrmPattern = 0;
             PrmScanPatts = new List<int>();
             if (_stage.PRML.ScanPatternCustomPool.Enabled) {
-#if DEBUG
-                CitizenFX.Core.Debug.WriteLine($"Adding Primary Scan pool patterns");
-#endif
+                Utils.DebugWriteLine($"Adding Primary Scan pool patterns");
                 foreach (int p in _stage.PRML.ScanPatternCustomPool.Pattern)
                 {
                     PrmScanPatts.Add(p);
-#if DEBUG
-                    CitizenFX.Core.Debug.WriteLine($"Added {p} to primary scan patterns");
-#endif
+                    Utils.DebugWriteLine($"Added {p} to primary scan patterns");
                 }
                 CurrentPrmPattern = PrmScanPatts[0];
             }
-            else
+            if (_extras.PRML.Count == 0)
             {
-
+                _prmPatterns = 0;
+                ElsUiPanel.SetUiDesc("--", ExtraEnum.PRML.ToString());
             }
         }
 
@@ -314,6 +354,11 @@ namespace ELS.Light
                 }
                 CurrentSecPattern = SecScanPatts[0];
             }
+            if (_extras.PRML.Count == 0)
+            {
+                _secPatterns = 0;
+                ElsUiPanel.SetUiDesc("--", ExtraEnum.SECL.ToString());
+            }
         }
 
         private void SetupWrnPatterns()
@@ -333,6 +378,11 @@ namespace ELS.Light
 #endif
                 }
                 CurrentWrnPattern = WrnScanPatts[0];
+            }
+            if (_extras.PRML.Count == 0)
+            {
+                _wrnPatterns = 0;
+                ElsUiPanel.SetUiDesc("--", ExtraEnum.WRNL.ToString());
             }
         }
 

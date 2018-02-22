@@ -6,7 +6,7 @@ namespace ELS.Siren
 {
     partial class Siren
     {
-        private partial class MainSiren
+        internal partial class MainSiren
         {
 
 
