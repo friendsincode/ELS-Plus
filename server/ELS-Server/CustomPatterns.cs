@@ -23,9 +23,8 @@ namespace ELS_Server
         public async static Task CheckCustomPatterns(Player player)
         {
             var numResources = API.GetNumResources();
-            for (int x = 0; x < numResources; x++)
+            foreach (string name in VcfSync.ElsResources)
             {
-                var name = Function.Call<string>(Hash.GET_RESOURCE_BY_FIND_INDEX, x);
                 ParsePatterns(name, player);
             }
             Class1.TriggerClientEvent(player, "ELS:PatternSync:Client", Patterns);
@@ -35,9 +34,7 @@ namespace ELS_Server
         {
             int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "file");
             string isElsResource = API.GetResourceMetadata(name, "is_els", 0);
-            if (!String.IsNullOrEmpty(isElsResource) && isElsResource.Equals("true"))
-            {
-                for (int i = 0; i < num; i++)
+            for (int i = 0; i < num; i++)
                 {
                     var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
                     var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
@@ -55,11 +52,6 @@ namespace ELS_Server
                         }
                     }
                 }
-            }
-            else
-            {
-                Utils.DebugWriteLine($"{name} is not an ELS Vehicle Resource");
-            }
         }
     }
 }

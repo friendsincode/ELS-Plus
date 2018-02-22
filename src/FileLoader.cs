@@ -37,15 +37,6 @@ namespace ELS
         {
             LoadFilesPromScript(scriptName);
         }
-        internal void RunLoader()
-        {
-            var numResources = Function.Call<int>((Hash)Game.GenerateHash("GET_NUM_RESOURCES"));
-            for (int x = 0; x < numResources; x++)
-            {
-                var name = Function.Call<string>((Hash)Game.GenerateHash("GET_RESOURCE_BY_FIND_INDEX"), x);
-                LoadFilesPromScript(name);
-            }
-        }
 
         private static void LoadFilesPromScript(string name)
         {

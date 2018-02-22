@@ -42,7 +42,7 @@ namespace ELS_Server
             EventHandlers["ELS:VcfSync:Server"] += new Action<int>(async (int source) =>
             {
                 Utils.DebugWriteLine($"Sending Data to {Players[source].Name}");
-                _vcfSync = new VcfSync();
+                 _vcfSync = new VcfSync();
                 await _vcfSync.CheckVCF(Players[source]);
                 await CustomPatterns.CheckCustomPatterns(Players[source]);
             });
@@ -87,6 +87,8 @@ namespace ELS_Server
 #endif
                 TriggerClientEvent(Players[(int.Parse((string)b[0]))], "ELS:FullSync:NewSpawnWithData", _cachedData);
             }), false);
+
+            VcfSync.CheckResources();
 
 
 

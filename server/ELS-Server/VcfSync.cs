@@ -22,35 +22,44 @@ namespace ELS_Server
 
         public async Task CheckVCF(Player player)
         {
-            var numResources = Function.Call<int>(Hash.GET_NUM_RESOURCES);
-            for (int x = 0; x < numResources; x++)
+            foreach (string name in ElsResources)
             {
-                var name = Function.Call<string>(Hash.GET_RESOURCE_BY_FIND_INDEX, x);
-                LoadFilesPromScript(name, player);
+                Utils.DebugWriteLine($"Processing {name} for {player.Name}");
+                LoadFilesPromScript(name);
             }
             Class1.TriggerClientEvent(player, "ELS:VcfSync:Client", VcfData);
         }
 
-        internal static void LoadFilesPromScript(string name, Player player)
+        public static async Task CheckResources()
+        {
+            var numResources = Function.Call<int>(Hash.GET_NUM_RESOURCES);
+            for (int x = 0; x < numResources; x++)
+            {
+                var name = Function.Call<string>(Hash.GET_RESOURCE_BY_FIND_INDEX, x);
+                string isElsResource = API.GetResourceMetadata(name, "is_els", 0);
+                if (!String.IsNullOrEmpty(isElsResource) && isElsResource.Equals("true"))
+                {
+                    ElsResources.Add(name);
+                    Utils.DebugWriteLine($"Added {name} to resources");
+                }
+                
+            }
+            Utils.ReleaseWriteLine($"Total ELS Resources: {ElsResources.Count}");
+        }
+
+        internal static void LoadFilesPromScript(string name)
         {
             int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "file");
-            string isElsResource = API.GetResourceMetadata(name, "is_els", 0);
-            if (!String.IsNullOrEmpty(isElsResource) && isElsResource.Equals("true"))
-            {
-
 #if DEBUG
                 Debug.WriteLine($"{num} files for {name}");
 #endif
-                ElsResources.Add(name);
+                
                 for (int i = 0; i < num; i++)
                 {
                     var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
 
                     var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
-
-#if DEBUG
-                    CitizenFX.Core.Debug.WriteLine($"Checking {filename}");
-#endif
+                    Utils.DebugWriteLine($"Checking {filename}");
                     if (Path.GetExtension(filename).ToLower() == ".xml")
                     {
 
@@ -61,22 +70,11 @@ namespace ELS_Server
                         else
                         {
 #if DEBUG
-                            CitizenFX.Core.Debug.WriteLine($"XML data for {filename} is not valid");
+                        Utils.DebugWriteLine($"XML data for {filename} is not valid");
 #endif
                         }
                     }
-                }
             }
-            else
-            {
-#if DEBUG
-                CitizenFX.Core.Debug.WriteLine($"{name} is not an ELS Vehicle Resource");
-#endif
-            }
-
-
         }
-
-
     }
 }

@@ -61,7 +61,6 @@ namespace ELS
                             TriggerServerEvent("ELS:FullSync:Request:All", Game.Player.ServerId);
                             ElsUiPanel.InitData();
                             ElsUiPanel.DisableUI();
-                            SetupExports();
                         }
                         catch (Exception e)
                         {

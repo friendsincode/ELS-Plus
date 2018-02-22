@@ -96,7 +96,16 @@ namespace ELS.Manager
             {
                 try
                 {
-                    var veh = new ELSVehicle(API.NetToVeh(NetworkID), data);
+                    ELSVehicle veh = null;
+                    int handle = API.NetToVeh(NetworkID);
+                    if (handle == 0)
+                    {
+                        veh = new ELSVehicle(Game.PlayerPed.CurrentVehicle.Handle, data);
+                    }
+                    else
+                    {
+                        veh = new ELSVehicle(handle, data);
+                    }
                     Add(veh.GetNetworkId(),veh);
                     Utils.DebugWriteLine($"Adding Vehicle");
                     vehicle = veh;
