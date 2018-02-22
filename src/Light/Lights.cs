@@ -53,7 +53,7 @@ namespace ELS.Light
 
         private Vcfroot _vcfroot;
         private Vehicle _vehicle;
-        private Stage _stage;
+        internal Stage _stage;
        
 
         internal Lights(Vehicle vehicle, Vcfroot vcfroot, [Optional]IDictionary<string, object> data)

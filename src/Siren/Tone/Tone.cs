@@ -26,12 +26,14 @@ namespace ELS.Siren
         private readonly ToneType _type;
         internal string Type;
         internal bool _state { private set;  get; }
-        internal Tone(string file, Entity entity,ToneType type, bool state =false)
+        internal bool AllowUse { get; set; }
+        internal Tone(string file, Entity entity,ToneType type,bool allow, bool state =false)
         {
             _entity = entity;
             _file = file;
             _type = type;
             SetState(state);
+            AllowUse = allow;
             switch(type)
             {
                 case ToneType.SrnTon1:
@@ -49,18 +51,19 @@ namespace ELS.Siren
             }
         }
 
-        internal void SetState( bool state)
+        internal void SetState(bool state)
         {
-            _state = state;
-            if (_state)
-            {
-                if (!Audio.HasSoundFinished(soundId)) return;
-                Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)_file, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
-            }
-            else
-            {
-                Audio.StopSound(soundId);
-            }
+            
+                _state = state;
+                if (_state && AllowUse)
+                {
+                    if (!Audio.HasSoundFinished(soundId)) return;
+                    Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)_file, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
+                }
+                else
+                {
+                    Audio.StopSound(soundId);
+                }
         }
         
         internal void CleanUp()

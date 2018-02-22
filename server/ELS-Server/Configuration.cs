@@ -34,13 +34,23 @@ namespace ELS_Server
             get; private set;
         }
 
+        internal static List<string> ElsVehicleGroups
+        {
+            get; set;
+        }
+
         static Configuration()
         {
             var data = API.LoadResourceFile(API.GetCurrentResourceName(), "ELS.ini");
             if (isValidData(data))
             {
-                var u = SharpConfig.Configuration.LoadFromString(data);
+                SharpConfig.Configuration u = SharpConfig.Configuration.LoadFromString(data);
                 ElsCarAdminOnly = u["ADMIN"]["ElsCarAdminOnly"].BoolValue;
+                ElsVehicleGroups = new List<string>();
+                foreach(string s in u["ADMIN"]["Groups"].StringValueArray)
+                {
+                    ElsVehicleGroups.Add(s);
+                }
             }
         }
 

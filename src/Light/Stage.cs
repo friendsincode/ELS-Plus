@@ -26,6 +26,7 @@ namespace ELS.Light
             CurrentStage = 0;
             vehicleId = veh;
             ActivationType = acttype.ToLower();
+            Utils.DebugWriteLine($"Light Stage activation type is {ActivationType}");
         }
 
         internal int CurrentStage
@@ -34,7 +35,7 @@ namespace ELS.Light
             private set
             {
                 stage = value;
-                if (Game.PlayerPed.IsInPoliceVehicle && vehicleId == Game.PlayerPed.CurrentVehicle.GetNetworkId())
+                if (Game.PlayerPed.IsSittingInELSVehicle() && vehicleId == Game.PlayerPed.CurrentVehicle.GetNetworkId())
                 {
                     ElsUiPanel.ToggleStages(CurrentStage);
                 }

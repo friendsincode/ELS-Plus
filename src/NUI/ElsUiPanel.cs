@@ -59,6 +59,18 @@ namespace ELS.NUI
             API.SendNuiMessage($"{{\"type\":\"seteuro\", \"euro\":{euro.ToString().ToLower()}}}");
         }
 
+        static internal void PlayUiSound(bool state)
+        {
+            if (state)
+            {
+                API.PlaySoundFrontend(-1, "NAV_LEFT_RIGHT", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);
+            }
+            else
+            {
+                API.PlaySoundFrontend(-1, "NAV_LEFT_RIGHT", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);
+            }
+        }
+
         /// <summary>
         /// Send lighting data to display 
         /// </summary>

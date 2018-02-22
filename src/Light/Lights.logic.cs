@@ -34,6 +34,7 @@ namespace ELS.Light
             }
             secLights = !secLights;
             ElsUiPanel.ToggleUiBtnState(secLights, "SECL");
+            ElsUiPanel.PlayUiSound(secLights);
         }
 
         bool wrnLights = false;
@@ -53,6 +54,7 @@ namespace ELS.Light
             }
             wrnLights = !wrnLights;
             ElsUiPanel.ToggleUiBtnState(wrnLights, "WRNL");
+            ElsUiPanel.PlayUiSound(wrnLights);
         }
 
         bool crsLights = false;
@@ -113,18 +115,21 @@ namespace ELS.Light
             }
             crsLights = !crsLights;
             ElsUiPanel.ToggleUiBtnState(crsLights, "CRS");
+            ElsUiPanel.PlayUiSound(crsLights);
         }
 
         internal void ToggleTdl()
         {
             _extras.TDL.TurnedOn = !_extras.TDL.State;
             ElsUiPanel.ToggleUiBtnState(_extras.TDL.TurnedOn, "TDL");
+            ElsUiPanel.PlayUiSound(_extras.TDL.TurnedOn);
         }
 
         internal void ToggleScl()
         {
             _extras.SCL.TurnedOn = !_extras.SCL.State;
             ElsUiPanel.ToggleUiBtnState(_extras.SCL.TurnedOn, "SCL");
+            ElsUiPanel.PlayUiSound(_extras.SCL.TurnedOn);
         }
 
         internal async void ChgPrmPatt(bool decrement)
@@ -139,6 +144,7 @@ namespace ELS.Light
                 {
                     CurrentPrmPattern--;
                 }
+                ElsUiPanel.PlayUiSound(false);
             }
             else
             {
@@ -150,6 +156,7 @@ namespace ELS.Light
                 {
                     CurrentPrmPattern++;
                 }
+                ElsUiPanel.PlayUiSound(true);
             }
         }
 
@@ -165,6 +172,7 @@ namespace ELS.Light
                 {
                     CurrentSecPattern--;
                 }
+                ElsUiPanel.PlayUiSound(false);
             }
             else
             {
@@ -176,6 +184,7 @@ namespace ELS.Light
                 {
                     CurrentSecPattern++;
                 }
+                ElsUiPanel.PlayUiSound(true);
             }
         }
 
@@ -191,6 +200,7 @@ namespace ELS.Light
                 {
                     CurrentWrnPattern--;
                 }
+                ElsUiPanel.PlayUiSound(false);
             }
             else
             {
@@ -202,6 +212,7 @@ namespace ELS.Light
                 {
                     CurrentWrnPattern++;
                 }
+                ElsUiPanel.PlayUiSound(true);
             }
         }
 
@@ -469,8 +480,13 @@ namespace ELS.Light
                     ElsUiPanel.ToggleUiBtnState(prmLights, "PRML");
                     ElsUiPanel.ToggleUiBtnState(secLights, "SECL");
                     ElsUiPanel.ToggleUiBtnState(wrnLights, "WRNL");
+                    ElsUiPanel.PlayUiSound(false);
                     break;
                 case 1:
+                    if (_vcfroot.MISC.DfltSirenLtsActivateAtLstg == 1)
+                    {
+                        SetGTASirens(true);
+                    }
                     foreach (Extra.Extra e in _extras.SECL.Values)
                     {
                         if (_stage.SECL.PresetPatterns.Lstg1.Enabled)
@@ -481,7 +497,7 @@ namespace ELS.Light
                             }
                             else
                             {
-                                CurrentSecPattern = int.Parse(_stage.SECL.PresetPatterns.Lstg1.Pattern);
+                                CurrentSecPattern = _stage.SECL.PresetPatterns.Lstg1.IntPattern;
                             }
                         }
                         else
@@ -510,8 +526,13 @@ namespace ELS.Light
                     ElsUiPanel.ToggleUiBtnState(prmLights, "PRML");
                     ElsUiPanel.ToggleUiBtnState(secLights, "SECL");
                     ElsUiPanel.ToggleUiBtnState(wrnLights, "WRNL");
+                    ElsUiPanel.PlayUiSound(true);
                     break;
                 case 2:
+                    if (_vcfroot.MISC.DfltSirenLtsActivateAtLstg == 2)
+                    {
+                        SetGTASirens(true);
+                    }
                     foreach (Extra.Extra e in _extras.PRML.Values)
                     {
                         e.IsPatternRunning = false;
@@ -530,7 +551,7 @@ namespace ELS.Light
                             }
                             else
                             {
-                                CurrentSecPattern = int.Parse(_stage.SECL.PresetPatterns.Lstg2.Pattern);
+                                CurrentSecPattern = _stage.SECL.PresetPatterns.Lstg2.IntPattern;
                             }
                         }
                         else
@@ -542,24 +563,27 @@ namespace ELS.Light
                     secLights = true;
                     foreach (int i in extras)
                     {
-                        Extra.Extra e = _extras.PRML[i];
-                        if (_stage.PRML.PresetPatterns.Lstg2.Enabled)
+                        if (_extras.PRML.ContainsKey(i))
                         {
-                            if (_stage.PRML.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan"))
+                            Extra.Extra e = _extras.PRML[i];
+                            if (_stage.PRML.PresetPatterns.Lstg2.Enabled)
                             {
-                                _scan = true;
+                                if (_stage.PRML.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan"))
+                                {
+                                    _scan = true;
+                                }
+                                else
+                                {
+                                    CurrentPrmPattern = _stage.PRML.PresetPatterns.Lstg2.IntPattern;
+                                }
                             }
                             else
                             {
-                                CurrentPrmPattern = int.Parse(_stage.PRML.PresetPatterns.Lstg2.Pattern);
-                            }
-                        }
-                        else
-                        {
 
+                            }
+                            e.IsPatternRunning = false;
+                            e.IsPatternRunning = true;
                         }
-                        e.IsPatternRunning = false;
-                        e.IsPatternRunning = true;
                     }
                     if (_vcfroot.PRML.LightingFormat.ToLower().Equals("chp"))
                     {
@@ -573,9 +597,13 @@ namespace ELS.Light
                     ElsUiPanel.ToggleUiBtnState(prmLights, "PRML");
                     ElsUiPanel.ToggleUiBtnState(secLights, "SECL");
                     ElsUiPanel.ToggleUiBtnState(wrnLights, "WRNL");
+                    ElsUiPanel.PlayUiSound(true);
                     break;
                 case 3:
-                    SetGTASirens(true);
+                    if (_vcfroot.MISC.DfltSirenLtsActivateAtLstg == 3)
+                    {
+                        SetGTASirens(true);
+                    }
                     foreach (Extra.Extra e in _extras.SECL.Values)
                     {
 
@@ -587,7 +615,7 @@ namespace ELS.Light
                             }
                             else
                             {
-                                CurrentSecPattern = int.Parse(_stage.SECL.PresetPatterns.Lstg3.Pattern);
+                                CurrentSecPattern = _stage.SECL.PresetPatterns.Lstg3.IntPattern;
                             }
                         }
                         if (_vcfroot.SECL.DisableAtLstg3)
@@ -614,7 +642,7 @@ namespace ELS.Light
                             }
                             else
                             {
-                                CurrentPrmPattern = int.Parse(_stage.PRML.PresetPatterns.Lstg3.Pattern);
+                                CurrentPrmPattern = _stage.PRML.PresetPatterns.Lstg3.IntPattern;
                             }
                         }
                         if (_vcfroot.PRML.DisableAtLstg3)
@@ -642,7 +670,7 @@ namespace ELS.Light
                             }
                             else
                             {
-                                CurrentWrnPattern = int.Parse(_stage.WRNL.PresetPatterns.Lstg3.Pattern);
+                                CurrentWrnPattern = _stage.WRNL.PresetPatterns.Lstg3.IntPattern;
                             }
                         }
                         if (_vcfroot.WRNL.DisableAtLstg3)
@@ -665,7 +693,7 @@ namespace ELS.Light
                         _extras.SBRN.Pattern = CHP.LightStage3[CurrentWrnPattern][10];
                         _extras.SBRN.IsPatternRunning = true;
                     }
-                    
+                    ElsUiPanel.PlayUiSound(true);
                     break;
             }
         }

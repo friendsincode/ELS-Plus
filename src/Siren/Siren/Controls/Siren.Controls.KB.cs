@@ -15,7 +15,6 @@ namespace ELS.Siren
             {
 #if !REMOTETEST
                 AirHornLogic(true, true);
-                //Vehicles.MoveTraffic().Start();
 #endif
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle, true, Game.Player.ServerId);
 
@@ -25,6 +24,7 @@ namespace ELS.Siren
                 || (Game.IsControlJustReleased(2, Control.SpecialAbility) && Game.CurrentInputMode == InputMode.GamePad && Global.AllowController))
             {
 #if !REMOTETEST
+                int[] patts = { _patternController.CurrentPrmPattern, _patternController.CurrentSecPattern, _patternController.CurrentWrnPattern };
                 AirHornLogic(false, true);
 #endif
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.AirHorn, _vehicle, false, Game.Player.ServerId);
@@ -109,7 +109,7 @@ namespace ELS.Siren
 #endif
                 System.Collections.Generic.Dictionary<String, object> dic = new System.Collections.Generic.Dictionary<string, object>();
                // Manager.VehicleManager.SyncRequestReply(_vehicle.GetNetworkId());
-                //RemoteEventManager.SendEvent(RemoteEventManager.Commands.DualSiren, _vehicle, true, Game.Player.ServerId);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.DualSiren, _vehicle, true, Game.Player.ServerId);
             }
         }
         int pressedTime;

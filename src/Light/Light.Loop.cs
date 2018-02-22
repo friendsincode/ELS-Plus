@@ -136,6 +136,7 @@ namespace ELS.Light
             {
                 _vehicle.IsEngineRunning = true;
             }
+
             if (_extras.BRD.HasBoard)
             {
                 _extras.BRD.BoardTicker();

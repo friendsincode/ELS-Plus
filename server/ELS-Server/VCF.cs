@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Xml.Serialization;
 using CitizenFX.Core;
 
 namespace ELS_Server
@@ -33,10 +32,9 @@ namespace ELS_Server
         internal static bool isValidData(string data)
         {
             if (String.IsNullOrEmpty(data)) return false;
-            System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-            doc.LoadXml(data);
+            NanoXMLDocument doc = new NanoXMLDocument(data);
             //TODO change how below is detected to account for xml meta tag being before it.
-            return doc.DocumentElement.Name == "vcfroot";
+            return doc.RootNode.Name == "vcfroot";
         }
         
         

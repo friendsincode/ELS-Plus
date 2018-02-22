@@ -13,13 +13,14 @@ namespace ELS_Server
     {
 
         public static List<string> ElsResources = new List<string>();
+        public static List<Tuple<string,string,string>> VcfData = new List<Tuple<string,string,string>>();
 
         public VcfSync()
         {
             Debug.WriteLine("Loading VCF Sync");
         }
 
-        public void CheckVCF(Player player)
+        public async Task CheckVCF(Player player)
         {
             var numResources = Function.Call<int>(Hash.GET_NUM_RESOURCES);
             for (int x = 0; x < numResources; x++)
@@ -27,6 +28,7 @@ namespace ELS_Server
                 var name = Function.Call<string>(Hash.GET_RESOURCE_BY_FIND_INDEX, x);
                 LoadFilesPromScript(name, player);
             }
+            Class1.TriggerClientEvent(player, "ELS:VcfSync:Client", VcfData);
         }
 
         internal static void LoadFilesPromScript(string name, Player player)
@@ -54,7 +56,7 @@ namespace ELS_Server
 
                         if (VCF.isValidData(data))
                         {
-                            Class1.TriggerClientEvent(player, "ELS:VcfSync:Client", name, filename, data);
+                            VcfData.Add(new Tuple<string, string, string>(name,filename,data));
                         }
                         else
                         {

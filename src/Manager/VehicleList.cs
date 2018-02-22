@@ -1,4 +1,5 @@
-﻿using CitizenFX.Core.Native;
+﻿using CitizenFX.Core;
+using CitizenFX.Core.Native;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace ELS.Manager
 {
-    class VehicleList : List<ELSVehicle>
+    class VehicleList : Dictionary<int,ELSVehicle>
     {
-        public new void Add(ELSVehicle veh)
+        /*public new void Add(ELSVehicle veh)
         {
             base.Add(veh);
-        }
+        }*/
         public void Add(int NetworkID)
         {
             var veh = new ELSVehicle(API.NetToVeh(NetworkID));
-            Add(veh);
+            Add(veh.GetNetworkId(),veh);
         }
         public bool IsReadOnly => throw new NotImplementedException();
         public void RunTick()
@@ -29,7 +30,7 @@ namespace ELS.Manager
         {
             try
             {
-                foreach (var t in this)
+                foreach (var t in this.Values)
                 {
                     if (vehicle == null ||  t.Handle!=vehicle.Handle)
                     t.RunExternalTick();
@@ -44,25 +45,32 @@ namespace ELS.Manager
         {
             if (NetworkID == 0)
             {
-                CitizenFX.Core.Debug.WriteLine("ERROR Try to add vehicle\nNetwordID equals 0");
+                Utils.DebugWriteLine("ERROR Try to add vehicle\nNetwordID equals 0");
                 vehicle = null;
                 return false;
             }
 
-            else if (!Exists(poolObject => (poolObject).GetNetworkId() == NetworkID))
+            else if (!ContainsKey(NetworkID))
             {
                 try
                 {
-                    var veh = new ELSVehicle(API.NetToVeh(NetworkID));
-                    Add(veh);
+                    ELSVehicle veh = null;
+                    int handle = API.NetToVeh(NetworkID);
+                    if (handle == 0)
+                    {
+                        veh = new ELSVehicle(Game.PlayerPed.CurrentVehicle.Handle);
+                    }
+                    else
+                    {
+                        veh = new ELSVehicle(handle);
+                    }
+                    Add(NetworkID,veh);
                     vehicle = veh;
                     return true;
                 }
                 catch (Exception ex)
                 {
-#if DEBUG 
-                    CitizenFX.Core.Debug.Write($"Exsits Error: {ex.Message} due to {ex.InnerException}");
-#endif
+                    Utils.DebugWriteLine($"Exists Error: {ex.Message} due to {ex.InnerException}");
                     vehicle = null;
                     return false;
                     throw ex;
@@ -71,7 +79,7 @@ namespace ELS.Manager
             }
             else
             {
-                vehicle = Find(poolObject => ((ELSVehicle)poolObject).GetNetworkId() == NetworkID);
+                vehicle = this[NetworkID];//Find(poolObject => ((ELSVehicle)poolObject).GetNetworkId() == NetworkID);
                 return true;
             }
         }
@@ -79,28 +87,24 @@ namespace ELS.Manager
         {
             if (NetworkID == 0)
             {
-                CitizenFX.Core.Debug.WriteLine("ERROR NetwordID equals 0\n");
+                Utils.DebugWriteLine("ERROR NetwordID equals 0\n");
                 vehicle = null;
                 return false;
             }
 
-            else if (!Exists(poolObject => (poolObject).GetNetworkId() == NetworkID))
+            else if (!ContainsKey(NetworkID))
             {
                 try
                 {
                     var veh = new ELSVehicle(API.NetToVeh(NetworkID), data);
-                    Add(veh);
-#if DEBUG
-                    CitizenFX.Core.Debug.Write($"Adding Vehicle");
-#endif
+                    Add(veh.GetNetworkId(),veh);
+                    Utils.DebugWriteLine($"Adding Vehicle");
                     vehicle = veh;
                     return true;
                 }
                 catch (Exception ex)
                 {
-#if DEBUG
                     CitizenFX.Core.Debug.Write($"Exsits Error With Data: {ex.Message}");
-#endif
                     vehicle = null;
                     return false;
                     throw ex;
@@ -109,13 +113,16 @@ namespace ELS.Manager
             }
             else
             {
-                vehicle = Find(poolObject => ((ELSVehicle)poolObject).GetNetworkId() == NetworkID) as ELSVehicle;
+                vehicle = this[NetworkID];
                 return true;
             }
         }
         public void CleanUP()
         {
-            ForEach((veh) => { veh.CleanUP(); });
+            foreach(ELSVehicle v in this.Values)
+            {
+                v.CleanUP();
+            }
         }
         ~VehicleList()
         {

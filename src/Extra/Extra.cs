@@ -161,13 +161,7 @@ namespace ELS.Extra
             SetInfo();
             PatternType = format;
             TurnedOn = false;
-            if (!API.DoesExtraExist(entity.Handle, id))
-            {
-                CitizenFX.Core.Debug.WriteLine($"Extra id: {id} does not exsist");
-            }
-#if DEBUG
-            CitizenFX.Core.Debug.WriteLine($"Registered extra_{_Id} successfully");
-#endif
+            Utils.DebugWriteLine($"Registered extra_{_Id} successfully");
         }
 
         internal void SetState(bool state)
@@ -196,19 +190,7 @@ namespace ELS.Extra
         bool firstTick = true;
         internal async void ExtraTicker()
         {
-            /*if (firstTick)
-           {
-               Delay = 100;
-               firstTick = false;
-           }
-          flashrate = (int)Game.FPS / ((int)Game.FPS * 60 / Delay);
-#if DEBUG
-           //CitizenFX.Core.Debug.WriteLine($"Flash rate: {flashrate}");
-           //CitizenFX.Core.Debug.WriteLine($"Allow Flash: {allowflash}");
-#endif
-           if (flashrate == allowflash)
-           {*/
-            if (flashrate != 0 && Game.GameTime - flashrate >= Global.PrimDelay)
+            if (flashrate != 0 && Game.GameTime - flashrate >= Delay)
             {
                 allowflash = 1;
                 if (IsPatternRunning)
@@ -218,7 +200,7 @@ namespace ELS.Extra
                         CleanUp();
                         return;
                     }
-                    if (Pattern[count].Equals('0'))
+                    if (Pattern.ToCharArray()[count].Equals('0'))
                     {
                         SetState(false);
                         if (!IsPatternRunning)
@@ -238,7 +220,7 @@ namespace ELS.Extra
 
                     }
                     count++;
-                    if (count > Pattern.Length - 1)
+                    if (count == Pattern.Length - 1)
                     {
                         count = 0;
                     }
@@ -249,23 +231,10 @@ namespace ELS.Extra
                     }
                 }
                 flashrate = Game.GameTime;
-#if DEBUG
-                //CitizenFX.Core.Debug.WriteLine($"Allow flash ran on extra {Id}");
-#endif
+
             }
-            /*else if (allowflash > flashrate)
-            {
-                allowflash = 1;
-            }
-            else
-            {
-                allowflash++;
-            }*/
             if (TurnedOn && spotLight != null)
             {
-#if DEBUG
-                //CitizenFX.Core.Debug.WriteLine("Spotlight tick ran");
-#endif
                 spotLight.RunTick();
             }
 
@@ -306,17 +275,6 @@ namespace ELS.Extra
                 return;
             }
             var extraoffset = _vehicle.GetOffsetPosition(off + new Vector3(_extraInfo.OffsetX, _extraInfo.OffsetY, _extraInfo.OffsetZ));
-
-
-            //float hx = (float)((double)extraoffset.X + 5 * Math.Cos(((double)anglehorizontal + Game.Player.Character.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
-            //float hy = (float)((double)extraoffset.Y + 5 * Math.Sin(((double)anglehorizontal + Game.Player.Character.CurrentVehicle.Rotation.Z) * Math.PI / 180.0));
-            //float vz = (float)((double)extraoffset.Z + 5 * Math.Sin((double)anngleVirtical * Math.PI / 180.0));
-
-            //Vector3 destinationCoords = (new Vector3(hx, hy, vz));
-
-            //dirVector = destinationCoords - extraoffset;
-            //dirVector.Normalize();
-            //API.DrawSpotLightWithShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, dirVector.X, dirVector.Y, dirVector.Z, Color['r'], Color['g'], Color['b'], 100.0f, 1f, 0.0f, 13.0f, 1f, 100f);
             API.DrawLightWithRangeAndShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, Color['r'], Color['g'], Color['b'], Global.EnvLightRng, Global.EnvLightInt, 0.01f);
         }
 
@@ -324,62 +282,52 @@ namespace ELS.Extra
 
         internal void SetInfo()
         {
+            Delay = Global.PrimDelay;
             switch (_Id)
             {
                 case 1:
                     LightType = LightType.PRML;
-                    Delay = 100;
                     Pattern = "";
                     break;
                 case 2:
                     LightType = LightType.PRML;
-                    Delay = 100;
                     Pattern = "";
                     break;
                 case 3:
                     LightType = LightType.PRML;
-                    Delay = 100;
                     Pattern = "";
                     break;
                 case 4:
                     LightType = LightType.PRML;
-                    Delay = 100;
                     Pattern = "";
                     break;
                 case 5:
                     LightType = LightType.WRNL;
-                    Delay = 100;
                     Pattern = "";
                     break;
                 case 6:
                     LightType = LightType.WRNL;
-                    Delay = 100;
                     Pattern = "";
                     break;
                 case 7:
                     LightType = LightType.SECL;
-                    Delay = 100;
                     Pattern = "";
                     break;
                 case 8:
                     LightType = LightType.SECL;
-                    Delay = 100;
                     Pattern = "";
                     break;
                 case 9:
                     LightType = LightType.SECL;
-                    Delay = 100;
                     Pattern = "";
                     break;
                 case 10:
                     LightType = LightType.SBRN;
-                    Delay = 100;
                     Pattern = "";
                     IsPatternRunning = false;
                     break;
                 case 11:
                     LightType = LightType.SCL;
-                    Delay = 100;
                     Pattern = "";
                     IsPatternRunning = false;
                     spotLight = new SpotLight(_Id, _vehicle.GetNetworkId());
@@ -389,7 +337,7 @@ namespace ELS.Extra
                     break;
                 case 12:
                     LightType = LightType.TDL;
-                    Delay = 100;
+                    Delay = Global.PrimDelay;
                     Pattern = "";
                     IsPatternRunning = false;
                     spotLight = new SpotLight(_Id, _vehicle.GetNetworkId());

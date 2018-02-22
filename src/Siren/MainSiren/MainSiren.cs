@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using ELS.FullSync;
+using ELS.NUI;
 
 namespace ELS.Siren
 {
     partial class Siren : IManagerEntry
     {
-        private partial class MainSiren : IFullSyncComponent
+        internal partial class MainSiren : IFullSyncComponent
         {
             internal bool _enable { get; private set; }
             internal bool interupted = false;
@@ -30,10 +31,18 @@ namespace ELS.Siren
                 if (_enable) //turning the main siren on
                 {
                     currentTone.SetState(true);
+                    if (Game.PlayerPed.IsSittingInELSVehicle())
+                    {
+                        ElsUiPanel.ToggleUiBtnState(_enable, "SRN");
+                    }
                 }
                 else
                 {
                     currentTone.SetState(false);
+                    if (Game.PlayerPed.IsSittingInELSVehicle())
+                    {
+                        ElsUiPanel.ToggleUiBtnState(_enable, "SRN");
+                    }
                 }
             }
 

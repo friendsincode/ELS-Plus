@@ -11,5 +11,6 @@ namespace ELS.Light
         int CurrentPrmPattern { get; set; }
         int CurrentSecPattern { get; set; }
         int CurrentWrnPattern { get; set; }
+        int CurrentStage { get; }
     }
 }

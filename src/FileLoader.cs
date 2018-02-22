@@ -71,7 +71,7 @@ namespace ELS
         }
         internal void UnLoadFilesFromScript(string name)
         {
-            VCF.unload(name);   
+            VCF.unload(name);
         }
     }
 }

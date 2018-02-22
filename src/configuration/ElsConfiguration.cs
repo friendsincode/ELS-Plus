@@ -98,6 +98,15 @@ namespace ELS.configuration
                 t = u["CONTROL"]["Toggle_BRD"].IntValue;
                 KeyBindings.ToggleBoard = (Control)t;
 
+                t = u["CONTROL"]["Toggle_LIND"].IntValue;
+                KeyBindings.ToggleLIND = (Control)t;
+
+                t = u["CONTROL"]["Toggle_RIND"].IntValue;
+                KeyBindings.ToggleRIND = (Control)t;
+
+                t = u["CONTROL"]["Toggle_HAZ"].IntValue;
+                KeyBindings.ToggleHAZ = (Control)t;
+
 
                 ControlsUpdated?.Invoke(KeyBindings);
                 Global.EnabeTrafficControl = u["GENERAL"]["ElsTrafCtrlOn"].BoolValue;
@@ -132,6 +141,9 @@ namespace ELS.configuration
             internal Control ChgPattSecL { get; set; }
             internal Control ChgPattWrnL { get; set; }
             internal Control ToggleLstg { get; set; }
+            internal Control ToggleLIND { get; set; }
+            internal Control ToggleRIND { get; set; }
+            internal Control ToggleHAZ { get; set; }
         }
 
         internal static bool isValidData(string data)

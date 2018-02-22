@@ -9,7 +9,7 @@ namespace ELS
     {
         public static bool IsEls(this Vehicle vehicle)
         {
-            return configuration.VCF.ELSVehicle.Exists(obj => obj.modelHash == vehicle.Model);
+            return configuration.VCF.ELSVehicle.ContainsKey(vehicle.Model);
         }
         
         public static bool IsSittingInELSVehicle(this Ped ped)
