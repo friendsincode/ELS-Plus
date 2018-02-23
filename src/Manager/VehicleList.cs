@@ -45,6 +45,12 @@ namespace ELS.Manager
         {
             if (NetworkID == 0)
             {
+                VehicleManager.makenetworked(Game.PlayerPed.CurrentVehicle);
+                if (Game.PlayerPed.CurrentVehicle.GetNetworkId() != 0)
+                {
+                    MakeSureItExists(Game.PlayerPed.CurrentVehicle.GetNetworkId(), out vehicle);
+                    return true;
+                }
                 Utils.DebugWriteLine("ERROR Try to add vehicle\nNetwordID equals 0");
                 vehicle = null;
                 return false;
@@ -88,6 +94,12 @@ namespace ELS.Manager
             if (NetworkID == 0)
             {
                 Utils.DebugWriteLine("ERROR NetwordID equals 0\n");
+                VehicleManager.makenetworked(Game.PlayerPed.CurrentVehicle);
+                if (Game.PlayerPed.CurrentVehicle.GetNetworkId() != 0)
+                {
+                    MakeSureItExists(Game.PlayerPed.CurrentVehicle.GetNetworkId(), out vehicle);
+                    return true;
+                }
                 vehicle = null;
                 return false;
             }

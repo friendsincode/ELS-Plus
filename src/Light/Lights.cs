@@ -100,7 +100,7 @@ namespace ELS.Light
             }
         }
 
-        private void SetGTASirens(bool state) {
+        internal void SetGTASirens(bool state) {
             _vehicle.IsSirenActive = state;
         }
 

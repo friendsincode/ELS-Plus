@@ -17,12 +17,12 @@ namespace ELS.Manager
     class VehicleManager
     {
         internal static VehicleList vehicleList;
-        bool notified = false;
+        static bool notified = false;
         public VehicleManager()
         {
             vehicleList = new VehicleList();
         }
-        private void makenetworked(Vehicle veh)
+        internal static void makenetworked(Vehicle veh)
         {
             //////////
             ///
@@ -34,16 +34,23 @@ namespace ELS.Manager
                 var attempts = 0;
                 do
                 {
-                    BaseScript.Delay(500);
-                    net1 = API.NetworkGetNetworkIdFromEntity(veh.Handle);
+                Utils.DebugWriteLine($"This is attempt {attempts} we have a netid of {net1}");
+                
+                    int net2 = API.NetworkGetNetworkIdFromEntity(veh.Handle);
+                BaseScript.Delay(500);
+                if (net1 != net2)
+                {
+                    net1 = net2;
+                } 
                     API.NetworkRegisterEntityAsNetworked(veh.Handle);
                     API.SetEntityAsMissionEntity(veh.Handle, false, false);
                     API.SetNetworkIdCanMigrate(net1, true);
                     API.SetNetworkIdExistsOnAllMachines(net1, true);
                     API.NetworkRequestControlOfEntity(veh.Handle);
                     attempts++;
-                }
-                while (veh.GetNetworkId() == 0 && attempts < 100 && !notified);
+
+            }
+            while (!API.NetworkDoesEntityExistWithNetworkId(veh.Handle) && attempts < 100 && !notified);
                 if (attempts == 100 && !notified)
                 {
                     CitizenFX.Core.Debug.WriteLine("Failed to register entity on net");
@@ -74,8 +81,8 @@ namespace ELS.Manager
                     }
                     else
                     {
-                        Utils.DebugWriteLine("Vehicle does not exist");
-                        makenetworked(Game.PlayerPed.CurrentVehicle);
+                        //Utils.DebugWriteLine("Vehicle does not exist");
+                        //makenetworked(Game.PlayerPed.CurrentVehicle);
                         //var pos = Game.PlayerPed.CurrentVehicle.Position;
                         //var rot = Game.PlayerPed.CurrentVehicle.Rotation;
                         //var model = Game.PlayerPed.CurrentVehicle.Model;
@@ -126,7 +133,7 @@ namespace ELS.Manager
         async internal void SetVehicleSyncData(IDictionary<string, object> dataDic,int PlayerId)
         {
             Utils.DebugWriteLine($"Got Sync Data for {dataDic["NetworkID"]}");
-            if (Game.Player.ServerId == PlayerId) return;
+            if (Game.Player.ServerId == PlayerId  || dataDic == null) return;
             var bo = vehicleList.MakeSureItExists((int)dataDic["NetworkID"], dataDic, out ELSVehicle veh1);
             if (bo && dataDic.ContainsKey("siren") || dataDic.ContainsKey("light"))
             {
