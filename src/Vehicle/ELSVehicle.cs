@@ -45,11 +45,11 @@ namespace ELS
             {
                 Utils.ReleaseWriteLine("ELSVehicle.cs:Repair Fix is not enabled on this client");
             }
-            
-            
-            _light = new Light.Lights(_vehicle, _vcf, (IDictionary<string, object>)data?["light"]);
-            _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data?["siren"],_light);
 
+
+            _light = new Light.Lights(_vehicle, _vcf, (IDictionary<string, object>)data?["light"]);
+            _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data?["siren"], _light);
+            _light.SetGTASirens(false);
             //_vehicle.SetExistOnAllMachines(true);
 #if DEBUG
             CitizenFX.Core.Debug.WriteLine(CitizenFX.Core.Native.API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
@@ -71,26 +71,16 @@ namespace ELS
             _siren.CleanUP();
             _light.CleanUP();
             Utils.DebugWriteLine("ELSVehicle.cs:running vehicle deconstructor");
-            API.NetworkUnregisterNetworkedEntity(_vehicle.Handle);
-            //CitizenFX.Core.Native.API.NetworkSetMissionFinished();
-            //_vehicle.MarkAsNoLongerNeeded();
         }
 
         internal void RunTick()
         {
-            if (_vehicle.IsDead || !_vehicle.Exists())
+            _siren.Ticker();
+            _light.Ticker();
+            if (_siren._mainSiren._enable && _light._stage.CurrentStage != 3)
             {
-                Delete();
-            }
-            else
-            {
-                _siren.Ticker();
-                _light.Ticker();
-                if (_siren._mainSiren._enable && _light._stage.CurrentStage != 3)
-                {
-                    _siren._mainSiren.SetEnable(false);
-                    RemoteEventManager.SendEvent(RemoteEventManager.Commands.MainSiren, _vehicle, true, Game.Player.ServerId);
-                }
+                _siren._mainSiren.SetEnable(false);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MainSiren, _vehicle, true, Game.Player.ServerId);
             }
             if (_vehicle.GetPedOnSeat(VehicleSeat.Any).IsPlayer)
             {
@@ -103,15 +93,8 @@ namespace ELS
         }
         internal void RunExternalTick()
         {
-            if (_vehicle.IsDead || !_vehicle.Exists())
-            {
-                Delete();
-            }
-            else
-            {
-                _siren.ExternalTicker();
-                _light.ExternalTicker();
-            }
+            _siren.ExternalTicker();
+            _light.ExternalTicker();
         }
 
         internal Vector3 GetBonePosistion()
@@ -136,12 +119,12 @@ namespace ELS
         {
             try
             {
-                VehicleManager.vehicleList.Remove(_vehicle.GetNetworkId());
+
                 _light.CleanUP();
                 _siren.CleanUP();
                 _vehicle.SetExistOnAllMachines(false);
-                //_vehicle.MarkAsNoLongerNeeded();
                 API.SetEntityAsMissionEntity(_vehicle.Handle, true, true);
+                VehicleManager.vehicleList.Remove(_vehicle.GetNetworkId());
                 _vehicle.Delete();
             }
             catch (Exception e)
@@ -184,5 +167,7 @@ namespace ELS
             };
             return vehDic;
         }
+
+
     }
 }

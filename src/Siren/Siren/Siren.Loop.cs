@@ -13,6 +13,7 @@ namespace ELS.Siren
     {
         public void Ticker()
         {
+            Game.DisableControlThisFrame(0, configuration.ElsConfiguration.KeyBindings.Sound_Ahorn);
             AirHornControlsKB();
             ManualTone1ControlsKB();
             ManualTone2ControlsKB();
