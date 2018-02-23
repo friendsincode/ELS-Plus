@@ -11,7 +11,7 @@ namespace ELS_Server
     public class Class1 : BaseScript
     {
         Dictionary<int, object> _cachedData = new Dictionary<int, object>();
-        VcfSync _vcfSync;
+
         public Class1()
         {
             Debug.WriteLine("Welcome to ELS+ for FiveM");
@@ -42,9 +42,11 @@ namespace ELS_Server
             EventHandlers["ELS:VcfSync:Server"] += new Action<int>(async (int source) =>
             {
                 Utils.DebugWriteLine($"Sending Data to {Players[source].Name}");
-                 _vcfSync = new VcfSync();
-                await _vcfSync.CheckVCF(Players[source]);
-                await CustomPatterns.CheckCustomPatterns(Players[source]);
+                 
+
+                TriggerClientEvent(Players[source], "ELS:VcfSync:Client", VcfSync.VcfData);
+                TriggerClientEvent(Players[source], "ELS:PatternSync:Client", CustomPatterns.Patterns);
+
             });
 
             EventHandlers["baseevents:enteredVehicle"] += new Action<int,int,string>((veh,seat,name) =>
@@ -52,17 +54,6 @@ namespace ELS_Server
                 Utils.DebugWriteLine("Vehicle Entered");
                 TriggerClientEvent("ELS:VehicleEntered", veh);
             });
-
-            /*EventHandlers.Add("onResourceStart", new Action<string>((resource) =>
-            {
-                if (VcfSync.ElsResources.Exists(res => res.Equals(resource)))
-                {
-                    foreach (Player p in Players)
-                    {
-                        VcfSync.LoadFilesPromScript(resource, p);
-                    }
-                }
-            }));*/
             EventHandlers["ELS:FullSync:Unicast"] += new Action(() => { });
             EventHandlers["ELS:FullSync:Broadcast"] += new Action<System.Dynamic.ExpandoObject, int>((dataDic, playerID) =>
              {
@@ -88,12 +79,15 @@ namespace ELS_Server
                 TriggerClientEvent(Players[(int.Parse((string)b[0]))], "ELS:FullSync:NewSpawnWithData", _cachedData);
             }), false);
 
-            VcfSync.CheckResources();
-
-
-
-
+            PreloadSyncData();
         }
+
+        async Task PreloadSyncData()
+        {
+            await VcfSync.CheckResources();
+            await CustomPatterns.CheckCustomPatterns();
+        }
+
         void BroadcastMessage(System.Dynamic.ExpandoObject dataDic, int SourcePlayerID)
         {
             TriggerClientEvent("ELS:NewFullSyncData", dataDic,SourcePlayerID);

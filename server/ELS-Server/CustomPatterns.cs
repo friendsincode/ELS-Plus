@@ -11,7 +11,7 @@ namespace ELS_Server
 {
     public class CustomPatterns
     {
-        static List<Tuple<string, string, string>> Patterns = new List<Tuple<string, string, string>>();
+        internal static List<Tuple<string, string, string>> Patterns = new List<Tuple<string, string, string>>();
         internal static bool IsValidPatternData(string data)
         {
             if (String.IsNullOrEmpty(data)) return false;
@@ -20,17 +20,17 @@ namespace ELS_Server
             return doc.RootNode.Name == "pattern";
         }
 
-        public async static Task CheckCustomPatterns(Player player)
+        public async static Task CheckCustomPatterns()
         {
             var numResources = API.GetNumResources();
             foreach (string name in VcfSync.ElsResources)
             {
-                ParsePatterns(name, player);
+                ParsePatterns(name);
             }
-            Class1.TriggerClientEvent(player, "ELS:PatternSync:Client", Patterns);
+            
         }
 
-        internal static void ParsePatterns(string name, Player player)
+        internal static void ParsePatterns(string name)
         {
             int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "file");
             string isElsResource = API.GetResourceMetadata(name, "is_els", 0);

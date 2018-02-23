@@ -27,7 +27,6 @@ namespace ELS_Server
                 Utils.DebugWriteLine($"Processing {name} for {player.Name}");
                 LoadFilesPromScript(name);
             }
-            Class1.TriggerClientEvent(player, "ELS:VcfSync:Client", VcfData);
         }
 
         public static async Task CheckResources()
@@ -40,6 +39,7 @@ namespace ELS_Server
                 if (!String.IsNullOrEmpty(isElsResource) && isElsResource.Equals("true"))
                 {
                     ElsResources.Add(name);
+                    LoadFilesPromScript(name);
                     Utils.DebugWriteLine($"Added {name} to resources");
                 }
                 
@@ -47,7 +47,7 @@ namespace ELS_Server
             Utils.ReleaseWriteLine($"Total ELS Resources: {ElsResources.Count}");
         }
 
-        internal static void LoadFilesPromScript(string name)
+        internal static async void LoadFilesPromScript(string name)
         {
             int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "file");
 #if DEBUG
