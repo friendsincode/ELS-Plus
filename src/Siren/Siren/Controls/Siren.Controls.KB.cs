@@ -32,7 +32,7 @@ namespace ELS.Siren
         }
         void ManualTone1ControlsKB()
         {
-            if ((Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Snd_SrnTon1) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) || (Global.AllowController && Game.IsControlJustReleased(2,Control.Reload) && Game.CurrentInputMode == InputMode.GamePad))
+            if ((Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Snd_SrnTon1) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) || (Global.AllowController && Game.IsControlJustPressed(2,Control.Reload) && Game.CurrentInputMode == InputMode.GamePad))
             {
 #if !REMOTETEST
                 SirenTone1Logic(true, true);
@@ -52,7 +52,7 @@ namespace ELS.Siren
         }
         void ManualTone3ControlsKB()
         {
-            if ((Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Snd_SrnTon3) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) || (Global.AllowController && Game.IsControlJustReleased(2, Control.SniperZoomInSecondary) && Game.CurrentInputMode == InputMode.GamePad))
+            if ((Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Snd_SrnTon3) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) || (Global.AllowController && Game.IsControlJustPressed(2, Control.SniperZoomInSecondary) && Game.CurrentInputMode == InputMode.GamePad))
             {
 #if !REMOTETEST
                 SirenTone3Logic(true, true);
@@ -73,7 +73,7 @@ namespace ELS.Siren
 
         void MainSirenToggleControlsKB()
         {
-            if ((Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Toggle_SIRN) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) || (Global.AllowController && Game.IsControlJustReleased(2, Control.HUDSpecial) && Game.CurrentInputMode == InputMode.GamePad))
+            if ((Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Toggle_SIRN) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) || (Global.AllowController && Game.IsControlJustPressed(2, Control.HUDSpecial) && Game.CurrentInputMode == InputMode.GamePad))
             {
 #if !REMOTETEST
                 MainSirenToggleLogic(true, true);

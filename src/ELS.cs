@@ -61,7 +61,6 @@ namespace ELS
                             TriggerServerEvent("ELS:FullSync:Request:All", Game.Player.ServerId);
                             ElsUiPanel.InitData();
                             ElsUiPanel.DisableUI();
-                            SetupExports();
                         }
                         catch (Exception e)
                         {
@@ -195,7 +194,15 @@ namespace ELS
             {
                 if (Game.PlayerPed.CurrentVehicle.IsEls())
                 {
-                    VehicleManager.vehicleList[Game.PlayerPed.CurrentVehicle.GetNetworkId()].Delete();
+                    if (VehicleManager.vehicleList.ContainsKey(Game.PlayerPed.CurrentVehicle.GetNetworkId()))
+                    {
+                        VehicleManager.vehicleList[Game.PlayerPed.CurrentVehicle.GetNetworkId()].Delete();
+                    }
+                    else
+                    {
+                        Game.PlayerPed.CurrentVehicle.Delete();
+                    }
+
                 }
                 else
                 {

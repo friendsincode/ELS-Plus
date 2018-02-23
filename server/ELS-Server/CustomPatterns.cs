@@ -11,7 +11,7 @@ namespace ELS_Server
 {
     public class CustomPatterns
     {
-        static List<Tuple<string, string, string>> Patterns = new List<Tuple<string, string, string>>();
+        internal static List<Tuple<string, string, string>> Patterns = new List<Tuple<string, string, string>>();
         internal static bool IsValidPatternData(string data)
         {
             if (String.IsNullOrEmpty(data)) return false;
@@ -20,24 +20,21 @@ namespace ELS_Server
             return doc.RootNode.Name == "pattern";
         }
 
-        public async static Task CheckCustomPatterns(Player player)
+        public async static Task CheckCustomPatterns()
         {
             var numResources = API.GetNumResources();
-            for (int x = 0; x < numResources; x++)
+            foreach (string name in VcfSync.ElsResources)
             {
-                var name = Function.Call<string>(Hash.GET_RESOURCE_BY_FIND_INDEX, x);
-                ParsePatterns(name, player);
+                ParsePatterns(name);
             }
-            Class1.TriggerClientEvent(player, "ELS:PatternSync:Client", Patterns);
+            
         }
 
-        internal static void ParsePatterns(string name, Player player)
+        internal static void ParsePatterns(string name)
         {
             int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "file");
             string isElsResource = API.GetResourceMetadata(name, "is_els", 0);
-            if (!String.IsNullOrEmpty(isElsResource) && isElsResource.Equals("true"))
-            {
-                for (int i = 0; i < num; i++)
+            for (int i = 0; i < num; i++)
                 {
                     var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
                     var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
@@ -55,11 +52,6 @@ namespace ELS_Server
                         }
                     }
                 }
-            }
-            else
-            {
-                Utils.DebugWriteLine($"{name} is not an ELS Vehicle Resource");
-            }
         }
     }
 }

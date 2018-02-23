@@ -309,7 +309,7 @@ namespace ELS.Light
         internal void ToggleTdlKB()
         {
             Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleTdl);
-            if ((Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleTdl) && !Game.IsControlPressed(0, Control.CharacterWheel)) || (Global.AllowController && Game.IsControlJustReleased(2, Control.Talk) && Game.CurrentInputMode == InputMode.GamePad))
+            if ((Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleTdl) && !Game.IsControlPressed(0, Control.CharacterWheel)) || (Global.AllowController && Game.IsControlJustPressed(2, Control.Talk) && Game.CurrentInputMode == InputMode.GamePad))
             {
                 if (_extras.TDL != null)
                 {
@@ -380,7 +380,7 @@ namespace ELS.Light
         internal void ToggleLightStageKB()
         {
             Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleLstg);
-            if ((Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleLstg) && !Game.IsControlPressed(0, Control.CharacterWheel)) || (Global.AllowController && Game.IsControlJustReleased(2, Control.Detonate) && Game.CurrentInputMode == InputMode.GamePad))
+            if ((Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleLstg) && !Game.IsControlPressed(0, Control.CharacterWheel)) || (Global.AllowController && Game.IsControlJustPressed(2, Control.Detonate) && Game.CurrentInputMode == InputMode.GamePad))
             {
                 Utils.DebugWriteLine("Toggle Light stage");
                 ToggleLightStage();
