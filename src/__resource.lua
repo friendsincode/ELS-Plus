@@ -53,3 +53,9 @@ server_script 'els-server.net.dll'
 files({
 'ELS.ini',
 })
+
+
+exports {
+	'SpawnCar',
+	'SpawnCarWithCoords'
+}

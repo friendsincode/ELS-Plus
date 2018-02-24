@@ -123,7 +123,7 @@ namespace ELS.Board
                 return;
             }
             var _angle = API.GetVehicleDoorAngleRatio(_vehicle.Handle, BoardDoorIndex);
-            if (!API.IsVehicleDoorFullyOpen(_vehicle.Handle,BoardDoorIndex) || _angle <= 0.80000001f)
+            if (API.IsVehicleDoorFullyOpen(_vehicle.Handle,BoardDoorIndex) != 1 || _angle <= 0.80000001f)
             {
                 API.SetVehicleDoorControl(_vehicle.Handle, BoardDoorIndex, _speed, _angle + 0.029999999f);
                 if (_boardType.Equals("boots"))
@@ -144,7 +144,7 @@ namespace ELS.Board
                 return;
             }
             var _angle = API.GetVehicleDoorAngleRatio(_vehicle.Handle, BoardDoorIndex);
-            if (API.IsVehicleDoorFullyOpen(_vehicle.Handle, BoardDoorIndex) || _angle >= 0.00000001f)
+            if (API.IsVehicleDoorFullyOpen(_vehicle.Handle, BoardDoorIndex) == 1 || _angle >= 0.00000001f)
             {
                 API.SetVehicleDoorControl(_vehicle.Handle, BoardDoorIndex, _speed, _angle - 0.029999999f);
                 if (_boardType.Equals("boots"))

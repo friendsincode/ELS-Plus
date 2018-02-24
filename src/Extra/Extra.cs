@@ -361,6 +361,7 @@ namespace ELS.Extra
                     hex = "0xFF7E00";
                     break;
                 case "white":
+                    hex = "0xFFFFFF";
                     break;
             }
             int r = Convert.ToInt32(hex.Substring(2, 2), 16);

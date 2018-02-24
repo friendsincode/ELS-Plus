@@ -61,6 +61,7 @@ namespace ELS
                             TriggerServerEvent("ELS:FullSync:Request:All", Game.Player.ServerId);
                             ElsUiPanel.InitData();
                             ElsUiPanel.DisableUI();
+                            SetupExports();
                         }
                         catch (Exception e)
                         {
@@ -214,6 +215,7 @@ namespace ELS
             await polModel.Request(-1);
             Vehicle _veh = await World.CreateVehicle(polModel, Game.PlayerPed.Position + new Vector3(0f,5f,0f));
             Game.PlayerPed.SetIntoVehicle(_veh, VehicleSeat.Driver);
+            polModel.MarkAsNoLongerNeeded();
             return _veh;
         }
 
@@ -244,11 +246,24 @@ namespace ELS
             CitizenFX.Core.Debug.WriteLine($"Attempting to spawn: {veh}");
             var polModel = new Model((VehicleHash)hash);
             await polModel.Request(-1);
-            Vehicle _veh = await World.CreateVehicle(polModel, coords);
+            Vehicle _veh = await World.CreateVehicle(polModel, new Vector3(coords.x,coords.y,coords.z));
             polModel.MarkAsNoLongerNeeded();
             _veh.PlaceOnGround();
             Game.PlayerPed.SetIntoVehicle(_veh, VehicleSeat.Driver);
+            polModel.MarkAsNoLongerNeeded();
             return _veh;
+        }
+
+        private void SetupExports()
+        {
+            Exports.Add("SpawnCar", new Func<string, Task<Vehicle>>((veh) =>
+            {
+                return SpawnCar(veh);
+            }));
+            Exports.Add("SpawnCarWithCoords", new Func<string, dynamic, Task<Vehicle>>((veh,coord) =>
+            {
+                return SpawnCar(veh, coord);
+            }));
         }
 
         public static string CurrentResourceName()

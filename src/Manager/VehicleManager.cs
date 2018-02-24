@@ -9,6 +9,8 @@ using System.Drawing;
 using System.Collections;
 using System.Threading.Tasks;
 using ELS.configuration;
+using ELS.Light;
+using static ELS.RemoteEventManager;
 
 namespace ELS.Manager
 {
@@ -79,6 +81,13 @@ namespace ELS.Manager
                         //Game.PlayerPed.SetIntoVehicle(veh,VehicleSeat.Driver);
                         //vehicleList.Add(new ELSVehicle(Game.PlayerPed.CurrentVehicle.Handle));
                     }
+                    if (Game.PlayerPed.IsInVehicle() && (Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed)
+                    && (VehicleClass.Boats != Game.PlayerPed.CurrentVehicle.ClassType || VehicleClass.Trains != Game.PlayerPed.CurrentVehicle.ClassType
+                    || VehicleClass.Planes != Game.PlayerPed.CurrentVehicle.ClassType || VehicleClass.Helicopters != Game.PlayerPed.CurrentVehicle.ClassType))
+                    {
+                        makenetworked(Game.PlayerPed.CurrentVehicle);
+                        Indicator.RunAsync(Game.PlayerPed.CurrentVehicle);
+                    }
 
 
 #if DEBUG
@@ -116,13 +125,18 @@ namespace ELS.Manager
             if (Game.Player.ServerId == PlayerId) return;
             var bo = vehicleList.MakeSureItExists((int)dataDic["NetworkID"]
                         , dataDic, out ELSVehicle veh1);
-            if (bo)
+            if (bo && dataDic.ContainsKey("siren") || dataDic.ContainsKey("light"))
             {
                 veh1.SetData(dataDic);
 
 #if DEBUG
                 CitizenFX.Core.Debug.Write($" Applying vehicle data with NETID of {(int)dataDic["NetworkID"]} LOCALID of {CitizenFX.Core.Native.API.NetToVeh((int)dataDic["NetworkID"])}");
 #endif
+            }
+            if (dataDic.ContainsKey("IndState"))
+            {
+                Utils.DebugWriteLine($"Ind sync data for {dataDic["NetworkID"].ToString()} is {dataDic["IndState"]}");
+                Indicator.ToggleInicatorState((Vehicle)Vehicle.FromHandle(API.NetworkGetEntityFromNetworkId((int)dataDic["NetworkID"])), Indicator.IndStateLib[dataDic["IndState"].ToString()]);
             }
         }
 
@@ -133,20 +147,32 @@ namespace ELS.Manager
                 Utils.DebugWriteLine("Vehicle net ID is empty");
                 return;
             }
-            (vehicleList.Find(o => o.GetNetworkId() == netId)).SyncUi();
+            vehicleList[netId].SyncUi();
         }
 
-        internal static void SyncRequestReply(int NetworkId,int PlayerId)
+        internal static void SyncRequestReply(Commands command,int NetworkId,int PlayerId)
         {
             if (NetworkId == 0)
             {
                 CitizenFX.Core.Debug.WriteLine("ERROR sending vehicle data NetwordID equals 0\n");
                 return;
             }
-            FullSync.FullSyncManager.SendDataBroadcast(
-                (vehicleList.Find(o => o.GetNetworkId() == NetworkId)).GetData(),
-                PlayerId
-            );
+            switch (command)
+            {
+                case Commands.ToggleInd:
+                    Dictionary<string, object> dict = new Dictionary<string, object>
+                    {
+                        {"NetworkID",NetworkId },
+                        {"IndState", Indicator.CurrentIndicatorState((Vehicle)Vehicle.FromHandle(API.NetworkGetEntityFromNetworkId(NetworkId))).ToString() }
+                    };
+                    Utils.DebugWriteLine($"Sending sync data for {dict["NetworkID"]} is {dict["IndState"]}");
+                    FullSync.FullSyncManager.SendDataBroadcast(dict, PlayerId);
+                    break;
+                default:
+                    FullSync.FullSyncManager.SendDataBroadcast(vehicleList[NetworkId].GetData(), PlayerId);
+                    break;
+
+            }
         }
         internal void SyncAllVehiclesOnFirstSpawn(System.Dynamic.ExpandoObject data)
         {
