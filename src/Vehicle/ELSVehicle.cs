@@ -18,7 +18,7 @@ namespace ELS
         private Vcfroot _vcf;
         int lastdrivetime;
 
-        public ELSVehicle(int handle, [Optional]IDictionary<string, object> data) : base(handle)
+        public ELSVehicle(int handle, IDictionary<string, object> data =null) : base(handle)
         {
             _vehicle = new Vehicle(handle);
             ModelLoaded();

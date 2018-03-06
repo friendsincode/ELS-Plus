@@ -26,8 +26,9 @@ namespace ELS.Manager
         {
 
         }
-        public void RunExternalTick([Optional] ELSVehicle vehicle)
+        public void RunExternalTick( ELSVehicle vehicle=null)
         {
+
             try
             {
                 foreach (var t in this.Values)
@@ -38,24 +39,19 @@ namespace ELS.Manager
             }
             catch (Exception e)
             {
-                CitizenFX.Core.Debug.WriteLine($"VehicleList Error: {e.Message}");
+                CitizenFX.Core.Debug.WriteLine($"VehicleList Error: {e.Message}\n");
             }
         }
-        public bool MakeSureItExists(int NetworkID, [Optional]out ELSVehicle vehicle)
+        public bool MakeSureItExists(int NetworkID, [Optional]out ELSVehicle vehicle, IDictionary<string, object> data = null)
         {
             if (NetworkID == 0)
             {
-                VehicleManager.makenetworked(Game.PlayerPed.CurrentVehicle);
-                if (Game.PlayerPed.CurrentVehicle.GetNetworkId() != 0)
-                {
-                    MakeSureItExists(Game.PlayerPed.CurrentVehicle.GetNetworkId(), out vehicle);
-                    return true;
-                }
-                Utils.DebugWriteLine("ERROR Try to add vehicle\nNetwordID equals 0");
+               // VehicleManager.makenetworked()
+                Utils.DebugWriteLine("ERROR NetwordID equals 0 Can't add vehicle\n");
                 vehicle = null;
+                data = null;
                 return false;
             }
-
             else if (!ContainsKey(NetworkID))
             {
                 try
@@ -64,61 +60,16 @@ namespace ELS.Manager
                     int handle = API.NetToVeh(NetworkID);
                     if (handle == 0)
                     {
-                        veh = new ELSVehicle(Game.PlayerPed.CurrentVehicle.Handle);
+                        Utils.ReleaseWriteLine("handle=0");
                     }
                     else
                     {
-                        veh = new ELSVehicle(handle);
+                        if (data != null)
+                            veh = new ELSVehicle(handle, data);
+                        else
+                            veh = new ELSVehicle(handle, data);
                     }
                     Add(NetworkID,veh);
-                    vehicle = veh;
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Utils.DebugWriteLine($"Exists Error: {ex.Message} due to {ex.InnerException}");
-                    vehicle = null;
-                    return false;
-                    throw ex;
-                }
-
-            }
-            else
-            {
-                vehicle = this[NetworkID];//Find(poolObject => ((ELSVehicle)poolObject).GetNetworkId() == NetworkID);
-                return true;
-            }
-        }
-        public bool MakeSureItExists(int NetworkID, IDictionary<string, object> data, [Optional]out ELSVehicle vehicle)
-        {
-            if (NetworkID == 0)
-            {
-                Utils.DebugWriteLine("ERROR NetwordID equals 0\n");
-                VehicleManager.makenetworked(Game.PlayerPed.CurrentVehicle);
-                if (Game.PlayerPed.CurrentVehicle.GetNetworkId() != 0)
-                {
-                    MakeSureItExists(Game.PlayerPed.CurrentVehicle.GetNetworkId(), out vehicle);
-                    return true;
-                }
-                vehicle = null;
-                return false;
-            }
-
-            else if (!ContainsKey(NetworkID))
-            {
-                try
-                {
-                    ELSVehicle veh = null;
-                    int handle = API.NetToVeh(NetworkID);
-                    if (handle == 0)
-                    {
-                        veh = new ELSVehicle(Game.PlayerPed.CurrentVehicle.Handle, data);
-                    }
-                    else
-                    {
-                        veh = new ELSVehicle(handle, data);
-                    }
-                    Add(veh.GetNetworkId(),veh);
                     Utils.DebugWriteLine($"Adding Vehicle");
                     vehicle = veh;
                     return true;
