@@ -53,7 +53,8 @@ namespace ELS
             MoveSpotlightDown,
             MoveSpotlightLeft,
             MoveSpotlightRight,
-            ToggleInd
+            ToggleInd,
+            ToggleBrd
         }
         internal enum MessageTypes
         {

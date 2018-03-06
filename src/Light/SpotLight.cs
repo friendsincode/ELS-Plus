@@ -112,7 +112,7 @@ namespace ELS.Light
             dirVector = destinationCoords - spotoffset;
             dirVector.Normalize();
             //Function.Call(Hash.DRAW_SPOT_LIGHT, spotoffset.X, spotoffset.Y, spotoffset.Z, dirVector.X, dirVector.Y, dirVector.Z, 255, 255, 255, 100.0f, 1f, 0.0f, 13.0f, 1f,100f);
-            API.DrawSpotLightWithShadow(spotoffset.X,spotoffset.Y,spotoffset.Z, dirVector.X,dirVector.Y,dirVector.Z, 255,255,255,Global.TkdnRng,Global.TkdnInt,1f,13f,1f,100f);
+            API.DrawSpotLightWithShadow(spotoffset.X,spotoffset.Y,spotoffset.Z, dirVector.X,dirVector.Y,dirVector.Z, 255,255,255,Global.TkdnRng,Global.TkdnInt,1f,13f,1f,0);
         }
 
     }
