@@ -12,14 +12,14 @@ namespace ELS.Manager
 {
     class VehicleList : Dictionary<int,ELSVehicle>
     {
-        /*public new void Add(ELSVehicle veh)
-        {
-            base.Add(veh);
-        }*/
+        //public new void Add(ELSVehicle veh)
+        //{
+        //    base.Add(veh);
+        //}
         public void Add(int NetworkID)
         {
             var veh = new ELSVehicle(API.NetToVeh(NetworkID));
-            Add(veh.GetNetworkId(),veh);
+            Add(NetworkID,veh);
         }
         public bool IsReadOnly => throw new NotImplementedException();
         public void RunTick()
@@ -31,7 +31,7 @@ namespace ELS.Manager
 
             try
             {
-                foreach (var t in this.Values)
+                foreach (var t in Values)
                 {
                     if (vehicle == null ||  t.Handle!=vehicle.Handle)
                     t.RunExternalTick();
@@ -46,8 +46,12 @@ namespace ELS.Manager
         {
             if (NetworkID == 0)
             {
+
                // VehicleManager.makenetworked()
                 Utils.DebugWriteLine("ERROR NetwordID equals 0 Can't add vehicle\n");
+
+                CitizenFX.Core.Debug.WriteLine("ERROR Try to add vehicle\nNetwordID equals 0");
+
                 vehicle = null;
                 data = null;
                 return false;
@@ -70,13 +74,17 @@ namespace ELS.Manager
                             veh = new ELSVehicle(handle, data);
                     }
                     Add(NetworkID,veh);
+
                     Utils.DebugWriteLine($"Adding Vehicle");
+
                     vehicle = veh;
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    CitizenFX.Core.Debug.Write($"Exsits Error With Data: {ex.Message}");
+#if DEBUG 
+                    CitizenFX.Core.Debug.Write($"Exsits Error: {ex.Message} due to {ex.InnerException}");
+#endif
                     vehicle = null;
                     return false;
                     throw ex;
@@ -85,15 +93,15 @@ namespace ELS.Manager
             }
             else
             {
-                vehicle = this[NetworkID];
+                vehicle = this[NetworkID];//Find(poolObject => ((ELSVehicle)poolObject).GetNetworkId() == NetworkID);
                 return true;
             }
         }
         public void CleanUP()
         {
-            foreach(ELSVehicle v in this.Values)
+            for(int i = 0; i < Count; i++)
             {
-                v.CleanUP();
+                this.ElementAt(i).Value.CleanUP();
             }
         }
         ~VehicleList()
