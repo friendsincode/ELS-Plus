@@ -28,7 +28,7 @@ namespace ELS.Manager
         }
         public void RunExternalTick( ELSVehicle vehicle=null)
         {
-
+            if (vehicle == null) return;
             try
             {
                 foreach (var t in Values)
