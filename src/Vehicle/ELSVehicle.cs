@@ -73,6 +73,8 @@ namespace ELS
             Utils.DebugWriteLine("ELSVehicle.cs:running vehicle deconstructor");
         }
 
+        internal Vehicle GetVehicle { get { return _vehicle; } }
+
         internal void RunTick()
         {
             _siren.Ticker();

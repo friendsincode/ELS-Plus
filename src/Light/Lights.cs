@@ -194,7 +194,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 11) && _vcfroot.EOVERRIDE.Extra11.IsElsControlled)
                             {
-                                this._extras.SCL = new Extra.Extra(_vehicle, 11, _vcfroot.EOVERRIDE.Extra11);
+                                this._extras.TDL = new Extra.Extra(_vehicle, 11, _vcfroot.EOVERRIDE.Extra11);
                             }
                         }
                         break;
@@ -202,7 +202,7 @@ namespace ELS.Light
                         {
                             if (API.DoesExtraExist(_vehicle.Handle, 12) && _vcfroot.EOVERRIDE.Extra12.IsElsControlled)
                             {
-                                this._extras.TDL = new Extra.Extra(_vehicle, 12, _vcfroot.EOVERRIDE.Extra12);
+                                this._extras.SCL = new Extra.Extra(_vehicle, 12, _vcfroot.EOVERRIDE.Extra12);
                             }
                         }
                         break;
