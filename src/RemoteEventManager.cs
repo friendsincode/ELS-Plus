@@ -34,7 +34,27 @@ namespace ELS
             ManualTone1,
             ManualTone2,
             ManualTone3,
-            ManualTone4
+            ManualTone4,
+            ManualSound,
+            DualSiren,
+            PanicAlarm,
+            ToggleWrnL,
+            ToggleSecL,
+            ToggleCrsL,
+            ToggleTDL,
+            ToggleSCL,
+            ChangePrmPatt,
+            ChangeSecPatt,
+            ChangeWrnPatt,
+            ToggleLstg,
+            ChgPattPrmL,
+            ChgPattWrnL,
+            MoveSpotlightUp,
+            MoveSpotlightDown,
+            MoveSpotlightLeft,
+            MoveSpotlightRight,
+            ToggleInd,
+            ToggleBrd
         }
         internal enum MessageTypes
         {
@@ -45,11 +65,18 @@ namespace ELS
         }
         internal delegate void RemoteMessageRecievedHandler();
         internal static event RemoteMessageRecievedHandler RemoteMessageRecieved;
-        internal static void SendEvent(Commands type,Vehicle vehicle,bool state)
+
+        internal static void SendEvent(Commands type, Vehicle vehicle, bool state, int playerID)
         {
-            var netId = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);
-            var ped = vehicle.GetPedOnSeat(VehicleSeat.Driver);
-            BaseScript.TriggerServerEvent("ELS",type.ToString(),Game.Player.ServerId,state);
+            CitizenFX.Core.Debug.WriteLine($"sendding data for netID {vehicle.GetNetworkId()}");
+            Manager.VehicleManager.SyncRequestReply(type, vehicle.GetNetworkId(),playerID);
+
+            //var netId = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);
+            //var ped = vehicle.GetPedOnSeat(VehicleSeat.Driver);
+            //vehicle.RegisterAsNetworked();
+            //vehicle.SetExistOnAllMachines(true);
+            // BaseScript.TriggerServerEvent("ELS", type.ToString(), vehicle.GetNetworkId(), playerID, state);
+
         }
     }
 }

@@ -15,51 +15,81 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]
-RegisterServerEvent("sirenStateChanged")
 RegisterServerEvent("ELS")
 RegisterServerEvent("ELS:FullSync")
 RegisterServerEvent("ONDEBUG")
+RegisterServerEvent("ELS:FullSync:Request")
+RegisterServerEvent("ELS:FullSync:Broadcast")
+RegisterServerEvent("ELS:FullSync:Request:All")
 --[[
 if clr.System.IO.Directory.Exists("resources/" .. GetInvokingResource() .. "/bugs") ==false then
 	clr.System.IO.Directory.CreateDirectory("resources/" .. GetInvokingResource() .. "/bugs")
 end]]
 
-AddEventHandler("sirenStateChanged",function (vehnetId,netSoundid,propertyName,state)
-	--print(netId .. propertyName .. state)
-	TriggerClientEvent("sirenStateChanged",-1,vehnetId,netSoundid,propertyName,state)
-	local players=GetPlayers()
-	print(players)
-	for x,y in ipairs(players) do
-		print(x .. " "  .. y)
-	end
-end)
+-- Print contents of `tbl`, with indentation.
+-- `indent` sets the initial level of indentation.
+CacheData = {}
 
-AddEventHandler("ELS",function(type,netId,state)
-	print(type .. " " .. netId .. " "  .. state)
-	TriggerClientEvent("ELS:SirenUpdated",-1,type,netId,state)
-end)
-
-local function PrintTable(table)
-	if type(table) == 'table' then
-		for v in table do
-			print(v)
-			if type(v) == 'table' then
-				PrintTable(v)
-			end
-		end
-	end
+function tprint (tbl, indent)
+  if not indent then indent = 0 end
+  for k, v in pairs(tbl) do
+    formatting = string.rep("  ", indent) .. k .. ": "
+    if type(v) == "table" then
+      print(formatting)
+      tprint(v, indent+1)
+    else
+      print(formatting .. tostring(v))
+    end
+  end
 end
 
-AddEventHandler("ELS:FullSync",function(DataType,DataDic,PlayerId)
-	--print(type(DataType),type(DataDic),type(PlayerId))
-	--PrintTable(DataType)
-	--if DataType == 'Tones' then
-		PrintTable(DataDic)
-	
-	TriggerClientEvent("ELS:NewFullSyncData",-1,DataType,DataDic,PlayerId)
+function CacheELSData(data)
+  if CacheData[data["NetworkID"]] == nil then
+  	 CacheData[data["NetworkID"]]=data
+  	 	print("inserting data")
+  	 else 
+  		if type(CacheData[data["NetworkID"]]) == "table" then 
+  			table.remove(CacheData,data["NetworkID"])
+  			print("removing and inserting")
+  			CacheData[data["NetworkID"]] = data
+  	 end
+  end
+end
+local function GetBroadcastList(PlayerId)
+	local players = GetPlayers()
+	for k,v in pairs(players) do
+	    if v == tostring(PlayerId) then
+           table.remove(players,k)
+	   end
+    end
+	tprint(players)
+	return players
+end
+
+AddEventHandler("ELS:FullSync:Request:All",function()
+	print(source," is requsting ELS sync data")
+	if #CacheData > 1 then
+		TriggerClientEvent("ELS:FullSync:NewSpawnWithData",source,CacheData)
+	else
+		TriggerClientEvent("ELS:FullSync:NewSpawn",source)
+	end
 end)
 
+AddEventHandler("ELS:FullSync:Broadcast",function(DataDic)
+	tprint(DataDic)
+	CacheELSData(DataDic)
+	print(DataDic["NetworkID"])
+	TriggerClientEvent("ELS:NewFullSyncData",-1,DataDic)
+	--TriggerClientEvent("ELS:FullSync:Request2",source,CacheData)
 
+end)
+
+AddEventHandler("ELS:FullSync:Unicast",function(DataDic,PlayerId)
+	PrintTable(DataDic)
+	TriggerClientEvent("ELS:NewFullSyncData",PlayerId,DataDic)
+end)
+
+--[[
 local function getAllSubDirs(directory)
     local tabletoreturn={}
     local dfiles = clr.System.IO.Directory.GetDirectories(directory,"*",clr.System.IO.SearchOption.AllDirectories)
@@ -69,7 +99,7 @@ local function getAllSubDirs(directory)
     end
 	--print(typeOf(dfiles))
     return dfiles
-end
+end]]
 
 
 

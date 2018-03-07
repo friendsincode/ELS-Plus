@@ -37,46 +37,32 @@ namespace ELS
         {
             LoadFilesPromScript(scriptName);
         }
-        internal void RunLoader()
-        {
-            var numResources = Function.Call<int>((Hash)Game.GenerateHash("GET_NUM_RESOURCES"));
-            for (int x = 0; x < numResources; x++)
-            {
-                var name = Function.Call<string>((Hash)Game.GenerateHash("GET_RESOURCE_BY_FIND_INDEX"), x);
-                LoadFilesPromScript(name);
-            }
-        }
 
         private static void LoadFilesPromScript(string name)
         {
             int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "file");
-            
+            CitizenFX.Core.Debug.WriteLine($"{num} files for {name}");
             for (int i = 0; i < num; i++)
             {
                 var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
 
                 var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
 
-
-                if (filename.Equals("extra-files/ELS.ini"))
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine($"Checking {filename}");
+#endif
+                if (filename.Equals("ELS.ini"))
                 {
-                    if (configuration.ControlConfiguration.isValidData(data))
+                    if (configuration.ElsConfiguration.isValidData(data))
                     {
                         OnSettingsLoaded?.Invoke(SettingsType.Type.GLOBAL, data);
                     }
                 }
-                else if (Path.GetExtension(filename).ToLower()==".xml")
-                {
-
-                    if (VCF.isValidData(data))
-                    {
-#if DEBUG
-                        Debug.WriteLine("Sending data to XML parser");
-#endif
-                        VCF.load(SettingsType.Type.VCF, filename, data);
-                    }
-                }
             }
+        }
+        internal void UnLoadFilesFromScript(string name)
+        {
+            VCF.unload(name);
         }
     }
 }

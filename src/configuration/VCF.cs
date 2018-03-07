@@ -19,17 +19,44 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+//using System.Xml.Serialization;
 using CitizenFX.Core;
 
 namespace ELS.configuration
 {
+    internal struct VCFEntry
+    {
+        public string filename;
+        public string resource;
+        public Vcfroot root;
+        public Model modelHash;
+
+        public VCFEntry(string fn, string res, Model hash, Vcfroot vcfroot)
+        {
+            filename = fn;
+            resource = res;
+            root = vcfroot;
+            modelHash = hash;
+        }
+    }
+
     public class VCF
     {
-        internal static List<vcfroot> ELSVehicle = new List<vcfroot>();
+        internal static Dictionary<int, VCFEntry> ELSVehicle = new Dictionary<int, VCFEntry>();
         public VCF()
         {
         }
-        internal static void load(SettingsType.Type type, string name, string Data)
+
+        internal static void ParseVcfs(List<dynamic> VcfData)
+        {
+            foreach(dynamic vcf in VcfData)
+            {
+                Utils.DebugWriteLine($"Currently adding {vcf.Item2} from {vcf.Item1}");
+                load(SettingsType.Type.VCF, vcf.Item2, vcf.Item3, vcf.Item1);
+            }
+        }
+
+        static void load(SettingsType.Type type, string name, string Data, string ResourceName)
         {
             var bytes = Encoding.UTF8.GetBytes(Data);
             if (bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
@@ -39,4615 +66,1281 @@ namespace ELS.configuration
                 throw (ex);
             }
             Encoding.UTF8.GetPreamble();
-            var data = new vcfroot
-            {
-                SOUNDS = new vcfrootSOUNDS
-                {
-                    MainHorn = new vcfrootSOUNDSMainHorn(),
-                    SrnTone1 = new vcfrootSOUNDSSrnTone1(),
-                    SrnTone2 = new vcfrootSOUNDSSrnTone2(),
-                    SrnTone3 = new vcfrootSOUNDSSrnTone3(),
-                    SrnTone4 = new vcfrootSOUNDSSrnTone4(),
-                    AuxSiren = new vcfrootSOUNDSAuxSiren(),
-                    ManTone1 = new vcfrootSOUNDSManTone1(),
-                    ManTone2 = new vcfrootSOUNDSManTone2(),
-                    PanicMde = new vcfrootSOUNDSPanicMde()
-                },
-                ACORONAS = new vcfrootACORONAS(),
-                CRUISE = new vcfrootCRUISE(),
-                EOVERRIDE = new vcfrootEOVERRIDE
-                {
-                    Extra01 = new vcfrootEOVERRIDEExtra01(),
-                    Extra02 = new vcfrootEOVERRIDEExtra02(),
-                    Extra03 = new vcfrootEOVERRIDEExtra03(),
-                    Extra04 = new vcfrootEOVERRIDEExtra04(),
-                    Extra05 = new vcfrootEOVERRIDEExtra05(),
-                    Extra06 = new vcfrootEOVERRIDEExtra06(),
-                    Extra07 = new vcfrootEOVERRIDEExtra07(),
-                    Extra08 = new vcfrootEOVERRIDEExtra08(),
-                    Extra09 = new vcfrootEOVERRIDEExtra09(),
-                    Extra10 = new vcfrootEOVERRIDEExtra10(),
-                    Extra11 = new vcfrootEOVERRIDEExtra11(),
-                    Extra12 = new vcfrootEOVERRIDEExtra12()
-                },
-                INTERFACE = new vcfrootINTERFACE(),
-                MISC = new vcfrootMISC(),
-                PRML = new vcfrootPRML(),
-                SECL = new vcfrootSECL(),
-                WRNL = new vcfrootWRNL()
-            };
-
+            Model hash = Game.GenerateHash(Path.GetFileNameWithoutExtension(name));
+            var data = new VCFEntry(Path.GetFileNameWithoutExtension(name), ResourceName, hash, new Vcfroot());
             if (type == SettingsType.Type.VCF)
             {
-                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-                doc.LoadXml(Data);
+                //System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+                NanoXMLDocument doc = new NanoXMLDocument(Data);
+                // doc.LoadXml(Data);
                 bool res;
-                data.FileName = Path.GetFileNameWithoutExtension(name);
-
-                data.SOUNDS.ManTone1.AudioString = doc["vcfroot"]["SOUNDS"]["ManTone1"].Attributes["AudioString"].Value;
-                data.SOUNDS.ManTone1.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["ManTone1"].Attributes["AllowUse"].Value);
-
-                data.SOUNDS.ManTone2.AudioString = doc["vcfroot"]["SOUNDS"]["ManTone2"].Attributes["AudioString"].Value;
-                data.SOUNDS.ManTone2.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["ManTone2"].Attributes["AllowUse"].Value);
-
-
-                data.SOUNDS.MainHorn.AudioString = doc["vcfroot"]["SOUNDS"]["MainHorn"].Attributes["AudioString"].Value;
-                data.SOUNDS.MainHorn.InterruptsSiren = bool.Parse(doc["vcfroot"]["SOUNDS"]["MainHorn"].Attributes["InterruptsSiren"].Value);
-
-                data.SOUNDS.SrnTone1.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone1"].Attributes["AudioString"].Value;
-                data.SOUNDS.SrnTone1.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["SrnTone1"].Attributes["AllowUse"].Value);
-
-                data.SOUNDS.SrnTone2.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone2"].Attributes["AudioString"].Value;
-                data.SOUNDS.SrnTone2.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["SrnTone2"].Attributes["AllowUse"].Value);
-
-                data.SOUNDS.SrnTone3.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone3"].Attributes["AudioString"].Value;
-                data.SOUNDS.SrnTone3.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["SrnTone3"].Attributes["AllowUse"].Value);
-
-                data.SOUNDS.SrnTone4.AudioString = doc["vcfroot"]["SOUNDS"]["SrnTone4"].Attributes["AudioString"].Value;
-                data.SOUNDS.SrnTone4.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["SrnTone4"].Attributes["AllowUse"].Value);
-
-                data.SOUNDS.AuxSiren.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["AuxSiren"].Attributes["AllowUse"].Value);
-                data.SOUNDS.AuxSiren.AudioString = doc["vcfroot"]["SOUNDS"]["AuxSiren"].Attributes["AudioString"].Value;
-
-                data.SOUNDS.PanicMde.AllowUse = bool.Parse(doc["vcfroot"]["SOUNDS"]["PanicMde"].Attributes["AllowUse"].Value);
-                data.SOUNDS.PanicMde.AudioString = doc["vcfroot"]["SOUNDS"]["PanicMde"].Attributes["AudioString"].Value;
-
-                data.Author = doc["vcfroot"].Attributes["Author"].Value;
-                ELSVehicle.Add(data);
-                Debug.WriteLine($"Added {data.FileName}");
-            }
-        }
-
-        /// <remarks/>
-
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
-        internal partial class vcfroot
-        {
-
-            private vcfrootINTERFACE iNTERFACEField;
-
-            private vcfrootEOVERRIDE eOVERRIDEField;
-
-            private vcfrootMISC mISCField;
-
-            private vcfrootCRUISE cRUISEField;
-
-            private vcfrootACORONAS aCORONASField;
-
-            private vcfrootSOUNDS sOUNDSField;
-
-            private vcfrootWRNL wRNLField;
-
-            private vcfrootPRML pRMLField;
-
-            private vcfrootSECL sECLField;
-
-            private string descriptionField;
-
-            private string authorField;
-
-            private string FileNameField;
-            /// <remarks/>
-            public vcfrootINTERFACE INTERFACE
-            {
-                get
-                {
-                    return this.iNTERFACEField;
-                }
-                set
-                {
-                    this.iNTERFACEField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootEOVERRIDE EOVERRIDE
-            {
-                get
-                {
-                    return this.eOVERRIDEField;
-                }
-                set
-                {
-                    this.eOVERRIDEField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootMISC MISC
-            {
-                get
-                {
-                    return this.mISCField;
-                }
-                set
-                {
-                    this.mISCField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootCRUISE CRUISE
-            {
-                get
-                {
-                    return this.cRUISEField;
-                }
-                set
-                {
-                    this.cRUISEField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootACORONAS ACORONAS
-            {
-                get
-                {
-                    return this.aCORONASField;
-                }
-                set
-                {
-                    this.aCORONASField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSOUNDS SOUNDS
-            {
-                get
-                {
-                    return this.sOUNDSField;
-                }
-                set
-                {
-                    this.sOUNDSField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootWRNL WRNL
-            {
-                get
-                {
-                    return this.wRNLField;
-                }
-                set
-                {
-                    this.wRNLField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootPRML PRML
-            {
-                get
-                {
-                    return this.pRMLField;
-                }
-                set
-                {
-                    this.pRMLField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSECL SECL
-            {
-                get
-                {
-                    return this.sECLField;
-                }
-                set
-                {
-                    this.sECLField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string Description
-            {
-                get
-                {
-                    return this.descriptionField;
-                }
-                set
-                {
-                    this.descriptionField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string Author
-            {
-                get
-                {
-                    return this.authorField;
-                }
-                set
-                {
-                    this.authorField = value;
-                }
-            }
-
-            public string FileName
-            {
-                get
-                {
-                    return this.FileNameField;
-                }
-                set
-                {
-                    this.FileNameField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootINTERFACE
-        {
-
-            private string lstgActivationTypeField;
-
-            private string defaultSirenModeField;
-
-            private string infoPanelHeaderColorField;
-
-            private string infoPanelButtonLightColorField;
-
-            /// <remarks/>
-            public string LstgActivationType
-            {
-                get
-                {
-                    return this.lstgActivationTypeField;
-                }
-                set
-                {
-                    this.lstgActivationTypeField = value;
-                }
-            }
-
-            /// <remarks/>
-            public string DefaultSirenMode
-            {
-                get
-                {
-                    return this.defaultSirenModeField;
-                }
-                set
-                {
-                    this.defaultSirenModeField = value;
-                }
-            }
-
-            /// <remarks/>
-            public string InfoPanelHeaderColor
-            {
-                get
-                {
-                    return this.infoPanelHeaderColorField;
-                }
-                set
-                {
-                    this.infoPanelHeaderColorField = value;
-                }
-            }
-
-            /// <remarks/>
-            public string InfoPanelButtonLightColor
-            {
-                get
-                {
-                    return this.infoPanelButtonLightColorField;
-                }
-                set
-                {
-                    this.infoPanelButtonLightColorField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootEOVERRIDE
-        {
-
-            private vcfrootEOVERRIDEExtra01 extra01Field;
-
-            private vcfrootEOVERRIDEExtra02 extra02Field;
-
-            private vcfrootEOVERRIDEExtra03 extra03Field;
-
-            private vcfrootEOVERRIDEExtra04 extra04Field;
-
-            private vcfrootEOVERRIDEExtra05 extra05Field;
-
-            private vcfrootEOVERRIDEExtra06 extra06Field;
-
-            private vcfrootEOVERRIDEExtra07 extra07Field;
-
-            private vcfrootEOVERRIDEExtra08 extra08Field;
-
-            private vcfrootEOVERRIDEExtra09 extra09Field;
-
-            private vcfrootEOVERRIDEExtra10 extra10Field;
-
-            private vcfrootEOVERRIDEExtra11 extra11Field;
-
-            private vcfrootEOVERRIDEExtra12 extra12Field;
-
-            /// <remarks/>
-            public vcfrootEOVERRIDEExtra01 Extra01
-            {
-                get
-                {
-                    return this.extra01Field;
-                }
-                set
-                {
-                    this.extra01Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootEOVERRIDEExtra02 Extra02
-            {
-                get
-                {
-                    return this.extra02Field;
-                }
-                set
-                {
-                    this.extra02Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootEOVERRIDEExtra03 Extra03
-            {
-                get
-                {
-                    return this.extra03Field;
-                }
-                set
-                {
-                    this.extra03Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootEOVERRIDEExtra04 Extra04
-            {
-                get
-                {
-                    return this.extra04Field;
-                }
-                set
-                {
-                    this.extra04Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootEOVERRIDEExtra05 Extra05
-            {
-                get
-                {
-                    return this.extra05Field;
-                }
-                set
-                {
-                    this.extra05Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootEOVERRIDEExtra06 Extra06
-            {
-                get
-                {
-                    return this.extra06Field;
-                }
-                set
-                {
-                    this.extra06Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootEOVERRIDEExtra07 Extra07
-            {
-                get
-                {
-                    return this.extra07Field;
-                }
-                set
-                {
-                    this.extra07Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootEOVERRIDEExtra08 Extra08
-            {
-                get
-                {
-                    return this.extra08Field;
-                }
-                set
-                {
-                    this.extra08Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootEOVERRIDEExtra09 Extra09
-            {
-                get
-                {
-                    return this.extra09Field;
-                }
-                set
-                {
-                    this.extra09Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootEOVERRIDEExtra10 Extra10
-            {
-                get
-                {
-                    return this.extra10Field;
-                }
-                set
-                {
-                    this.extra10Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootEOVERRIDEExtra11 Extra11
-            {
-                get
-                {
-                    return this.extra11Field;
-                }
-                set
-                {
-                    this.extra11Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootEOVERRIDEExtra12 Extra12
-            {
-                get
-                {
-                    return this.extra12Field;
-                }
-                set
-                {
-                    this.extra12Field = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootEOVERRIDEExtra01
-        {
-
-            private bool isElsControlledField;
-
-            private bool allowEnvLightField;
-
-            private string colorField;
-
-            private decimal offsetXField;
-
-            private decimal offsetYField;
-
-            private decimal offsetZField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool IsElsControlled
-            {
-                get
-                {
-                    return this.isElsControlledField;
-                }
-                set
-                {
-                    this.isElsControlledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowEnvLight
-            {
-                get
-                {
-                    return this.allowEnvLightField;
-                }
-                set
-                {
-                    this.allowEnvLightField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string Color
-            {
-                get
-                {
-                    return this.colorField;
-                }
-                set
-                {
-                    this.colorField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetX
-            {
-                get
-                {
-                    return this.offsetXField;
-                }
-                set
-                {
-                    this.offsetXField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetY
-            {
-                get
-                {
-                    return this.offsetYField;
-                }
-                set
-                {
-                    this.offsetYField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetZ
-            {
-                get
-                {
-                    return this.offsetZField;
-                }
-                set
-                {
-                    this.offsetZField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootEOVERRIDEExtra02
-        {
-
-            private bool isElsControlledField;
-
-            private bool allowEnvLightField;
-
-            private string colorField;
-
-            private decimal offsetXField;
-
-            private decimal offsetYField;
-
-            private decimal offsetZField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool IsElsControlled
-            {
-                get
-                {
-                    return this.isElsControlledField;
-                }
-                set
-                {
-                    this.isElsControlledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowEnvLight
-            {
-                get
-                {
-                    return this.allowEnvLightField;
-                }
-                set
-                {
-                    this.allowEnvLightField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string Color
-            {
-                get
-                {
-                    return this.colorField;
-                }
-                set
-                {
-                    this.colorField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetX
-            {
-                get
-                {
-                    return this.offsetXField;
-                }
-                set
-                {
-                    this.offsetXField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetY
-            {
-                get
-                {
-                    return this.offsetYField;
-                }
-                set
-                {
-                    this.offsetYField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetZ
-            {
-                get
-                {
-                    return this.offsetZField;
-                }
-                set
-                {
-                    this.offsetZField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootEOVERRIDEExtra03
-        {
-
-            private bool isElsControlledField;
-
-            private bool allowEnvLightField;
-
-            private string colorField;
-
-            private decimal offsetXField;
-
-            private decimal offsetYField;
-
-            private decimal offsetZField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool IsElsControlled
-            {
-                get
-                {
-                    return this.isElsControlledField;
-                }
-                set
-                {
-                    this.isElsControlledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowEnvLight
-            {
-                get
-                {
-                    return this.allowEnvLightField;
-                }
-                set
-                {
-                    this.allowEnvLightField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string Color
-            {
-                get
-                {
-                    return this.colorField;
-                }
-                set
-                {
-                    this.colorField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetX
-            {
-                get
-                {
-                    return this.offsetXField;
-                }
-                set
-                {
-                    this.offsetXField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetY
-            {
-                get
-                {
-                    return this.offsetYField;
-                }
-                set
-                {
-                    this.offsetYField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetZ
-            {
-                get
-                {
-                    return this.offsetZField;
-                }
-                set
-                {
-                    this.offsetZField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootEOVERRIDEExtra04
-        {
-
-            private bool isElsControlledField;
-
-            private bool allowEnvLightField;
-
-            private string colorField;
-
-            private decimal offsetXField;
-
-            private decimal offsetYField;
-
-            private decimal offsetZField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool IsElsControlled
-            {
-                get
-                {
-                    return this.isElsControlledField;
-                }
-                set
-                {
-                    this.isElsControlledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowEnvLight
-            {
-                get
-                {
-                    return this.allowEnvLightField;
-                }
-                set
-                {
-                    this.allowEnvLightField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string Color
-            {
-                get
-                {
-                    return this.colorField;
-                }
-                set
-                {
-                    this.colorField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetX
-            {
-                get
-                {
-                    return this.offsetXField;
-                }
-                set
-                {
-                    this.offsetXField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetY
-            {
-                get
-                {
-                    return this.offsetYField;
-                }
-                set
-                {
-                    this.offsetYField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetZ
-            {
-                get
-                {
-                    return this.offsetZField;
-                }
-                set
-                {
-                    this.offsetZField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootEOVERRIDEExtra05
-        {
-
-            private bool isElsControlledField;
-
-            private bool allowEnvLightField;
-
-            private string colorField;
-
-            private decimal offsetXField;
-
-            private decimal offsetYField;
-
-            private decimal offsetZField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool IsElsControlled
-            {
-                get
-                {
-                    return this.isElsControlledField;
-                }
-                set
-                {
-                    this.isElsControlledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowEnvLight
-            {
-                get
-                {
-                    return this.allowEnvLightField;
-                }
-                set
-                {
-                    this.allowEnvLightField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string Color
-            {
-                get
-                {
-                    return this.colorField;
-                }
-                set
-                {
-                    this.colorField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetX
-            {
-                get
-                {
-                    return this.offsetXField;
-                }
-                set
-                {
-                    this.offsetXField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetY
-            {
-                get
-                {
-                    return this.offsetYField;
-                }
-                set
-                {
-                    this.offsetYField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetZ
-            {
-                get
-                {
-                    return this.offsetZField;
-                }
-                set
-                {
-                    this.offsetZField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootEOVERRIDEExtra06
-        {
-
-            private bool isElsControlledField;
-
-            private bool allowEnvLightField;
-
-            private string colorField;
-
-            private decimal offsetXField;
-
-            private decimal offsetYField;
-
-            private decimal offsetZField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool IsElsControlled
-            {
-                get
-                {
-                    return this.isElsControlledField;
-                }
-                set
-                {
-                    this.isElsControlledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowEnvLight
-            {
-                get
-                {
-                    return this.allowEnvLightField;
-                }
-                set
-                {
-                    this.allowEnvLightField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string Color
-            {
-                get
-                {
-                    return this.colorField;
-                }
-                set
-                {
-                    this.colorField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetX
-            {
-                get
-                {
-                    return this.offsetXField;
-                }
-                set
-                {
-                    this.offsetXField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetY
-            {
-                get
-                {
-                    return this.offsetYField;
-                }
-                set
-                {
-                    this.offsetYField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetZ
-            {
-                get
-                {
-                    return this.offsetZField;
-                }
-                set
-                {
-                    this.offsetZField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootEOVERRIDEExtra07
-        {
-
-            private bool isElsControlledField;
-
-            private bool allowEnvLightField;
-
-            private string colorField;
-
-            private decimal offsetXField;
-
-            private decimal offsetYField;
-
-            private decimal offsetZField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool IsElsControlled
-            {
-                get
-                {
-                    return this.isElsControlledField;
-                }
-                set
-                {
-                    this.isElsControlledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowEnvLight
-            {
-                get
-                {
-                    return this.allowEnvLightField;
-                }
-                set
-                {
-                    this.allowEnvLightField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string Color
-            {
-                get
-                {
-                    return this.colorField;
-                }
-                set
-                {
-                    this.colorField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetX
-            {
-                get
-                {
-                    return this.offsetXField;
-                }
-                set
-                {
-                    this.offsetXField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetY
-            {
-                get
-                {
-                    return this.offsetYField;
-                }
-                set
-                {
-                    this.offsetYField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetZ
-            {
-                get
-                {
-                    return this.offsetZField;
-                }
-                set
-                {
-                    this.offsetZField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootEOVERRIDEExtra08
-        {
-
-            private bool isElsControlledField;
-
-            private bool allowEnvLightField;
-
-            private string colorField;
-
-            private decimal offsetXField;
-
-            private decimal offsetYField;
-
-            private decimal offsetZField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool IsElsControlled
-            {
-                get
-                {
-                    return this.isElsControlledField;
-                }
-                set
-                {
-                    this.isElsControlledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowEnvLight
-            {
-                get
-                {
-                    return this.allowEnvLightField;
-                }
-                set
-                {
-                    this.allowEnvLightField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string Color
-            {
-                get
-                {
-                    return this.colorField;
-                }
-                set
-                {
-                    this.colorField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetX
-            {
-                get
-                {
-                    return this.offsetXField;
-                }
-                set
-                {
-                    this.offsetXField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetY
-            {
-                get
-                {
-                    return this.offsetYField;
-                }
-                set
-                {
-                    this.offsetYField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetZ
-            {
-                get
-                {
-                    return this.offsetZField;
-                }
-                set
-                {
-                    this.offsetZField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootEOVERRIDEExtra09
-        {
-
-            private bool isElsControlledField;
-
-            private bool allowEnvLightField;
-
-            private string colorField;
-
-            private decimal offsetXField;
-
-            private decimal offsetYField;
-
-            private decimal offsetZField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool IsElsControlled
-            {
-                get
-                {
-                    return this.isElsControlledField;
-                }
-                set
-                {
-                    this.isElsControlledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowEnvLight
-            {
-                get
-                {
-                    return this.allowEnvLightField;
-                }
-                set
-                {
-                    this.allowEnvLightField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string Color
-            {
-                get
-                {
-                    return this.colorField;
-                }
-                set
-                {
-                    this.colorField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetX
-            {
-                get
-                {
-                    return this.offsetXField;
-                }
-                set
-                {
-                    this.offsetXField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetY
-            {
-                get
-                {
-                    return this.offsetYField;
-                }
-                set
-                {
-                    this.offsetYField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public decimal OffsetZ
-            {
-                get
-                {
-                    return this.offsetZField;
-                }
-                set
-                {
-                    this.offsetZField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootEOVERRIDEExtra10
-        {
-
-            private bool isElsControlledField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool IsElsControlled
-            {
-                get
-                {
-                    return this.isElsControlledField;
-                }
-                set
-                {
-                    this.isElsControlledField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootEOVERRIDEExtra11
-        {
-
-            private bool isElsControlledField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool IsElsControlled
-            {
-                get
-                {
-                    return this.isElsControlledField;
-                }
-                set
-                {
-                    this.isElsControlledField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootEOVERRIDEExtra12
-        {
-
-            private bool isElsControlledField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool IsElsControlled
-            {
-                get
-                {
-                    return this.isElsControlledField;
-                }
-                set
-                {
-                    this.isElsControlledField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootMISC
-        {
-
-            private bool vehicleIsSlicktopField;
-
-            private string arrowboardTypeField;
-
-            private bool useSteadyBurnLightsField;
-
-            private byte dfltSirenLtsActivateAtLstgField;
-
-            private vcfrootMISCTakedowns takedownsField;
-
-            private vcfrootMISCSceneLights sceneLightsField;
-
-            /// <remarks/>
-            public bool VehicleIsSlicktop
-            {
-                get
-                {
-                    return this.vehicleIsSlicktopField;
-                }
-                set
-                {
-                    this.vehicleIsSlicktopField = value;
-                }
-            }
-
-            /// <remarks/>
-            public string ArrowboardType
-            {
-                get
-                {
-                    return this.arrowboardTypeField;
-                }
-                set
-                {
-                    this.arrowboardTypeField = value;
-                }
-            }
-
-            /// <remarks/>
-            public bool UseSteadyBurnLights
-            {
-                get
-                {
-                    return this.useSteadyBurnLightsField;
-                }
-                set
-                {
-                    this.useSteadyBurnLightsField = value;
-                }
-            }
-
-            /// <remarks/>
-            public byte DfltSirenLtsActivateAtLstg
-            {
-                get
-                {
-                    return this.dfltSirenLtsActivateAtLstgField;
-                }
-                set
-                {
-                    this.dfltSirenLtsActivateAtLstgField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootMISCTakedowns Takedowns
-            {
-                get
-                {
-                    return this.takedownsField;
-                }
-                set
-                {
-                    this.takedownsField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootMISCSceneLights SceneLights
-            {
-                get
-                {
-                    return this.sceneLightsField;
-                }
-                set
-                {
-                    this.sceneLightsField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootMISCTakedowns
-        {
-
-            private bool allowUseField;
-
-            private bool mirroredField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowUse
-            {
-                get
-                {
-                    return this.allowUseField;
-                }
-                set
-                {
-                    this.allowUseField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Mirrored
-            {
-                get
-                {
-                    return this.mirroredField;
-                }
-                set
-                {
-                    this.mirroredField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootMISCSceneLights
-        {
-
-            private bool allowUseField;
-
-            private bool illuminateSidesOnlyField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowUse
-            {
-                get
-                {
-                    return this.allowUseField;
-                }
-                set
-                {
-                    this.allowUseField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool IlluminateSidesOnly
-            {
-                get
-                {
-                    return this.illuminateSidesOnlyField;
-                }
-                set
-                {
-                    this.illuminateSidesOnlyField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootCRUISE
-        {
-
-            private bool disableAtLstg3Field;
-
-            private vcfrootCRUISEUseExtras useExtrasField;
-
-            /// <remarks/>
-            public bool DisableAtLstg3
-            {
-                get
-                {
-                    return this.disableAtLstg3Field;
-                }
-                set
-                {
-                    this.disableAtLstg3Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootCRUISEUseExtras UseExtras
-            {
-                get
-                {
-                    return this.useExtrasField;
-                }
-                set
-                {
-                    this.useExtrasField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootCRUISEUseExtras
-        {
-
-            private bool extra1Field;
-
-            private bool extra2Field;
-
-            private bool extra3Field;
-
-            private bool extra4Field;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Extra1
-            {
-                get
-                {
-                    return this.extra1Field;
-                }
-                set
-                {
-                    this.extra1Field = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Extra2
-            {
-                get
-                {
-                    return this.extra2Field;
-                }
-                set
-                {
-                    this.extra2Field = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Extra3
-            {
-                get
-                {
-                    return this.extra3Field;
-                }
-                set
-                {
-                    this.extra3Field = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Extra4
-            {
-                get
-                {
-                    return this.extra4Field;
-                }
-                set
-                {
-                    this.extra4Field = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootACORONAS
-        {
-
-            private vcfrootACORONASHeadlights headlightsField;
-
-            private vcfrootACORONASTailLights tailLightsField;
-
-            private vcfrootACORONASIndicatorsF indicatorsFField;
-
-            private vcfrootACORONASIndicatorsB indicatorsBField;
-
-            private vcfrootACORONASReverseLights reverseLightsField;
-
-            /// <remarks/>
-            public vcfrootACORONASHeadlights Headlights
-            {
-                get
-                {
-                    return this.headlightsField;
-                }
-                set
-                {
-                    this.headlightsField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootACORONASTailLights TailLights
-            {
-                get
-                {
-                    return this.tailLightsField;
-                }
-                set
-                {
-                    this.tailLightsField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootACORONASIndicatorsF IndicatorsF
-            {
-                get
-                {
-                    return this.indicatorsFField;
-                }
-                set
-                {
-                    this.indicatorsFField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootACORONASIndicatorsB IndicatorsB
-            {
-                get
-                {
-                    return this.indicatorsBField;
-                }
-                set
-                {
-                    this.indicatorsBField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootACORONASReverseLights ReverseLights
-            {
-                get
-                {
-                    return this.reverseLightsField;
-                }
-                set
-                {
-                    this.reverseLightsField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootACORONASHeadlights
-        {
-
-            private byte dfltPatternField;
-
-            private string colorLField;
-
-            private string colorRField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte DfltPattern
-            {
-                get
-                {
-                    return this.dfltPatternField;
-                }
-                set
-                {
-                    this.dfltPatternField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string ColorL
-            {
-                get
-                {
-                    return this.colorLField;
-                }
-                set
-                {
-                    this.colorLField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string ColorR
-            {
-                get
-                {
-                    return this.colorRField;
-                }
-                set
-                {
-                    this.colorRField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootACORONASTailLights
-        {
-
-            private byte dfltPatternField;
-
-            private string colorLField;
-
-            private string colorRField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte DfltPattern
-            {
-                get
-                {
-                    return this.dfltPatternField;
-                }
-                set
-                {
-                    this.dfltPatternField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string ColorL
-            {
-                get
-                {
-                    return this.colorLField;
-                }
-                set
-                {
-                    this.colorLField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string ColorR
-            {
-                get
-                {
-                    return this.colorRField;
-                }
-                set
-                {
-                    this.colorRField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootACORONASIndicatorsF
-        {
-
-            private byte dfltPatternField;
-
-            private string colorLField;
-
-            private string colorRField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte DfltPattern
-            {
-                get
-                {
-                    return this.dfltPatternField;
-                }
-                set
-                {
-                    this.dfltPatternField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string ColorL
-            {
-                get
-                {
-                    return this.colorLField;
-                }
-                set
-                {
-                    this.colorLField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string ColorR
-            {
-                get
-                {
-                    return this.colorRField;
-                }
-                set
-                {
-                    this.colorRField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootACORONASIndicatorsB
-        {
-
-            private byte dfltPatternField;
-
-            private string colorLField;
-
-            private string colorRField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte DfltPattern
-            {
-                get
-                {
-                    return this.dfltPatternField;
-                }
-                set
-                {
-                    this.dfltPatternField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string ColorL
-            {
-                get
-                {
-                    return this.colorLField;
-                }
-                set
-                {
-                    this.colorLField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string ColorR
-            {
-                get
-                {
-                    return this.colorRField;
-                }
-                set
-                {
-                    this.colorRField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootACORONASReverseLights
-        {
-
-            private byte dfltPatternField;
-
-            private string colorLField;
-
-            private string colorRField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte DfltPattern
-            {
-                get
-                {
-                    return this.dfltPatternField;
-                }
-                set
-                {
-                    this.dfltPatternField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string ColorL
-            {
-                get
-                {
-                    return this.colorLField;
-                }
-                set
-                {
-                    this.colorLField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string ColorR
-            {
-                get
-                {
-                    return this.colorRField;
-                }
-                set
-                {
-                    this.colorRField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSOUNDS
-        {
-
-            private vcfrootSOUNDSMainHorn mainHornField;
-
-            private vcfrootSOUNDSManTone1 manTone1Field;
-
-            private vcfrootSOUNDSManTone2 manTone2Field;
-
-            private vcfrootSOUNDSSrnTone1 srnTone1Field;
-
-            private vcfrootSOUNDSSrnTone2 srnTone2Field;
-
-            private vcfrootSOUNDSSrnTone3 srnTone3Field;
-
-            private vcfrootSOUNDSSrnTone4 srnTone4Field;
-
-            private vcfrootSOUNDSAuxSiren auxSirenField;
-
-            private vcfrootSOUNDSPanicMde panicMdeField;
-
-            /// <remarks/>
-            public vcfrootSOUNDSMainHorn MainHorn
-            {
-                get
-                {
-                    return this.mainHornField;
-                }
-                set
-                {
-                    this.mainHornField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSOUNDSManTone1 ManTone1
-            {
-                get
-                {
-                    return this.manTone1Field;
-                }
-                set
-                {
-                    this.manTone1Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSOUNDSManTone2 ManTone2
-            {
-                get
-                {
-                    return this.manTone2Field;
-                }
-                set
-                {
-                    this.manTone2Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSOUNDSSrnTone1 SrnTone1
-            {
-                get
-                {
-                    return this.srnTone1Field;
-                }
-                set
-                {
-                    this.srnTone1Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSOUNDSSrnTone2 SrnTone2
-            {
-                get
-                {
-                    return this.srnTone2Field;
-                }
-                set
-                {
-                    this.srnTone2Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSOUNDSSrnTone3 SrnTone3
-            {
-                get
-                {
-                    return this.srnTone3Field;
-                }
-                set
-                {
-                    this.srnTone3Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSOUNDSSrnTone4 SrnTone4
-            {
-                get
-                {
-                    return this.srnTone4Field;
-                }
-                set
-                {
-                    this.srnTone4Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSOUNDSAuxSiren AuxSiren
-            {
-                get
-                {
-                    return this.auxSirenField;
-                }
-                set
-                {
-                    this.auxSirenField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSOUNDSPanicMde PanicMde
-            {
-                get
-                {
-                    return this.panicMdeField;
-                }
-                set
-                {
-                    this.panicMdeField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSOUNDSMainHorn
-        {
-
-            private bool interruptsSirenField;
-
-            private string audioStringField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool InterruptsSiren
-            {
-                get
-                {
-                    return this.interruptsSirenField;
-                }
-                set
-                {
-                    this.interruptsSirenField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string AudioString
-            {
-                get
-                {
-                    return this.audioStringField;
-                }
-                set
-                {
-                    this.audioStringField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSOUNDSManTone1
-        {
-
-            private bool allowUseField;
-
-            private string audioStringField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowUse
-            {
-                get
-                {
-                    return this.allowUseField;
-                }
-                set
-                {
-                    this.allowUseField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string AudioString
-            {
-                get
-                {
-                    return this.audioStringField;
-                }
-                set
-                {
-                    this.audioStringField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSOUNDSManTone2
-        {
-
-            private bool allowUseField;
-
-            private string audioStringField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowUse
-            {
-                get
-                {
-                    return this.allowUseField;
-                }
-                set
-                {
-                    this.allowUseField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string AudioString
-            {
-                get
-                {
-                    return this.audioStringField;
-                }
-                set
-                {
-                    this.audioStringField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSOUNDSSrnTone1
-        {
-
-            private bool allowUseField;
-
-            private string audioStringField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowUse
-            {
-                get
-                {
-                    return this.allowUseField;
-                }
-                set
-                {
-                    this.allowUseField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string AudioString
-            {
-                get
-                {
-                    return this.audioStringField;
-                }
-                set
-                {
-                    this.audioStringField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSOUNDSSrnTone2
-        {
-
-            private bool allowUseField;
-
-            private string audioStringField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowUse
-            {
-                get
-                {
-                    return this.allowUseField;
-                }
-                set
-                {
-                    this.allowUseField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string AudioString
-            {
-                get
-                {
-                    return this.audioStringField;
-                }
-                set
-                {
-                    this.audioStringField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSOUNDSSrnTone3
-        {
-
-            private bool allowUseField;
-
-            private string audioStringField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowUse
-            {
-                get
-                {
-                    return this.allowUseField;
-                }
-                set
-                {
-                    this.allowUseField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string AudioString
-            {
-                get
-                {
-                    return this.audioStringField;
-                }
-                set
-                {
-                    this.audioStringField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSOUNDSSrnTone4
-        {
-
-            private bool allowUseField;
-
-            private string audioStringField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowUse
-            {
-                get
-                {
-                    return this.allowUseField;
-                }
-                set
-                {
-                    this.allowUseField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string AudioString
-            {
-                get
-                {
-                    return this.audioStringField;
-                }
-                set
-                {
-                    this.audioStringField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSOUNDSAuxSiren
-        {
-
-            private bool allowUseField;
-
-            private string audioStringField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowUse
-            {
-                get
-                {
-                    return this.allowUseField;
-                }
-                set
-                {
-                    this.allowUseField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string AudioString
-            {
-                get
-                {
-                    return this.audioStringField;
-                }
-                set
-                {
-                    this.audioStringField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSOUNDSPanicMde
-        {
-
-            private bool allowUseField;
-
-            private string audioStringField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool AllowUse
-            {
-                get
-                {
-                    return this.allowUseField;
-                }
-                set
-                {
-                    this.allowUseField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string AudioString
-            {
-                get
-                {
-                    return this.audioStringField;
-                }
-                set
-                {
-                    this.audioStringField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootWRNL
-        {
-
-            private vcfrootWRNLPresetPatterns presetPatternsField;
-
-            private vcfrootWRNLForcedPatterns forcedPatternsField;
-
-            private vcfrootWRNLScanPatternCustomPool scanPatternCustomPoolField;
-
-            private string lightingFormatField;
-
-            /// <remarks/>
-            public vcfrootWRNLPresetPatterns PresetPatterns
-            {
-                get
-                {
-                    return this.presetPatternsField;
-                }
-                set
-                {
-                    this.presetPatternsField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootWRNLForcedPatterns ForcedPatterns
-            {
-                get
-                {
-                    return this.forcedPatternsField;
-                }
-                set
-                {
-                    this.forcedPatternsField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootWRNLScanPatternCustomPool ScanPatternCustomPool
-            {
-                get
-                {
-                    return this.scanPatternCustomPoolField;
-                }
-                set
-                {
-                    this.scanPatternCustomPoolField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string LightingFormat
-            {
-                get
-                {
-                    return this.lightingFormatField;
-                }
-                set
-                {
-                    this.lightingFormatField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootWRNLPresetPatterns
-        {
-
-            private vcfrootWRNLPresetPatternsLstg3 lstg3Field;
-
-            /// <remarks/>
-            public vcfrootWRNLPresetPatternsLstg3 Lstg3
-            {
-                get
-                {
-                    return this.lstg3Field;
-                }
-                set
-                {
-                    this.lstg3Field = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootWRNLPresetPatternsLstg3
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootWRNLForcedPatterns
-        {
-
-            private vcfrootWRNLForcedPatternsMainHorn mainHornField;
-
-            private vcfrootWRNLForcedPatternsSrnTone1 srnTone1Field;
-
-            private vcfrootWRNLForcedPatternsSrnTone2 srnTone2Field;
-
-            private vcfrootWRNLForcedPatternsSrnTone3 srnTone3Field;
-
-            private vcfrootWRNLForcedPatternsSrnTone4 srnTone4Field;
-
-            private vcfrootWRNLForcedPatternsPanicMde panicMdeField;
-
-            private vcfrootWRNLForcedPatternsOutOfVeh outOfVehField;
-
-            /// <remarks/>
-            public vcfrootWRNLForcedPatternsMainHorn MainHorn
-            {
-                get
-                {
-                    return this.mainHornField;
-                }
-                set
-                {
-                    this.mainHornField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootWRNLForcedPatternsSrnTone1 SrnTone1
-            {
-                get
-                {
-                    return this.srnTone1Field;
-                }
-                set
-                {
-                    this.srnTone1Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootWRNLForcedPatternsSrnTone2 SrnTone2
-            {
-                get
-                {
-                    return this.srnTone2Field;
-                }
-                set
-                {
-                    this.srnTone2Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootWRNLForcedPatternsSrnTone3 SrnTone3
-            {
-                get
-                {
-                    return this.srnTone3Field;
-                }
-                set
-                {
-                    this.srnTone3Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootWRNLForcedPatternsSrnTone4 SrnTone4
-            {
-                get
-                {
-                    return this.srnTone4Field;
-                }
-                set
-                {
-                    this.srnTone4Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootWRNLForcedPatternsPanicMde PanicMde
-            {
-                get
-                {
-                    return this.panicMdeField;
-                }
-                set
-                {
-                    this.panicMdeField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootWRNLForcedPatternsOutOfVeh OutOfVeh
-            {
-                get
-                {
-                    return this.outOfVehField;
-                }
-                set
-                {
-                    this.outOfVehField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootWRNLForcedPatternsMainHorn
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootWRNLForcedPatternsSrnTone1
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootWRNLForcedPatternsSrnTone2
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootWRNLForcedPatternsSrnTone3
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootWRNLForcedPatternsSrnTone4
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootWRNLForcedPatternsPanicMde
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootWRNLForcedPatternsOutOfVeh
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootWRNLScanPatternCustomPool
-        {
-
-            private byte[] patternField;
-
-            private bool enabledField;
-
-            private bool sequentialField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute("Pattern")]
-            public byte[] Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Sequential
-            {
-                get
-                {
-                    return this.sequentialField;
-                }
-                set
-                {
-                    this.sequentialField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootPRML
-        {
-
-            private vcfrootPRMLPresetPatterns presetPatternsField;
-
-            private vcfrootPRMLForcedPatterns forcedPatternsField;
-
-            private vcfrootPRMLScanPatternCustomPool scanPatternCustomPoolField;
-
-            private string lightingFormatField;
-
-            private string extrasActiveAtLstg2Field;
-
-            /// <remarks/>
-            public vcfrootPRMLPresetPatterns PresetPatterns
-            {
-                get
-                {
-                    return this.presetPatternsField;
-                }
-                set
-                {
-                    this.presetPatternsField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootPRMLForcedPatterns ForcedPatterns
-            {
-                get
-                {
-                    return this.forcedPatternsField;
-                }
-                set
-                {
-                    this.forcedPatternsField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootPRMLScanPatternCustomPool ScanPatternCustomPool
-            {
-                get
-                {
-                    return this.scanPatternCustomPoolField;
-                }
-                set
-                {
-                    this.scanPatternCustomPoolField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string LightingFormat
-            {
-                get
-                {
-                    return this.lightingFormatField;
-                }
-                set
-                {
-                    this.lightingFormatField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string ExtrasActiveAtLstg2
-            {
-                get
-                {
-                    return this.extrasActiveAtLstg2Field;
-                }
-                set
-                {
-                    this.extrasActiveAtLstg2Field = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootPRMLPresetPatterns
-        {
-
-            private vcfrootPRMLPresetPatternsLstg2 lstg2Field;
-
-            private vcfrootPRMLPresetPatternsLstg3 lstg3Field;
-
-            /// <remarks/>
-            public vcfrootPRMLPresetPatternsLstg2 Lstg2
-            {
-                get
-                {
-                    return this.lstg2Field;
-                }
-                set
-                {
-                    this.lstg2Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootPRMLPresetPatternsLstg3 Lstg3
-            {
-                get
-                {
-                    return this.lstg3Field;
-                }
-                set
-                {
-                    this.lstg3Field = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootPRMLPresetPatternsLstg2
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootPRMLPresetPatternsLstg3
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootPRMLForcedPatterns
-        {
-
-            private vcfrootPRMLForcedPatternsMainHorn mainHornField;
-
-            private vcfrootPRMLForcedPatternsSrnTone1 srnTone1Field;
-
-            private vcfrootPRMLForcedPatternsSrnTone2 srnTone2Field;
-
-            private vcfrootPRMLForcedPatternsSrnTone3 srnTone3Field;
-
-            private vcfrootPRMLForcedPatternsSrnTone4 srnTone4Field;
-
-            private vcfrootPRMLForcedPatternsPanicMde panicMdeField;
-
-            private vcfrootPRMLForcedPatternsOutOfVeh outOfVehField;
-
-            /// <remarks/>
-            public vcfrootPRMLForcedPatternsMainHorn MainHorn
-            {
-                get
-                {
-                    return this.mainHornField;
-                }
-                set
-                {
-                    this.mainHornField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootPRMLForcedPatternsSrnTone1 SrnTone1
-            {
-                get
-                {
-                    return this.srnTone1Field;
-                }
-                set
-                {
-                    this.srnTone1Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootPRMLForcedPatternsSrnTone2 SrnTone2
-            {
-                get
-                {
-                    return this.srnTone2Field;
-                }
-                set
-                {
-                    this.srnTone2Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootPRMLForcedPatternsSrnTone3 SrnTone3
-            {
-                get
-                {
-                    return this.srnTone3Field;
-                }
-                set
-                {
-                    this.srnTone3Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootPRMLForcedPatternsSrnTone4 SrnTone4
-            {
-                get
-                {
-                    return this.srnTone4Field;
-                }
-                set
-                {
-                    this.srnTone4Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootPRMLForcedPatternsPanicMde PanicMde
-            {
-                get
-                {
-                    return this.panicMdeField;
-                }
-                set
-                {
-                    this.panicMdeField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootPRMLForcedPatternsOutOfVeh OutOfVeh
-            {
-                get
-                {
-                    return this.outOfVehField;
-                }
-                set
-                {
-                    this.outOfVehField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootPRMLForcedPatternsMainHorn
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootPRMLForcedPatternsSrnTone1
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootPRMLForcedPatternsSrnTone2
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootPRMLForcedPatternsSrnTone3
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootPRMLForcedPatternsSrnTone4
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootPRMLForcedPatternsPanicMde
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootPRMLForcedPatternsOutOfVeh
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootPRMLScanPatternCustomPool
-        {
-
-            private byte[] patternField;
-
-            private bool enabledField;
-
-            private bool sequentialField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute("Pattern")]
-            public byte[] Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Sequential
-            {
-                get
-                {
-                    return this.sequentialField;
-                }
-                set
-                {
-                    this.sequentialField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSECL
-        {
-
-            private vcfrootSECLPresetPatterns presetPatternsField;
-
-            private vcfrootSECLForcedPatterns forcedPatternsField;
-
-            private vcfrootSECLScanPatternCustomPool scanPatternCustomPoolField;
-
-            private string lightingFormatField;
-
-            private bool disableAtLstg3Field;
-
-            /// <remarks/>
-            public vcfrootSECLPresetPatterns PresetPatterns
-            {
-                get
-                {
-                    return this.presetPatternsField;
-                }
-                set
-                {
-                    this.presetPatternsField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSECLForcedPatterns ForcedPatterns
-            {
-                get
-                {
-                    return this.forcedPatternsField;
-                }
-                set
-                {
-                    this.forcedPatternsField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSECLScanPatternCustomPool ScanPatternCustomPool
-            {
-                get
-                {
-                    return this.scanPatternCustomPoolField;
-                }
-                set
-                {
-                    this.scanPatternCustomPoolField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public string LightingFormat
-            {
-                get
-                {
-                    return this.lightingFormatField;
-                }
-                set
-                {
-                    this.lightingFormatField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool DisableAtLstg3
-            {
-                get
-                {
-                    return this.disableAtLstg3Field;
-                }
-                set
-                {
-                    this.disableAtLstg3Field = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSECLPresetPatterns
-        {
-
-            private vcfrootSECLPresetPatternsLstg1 lstg1Field;
-
-            private vcfrootSECLPresetPatternsLstg2 lstg2Field;
-
-            private vcfrootSECLPresetPatternsLstg3 lstg3Field;
-
-            /// <remarks/>
-            public vcfrootSECLPresetPatternsLstg1 Lstg1
-            {
-                get
-                {
-                    return this.lstg1Field;
-                }
-                set
-                {
-                    this.lstg1Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSECLPresetPatternsLstg2 Lstg2
-            {
-                get
-                {
-                    return this.lstg2Field;
-                }
-                set
-                {
-                    this.lstg2Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSECLPresetPatternsLstg3 Lstg3
-            {
-                get
-                {
-                    return this.lstg3Field;
-                }
-                set
-                {
-                    this.lstg3Field = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSECLPresetPatternsLstg1
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
+                //data.filename = Path.GetFileNameWithoutExtension(name);
+                if (data.root == null)
+                {
+                    CitizenFX.Core.Debug.WriteLine("Null issue");
+                    return;
+                }
+                Dictionary<string, NanoXMLNode> subNodes = new Dictionary<string, NanoXMLNode>();
+                foreach (NanoXMLNode node in doc.RootNode.SubNodes)
+                {
+                    subNodes.Add(node.Name, node);
+                }
+                #region VCF Info
+                CitizenFX.Core.Debug.WriteLine($"Parsing VCF Info for vehicle {name}");
+                //VCF Description
+                if (doc.RootNode.GetAttribute("Description") != null)
+                {
+                    data.root.Description = doc.RootNode.GetAttribute("Description").Value;
+                }
+
+                //VCF Author
+                if (doc.RootNode.GetAttribute("Author") != null)
+                {
+                    data.root.Author = doc.RootNode.GetAttribute("Author").Value;
+                }
+                #endregion
+                #region Interface
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine("Parsing Interface");
+#endif
+                try
+                {
+                    foreach (NanoXMLNode n in subNodes["INTERFACE"].SubNodes)
+                    {
+                        switch (n.Name)
+                        {
+                            case "LstgActivationType":
+                                data.root.INTERFACE.LstgActivationType = n.Value;
+                                break;
+                            case "DefaultSirenMode":
+                                data.root.INTERFACE.DefaultSirenMode = n.Value;
+                                break;
+                            case "InfoPanelHeaderColor":
+                                data.root.INTERFACE.InfoPanelHeaderColor = n.Value;
+                                break;
+                            case "InfoPanelButtonLightColor":
+                                data.root.INTERFACE.InfoPanelButtonLightColor = n.Value;
+                                break;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Utils.ReleaseWriteLine($"Interface for {name} failed to parse due to {e.Message} with inner of {e.InnerException}");
+                }
+                #endregion
+
+                #region Extras Override
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine("Parsing Extras");
+#endif
+                try
+                {
+                    foreach (NanoXMLNode n in subNodes["EOVERRIDE"].SubNodes)
+                    {
+                        switch (n.Name)
+                        {
+                            case "Extra01":
+                                data.root.EOVERRIDE.Extra01.IsElsControlled = bool.Parse(n.GetAttribute("IsElsControlled").Value);
+                                data.root.EOVERRIDE.Extra01.AllowEnvLight = bool.Parse(n.GetAttribute("AllowEnvLight").Value);
+                                data.root.EOVERRIDE.Extra01.Color = n.GetAttribute("Color").Value;
+                                data.root.EOVERRIDE.Extra01.OffsetX = float.Parse(n.GetAttribute("OffsetX").Value);
+                                data.root.EOVERRIDE.Extra01.OffsetY = float.Parse(n.GetAttribute("OffsetY").Value);
+                                data.root.EOVERRIDE.Extra01.OffsetZ = float.Parse(n.GetAttribute("OffsetZ").Value);
+                                break;
+                            case "Extra02":
+                                data.root.EOVERRIDE.Extra02.IsElsControlled = bool.Parse(n.GetAttribute("IsElsControlled").Value);
+                                data.root.EOVERRIDE.Extra02.AllowEnvLight = bool.Parse(n.GetAttribute("AllowEnvLight").Value);
+                                data.root.EOVERRIDE.Extra02.Color = n.GetAttribute("Color").Value;
+                                data.root.EOVERRIDE.Extra02.OffsetX = float.Parse(n.GetAttribute("OffsetX").Value);
+                                data.root.EOVERRIDE.Extra02.OffsetY = float.Parse(n.GetAttribute("OffsetY").Value);
+                                data.root.EOVERRIDE.Extra02.OffsetZ = float.Parse(n.GetAttribute("OffsetZ").Value);
+                                break;
+                            case "Extra03":
+                                data.root.EOVERRIDE.Extra03.IsElsControlled = bool.Parse(n.GetAttribute("IsElsControlled").Value);
+                                data.root.EOVERRIDE.Extra03.AllowEnvLight = bool.Parse(n.GetAttribute("AllowEnvLight").Value);
+                                data.root.EOVERRIDE.Extra03.Color = n.GetAttribute("Color").Value;
+                                data.root.EOVERRIDE.Extra03.OffsetX = float.Parse(n.GetAttribute("OffsetX").Value);
+                                data.root.EOVERRIDE.Extra03.OffsetY = float.Parse(n.GetAttribute("OffsetY").Value);
+                                data.root.EOVERRIDE.Extra03.OffsetZ = float.Parse(n.GetAttribute("OffsetZ").Value);
+                                break;
+                            case "Extra04":
+                                data.root.EOVERRIDE.Extra04.IsElsControlled = bool.Parse(n.GetAttribute("IsElsControlled").Value);
+                                data.root.EOVERRIDE.Extra04.AllowEnvLight = bool.Parse(n.GetAttribute("AllowEnvLight").Value);
+                                data.root.EOVERRIDE.Extra04.Color = n.GetAttribute("Color").Value;
+                                data.root.EOVERRIDE.Extra04.OffsetX = float.Parse(n.GetAttribute("OffsetX").Value);
+                                data.root.EOVERRIDE.Extra04.OffsetY = float.Parse(n.GetAttribute("OffsetY").Value);
+                                data.root.EOVERRIDE.Extra04.OffsetZ = float.Parse(n.GetAttribute("OffsetZ").Value);
+                                break;
+                            case "Extra05":
+                                data.root.EOVERRIDE.Extra05.IsElsControlled = bool.Parse(n.GetAttribute("IsElsControlled").Value);
+                                data.root.EOVERRIDE.Extra05.AllowEnvLight = bool.Parse(n.GetAttribute("AllowEnvLight").Value);
+                                data.root.EOVERRIDE.Extra05.Color = n.GetAttribute("Color").Value;
+                                data.root.EOVERRIDE.Extra05.OffsetX = float.Parse(n.GetAttribute("OffsetX").Value);
+                                data.root.EOVERRIDE.Extra05.OffsetY = float.Parse(n.GetAttribute("OffsetY").Value);
+                                data.root.EOVERRIDE.Extra05.OffsetZ = float.Parse(n.GetAttribute("OffsetZ").Value);
+                                break;
+                            case "Extra06":
+                                data.root.EOVERRIDE.Extra06.IsElsControlled = bool.Parse(n.GetAttribute("IsElsControlled").Value);
+                                data.root.EOVERRIDE.Extra06.AllowEnvLight = bool.Parse(n.GetAttribute("AllowEnvLight").Value);
+                                data.root.EOVERRIDE.Extra06.Color = n.GetAttribute("Color").Value;
+                                data.root.EOVERRIDE.Extra06.OffsetX = float.Parse(n.GetAttribute("OffsetX").Value);
+                                data.root.EOVERRIDE.Extra06.OffsetY = float.Parse(n.GetAttribute("OffsetY").Value);
+                                data.root.EOVERRIDE.Extra06.OffsetZ = float.Parse(n.GetAttribute("OffsetZ").Value);
+                                break;
+                            case "Extra07":
+                                data.root.EOVERRIDE.Extra07.IsElsControlled = bool.Parse(n.GetAttribute("IsElsControlled").Value);
+                                data.root.EOVERRIDE.Extra07.AllowEnvLight = bool.Parse(n.GetAttribute("AllowEnvLight").Value);
+                                data.root.EOVERRIDE.Extra07.Color = n.GetAttribute("Color").Value;
+                                data.root.EOVERRIDE.Extra07.OffsetX = float.Parse(n.GetAttribute("OffsetX").Value);
+                                data.root.EOVERRIDE.Extra07.OffsetY = float.Parse(n.GetAttribute("OffsetY").Value);
+                                data.root.EOVERRIDE.Extra07.OffsetZ = float.Parse(n.GetAttribute("OffsetZ").Value);
+                                break;
+                            case "Extra08":
+                                data.root.EOVERRIDE.Extra08.IsElsControlled = bool.Parse(n.GetAttribute("IsElsControlled").Value);
+                                data.root.EOVERRIDE.Extra08.AllowEnvLight = bool.Parse(n.GetAttribute("AllowEnvLight").Value);
+                                data.root.EOVERRIDE.Extra08.Color = n.GetAttribute("Color").Value;
+                                data.root.EOVERRIDE.Extra08.OffsetX = float.Parse(n.GetAttribute("OffsetX").Value);
+                                data.root.EOVERRIDE.Extra08.OffsetY = float.Parse(n.GetAttribute("OffsetY").Value);
+                                data.root.EOVERRIDE.Extra08.OffsetZ = float.Parse(n.GetAttribute("OffsetZ").Value);
+                                break;
+                            case "Extra09":
+                                data.root.EOVERRIDE.Extra09.IsElsControlled = bool.Parse(n.GetAttribute("IsElsControlled").Value);
+                                data.root.EOVERRIDE.Extra09.AllowEnvLight = bool.Parse(n.GetAttribute("AllowEnvLight").Value);
+                                data.root.EOVERRIDE.Extra09.Color = n.GetAttribute("Color").Value;
+                                data.root.EOVERRIDE.Extra09.OffsetX = float.Parse(n.GetAttribute("OffsetX").Value);
+                                data.root.EOVERRIDE.Extra09.OffsetY = float.Parse(n.GetAttribute("OffsetY").Value);
+                                data.root.EOVERRIDE.Extra09.OffsetZ = float.Parse(n.GetAttribute("OffsetZ").Value);
+                                break;
+                            case "Extra10":
+                                data.root.EOVERRIDE.Extra10.IsElsControlled = bool.Parse(n.GetAttribute("IsElsControlled").Value);
+                                //data.root.EOVERRIDE.Extra10.AllowEnvLight = bool.Parse(n.GetAttribute("AllowEnvLight").Value);
+                                //data.root.EOVERRIDE.Extra10.Color = n.GetAttribute("Color").Value;
+                                //data.root.EOVERRIDE.Extra10.OffsetX = float.Parse(n.GetAttribute("OffsetX").Value);
+                                //data.root.EOVERRIDE.Extra10.OffsetY = float.Parse(n.GetAttribute("OffsetY").Value);
+                                //data.root.EOVERRIDE.Extra10.OffsetZ = float.Parse(n.GetAttribute("OffsetZ").Value);
+                                break;
+                            case "Extra11":
+                                data.root.EOVERRIDE.Extra11.IsElsControlled = bool.Parse(n.GetAttribute("IsElsControlled").Value);
+                                //data.root.EOVERRIDE.Extra11.AllowEnvLight = bool.Parse(n.GetAttribute("AllowEnvLight").Value);
+                                //data.root.EOVERRIDE.Extra11.Color = n.GetAttribute("Color").Value; 
+                                //data.root.EOVERRIDE.Extra11.OffsetX = float.Parse(n.GetAttribute("OffsetX").Value);
+                                //data.root.EOVERRIDE.Extra11.OffsetY = float.Parse(n.GetAttribute("OffsetY").Value);
+                                //data.root.EOVERRIDE.Extra11.OffsetZ = float.Parse(n.GetAttribute("OffsetZ").Value);
+                                break;
+                            case "Extra12":
+                                data.root.EOVERRIDE.Extra12.IsElsControlled = bool.Parse(n.GetAttribute("IsElsControlled").Value);
+                                //data.root.EOVERRIDE.Extra12.AllowEnvLight = bool.Parse(n.GetAttribute("AllowEnvLight").Value);
+                                //data.root.EOVERRIDE.Extra12.Color = n.GetAttribute("Color").Value;
+                                //data.root.EOVERRIDE.Extra12.OffsetX = float.Parse(n.GetAttribute("OffsetX").Value);
+                                //data.root.EOVERRIDE.Extra12.OffsetY = float.Parse(n.GetAttribute("OffsetY").Value);
+                                //data.root.EOVERRIDE.Extra12.OffsetZ = float.Parse(n.GetAttribute("OffsetZ").Value);
+                                break;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Utils.ReleaseWriteLine($"EOverride for {name} failed to parse due to {e.Message} with inner of {e.InnerException}");
+                }
+                #endregion
+
+                #region MISC
+#if DEBUG
+                CitizenFX.Core.Debug.WriteLine("Parsing Misc");
+#endif
+                try
+                {
+                    foreach (NanoXMLNode n in subNodes["MISC"].SubNodes)
+                    {
+                        switch (n.Name)
+                        {
+                            case "VehicleIsSlicktop":
+                                data.root.MISC.VehicleIsSlicktop = bool.Parse(n.Value);
+                                break;
+                            case "ArrowboardType":
+                                data.root.MISC.ArrowboardType = n.Value;
+                                break;
+                            case "UseSteadyBurnLights":
+                                data.root.MISC.UseSteadyBurnLights = bool.Parse(n.Value);
+                                break;
+                            case "DfltSirenLtsActivateAtLstg":
+                                data.root.MISC.DfltSirenLtsActivateAtLstg = int.Parse(n.Value);
+                                break;
+                            case "Takedowns":
+                                data.root.MISC.Takedowns.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
+                                data.root.MISC.Takedowns.Mirrored = bool.Parse(n.GetAttribute("Mirrored").Value);
+                                break;
+                            case "SceneLights":
+                                data.root.MISC.SceneLights.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
+                                data.root.MISC.SceneLights.IlluminateSidesOnly = bool.Parse(n.GetAttribute("IlluminateSidesOnly").Value);
+                                break;
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Utils.ReleaseWriteLine($"Misc for {name} failed to parse due to {e.Message} with inner of {e.InnerException}");
+                }
+                #endregion
+
+                #region Cruise
+                Utils.DebugWriteLine("Parsing Cruise");
+                try
+                {
+                    foreach (NanoXMLNode n in subNodes["CRUISE"].SubNodes)
+                    {
+                        switch (n.Name)
+                        {
+                            case "DisableAtLstg3":
+                                data.root.CRUISE.DisableAtLstg3 = bool.Parse(n.Value);
+                                break;
+                            case "UseExtras":
+                                data.root.CRUISE.UseExtras.Extra1 = bool.Parse(n.GetAttribute("Extra1").Value);
+                                data.root.CRUISE.UseExtras.Extra2 = bool.Parse(n.GetAttribute("Extra2").Value);
+                                data.root.CRUISE.UseExtras.Extra3 = bool.Parse(n.GetAttribute("Extra3").Value);
+                                data.root.CRUISE.UseExtras.Extra4 = bool.Parse(n.GetAttribute("Extra4").Value);
+                                break;
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Utils.ReleaseWriteLine($"Cruise for {name} failed to parse due to {e.Message} with inner of {e.InnerException}");
+                }
+                #endregion
+
+                #region Aux Coronas
+                Utils.DebugWriteLine("Parsing Aux Coronas");
+                try
+                {
+                    foreach (NanoXMLNode n in subNodes["ACORONAS"].SubNodes)
+                    {
+                        switch (n.Name)
+                        {
+                            case "Headlights":
+                                data.root.ACORONAS.Headlights.DfltPattern = int.Parse(n.GetAttribute("DfltPattern").Value);
+                                data.root.ACORONAS.Headlights.ColorL = n.GetAttribute("ColorL").Value;
+                                data.root.ACORONAS.Headlights.ColorR = n.GetAttribute("ColorR").Value;
+                                break;
+                            case "TailLights":
+                                data.root.ACORONAS.TailLights.DfltPattern = int.Parse(n.GetAttribute("DfltPattern").Value);
+                                data.root.ACORONAS.TailLights.ColorL = n.GetAttribute("ColorL").Value;
+                                data.root.ACORONAS.TailLights.ColorR = n.GetAttribute("ColorR").Value;
+                                break;
+                            case "IndicatorsF":
+                                data.root.ACORONAS.IndicatorsF.DfltPattern = int.Parse(n.GetAttribute("DfltPattern").Value);
+                                data.root.ACORONAS.IndicatorsF.ColorL = n.GetAttribute("ColorL").Value;
+                                data.root.ACORONAS.IndicatorsF.ColorR = n.GetAttribute("ColorR").Value;
+                                break;
+                            case "IndicatorsB":
+                                data.root.ACORONAS.IndicatorsB.DfltPattern = int.Parse(n.GetAttribute("DfltPattern").Value);
+                                data.root.ACORONAS.IndicatorsB.ColorL = n.GetAttribute("ColorL").Value;
+                                data.root.ACORONAS.IndicatorsB.ColorR = n.GetAttribute("ColorR").Value;
+                                break;
+                            case "ReverseLights":
+                                data.root.ACORONAS.ReverseLights.DfltPattern = int.Parse(n.GetAttribute("DfltPattern").Value);
+                                data.root.ACORONAS.ReverseLights.ColorL = n.GetAttribute("ColorL").Value;
+                                data.root.ACORONAS.ReverseLights.ColorR = n.GetAttribute("ColorR").Value;
+                                break;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Utils.ReleaseWriteLine($"ACoronas for {name} failed to parse due to {e.Message} with inner of {e.InnerException}");
+                }
+                #endregion
+
+                #region Sounds
+                Utils.DebugWriteLine("Parsing Sounds");
+                try
+                {
+                    foreach (NanoXMLNode n in subNodes["SOUNDS"].SubNodes)
+                    {
+                        switch (n.Name)
+                        {
+                            case "ManTone1":
+                                data.root.SOUNDS.ManTone1.AudioString = n.GetAttribute("AudioString").Value;
+                                data.root.SOUNDS.ManTone1.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
+                                break;
+                            case "ManTone2":
+                                data.root.SOUNDS.ManTone2.AudioString = n.GetAttribute("AudioString").Value;
+                                data.root.SOUNDS.ManTone2.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
+                                break;
+                            case "MainHorn":
+                                data.root.SOUNDS.MainHorn.AudioString = n.GetAttribute("AudioString").Value;
+                                data.root.SOUNDS.MainHorn.InterruptsSiren = bool.Parse(n.GetAttribute("InterruptsSiren").Value);
+                                break;
+                            case "SrnTone1":
+                                data.root.SOUNDS.SrnTone1.AudioString = n.GetAttribute("AudioString").Value;
+                                data.root.SOUNDS.SrnTone1.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
+                                break;
+                            case "SrnTone2":
+                                data.root.SOUNDS.SrnTone2.AudioString = n.GetAttribute("AudioString").Value;
+                                data.root.SOUNDS.SrnTone2.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
+                                break;
+                            case "SrnTone3":
+                                data.root.SOUNDS.SrnTone3.AudioString = n.GetAttribute("AudioString").Value;
+                                data.root.SOUNDS.SrnTone3.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
+                                break;
+                            case "SrnTone4":
+                                data.root.SOUNDS.SrnTone4.AudioString = n.GetAttribute("AudioString").Value;
+                                data.root.SOUNDS.SrnTone4.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
+                                break;
+                            case "AuxSiren":
+                                data.root.SOUNDS.AuxSiren.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
+                                data.root.SOUNDS.AuxSiren.AudioString = n.GetAttribute("AudioString").Value;
+                                break;
+                            case "PanicMde":
+                                data.root.SOUNDS.PanicMde.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
+                                data.root.SOUNDS.PanicMde.AudioString = n.GetAttribute("AudioString").Value;
+                                break;
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Utils.ReleaseWriteLine($"Sounds for {name} failed to parse due to {e.Message} with inner of {e.InnerException}");
+                }
+                #endregion
+
+                #region Warning Lights
+
+                Utils.DebugWriteLine("Parsing Warning Lights");
+                try
+                {
+                    data.root.WRNL.LightingFormat = subNodes["WRNL"].GetAttribute("LightingFormat").Value;
+                    if (subNodes["WRNL"].GetAttribute("DisableAtLstg3") != null)
+                    {
+                        data.root.WRNL.DisableAtLstg3 = bool.Parse(subNodes["WRNL"].GetAttribute("DisableAtLstg3").Value);
+                    }
+                    
+                    data.root.WRNL.ExtrasActiveAtLstg1 = subNodes["WRNL"].GetAttribute("ExtrasActiveAtLstg1")?.Value;
+                    data.root.WRNL.ExtrasActiveAtLstg2 = subNodes["WRNL"].GetAttribute("ExtrasActiveAtLstg2")?.Value;
+                    data.root.WRNL.ExtrasActiveAtLstg3 = subNodes["WRNL"].GetAttribute("ExtrasActiveAtLstg3")?.Value;
+
+                    foreach (NanoXMLNode n in subNodes["WRNL"].SubNodes)
+                    {
+                        switch (n.Name)
+                        {
+
+                            case "PresetPatterns":
+                                foreach (NanoXMLNode sn in n.SubNodes)
+                                {
+                                    switch (sn.Name)
+                                    {
+                                        case "Lstg1":
+                                            data.root.WRNL.PresetPatterns.Lstg1.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.WRNL.PresetPatterns.Lstg1.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.WRNL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.WRNL.PresetPatterns.Lstg1.IntPattern = int.Parse(data.root.WRNL.PresetPatterns.Lstg1.Pattern);
+                                            }
+                                            break;
+                                        case "Lstg2":
+                                            data.root.WRNL.PresetPatterns.Lstg2.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.WRNL.PresetPatterns.Lstg2.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.WRNL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.WRNL.PresetPatterns.Lstg2.IntPattern = int.Parse(data.root.WRNL.PresetPatterns.Lstg2.Pattern);
+                                            }
+                                            break;
+                                        case "Lstg3":
+                                            data.root.WRNL.PresetPatterns.Lstg3.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.WRNL.PresetPatterns.Lstg3.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.WRNL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.WRNL.PresetPatterns.Lstg3.IntPattern = int.Parse(data.root.WRNL.PresetPatterns.Lstg3.Pattern);
+                                            }
+                                            break;
+                                    }
+                                }
+                                break;
+                            case "ForcedPatterns":
+                                foreach (NanoXMLNode sn in n.SubNodes)
+                                {
+                                    switch (sn.Name)
+                                    {
+                                        case "MainHorn":
+                                            data.root.WRNL.ForcedPatterns.MainHorn.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.WRNL.ForcedPatterns.MainHorn.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.WRNL.ForcedPatterns.MainHorn.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.WRNL.ForcedPatterns.MainHorn.IntPattern = int.Parse(data.root.WRNL.ForcedPatterns.MainHorn.Pattern);
+                                            }
+                                            break;
+                                        case "SrnTone1":
+                                            data.root.WRNL.ForcedPatterns.SrnTone1.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.WRNL.ForcedPatterns.SrnTone1.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.WRNL.ForcedPatterns.SrnTone1.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.WRNL.ForcedPatterns.SrnTone1.IntPattern = int.Parse(data.root.WRNL.ForcedPatterns.SrnTone1.Pattern);
+                                            }
+                                            break;
+                                        case "SrnTone2":
+                                            data.root.WRNL.ForcedPatterns.SrnTone2.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.WRNL.ForcedPatterns.SrnTone2.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.WRNL.ForcedPatterns.SrnTone2.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.WRNL.ForcedPatterns.SrnTone2.IntPattern = int.Parse(data.root.WRNL.ForcedPatterns.SrnTone2.Pattern);
+                                            }
+                                            break;
+                                        case "SrnTone3":
+                                            data.root.WRNL.ForcedPatterns.SrnTone3.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.WRNL.ForcedPatterns.SrnTone3.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.WRNL.ForcedPatterns.SrnTone3.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.WRNL.ForcedPatterns.SrnTone3.IntPattern = int.Parse(data.root.WRNL.ForcedPatterns.SrnTone3.Pattern);
+                                            }
+                                            break;
+                                        case "SrnTone4":
+                                            data.root.WRNL.ForcedPatterns.SrnTone4.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.WRNL.ForcedPatterns.SrnTone4.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.WRNL.ForcedPatterns.SrnTone4.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.WRNL.ForcedPatterns.SrnTone4.IntPattern = int.Parse(data.root.WRNL.ForcedPatterns.SrnTone4.Pattern);
+                                            }
+                                            break;
+                                        case "AuxSiren":
+                                            data.root.WRNL.ForcedPatterns.AuxSiren.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.WRNL.ForcedPatterns.AuxSiren.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.WRNL.ForcedPatterns.AuxSiren.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.WRNL.ForcedPatterns.AuxSiren.IntPattern = int.Parse(data.root.WRNL.ForcedPatterns.AuxSiren.Pattern);
+                                            }
+                                            break;
+                                        case "PanicMde":
+                                            data.root.WRNL.ForcedPatterns.PanicMde.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.WRNL.ForcedPatterns.PanicMde.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.WRNL.ForcedPatterns.PanicMde.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.WRNL.ForcedPatterns.PanicMde.IntPattern = int.Parse(data.root.WRNL.ForcedPatterns.PanicMde.Pattern);
+                                            }
+                                            break;
+                                        case "OutOfVeh":
+                                            data.root.WRNL.ForcedPatterns.OutOfVeh.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.WRNL.ForcedPatterns.OutOfVeh.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.WRNL.ForcedPatterns.OutOfVeh.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.WRNL.ForcedPatterns.OutOfVeh.IntPattern = int.Parse(data.root.WRNL.ForcedPatterns.OutOfVeh.Pattern);
+                                            }
+                                            break;
+                                    }
+                                }
+                                break;
+                            case "ScanPatternCustomPool":
+                                data.root.WRNL.ScanPatternCustomPool.Enabled = bool.Parse(n.GetAttribute("Enabled").Value);
+                                data.root.WRNL.ScanPatternCustomPool.Sequential = bool.Parse(n.GetAttribute("Sequential").Value);
+                                foreach (NanoXMLNode sn in n.SubNodes)
+                                {
+                                    data.root.WRNL.ScanPatternCustomPool.Pattern.Add(int.Parse(sn.Value));
+                                }
+                                break;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Utils.ReleaseWriteLine($"Warning lights for {name} failed to parse due to {e.Message} with inner of {e.InnerException}");
+                }
+
+                #endregion
+
+                #region Primary Lights
+
+                Utils.DebugWriteLine("Parsing Primary Lights");
+                try
+                {
+                    data.root.PRML.LightingFormat = subNodes["PRML"].GetAttribute("LightingFormat").Value;
+                    if (subNodes["PRML"].GetAttribute("DisableAtLstg3") != null)
+                    {
+                        data.root.PRML.DisableAtLstg3 = bool.Parse(subNodes["PRML"].GetAttribute("DisableAtLstg3").Value);
+                    }
+                    data.root.PRML.ExtrasActiveAtLstg1 = subNodes["PRML"].GetAttribute("ExtrasActiveAtLstg1")?.Value;
+                    data.root.PRML.ExtrasActiveAtLstg2 = subNodes["PRML"].GetAttribute("ExtrasActiveAtLstg2")?.Value;
+                    data.root.PRML.ExtrasActiveAtLstg3 = subNodes["PRML"].GetAttribute("ExtrasActiveAtLstg3")?.Value;
+                    foreach (NanoXMLNode n in subNodes["PRML"].SubNodes)
+                    {
+                        switch (n.Name)
+                        {
+                            case "PresetPatterns":
+                                foreach (NanoXMLNode sn in n.SubNodes)
+                                {
+                                    switch (sn.Name)
+                                    {
+                                        case "Lstg1":
+                                            data.root.PRML.PresetPatterns.Lstg1.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.PRML.PresetPatterns.Lstg1.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.PRML.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.PRML.PresetPatterns.Lstg1.IntPattern = int.Parse(data.root.PRML.PresetPatterns.Lstg1.Pattern);
+                                            }
+                                            break;
+                                        case "Lstg2":
+                                            data.root.PRML.PresetPatterns.Lstg2.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.PRML.PresetPatterns.Lstg2.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.PRML.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.PRML.PresetPatterns.Lstg2.IntPattern = int.Parse(data.root.PRML.PresetPatterns.Lstg2.Pattern);
+                                            }
+                                            break;
+                                        case "Lstg3":
+                                            data.root.PRML.PresetPatterns.Lstg3.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.PRML.PresetPatterns.Lstg3.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.PRML.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.PRML.PresetPatterns.Lstg3.IntPattern = int.Parse(data.root.PRML.PresetPatterns.Lstg3.Pattern);
+                                            }
+                                            break;
+                                    }
+                                }
+                                break;
+                            case "ForcedPatterns":
+                                foreach (NanoXMLNode sn in n.SubNodes)
+                                {
+                                    switch (sn.Name)
+                                    {
+                                        case "MainHorn":
+                                            data.root.PRML.ForcedPatterns.MainHorn.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.PRML.ForcedPatterns.MainHorn.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.PRML.ForcedPatterns.MainHorn.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.PRML.ForcedPatterns.MainHorn.IntPattern = int.Parse(data.root.WRNL.ForcedPatterns.MainHorn.Pattern);
+                                            }
+                                            break;
+                                        case "SrnTone1":
+                                            data.root.PRML.ForcedPatterns.SrnTone1.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.PRML.ForcedPatterns.SrnTone1.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.PRML.ForcedPatterns.SrnTone1.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.PRML.ForcedPatterns.SrnTone1.IntPattern = int.Parse(data.root.PRML.ForcedPatterns.SrnTone1.Pattern);
+                                            }
+                                            break;
+                                        case "SrnTone2":
+                                            data.root.PRML.ForcedPatterns.SrnTone2.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.PRML.ForcedPatterns.SrnTone2.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.PRML.ForcedPatterns.SrnTone2.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.PRML.ForcedPatterns.SrnTone2.IntPattern = int.Parse(data.root.PRML.ForcedPatterns.SrnTone2.Pattern);
+                                            }
+                                            break;
+                                        case "SrnTone3":
+                                            data.root.PRML.ForcedPatterns.SrnTone3.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.PRML.ForcedPatterns.SrnTone3.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.PRML.ForcedPatterns.SrnTone3.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.PRML.ForcedPatterns.SrnTone3.IntPattern = int.Parse(data.root.PRML.ForcedPatterns.SrnTone3.Pattern);
+                                            }
+                                            break;
+                                        case "SrnTone4":
+                                            data.root.PRML.ForcedPatterns.SrnTone4.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.PRML.ForcedPatterns.SrnTone4.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.PRML.ForcedPatterns.SrnTone4.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.PRML.ForcedPatterns.SrnTone4.IntPattern = int.Parse(data.root.PRML.ForcedPatterns.SrnTone4.Pattern);
+                                            }
+                                            break;
+                                        case "AuxSiren":
+                                            data.root.PRML.ForcedPatterns.AuxSiren.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.PRML.ForcedPatterns.AuxSiren.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.PRML.ForcedPatterns.AuxSiren.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.PRML.ForcedPatterns.AuxSiren.IntPattern = int.Parse(data.root.PRML.ForcedPatterns.MainHorn.Pattern);
+                                            }
+                                            break;
+                                        case "PanicMde":
+                                            data.root.PRML.ForcedPatterns.PanicMde.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.PRML.ForcedPatterns.PanicMde.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.PRML.ForcedPatterns.PanicMde.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.PRML.ForcedPatterns.PanicMde.IntPattern = int.Parse(data.root.PRML.ForcedPatterns.PanicMde.Pattern);
+                                            }
+                                            break;
+                                        case "OutOfVeh":
+                                            data.root.PRML.ForcedPatterns.OutOfVeh.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.PRML.ForcedPatterns.OutOfVeh.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.PRML.ForcedPatterns.OutOfVeh.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.PRML.ForcedPatterns.OutOfVeh.IntPattern = int.Parse(data.root.PRML.ForcedPatterns.OutOfVeh.Pattern);
+                                            }
+                                            break;
+                                    }
+                                }
+                                break;
+                            case "ScanPatternCustomPool":
+                                data.root.PRML.ScanPatternCustomPool.Enabled = bool.Parse(n.GetAttribute("Enabled").Value);
+                                data.root.PRML.ScanPatternCustomPool.Sequential = bool.Parse(n.GetAttribute("Sequential").Value);
+                                foreach (NanoXMLNode sn in n.SubNodes)
+                                {
+                                    data.root.PRML.ScanPatternCustomPool.Pattern.Add(int.Parse(sn.Value));
+                                }
+                                break;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Utils.ReleaseWriteLine($"Primary Lights for {name} failed to parse due to {e.Message} with inner of {e.InnerException}");
+                }
+
+                #endregion
+
+                #region Secondary Lights
+                Utils.DebugWriteLine("Parsing Secondary Lights");
+                try
+                {
+                    data.root.SECL.LightingFormat = subNodes["SECL"].GetAttribute("LightingFormat").Value;
+                    if (subNodes["SECL"].GetAttribute("DisableAtLstg3") != null)
+                    {
+                        data.root.SECL.DisableAtLstg3 = bool.Parse(subNodes["SECL"].GetAttribute("DisableAtLstg3").Value);
+                    }
+                    data.root.SECL.ExtrasActiveAtLstg1 = subNodes["SECL"].GetAttribute("ExtrasActiveAtLstg1")?.Value;
+                    data.root.SECL.ExtrasActiveAtLstg2 = subNodes["SECL"].GetAttribute("ExtrasActiveAtLstg2")?.Value;
+                    data.root.SECL.ExtrasActiveAtLstg3 = subNodes["SECL"].GetAttribute("ExtrasActiveAtLstg3")?.Value;
+                    foreach (NanoXMLNode n in subNodes["SECL"].SubNodes)
+                    {
+                        switch (n.Name)
+                        {
+                            case "PresetPatterns":
+                                foreach (NanoXMLNode sn in n.SubNodes)
+                                {
+                                    switch (sn.Name)
+                                    {
+                                        case "Lstg1":
+                                            data.root.SECL.PresetPatterns.Lstg1.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.SECL.PresetPatterns.Lstg1.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.SECL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.SECL.PresetPatterns.Lstg1.IntPattern = int.Parse(data.root.SECL.PresetPatterns.Lstg1.Pattern);
+                                            }
+                                            break;
+                                        case "Lstg2":
+                                            data.root.SECL.PresetPatterns.Lstg2.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.SECL.PresetPatterns.Lstg2.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.SECL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.SECL.PresetPatterns.Lstg2.IntPattern = int.Parse(data.root.SECL.PresetPatterns.Lstg2.Pattern);
+                                            }
+                                            break;
+                                        case "Lstg3":
+                                            data.root.SECL.PresetPatterns.Lstg3.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.SECL.PresetPatterns.Lstg3.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.SECL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.SECL.PresetPatterns.Lstg3.IntPattern = int.Parse(data.root.SECL.PresetPatterns.Lstg3.Pattern);
+                                            }
+                                            break;
+                                    }
+                                }
+                                break;
+                            case "ForcedPatterns":
+                                foreach (NanoXMLNode sn in n.SubNodes)
+                                {
+                                    switch (sn.Name)
+                                    {
+                                        case "MainHorn":
+                                            data.root.SECL.ForcedPatterns.MainHorn.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.SECL.ForcedPatterns.MainHorn.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.SECL.ForcedPatterns.MainHorn.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.SECL.ForcedPatterns.MainHorn.IntPattern = int.Parse(data.root.SECL.ForcedPatterns.MainHorn.Pattern);
+                                            }
+                                            break;
+                                        case "SrnTone1":
+                                            data.root.SECL.ForcedPatterns.SrnTone1.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.SECL.ForcedPatterns.SrnTone1.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.SECL.ForcedPatterns.SrnTone1.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.SECL.ForcedPatterns.SrnTone1.IntPattern = int.Parse(data.root.SECL.ForcedPatterns.SrnTone1.Pattern);
+                                            }
+                                            break;
+                                        case "SrnTone2":
+                                            data.root.SECL.ForcedPatterns.SrnTone2.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.SECL.ForcedPatterns.SrnTone2.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.SECL.ForcedPatterns.SrnTone2.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.SECL.ForcedPatterns.SrnTone2.IntPattern = int.Parse(data.root.SECL.ForcedPatterns.SrnTone2.Pattern);
+                                            }
+                                            break;
+                                        case "SrnTone3":
+                                            data.root.SECL.ForcedPatterns.SrnTone3.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.SECL.ForcedPatterns.SrnTone3.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.SECL.ForcedPatterns.SrnTone3.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.SECL.ForcedPatterns.SrnTone3.IntPattern = int.Parse(data.root.SECL.ForcedPatterns.SrnTone3.Pattern);
+                                            }
+                                            break;
+                                        case "SrnTone4":
+                                            data.root.SECL.ForcedPatterns.SrnTone4.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.SECL.ForcedPatterns.SrnTone4.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.SECL.ForcedPatterns.SrnTone4.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.SECL.ForcedPatterns.SrnTone4.IntPattern = int.Parse(data.root.SECL.ForcedPatterns.SrnTone4.Pattern);
+                                            }
+                                            break;
+                                        case "AuxSiren":
+                                            data.root.SECL.ForcedPatterns.AuxSiren.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.SECL.ForcedPatterns.AuxSiren.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.SECL.ForcedPatterns.AuxSiren.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.SECL.ForcedPatterns.AuxSiren.IntPattern = int.Parse(data.root.SECL.ForcedPatterns.AuxSiren.Pattern);
+                                            }
+                                            break;
+                                        case "PanicMde":
+                                            data.root.SECL.ForcedPatterns.PanicMde.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.SECL.ForcedPatterns.PanicMde.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.SECL.ForcedPatterns.PanicMde.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.SECL.ForcedPatterns.PanicMde.IntPattern = int.Parse(data.root.SECL.ForcedPatterns.PanicMde.Pattern);
+                                            }
+                                            break;
+                                        case "OutOfVeh":
+                                            data.root.SECL.ForcedPatterns.OutOfVeh.Enabled = bool.Parse(sn.GetAttribute("Enabled").Value);
+                                            data.root.SECL.ForcedPatterns.OutOfVeh.Pattern = sn.GetAttribute("Pattern").Value;
+                                            if (!data.root.SECL.ForcedPatterns.OutOfVeh.Pattern.ToLower().Equals("scan"))
+                                            {
+                                                data.root.SECL.ForcedPatterns.OutOfVeh.IntPattern = int.Parse(data.root.SECL.ForcedPatterns.OutOfVeh.Pattern);
+                                            }
+                                            break;
+                                    }
+                                }
+                                break;
+                            case "ScanPatternCustomPool":
+                                data.root.SECL.ScanPatternCustomPool.Enabled = bool.Parse(n.GetAttribute("Enabled").Value);
+                                data.root.SECL.ScanPatternCustomPool.Sequential = bool.Parse(n.GetAttribute("Sequential").Value);
+                                foreach (NanoXMLNode sn in n.SubNodes)
+                                {
+                                    data.root.SECL.ScanPatternCustomPool.Pattern.Add(int.Parse(sn.Value));
+                                }
+                                break;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Utils.ReleaseWriteLine($"Secondary Lights for {name} failed to parse due to {e.Message} with inner of {e.InnerException}");
+                }
+                #endregion
+
+                //TODO: add method to remove old file or a file from ELSVehicle
+                if (ELSVehicle.ContainsKey(hash))
+                {
+                    Utils.DebugWriteLine($"Removeing preexisting VCF for resource {ResourceName} for {name}");
+                    ELSVehicle.Remove(hash);
+                }
+                ELSVehicle.Add(hash, data);
+                Utils.ReleaseWriteLine($"Added vehicle {data.filename}");
+            }
+        }
+
+        internal static void unload(string hash)
+        {
+            var count = ELSVehicle.Count;
+            ELSVehicle.Clear();
+            Utils.DebugWriteLine($"Unloaded {count} VCF for {hash}");
+        }
+
+        internal static void ParsePatterns(List<dynamic> patterns)
+        {
+            foreach(dynamic patt in patterns)
+            {
+                LoadCustomPattern(patt);
+            }
+        }
+
+        static void LoadCustomPattern(dynamic pattData)
+        {
+            Light.Patterns.CustomPattern pattern = new Light.Patterns.CustomPattern(150,200,200,new Dictionary<int, string>());
+            NanoXMLDocument doc = new NanoXMLDocument(pattData.Item3);
+            List<StringBuilder> builders = new List<StringBuilder>();
+            for(int i = 0; i < 10; i++)
+            {
+                builders.Add(new StringBuilder());
+            }
+            foreach (NanoXMLNode n in doc.RootNode.SubNodes)
+            {
+                switch (n.Name)
+                {
+                    case "PRIMARY":
+                        pattern.PrmDelay = int.Parse(n.GetAttribute("speed").Value);
+                        foreach (NanoXMLNode state in n.SubNodes)
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                if (state.GetAttribute($"Extra{i + 1}") != null)
+                                {
+                                    builders[i].Append(bool.Parse(state.GetAttribute($"Extra{i + 1}").Value) ? "1" : "0");
+                                }
+                            }
+                        }
+                        break;
+                    case "SECONDARY":
+                        pattern.SecDelay = int.Parse(n.GetAttribute("speed").Value);
+                        foreach (NanoXMLNode state in n.SubNodes)
+                        {
+                            for (int i = 5; i < 9; i++)
+                            {
+                                if (state.GetAttribute($"Extra{i + 1}") != null)
+                                {
+                                    builders[i].Append(bool.Parse(state.GetAttribute($"Extra{i + 1}").Value) ? "1" : "0");
+                                }
+                            }
+                        }
+                        break;
+                    case "ADVISOR":
+                        pattern.TADelay = int.Parse(n.GetAttribute("speed").Value);
+                        foreach (NanoXMLNode state in n.SubNodes)
+                        {
+                            for (int i = 7; i < 9; i++)
+                            {
+                                if (state.GetAttribute($"Extra{i + 1}") != null)
+                                {
+                                    builders[i].Append(bool.Parse(state.GetAttribute($"Extra{i + 1}").Value) ? "1" : "0");
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+            if (builders[0].Length > 0)
+            {
+                pattern.PatternData.Add(1, builders[0].ToString());
+            }
+            if (builders[1].Length > 0)
+            {
+                pattern.PatternData.Add(2, builders[1].ToString());
+            }
+            if (builders[2].Length > 0)
+            {
+                pattern.PatternData.Add(3, builders[2].ToString());
+            }
+            if (builders[3].Length > 0)
+            {
+                pattern.PatternData.Add(4, builders[3].ToString());
+            }
+            if (builders[4].Length > 0)
+            {
+                pattern.PatternData.Add(5, builders[4].ToString());
+            }
+            if (builders[5].Length > 0)
+            {
+                pattern.PatternData.Add(6, builders[5].ToString());
+            }
+            if (builders[6].Length > 0)
+            {
+                pattern.PatternData.Add(7, builders[6].ToString());
+            }
+            if (builders[7].Length > 0)
+            {
+                pattern.PatternData.Add(8, builders[7].ToString());
+            }
+            if (builders[8].Length > 0)
+            {
+                pattern.PatternData.Add(9, builders[8].ToString());
+            }
+            foreach (int hash in ELSVehicle.Keys)
+            {
+                if (ELSVehicle[hash].root.CustomPatterns == null)
+                {
+                    ELSVehicle[hash].root.CustomPatterns = new Dictionary<string, Light.Patterns.CustomPattern>();
+                }
+                if (ELSVehicle[hash].root.CustomPatterns.ContainsKey(Path.GetFileNameWithoutExtension(pattData.Item2).ToLower()))
+                {
+                    ELSVehicle[hash].root.CustomPatterns[Path.GetFileNameWithoutExtension(pattData.Item2).ToLower()] = pattern;
+                }
+                else
+                {
+                    ELSVehicle[hash].root.CustomPatterns.Add(Path.GetFileNameWithoutExtension(pattData.Item2).ToLower(), pattern);
+                }
+                
             }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSECLPresetPatternsLstg2
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSECLPresetPatternsLstg3
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSECLForcedPatterns
-        {
-
-            private vcfrootSECLForcedPatternsMainHorn mainHornField;
-
-            private vcfrootSECLForcedPatternsSrnTone1 srnTone1Field;
-
-            private vcfrootSECLForcedPatternsSrnTone2 srnTone2Field;
-
-            private vcfrootSECLForcedPatternsSrnTone3 srnTone3Field;
-
-            private vcfrootSECLForcedPatternsSrnTone4 srnTone4Field;
-
-            private vcfrootSECLForcedPatternsPanicMde panicMdeField;
-
-            private vcfrootSECLForcedPatternsOutOfVeh outOfVehField;
-
-            /// <remarks/>
-            public vcfrootSECLForcedPatternsMainHorn MainHorn
-            {
-                get
-                {
-                    return this.mainHornField;
-                }
-                set
-                {
-                    this.mainHornField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSECLForcedPatternsSrnTone1 SrnTone1
-            {
-                get
-                {
-                    return this.srnTone1Field;
-                }
-                set
-                {
-                    this.srnTone1Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSECLForcedPatternsSrnTone2 SrnTone2
-            {
-                get
-                {
-                    return this.srnTone2Field;
-                }
-                set
-                {
-                    this.srnTone2Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSECLForcedPatternsSrnTone3 SrnTone3
-            {
-                get
-                {
-                    return this.srnTone3Field;
-                }
-                set
-                {
-                    this.srnTone3Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSECLForcedPatternsSrnTone4 SrnTone4
-            {
-                get
-                {
-                    return this.srnTone4Field;
-                }
-                set
-                {
-                    this.srnTone4Field = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSECLForcedPatternsPanicMde PanicMde
-            {
-                get
-                {
-                    return this.panicMdeField;
-                }
-                set
-                {
-                    this.panicMdeField = value;
-                }
-            }
-
-            /// <remarks/>
-            public vcfrootSECLForcedPatternsOutOfVeh OutOfVeh
-            {
-                get
-                {
-                    return this.outOfVehField;
-                }
-                set
-                {
-                    this.outOfVehField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSECLForcedPatternsMainHorn
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSECLForcedPatternsSrnTone1
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
 
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSECLForcedPatternsSrnTone2
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSECLForcedPatternsSrnTone3
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSECLForcedPatternsSrnTone4
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSECLForcedPatternsPanicMde
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSECLForcedPatternsOutOfVeh
-        {
-
-            private bool enabledField;
-
-            private byte patternField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public byte Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-        }
-
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        public partial class vcfrootSECLScanPatternCustomPool
-        {
-
-            private byte[] patternField;
-
-            private bool enabledField;
-
-            private bool sequentialField;
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlElementAttribute("Pattern")]
-            public byte[] Pattern
-            {
-                get
-                {
-                    return this.patternField;
-                }
-                set
-                {
-                    this.patternField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Enabled
-            {
-                get
-                {
-                    return this.enabledField;
-                }
-                set
-                {
-                    this.enabledField = value;
-                }
-            }
-
-            /// <remarks/>
-            [System.Xml.Serialization.XmlAttributeAttribute()]
-            public bool Sequential
-            {
-                get
-                {
-                    return this.sequentialField;
-                }
-                set
-                {
-                    this.sequentialField = value;
-                }
-            }
         }
-
 
         internal static bool isValidData(string data)
         {
-            System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-            doc.LoadXml(data);
-            return doc.DocumentElement.Name == "vcfroot";
+            if (String.IsNullOrEmpty(data)) return false;
+            NanoXMLDocument doc = new NanoXMLDocument(data);
+            return doc.RootNode.Name == "vcfroot";
         }
     }
+}
+namespace ELS.configuration
+{
+
+    public class INTERFACE
+    {
+        public string LstgActivationType { get; set; }
+        public string DefaultSirenMode { get; set; }
+        public string InfoPanelHeaderColor { get; set; }
+        public string InfoPanelButtonLightColor { get; set; }
+    }
+
+    public class Extra
+    {
+
+        public bool IsElsControlled { get; set; }
+        public bool AllowEnvLight { get; set; }
+        public string Color { get; set; }
+        public float OffsetX { get; set; }
+        public float OffsetY { get; set; }
+        public float OffsetZ { get; set; }
+
+        public Extra()
+        {
+            IsElsControlled = false;
+            AllowEnvLight = false;
+        }
+    }
+    public class EOVERRIDE
+    {
+
+        public Extra Extra01 { get; set; }
+
+        public Extra Extra02 { get; set; }
+
+        public Extra Extra03 { get; set; }
+        public Extra Extra04 { get; set; }
+        public Extra Extra05 { get; set; }
+        public Extra Extra06 { get; set; }
+        public Extra Extra07 { get; set; }
+        public Extra Extra08 { get; set; }
+        public Extra Extra09 { get; set; }
+        public Extra Extra10 { get; set; }
+        public Extra Extra11 { get; set; }
+        public Extra Extra12 { get; set; }
+
+        public EOVERRIDE()
+        {
+            Extra01 = new Extra();
+            Extra02 = new Extra();
+            Extra03 = new Extra();
+            Extra04 = new Extra();
+            Extra05 = new Extra();
+            Extra06 = new Extra();
+            Extra07 = new Extra();
+            Extra08 = new Extra();
+            Extra09 = new Extra();
+            Extra10 = new Extra();
+            Extra11 = new Extra();
+            Extra12 = new Extra();
+        }
+    }
+
+    public class Takedowns
+    {
+        public bool AllowUse { get; set; }
+        public bool Mirrored { get; set; }
+    }
+
+    public class SceneLights
+    {
+        public bool AllowUse { get; set; }
+        public bool IlluminateSidesOnly { get; set; }
+    }
+
+    public class MISC
+    {
+        public bool VehicleIsSlicktop { get; set; }
+        public string ArrowboardType { get; set; }
+        public bool UseSteadyBurnLights { get; set; }
+        public int DfltSirenLtsActivateAtLstg { get; set; }
+
+        public Takedowns Takedowns { get; set; }
+
+        public SceneLights SceneLights { get; set; }
+
+        public MISC()
+        {
+            Takedowns = new Takedowns();
+            SceneLights = new SceneLights();
+        }
+    }
+
+
+    public class UseExtras
+    {
+
+        public bool Extra1 { get; set; }
+
+        public bool Extra2 { get; set; }
+
+        public bool Extra3 { get; set; }
+
+        public bool Extra4 { get; set; }
+
+        public UseExtras()
+        {
+            Extra1 = true;
+            Extra2 = true;
+            Extra3 = true;
+            Extra4 = true;
+        }
+    }
+
+
+    public class CRUISE
+    {
+
+        public bool DisableAtLstg3 { get; set; }
+
+        public UseExtras UseExtras { get; set; }
+
+        public CRUISE()
+        {
+            UseExtras = new UseExtras();
+            DisableAtLstg3 = false;
+        }
+    }
+
+
+    public class AcoronaLights
+    {
+
+        public int DfltPattern { get; set; }
+
+        public string ColorL { get; set; }
+
+        public string ColorR { get; set; }
+    }
+
+
+
+    public class ACORONAS
+    {
+
+        public AcoronaLights Headlights { get; set; }
+
+        public AcoronaLights TailLights { get; set; }
+
+        public AcoronaLights IndicatorsF { get; set; }
+
+        public AcoronaLights IndicatorsB { get; set; }
+
+        public AcoronaLights ReverseLights { get; set; }
+
+        public ACORONAS()
+        {
+            Headlights = new AcoronaLights();
+            TailLights = new AcoronaLights();
+            IndicatorsF = new AcoronaLights();
+            IndicatorsB = new AcoronaLights();
+            ReverseLights = new AcoronaLights();
+        }
+    }
+
+
+    public class MainHorn
+    {
+
+        public bool InterruptsSiren { get; set; }
+
+        public string AudioString { get; set; }
+    }
+
+    public class SrnTone
+    {
+
+        public bool AllowUse { get; set; }
+
+        public string AudioString { get; set; }
+    }
+
+    public class TonePattern
+    {
+        public bool Enabled { get; set; }
+        public string Pattern { get; set; }
+        public int IntPattern { get; set; }
+
+        public TonePattern()
+        {
+            Enabled = false;
+            IntPattern = -1;
+        }
+    }
+
+
+    public class SOUNDS
+    {
+
+        public MainHorn MainHorn { get; set; }
+
+        public SrnTone ManTone1 { get; set; }
+
+        public SrnTone ManTone2 { get; set; }
+
+        public SrnTone SrnTone1 { get; set; }
+
+        public SrnTone SrnTone2 { get; set; }
+
+        public SrnTone SrnTone3 { get; set; }
+
+        public SrnTone SrnTone4 { get; set; }
+
+        public SrnTone AuxSiren { get; set; }
+
+        public SrnTone PanicMde { get; set; }
+
+        public SOUNDS()
+        {
+            MainHorn = new MainHorn();
+            ManTone1 = new SrnTone();
+            ManTone2 = new SrnTone();
+            SrnTone1 = new SrnTone();
+            SrnTone2 = new SrnTone();
+            SrnTone3 = new SrnTone();
+            SrnTone4 = new SrnTone();
+            AuxSiren = new SrnTone();
+            PanicMde = new SrnTone();
+        }
+    }
+
+
+    public class PresetPatterns
+    {
+
+        public Lstg Lstg3 { get; set; }
+
+        public Lstg Lstg2 { get; set; }
+
+        public Lstg Lstg1 { get; set; }
+
+        public PresetPatterns()
+        {
+            Lstg1 = new Lstg();
+            Lstg2 = new Lstg();
+            Lstg3 = new Lstg();
+        }
+    }
+
+
+    public class ForcedPatterns
+    {
+
+        public TonePattern MainHorn { get; set; }
+
+        public TonePattern SrnTone1 { get; set; }
+
+        public TonePattern SrnTone2 { get; set; }
+
+        public TonePattern SrnTone3 { get; set; }
+
+        public TonePattern SrnTone4 { get; set; }
+
+        public TonePattern PanicMde { get; set; }
+
+        public TonePattern AuxSiren { get; set; }
+
+
+        public TonePattern OutOfVeh { get; set; }
+
+        public ForcedPatterns()
+        {
+            MainHorn = new TonePattern();
+            SrnTone1 = new TonePattern();
+            SrnTone2 = new TonePattern();
+            SrnTone3 = new TonePattern();
+            SrnTone4 = new TonePattern();
+            AuxSiren = new TonePattern();
+            PanicMde = new TonePattern();
+            OutOfVeh = new TonePattern();
+        }
+    }
+
+
+    public class ScanPatternCustomPool
+    {
+
+        public List<int> Pattern { get; set; }
+
+        public bool Enabled { get; set; }
+
+        public bool Sequential { get; set; }
+
+        public ScanPatternCustomPool()
+        {
+            Pattern = new List<int>();
+        }
+    }
+
+    public class Lstg
+    {
+
+        public bool Enabled { get; set; }
+
+        public int IntPattern { get; set; }
+        public string Pattern { get; set; }
+    }
+
+    public class Lights
+    {
+
+        public PresetPatterns PresetPatterns { get; set; }
+
+        public ForcedPatterns ForcedPatterns { get; set; }
+
+        public ScanPatternCustomPool ScanPatternCustomPool { get; set; }
+
+        public string LightingFormat { get; set; }
+
+        public string ExtrasActiveAtLstg1 { get; set; }
+        public string ExtrasActiveAtLstg2 { get; set; }
+        public string ExtrasActiveAtLstg3 { get; set; }
+        public bool DisableAtLstg3 { get; set; }
+
+        public Lights()
+        {
+            PresetPatterns = new PresetPatterns();
+            ForcedPatterns = new ForcedPatterns();
+            ScanPatternCustomPool = new ScanPatternCustomPool();
+            DisableAtLstg3 = false;
+        }
+    }
+
+
+    public class Vcfroot
+    {
+
+        public INTERFACE INTERFACE { get; set; }
+
+        public EOVERRIDE EOVERRIDE { get; set; }
+
+        public MISC MISC { get; set; }
+
+        public CRUISE CRUISE { get; set; }
+
+        public ACORONAS ACORONAS { get; set; }
+
+        public SOUNDS SOUNDS { get; set; }
+
+        public Lights WRNL { get; set; }
+
+        public Lights PRML { get; set; }
+
+        public Lights SECL { get; set; }
+
+        public string Description { get; set; }
+
+        public string Author { get; set; }
+
+        public Dictionary<string, Light.Patterns.CustomPattern> CustomPatterns { get; set; }
+
+        public Vcfroot()
+        {
+            INTERFACE = new INTERFACE();
+            EOVERRIDE = new EOVERRIDE();
+            MISC = new MISC();
+            CRUISE = new CRUISE();
+            ACORONAS = new ACORONAS();
+            SOUNDS = new SOUNDS();
+            WRNL = new Lights();
+            PRML = new Lights();
+            SECL = new Lights();
+        }
+    }
+
 }

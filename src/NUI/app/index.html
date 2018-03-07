@@ -1,23 +1,115 @@
-﻿<!DOCTYPE html>
+<html>
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-
-    <link rel="stylesheet" href="css/app.css" />
-
-    <script src="js/vue.js" type="text/javascript"></script>
-    <script src="js/app.js" type="text/javascript"></script>
-
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-toggle.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/bootstrap-toggle.min.js"></script>
+    <script src="js/main.js"></script>
 </head>
+
 <body>
-
-    <div class="container" id="elsInterface">
-
-
-
+    <div class="card bg-dark text-white els-ui">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-auto">
+                    <div class="row">
+                        <h6><span id="stage1" class="badge badge-secondary m-1">S-1</span></h6>
+                        <h6><span id="stage2" class="badge badge-secondary m-1">S-2</span></h6>
+                        <h6><span id="stage3" class="badge badge-secondary m-1">S-3</span></h6>
+                    </div>
+                    <div class="row">
+                        <div class="card text-white bg-secondary btn-card m-1">
+                            <div class="card-header sm-header">
+                                <span id="prmPatt"></span>
+                            </div>
+                            <div class="card-body card-body-sm">
+                                <input id="togPri" type="checkbox" data-width="50" data-height="15" data-onstyle="success" data-offstyle="danger" data-size="mini">
+                            </div>
+                        </div>
+                        <div class="card text-white bg-secondary btn-card m-1">
+                            <div class="card-header sm-header">
+                                <span id="secPatt"></span>
+                            </div>
+                            <div class="card-body card-body-sm card-text">
+                                <input id="togSec" type="checkbox" data-width="50" data-height="15" data-onstyle="success" data-offstyle="danger" data-size="mini">
+                            </div>
+                        </div>
+                        <div class="card text-white bg-secondary btn-card m-1">
+                            <div class="card-header sm-header card-text">
+                                <span id="wrnPatt"></span>
+                            </div>
+                            <div class="card-body card-body-sm card-text">
+                                <input id="togWrn" type="checkbox" data-width="50" data-height="15" data-onstyle="success" data-offstyle="danger" data-size="mini">
+                            </div>
+                        </div>
+                        <div class="row m-1">
+                            <div class="card bg-secondary btn-card text-white p-1">
+                                <input id="togTkdn"  type="checkbox" data-width="50" data-height="15" data-toggle="toggle" data-on="TDL" data-off="TDL" data-onstyle="success" data-offstyle="danger" data-size="mini">
+                                <input id="togScl"  type="checkbox" data-width="50" data-height="15" data-toggle="toggle" data-on="SCL" data-off="SCL" data-onstyle="success" data-offstyle="danger" data-size="mini">
+                            </div>
+                        </div>
+                        <div class="row m-1">
+                            <div class="card bg-secondary btn-card text-white p-1">
+                                <input id="togCrs" type="checkbox" data-width="50" data-height="15" data-toggle="toggle" data-on="CRS" data-off="CRS" data-onstyle="success" data-offstyle="danger" data-size="mini">
+                                <span id="euro" class="badge badge-secondary m-1">999</span>
+                            </div>
+                        </div>
+                    </div>
+                <div class="row">
+                    <div class="card text-white bg-secondary btn-card m-1">
+                        <div class="card-header sm-header">
+                            <span id="hrnType"></span>
+                        </div>
+                        <div class="card-body card-body-sm">
+                            <input id="togHrn" type="checkbox" data-width="50" data-height="15" data-onstyle="success" data-offstyle="danger" data-size="mini">
+                        </div>
+                    </div>
+                    <div class="card text-white bg-secondary btn-card m-1">
+                        <div class="card-header sm-header">
+                            <span id="srnType"></span>
+                        </div>
+                        <div class="card-body card-body-sm">
+                            <input id="togSrn" type="checkbox" data-width="50" data-height="15" data-onstyle="success" data-offstyle="danger" data-size="mini">
+                        </div>
+                    </div>
+                    <div class="card text-white bg-secondary btn-card m-1">
+                        <div class="card-header sm-header">
+                            <span id="srmType"></span>
+                        </div>
+                        <div class="card-body card-body-sm">
+                            <input id="togSrm" type="checkbox" data-width="50" data-height="15" data-onstyle="success" data-offstyle="danger" data-size="mini">
+                        </div>
+                    </div>
+                    <div class="card bg-secondary text-white m-1">
+                        <div class="card-body card-body-sm">
+                            <div class="wrapper">
+                                <div id="extra5" class="front-1 pri-lights off"></div>
+                                <div id="extra6" class="front-2 pri-lights off"></div>
+                                <div id="extra1" class="pri-1 pri-lights off"></div>
+                                <div id="extra2" class="pri-2 pri-lights off"></div>
+                                <div id="extra3" class="pri-3 pri-lights off"></div>
+                                <div id="extra4" class="pri-4 pri-lights off"></div>
+                                <div id="extra7" class="rear-1 pri-lights off"></div>
+                                <div id="extra8" class="rear-2 pri-lights off"></div>
+                                <div id="extra9" class="rear-3 pri-lights off"></div>
+                                <div id="extra12-1" class="tkdn-1 sec-lights off"></div>
+                                <div id="extra12-2" class="tkdn-2 sec-lights off"></div>
+                                <div id="arrL1" class="arrow-1 pri-lights"></div>
+                                <div id="arrL2" class="arrow-2 pri-lights off"></div>
+                                <div id="arrL3" class="arrow-3 pri-lights off"></div>
+                                <div id="arrR2" class="arrow-4 pri-lights off"></div>
+                                <div id="arrR2" class="arrow-5 pri-lights off"></div>
+                                <div id="arrR1" class="arrow-6 pri-lights"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
 </body>
 </html>
