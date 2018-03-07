@@ -87,7 +87,7 @@ namespace ELS.Manager
                     }
                     else
                     {
-                        makenetworked(Game.PlayerPed.CurrentVehicle);
+                        //makenetworked(Game.PlayerPed.CurrentVehicle);
                         //var pos = Game.PlayerPed.CurrentVehicle.Position;
                         //var rot = Game.PlayerPed.CurrentVehicle.Rotation;
                         //var model = Game.PlayerPed.CurrentVehicle.Model;
@@ -100,7 +100,7 @@ namespace ELS.Manager
                     && (VehicleClass.Boats != Game.PlayerPed.CurrentVehicle.ClassType || VehicleClass.Trains != Game.PlayerPed.CurrentVehicle.ClassType
                     || VehicleClass.Planes != Game.PlayerPed.CurrentVehicle.ClassType || VehicleClass.Helicopters != Game.PlayerPed.CurrentVehicle.ClassType))
                     {
-                        makenetworked(Game.PlayerPed.CurrentVehicle);
+                        //makenetworked(Game.PlayerPed.CurrentVehicle);
                         Indicator.RunAsync(Game.PlayerPed.CurrentVehicle);
                     }
 
