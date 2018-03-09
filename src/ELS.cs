@@ -303,7 +303,7 @@ namespace ELS
                     RegisterNUICallback("keyPress", ElsUiPanel.KeyPress);
                     _firstTick = true;
                 }
-                _vehicleManager.RunTickAsync();
+                _vehicleManager.RunTick();
 
                 if (Game.PlayerPed.IsInVehicle() && Game.PlayerPed.CurrentVehicle.IsEls())
                 {

@@ -17,7 +17,8 @@ namespace ELS.Manager
     class VehicleManager
     {
         internal static VehicleList vehicleList;
-        bool notified = false;
+
+        private static ArrayList blacklist = new ArrayList(100);
         public VehicleManager()
         {
             vehicleList = new VehicleList();
@@ -34,37 +35,51 @@ namespace ELS.Manager
             var attempts = 0;
             do
             {
-                BaseScript.Delay(500);
-                var netid = API.NetworkGetNetworkIdFromEntity(veh.Handle);
+
+                Utils.DebugWriteLine($"This is attempt {attempts} we have a netid of {net1}");
+                int net2 = API.NetworkGetNetworkIdFromEntity(veh.Handle);
+                //BaseScript.Delay(500);
+                if (net1 != net2)
+                {
+                    net1 = net2;
+                }
                 API.NetworkRegisterEntityAsNetworked(veh.Handle);
                 API.SetEntityAsMissionEntity(veh.Handle, false, false);
-                API.SetNetworkIdCanMigrate(netid, true);
-                API.SetNetworkIdExistsOnAllMachines(netid, true);
+                API.SetNetworkIdCanMigrate(net1, true);
+                API.SetNetworkIdExistsOnAllMachines(net1, true);
                 API.NetworkRequestControlOfEntity(veh.Handle);
                 attempts++;
+                if (attempts >= 100 && net1==0)
+                {
+                    blacklist.Add(veh);
+                    CitizenFX.Core.Debug.WriteLine("Failed to register entity on net\nAdded to Vehicle Backlist blacklist");
+                    break;
+                }
+                else if(net1!=0)
+                {
+                    break;
+                }
             }
-            while (!API.NetworkDoesEntityExistWithNetworkId(veh.Handle) && attempts < 20);
-            if (attempts == 20 && !notified)
-            {
-                CitizenFX.Core.Debug.WriteLine("Failed to register entity on net");
-                notified = true;
-            }
-            else if (!notified)
-            {
-                CitizenFX.Core.Debug.WriteLine($"Registered {veh.Handle} on net as {net1}");
-                ELS.TriggerEvent("ELS:VehicleEntered");
-                notified = true;
-            }
+            while ( attempts < 100 /*|| !API.NetworkDoesEntityExistWithNetworkId(veh.Handle)*/ );
+            
         }
-        internal async void RunTickAsync()
+        internal void RunTick()
         {
             try
             {
                 if (Game.PlayerPed.IsSittingInELSVehicle() &&
+                    !blacklist.Contains(Game.PlayerPed.CurrentVehicle) &&
                         (Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed
                         || Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Passenger) == Game.PlayerPed))
                 {
-                    if (vehicleList.MakeSureItExists(API.VehToNet(Game.PlayerPed.CurrentVehicle.Handle), vehicle: out ELSVehicle _currentVehicle))
+                    var netid = Game.PlayerPed.CurrentVehicle.GetNetworkId();
+                    Utils.DebugWriteLine($"Player is in police vehicle with net id of {netid}");
+                    if (netid == 0)
+                    {
+                        makenetworked(Game.PlayerPed.CurrentVehicle);
+                    }
+                    if (!blacklist.Contains(Game.PlayerPed.CurrentVehicle) && vehicleList.MakeSureItExists(Game.PlayerPed.CurrentVehicle.GetNetworkId(), vehicle: out ELSVehicle _currentVehicle))
+
                     {
                         _currentVehicle?.RunTick();
                         vehicleList.RunExternalTick(_currentVehicle);
@@ -72,7 +87,7 @@ namespace ELS.Manager
                     }
                     else
                     {
-                        makenetworked(Game.PlayerPed.CurrentVehicle);
+                        //makenetworked(Game.PlayerPed.CurrentVehicle);
                         //var pos = Game.PlayerPed.CurrentVehicle.Position;
                         //var rot = Game.PlayerPed.CurrentVehicle.Rotation;
                         //var model = Game.PlayerPed.CurrentVehicle.Model;
@@ -85,12 +100,12 @@ namespace ELS.Manager
                     && (VehicleClass.Boats != Game.PlayerPed.CurrentVehicle.ClassType || VehicleClass.Trains != Game.PlayerPed.CurrentVehicle.ClassType
                     || VehicleClass.Planes != Game.PlayerPed.CurrentVehicle.ClassType || VehicleClass.Helicopters != Game.PlayerPed.CurrentVehicle.ClassType))
                     {
-                        makenetworked(Game.PlayerPed.CurrentVehicle);
+                        //makenetworked(Game.PlayerPed.CurrentVehicle);
                         Indicator.RunAsync(Game.PlayerPed.CurrentVehicle);
                     }
 
 
-#if DEBUG
+#if false
                     if (Game.IsControlJustPressed(0, Control.Cover))
                     {
                         FullSync.FullSyncManager.SendDataBroadcast(
@@ -107,24 +122,32 @@ namespace ELS.Manager
                 {
                     vehicleList.RunExternalTick();
                 }
+
+                if (Game.PlayerPed.IsGettingIntoAVehicle && !Game.PlayerPed.IsSittingInVehicle() ){
+                    var veh = API.GetVehiclePedIsUsing(Game.PlayerPed.Handle);
+                    ELS.TriggerEvent("ELS:VehicleEntered",veh);
+                }
+
+
             }
             catch (Exception e)
             {
                 CitizenFX.Core.Debug.WriteLine($"VehicleManager Error: {e.Message}");
+                throw e;
             }
-
-            //TODO Chnage how I check for the panic alarm
         }
 
         /// <summary>
         /// Proxies the sync data to a certain vehicle
         /// </summary>
         /// <param name="dataDic">data</param>
-        async internal void SetVehicleSyncData(IDictionary<string, object> dataDic,int PlayerId)
+        async internal void SetVehicleSyncData(IDictionary<string, object> dataDic, int PlayerId)
         {
-            if (Game.Player.ServerId == PlayerId) return;
-            var bo = vehicleList.MakeSureItExists((int)dataDic["NetworkID"]
-                        , dataDic, out ELSVehicle veh1);
+
+            Utils.DebugWriteLine($"Got Sync Data for {dataDic["NetworkID"]}");
+            if (Game.Player.ServerId == PlayerId || dataDic == null) return;
+            var bo = vehicleList.MakeSureItExists((int)dataDic["NetworkID"], out ELSVehicle veh1, dataDic);
+
             if (bo && dataDic.ContainsKey("siren") || dataDic.ContainsKey("light"))
             {
                 veh1.SetData(dataDic);
@@ -133,7 +156,9 @@ namespace ELS.Manager
                 CitizenFX.Core.Debug.Write($" Applying vehicle data with NETID of {(int)dataDic["NetworkID"]} LOCALID of {CitizenFX.Core.Native.API.NetToVeh((int)dataDic["NetworkID"])}");
 #endif
             }
-            if (dataDic.ContainsKey("IndState"))
+
+            else if (dataDic.ContainsKey("IndState"))
+
             {
                 Utils.DebugWriteLine($"Ind sync data for {dataDic["NetworkID"].ToString()} is {dataDic["IndState"]}");
                 Indicator.ToggleInicatorState((Vehicle)Vehicle.FromHandle(API.NetworkGetEntityFromNetworkId((int)dataDic["NetworkID"])), Indicator.IndStateLib[dataDic["IndState"].ToString()]);
@@ -150,7 +175,7 @@ namespace ELS.Manager
             vehicleList[netId].SyncUi();
         }
 
-        internal static void SyncRequestReply(Commands command,int NetworkId,int PlayerId)
+        internal static void SyncRequestReply(Commands command, int NetworkId, int PlayerId)
         {
             if (NetworkId == 0)
             {
@@ -183,9 +208,9 @@ namespace ELS.Manager
                 int netID = int.Parse(struct1.Key);
                 var vehData = (IDictionary<string, object>)struct1.Value;
                 vehicleList.MakeSureItExists((int)vehData["NetworkID"],
-                        vehData,
-                        out ELSVehicle veh
-                );
+                    out ELSVehicle veh
+,
+                    vehData);
             }
         }
 
@@ -196,7 +221,7 @@ namespace ELS.Manager
 
         void RemoveStallVehicles()
         {
-            
+
         }
         internal void CleanUP()
         {

@@ -26,8 +26,9 @@ namespace ELS.Manager
         {
 
         }
-        public void RunExternalTick([Optional] ELSVehicle vehicle)
+        public void RunExternalTick( ELSVehicle vehicle=null)
         {
+            if (vehicle == null) return;
             try
             {
                 foreach (var t in Values)
@@ -38,18 +39,23 @@ namespace ELS.Manager
             }
             catch (Exception e)
             {
-                CitizenFX.Core.Debug.WriteLine($"VehicleList Error: {e.Message}");
+                CitizenFX.Core.Debug.WriteLine($"VehicleList Error: {e.Message}\n");
             }
         }
-        public bool MakeSureItExists(int NetworkID, [Optional]out ELSVehicle vehicle)
+        public bool MakeSureItExists(int NetworkID, [Optional]out ELSVehicle vehicle, IDictionary<string, object> data = null)
         {
             if (NetworkID == 0)
             {
+
+               // VehicleManager.makenetworked()
+                Utils.DebugWriteLine("ERROR NetwordID equals 0 Can't add vehicle\n");
+
                 CitizenFX.Core.Debug.WriteLine("ERROR Try to add vehicle\nNetwordID equals 0");
+
                 vehicle = null;
+                data = null;
                 return false;
             }
-
             else if (!ContainsKey(NetworkID))
             {
                 try
@@ -58,13 +64,19 @@ namespace ELS.Manager
                     int handle = API.NetToVeh(NetworkID);
                     if (handle == 0)
                     {
-                        veh = new ELSVehicle(Game.PlayerPed.CurrentVehicle.Handle);
+                        Utils.ReleaseWriteLine("handle=0");
                     }
                     else
                     {
-                        veh = new ELSVehicle(handle);
+                        if (data != null)
+                            veh = new ELSVehicle(handle, data);
+                        else
+                            veh = new ELSVehicle(handle, data);
                     }
                     Add(NetworkID,veh);
+
+                    Utils.DebugWriteLine($"Adding Vehicle");
+
                     vehicle = veh;
                     return true;
                 }
@@ -72,53 +84,6 @@ namespace ELS.Manager
                 {
 #if DEBUG 
                     CitizenFX.Core.Debug.Write($"Exsits Error: {ex.Message} due to {ex.InnerException}");
-#endif
-                    vehicle = null;
-                    return false;
-                    throw ex;
-                }
-
-            }
-            else
-            {
-                vehicle = this[NetworkID];//Find(poolObject => ((ELSVehicle)poolObject).GetNetworkId() == NetworkID);
-                return true;
-            }
-        }
-        public bool MakeSureItExists(int NetworkID, IDictionary<string, object> data, [Optional]out ELSVehicle vehicle)
-        {
-            if (NetworkID == 0)
-            {
-                CitizenFX.Core.Debug.WriteLine("ERROR NetwordID equals 0\n");
-                vehicle = null;
-                return false;
-            }
-
-            else if (!ContainsKey(NetworkID))
-            {
-                try
-                {
-                    ELSVehicle veh = null;
-                    int handle = API.NetToVeh(NetworkID);
-                    if (handle == 0)
-                    {
-                        veh = new ELSVehicle(Game.PlayerPed.CurrentVehicle.Handle,data);
-                    }
-                    else
-                    {
-                        veh = new ELSVehicle(handle,data);
-                    }
-                    Add(NetworkID,veh);
-#if DEBUG
-                    CitizenFX.Core.Debug.Write($"Adding Vehicle");
-#endif
-                    vehicle = veh;
-                    return true;
-                }
-                catch (Exception ex)
-                {
-#if DEBUG
-                    CitizenFX.Core.Debug.Write($"Exsits Error With Data: {ex.Message}");
 #endif
                     vehicle = null;
                     return false;
