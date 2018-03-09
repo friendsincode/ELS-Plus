@@ -15,6 +15,7 @@ config.yml
 *.user
 *.userosscache
 *.sln.docstates
+*.sync-conflict*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
