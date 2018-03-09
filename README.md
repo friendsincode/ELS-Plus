@@ -1,12 +1,12 @@
 # ELS-Plus
 
-See: https://github.com/ejb1123/ELS-Plus/issues to submit an issue. It is important that if you test ELS for FiveM that you submit issues so that we may work to resolve these. Here's some things to consider:
+See: https://github.com/friendsincode/ELS-Plus/issues to submit an issue or use our discord here: . It is important that if you test ELS Plus for FiveM that you submit issues so that we may work to resolve these. Here's some things to consider:
 
-- ELS vehicles are not yet supported.
-- Lights are in progress. Currently sync is not working but you are able to use lights.
+- ELS vehicles are fully supported.
+- Full VCF parsing so you can totally customize vehicles.
 - Custom cars will require VCF files to be created by following the [How to add custom Vehicles](#how-to-add-els-vehicles-to-els-fivem) section.
 - You can spawn a vehicle using /elscar {model}
-- You can obtain a list of the vehicles ELS has detected by typing /elslist and pressing F8 to view console.
+- You can obtain a list of the vehicles ELS has detected by typing /elslist and pressing F8 to view console.(Plans to make menu in progress :D)
 
 
 
@@ -44,24 +44,28 @@ See: https://github.com/ejb1123/ELS-Plus/issues to submit an issue. It is import
 
 
 ### How to install
-1. Copy the `ELS-FiveM` folder to `cfx-server\resources\`
-2. Add `ELS-FiveM` to `server.cfg`
+1. Copy the `els-plus` folder to `cfx-server\resources\`
+2. Add `start els-plus` to `server.cfg`
 3. Add `add_ace resource.RESOURCE_NAME command.add_ace allow` to `server.cfg`
    remember to replace `RESOURCE_NAME` with the name of this resource.
-4. Add your user to the `group.admin` principle to allow you to use the elscar commmand to spawn a vehicle
+4. Modify settings via ini file how you see fit.
+5. If you set AllowAdminOnly to `true` Add your user to the `group.admin`
+   principal with the following `add_principal identifier.[license||steam]:id# group.admin`
+   to allow you to use the elscar commmand to spawn a vehicle.
+6. You can also add custom groups to els-plus to allow better control on who you wish to use the command.
 
-### How to add ELS Vehicles to ELS-FiveM
+
+### How to add ELS Vehicles to ELS-Plus
 1. Create add-on/replace Vehicle with stream folder and relevant files.
-2. In `__resource.lua` add the `VCF` xml file to the `files` list.
-3. Add `is_els 'true'` to bottom of `__resource.lua`.
-4. Restart Server
-5. Profit
+2. In `__resource.lua` of that add-on/replace vehicle add the `VCF` xml file to the `files` list.
+3. Make sure to validate the xml file to avoid issues with vehicle not showing up.
+4. Add `is_els 'true'` to bottom of `__resource.lua`.
+5. Restart Server
+6. Profit
 
 #### Important Notes
 
-- When running the rcon command `restart ELS-FiveM` or `start ELS-FiveM`.
-Make sure you restart any resources that have ELS vehicles.
-- Make sure ELS-FiveM is located below all ELS enabled vehicle stream resources in the `server.cfg` file.
+- When running the rcon command `restart els-plus` or `start els-plus`.
 
 ## Contribute
 if you are a developer and  would like to contribute any help is welcome!
@@ -71,14 +75,14 @@ The contribution guide can be found [here](CONTRIBUTING.md).
 
 1. Add the enviroment variable `FXSERVERDATA` and set its value to the `resources` directory path.
 
-2. `git clone https://github.com/FiveM-Scripts/ELS-FiveM.git`
+2. `git clone https://github.com/friendsincode/ELS-Plus.git`
 
-3. Open `ELS-FiveM\src\ELS-for-FiveM.sln` in Visual Studio
+3. Open `ELS-Plus\src\elsplus.sln` in Visual Studio
 
 4. Select `Release` and `Any CPU`  next to the Start button
 
 5. In the menu bar under Build click on `Build Solution`
 
-6. Copy all the files from `ELS-FiveM\src\bin\Release` to `cfx-server\resources\ELS-FiveM`
+6. Copy all the files from `ELS-Plus\src\bin\Release` to `cfx-server\resources\els-plus`
 
-7. Add `ELS-FiveM` to `AutoStartResources` in `cfx-server\citmp-server.yml`
+7. Add `start els-plus` to `server.cfg`
