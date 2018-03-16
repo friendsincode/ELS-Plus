@@ -124,7 +124,7 @@ namespace ELS.Manager
             }
             catch (Exception e)
             {
-                CitizenFX.Core.Debug.WriteLine($"VehicleManager Error: {e.Message}");
+                CitizenFX.Core.Debug.WriteLine($"VehicleManager Error: {e.Message} \n Stacktrace: {e.StackTrace}");
             }
 
             //TODO Chnage how I check for the panic alarm
