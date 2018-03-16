@@ -98,11 +98,12 @@ namespace ELS.Siren
                             _patternController.CurrentWrnPattern = _vcf.WRNL.ForcedPatterns.SrnTone1.IntPattern;
                         }
                     }
-                    else if (_mainSiren._enable && dual_siren && _mainSiren.currentTone != _tones.tone1)
+                    if (_mainSiren._enable && dual_siren && !_tones.tone1._state)
                     {
+                        Utils.DebugWriteLine("Setting Dual Siren tone 2");
                         _tones.tone4.SetState(false);
-                        _tones.tone1.SetState(true);
-                        _tones.tone2.SetState(false);
+                        _tones.tone1.SetState(false);
+                        _tones.tone2.SetState(true);
                         _tones.tone3.SetState(false);
                     }
                     ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
@@ -138,12 +139,13 @@ namespace ELS.Siren
                     }
                     
                 }
-                else if (_mainSiren._enable && dual_siren && _mainSiren.currentTone != _tones.tone2)
+                if (_mainSiren._enable && dual_siren && !_tones.tone2._state)
                 {
+                    Utils.DebugWriteLine("Setting Dual Siren tone 3");
                     _tones.tone4.SetState(false);
                     _tones.tone1.SetState(false);
-                    _tones.tone2.SetState(true);
-                    _tones.tone3.SetState(false);
+                    _tones.tone2.SetState(false);
+                    _tones.tone3.SetState(true);
                 }
                 ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
                 ElsUiPanel.PlayUiSound(true);
@@ -175,12 +177,13 @@ namespace ELS.Siren
                     ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
                 }
 
-                if (_mainSiren._enable && dual_siren && _mainSiren.currentTone != _tones.tone3)
+                if (_mainSiren._enable && dual_siren && !_tones.tone3._state)
                 {
-                    _tones.tone3.SetState(true);
+                    Utils.DebugWriteLine("Setting Dual Siren tone 4");
+                    _tones.tone3.SetState(false);
                     _tones.tone1.SetState(false);
                     _tones.tone2.SetState(false);
-                    _tones.tone4.SetState(false);
+                    _tones.tone4.SetState(true);
                 }
             }
             ElsUiPanel.PlayUiSound(true);
@@ -210,9 +213,10 @@ namespace ELS.Siren
                     }
                     ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
                 }
-
-                if (_mainSiren._enable && dual_siren && _mainSiren.currentTone != _tones.tone4)
+                
+                if (_mainSiren._enable && dual_siren && !_tones.tone4._state)
                 {
+                    Utils.DebugWriteLine("Setting Dual Siren tone 1");
                     _tones.tone4.SetState(true);
                     _tones.tone1.SetState(false);
                     _tones.tone2.SetState(false);
@@ -268,16 +272,32 @@ namespace ELS.Siren
             if (toggle)
             {
                 dual_siren = !dual_siren;
-                Screen.ShowNotification($"Dual Siren {dual_siren}");
+                switch(_mainSiren.currentTone.Type)
+                {
+                    case "WL":
+                        _tones.tone2.SetState(dual_siren);
+                        break;
+                    case "YP":
+                        _tones.tone3.SetState(dual_siren);
+                        break;
+                    case "A1":
+                        _tones.tone4.SetState(dual_siren);
+                        break;
+                    case "A2":
+                        _tones.tone1.SetState(dual_siren);
+                        break;
+                }
+                Utils.DebugWriteLine($"Dual Siren {dual_siren}");
             }
         }
         void PanicAlarmLogic(bool toggle,bool disableControls = false)
         {
             if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Snd_SrnPnic);
-            CitizenFX.Core.UI.Screen.ShowNotification($"{toggle}");
+            //CitizenFX.Core.UI.Screen.ShowNotification($"{toggle}");
             this._tones.panicAlarm.SetState(toggle);
             if (toggle)
             {
+
                 //Screen.ShowNotification($"{toggle}");
             }
         }

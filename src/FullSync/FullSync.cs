@@ -21,16 +21,16 @@ namespace ELS.FullSync
 
         internal static void RequestData(long NetworkID)
         {
-            BaseScript.TriggerServerEvent("ELS:FullSync:Request", NetworkID);
+            ELS.TriggerServerEvent("ELS:FullSync:Request", NetworkID);
         }
 
         internal static void SendDataBroadcast(IDictionary dic,int PlayerId)
         {
-            BaseScript.TriggerServerEvent("ELS:FullSync:Broadcast",dic,PlayerId);
+            ELS.TriggerServerEvent("ELS:FullSync:Broadcast",dic,PlayerId);
         }
         internal static void SendDataUnicast(IDictionary dic,int PlayerID)
         {
-            BaseScript.TriggerServerEvent("ELS:FullSync:Unicast", dic,PlayerID);
+            ELS.TriggerServerEvent("ELS:FullSync:Unicast", dic,PlayerID);
         }
     }
     internal static class SetData
