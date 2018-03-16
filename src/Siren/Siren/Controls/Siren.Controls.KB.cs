@@ -73,7 +73,10 @@ namespace ELS.Siren
 
         void MainSirenToggleControlsKB()
         {
-            if ((Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Toggle_SIRN) && Game.CurrentInputMode == InputMode.MouseAndKeyboard) || (Global.AllowController && Game.IsControlJustPressed(2, Control.HUDSpecial) && Game.CurrentInputMode == InputMode.GamePad))
+            if ((Game.IsControlJustPressed(0, ElsConfiguration.KeyBindings.Toggle_SIRN) 
+                && Game.CurrentInputMode == InputMode.MouseAndKeyboard) || (Global.AllowController 
+                && Game.IsControlJustPressed(2, Control.HUDSpecial) 
+                && Game.CurrentInputMode == InputMode.GamePad))
             {
 #if !REMOTETEST
                 MainSirenToggleLogic(true, true);
@@ -84,14 +87,15 @@ namespace ELS.Siren
 
         void ManualSoundControlsKB()
         {
-            if (Game.IsControlJustPressed(0, ElsConfiguration.KeyBindings.Sound_Manul))
+            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Sound_Manul);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.Sound_Manul))
             {
 #if !REMOTETEST
                 ManualSoundLogic(true, true);
 #endif
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ManualSound, _vehicle, true, Game.Player.ServerId);
             }
-            if (Game.IsControlJustReleased(0, ElsConfiguration.KeyBindings.Sound_Manul))
+            if (Game.IsDisabledControlJustReleased(0, ElsConfiguration.KeyBindings.Sound_Manul))
             {
 #if !REMOTETEST
                 ManualSoundLogic(false, true);

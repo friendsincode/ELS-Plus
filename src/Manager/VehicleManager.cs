@@ -143,16 +143,16 @@ namespace ELS.Manager
             }
 
             Utils.DebugWriteLine($"{PlayerId} has sent us data parsing");
-            if (vehicleList.ContainsKey((int)dataDic["NetworkID"]))
+            if (vehicleList.ContainsKey((Int16)dataDic["NetworkID"]))
             {
-                vehicleList[(int)dataDic["NetworkID"]].SetData(dataDic);
-                Utils.DebugWriteLine($" Applying vehicle data with NETID of {(int)dataDic["NetworkID"]} LOCALID of {CitizenFX.Core.Native.API.NetToVeh((int)dataDic["NetworkID"])}");
+                vehicleList[(Int16)dataDic["NetworkID"]].SetData(dataDic);
+                Utils.DebugWriteLine($" Applying vehicle data with NETID of {(Int16)dataDic["NetworkID"]} LOCALID of {CitizenFX.Core.Native.API.NetToVeh((Int16)dataDic["NetworkID"])}");
             } 
             else
             {
-                if (!vehicleList.VehRegAttempts.ContainsKey((int)dataDic["NetworkID"]) || Game.GameTime - vehicleList.VehRegAttempts[(int)dataDic["NetworkID"]].Item2 >= 600000 && vehicleList.VehRegAttempts[(int)dataDic["NetworkID"]].Item1 < 5)
+                if (!vehicleList.VehRegAttempts.ContainsKey((Int16)dataDic["NetworkID"]) || Game.GameTime - vehicleList.VehRegAttempts[(Int16)dataDic["NetworkID"]].Item2 >= 600000 && vehicleList.VehRegAttempts[(Int16)dataDic["NetworkID"]].Item1 < 5)
                 {
-                    if (!vehicleList.MakeSureItExists((int)dataDic["NetworkID"], dataDic, out ELSVehicle veh1, PlayerId))
+                    if (!vehicleList.MakeSureItExists((Int16)dataDic["NetworkID"], dataDic, out ELSVehicle veh1, PlayerId))
                     {
                         Utils.DebugWriteLine("Failed to register other clients vehicle");
                         return;
@@ -233,7 +233,7 @@ namespace ELS.Manager
             {
                 int netID = int.Parse(struct1.Key);
                 var vehData = (IDictionary<string, object>)struct1.Value;
-                vehicleList.MakeSureItExists((int)vehData["NetworkID"],
+                vehicleList.MakeSureItExists((Int16)vehData["NetworkID"],
                         vehData,
                         out ELSVehicle veh
                 );

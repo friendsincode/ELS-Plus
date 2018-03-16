@@ -213,7 +213,7 @@ namespace ELS
             CitizenFX.Core.Debug.WriteLine($"Attempting to spawn: {veh}");
             var polModel = new Model((VehicleHash)hash);
             await polModel.Request(-1);
-            Vehicle _veh = await World.CreateVehicle(polModel, Game.PlayerPed.Position + new Vector3(0f,5f,0f));
+            Vehicle _veh =  new Vehicle(API.CreateVehicle((uint) Game.GenerateHash(veh), Game.PlayerPed.Position.X, Game.PlayerPed.Position.Y + 5f, Game.PlayerPed.Position.Z, Game.PlayerPed.Heading, true,true));
             Game.PlayerPed.SetIntoVehicle(_veh, VehicleSeat.Driver);
             polModel.MarkAsNoLongerNeeded();
             return _veh;
@@ -246,7 +246,7 @@ namespace ELS
             CitizenFX.Core.Debug.WriteLine($"Attempting to spawn: {veh}");
             var polModel = new Model((VehicleHash)hash);
             await polModel.Request(-1);
-            Vehicle _veh = await World.CreateVehicle(polModel, new Vector3(coords.x,coords.y,coords.z));
+            Vehicle _veh = new Vehicle(API.CreateVehicle((uint)Game.GenerateHash(veh), coords.x, coords.y + 5f, coords.z, Game.PlayerPed.Heading, true, true));
             polModel.MarkAsNoLongerNeeded();
             _veh.PlaceOnGround();
             Game.PlayerPed.SetIntoVehicle(_veh, VehicleSeat.Driver);
