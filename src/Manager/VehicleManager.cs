@@ -82,6 +82,14 @@ namespace ELS.Manager
                                 vehicleList.RunExternalTick(_currentVehicle);
                                 Game.PlayerPed.CurrentVehicle.SetExistOnAllMachines(true);
                             }
+                            else
+                            {
+                                vehicleList.RunExternalTick();
+                            }
+                        }
+                        else
+                        {
+                            vehicleList.RunExternalTick();
                         }
                     }
                     if (Game.PlayerPed.IsInVehicle() && (Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed)
