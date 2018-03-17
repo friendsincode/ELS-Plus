@@ -20,19 +20,22 @@ See: https://github.com/friendsincode/ELS-Plus/issues to submit an issue or use 
 | Select Shotgun Weapon | 3 Key | Auxilary tone 1|
 | Select Heavy Weapon | 4 Key | Auxilary tone 2|
 | Select Special Weapon | 5 Key | Toggles Dual Siren Mode|
-| Chat All| Y Key|Goes to next tone or plays tone 1|
-| Throw Grenade| G Key|Toggles main siren|
-| Radio Wheel | Q Key | Toggles vehicle's Light Stages|
-| Multiplayer Info | Z Key | Toggles vehicle's Primary Patterns|
-| Drop Projectile | X Key | Toggles vehicle's Secondary Patterns|
-| Look Behind | C Key | Toggles vehicle's Warning Patterns|
-| Vehicle Next Radio Track | . Key | Toggles vehicle's Takedown Lights (Extra 12)|
-| Vehicle Next Radio Track | Alt + . Key | Toggles vehicle's Scene Lights (Extra 11)|
-|Replay Show Hot Key | K Key | Toggles vehicle's secondary lights|
-|Cinematic Slo Mo | L Key | Toggles vehicle's warning lights|
-|| [ Key | Toggles vehicle's Cruise Lights|
-|| L Alt + [ | Toggles vehicles Arrowboard if equipped(Not fully working)|
-||Ctrl + P|Toggles UI Panel|
+| Veh Cinema Cam | R Key|Goes to next tone or plays tone 1|
+| Character Wheel | Left Alt Key |Toggles main siren|
+| Radio Wheel | Q Key | Toggles vehicle's Light Stages using L Alt Modifier toggles backwards depending on Activation type |
+| Select SMG | 7 Key | Toggles vehicle's Primary Patterns using L Alt Modifier toggles backwards |
+| Select Auto Rifle | 8 Key | Toggles vehicle's Secondary Patterns using L Alt Modifier toggles backwards |
+| Select Sniper Rifle | 9 Key | Toggles vehicle's Warning Patterns using L Alt Modifier toggles backwards |
+| Vehicle Next Radio Track | . Key | Toggles vehicle's Takedown Lights (Extra 12) |
+| Vehicle Next Radio Track | Alt + . Key | Toggles vehicle's Scene Lights (Extra 11) |
+| Replay Show Hot Key | K Key | Toggles vehicle's secondary lights|
+| Cinematic Slo Mo | L Key | Toggles vehicle's warning lights|
+| Previous Weapon | [ Key | Toggles vehicle's Cruise Lights|
+| Character Wheel + Previous Weapon | L Alt + [ | Toggles vehicles Arrowboard if equipped(Not fully working)|
+| Duck + Pause | L Ctrl + P|Toggles UI Panel|
+| Vehicle Previous Radio Track | - Key | Toggle Left Indicator |
+| Vehicle Next Radio Track | = Key | Toggle Right Indicator |
+| Cellphone Cancel | - Key | Toggle Hazards |
 |---|---|---|
 |Sniper Zoom in secondary|DPad Up|Toggle Auxilary Tone 1|
 |Sniper Zoom out secondary|DPad Down|Toggle Main Siren|
