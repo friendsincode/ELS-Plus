@@ -61,7 +61,7 @@ namespace ELS_Server
 #if DEBUG
                  Debug.WriteLine($"NetworkID {dd["NetworkID"]}");
 #endif
-                 _cachedData[(Int16)dd["NetworkID"]] = dd;
+                 _cachedData[int.Parse(dd["NetworkID"].ToString())] = dd;
                  BroadcastMessage(dataDic, playerID);
              });
             EventHandlers["ELS:FullSync:Request:All"] += new Action<int>((int source) =>

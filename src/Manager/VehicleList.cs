@@ -38,8 +38,10 @@ namespace ELS.Manager
             {
                 foreach (var t in Values)
                 {
-                    if (vehicle == null ||  t.Handle!=vehicle.Handle)
-                    t.RunExternalTick();
+                    if (vehicle == null || t.Handle != vehicle.Handle)
+                    {
+                        t.RunExternalTick();
+                    } 
                 }
             }
             catch (Exception e)

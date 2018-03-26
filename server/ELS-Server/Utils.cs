@@ -16,7 +16,7 @@ namespace ELS_Server
         static internal void DebugWrite(string data)
         {
 #if DEBUG
-            CitizenFX.Core.Debug.Write(data);
+            CitizenFX.Core.Debug.Write($"ELS-Plus: {data}");
 #endif
         }
 
@@ -30,11 +30,11 @@ namespace ELS_Server
 #if DEBUG
             if (args != null)
             {
-                CitizenFX.Core.Debug.WriteLine(data, args);
+                CitizenFX.Core.Debug.WriteLine($"ELS-Plus: {data}", args);
             }
             else
             {
-                CitizenFX.Core.Debug.WriteLine(data);
+                CitizenFX.Core.Debug.WriteLine($"ELS-Plus: {data}");
             }
 #endif
         }
@@ -44,7 +44,7 @@ namespace ELS_Server
         /// /// <param name="data">Data to print in console</param>
         static internal void ReleaseWrite(string data)
         {
-            CitizenFX.Core.Debug.Write(data);
+            CitizenFX.Core.Debug.Write($"ELS-Plus: {data}");
         }
 
         /// <summary>
@@ -56,11 +56,11 @@ namespace ELS_Server
         {
             if (args != null)
             {
-                CitizenFX.Core.Debug.WriteLine(data, args);
+                CitizenFX.Core.Debug.WriteLine($"ELS-Plus: {data}", args);
             }
             else
             {
-                CitizenFX.Core.Debug.WriteLine(data);
+                CitizenFX.Core.Debug.WriteLine($"ELS-Plus: {data}");
             }
         }
 
