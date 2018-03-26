@@ -77,6 +77,11 @@ namespace ELS
 
         internal void RunTick()
         {
+            if (!_vehicle.Exists() || _vehicle.IsDead)
+            {
+                VehicleManager.vehicleList.Remove(GetNetworkId());
+                return;
+            }
             _siren.Ticker();
             _light.Ticker();
             if (_siren._mainSiren._enable && _light._stage.CurrentStage != 3)
@@ -95,6 +100,11 @@ namespace ELS
         }
         internal void RunExternalTick()
         {
+            if (!_vehicle.Exists() || _vehicle.IsDead)
+            {
+                VehicleManager.vehicleList.Remove(GetNetworkId());
+                return;
+            }
             _siren.ExternalTicker();
             _light.ExternalTicker();
         }

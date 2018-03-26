@@ -35,6 +35,7 @@ namespace ELS.Manager
             var attempts = 0;
             do
             {
+                Utils.DebugWriteLine($"Attempt {attempts} of {veh.Handle} driven by {veh.GetPedOnSeat(VehicleSeat.Driver).Handle}");
                 //BaseScript.Delay(500);
                 var netid = API.NetworkGetNetworkIdFromEntity(veh.Handle);
                 API.NetworkRegisterEntityAsNetworked(veh.Handle);
@@ -67,6 +68,7 @@ namespace ELS.Manager
                 {
                     if (vehicleList.ContainsKey(Game.PlayerPed.CurrentVehicle.GetNetworkId()))
                     {
+                        Utils.DebugWriteLine("Vehicle is in the list running ticks");
                         ELSVehicle _currentVehicle = vehicleList[Game.PlayerPed.CurrentVehicle.GetNetworkId()];
                         _currentVehicle?.RunTick();
                         vehicleList.RunExternalTick(_currentVehicle);
@@ -74,7 +76,7 @@ namespace ELS.Manager
                     }
                     else
                     {
-                        if (!vehicleList.VehRegAttempts.ContainsKey(Game.PlayerPed.CurrentVehicle.GetNetworkId()) || Game.GameTime - vehicleList.VehRegAttempts[Game.PlayerPed.CurrentVehicle.GetNetworkId()].Item2 >= 60000 && vehicleList.VehRegAttempts[Game.PlayerPed.CurrentVehicle.GetNetworkId()].Item1 < 5)
+                        if (!vehicleList.VehRegAttempts.ContainsKey(Game.PlayerPed.CurrentVehicle.GetNetworkId()) || Game.GameTime - vehicleList.VehRegAttempts[Game.PlayerPed.CurrentVehicle.GetNetworkId()].Item2 >= 15000 && vehicleList.VehRegAttempts[Game.PlayerPed.CurrentVehicle.GetNetworkId()].Item1 < 5)
                         {
                             if (vehicleList.MakeSureItExists(API.VehToNet(Game.PlayerPed.CurrentVehicle.Handle), vehicle: out ELSVehicle _currentVehicle))
                             {
@@ -143,16 +145,17 @@ namespace ELS.Manager
             }
 
             Utils.DebugWriteLine($"{PlayerId} has sent us data parsing");
-            if (vehicleList.ContainsKey((Int16)dataDic["NetworkID"]))
+            int netid = int.Parse(dataDic["NetworkID"].ToString());
+            if (vehicleList.ContainsKey(netid) && dataDic.ContainsKey("siren") || dataDic.ContainsKey("lights") && !dataDic.ContainsKey("IndState"))
             {
-                vehicleList[(Int16)dataDic["NetworkID"]].SetData(dataDic);
-                Utils.DebugWriteLine($" Applying vehicle data with NETID of {(Int16)dataDic["NetworkID"]} LOCALID of {CitizenFX.Core.Native.API.NetToVeh((Int16)dataDic["NetworkID"])}");
+                vehicleList[netid].SetData(dataDic);
+                Utils.DebugWriteLine($" Applying vehicle data with NETID of {netid} LOCALID of {API.NetToVeh(netid)}");
             } 
             else
             {
-                if (!vehicleList.VehRegAttempts.ContainsKey((Int16)dataDic["NetworkID"]) || Game.GameTime - vehicleList.VehRegAttempts[(Int16)dataDic["NetworkID"]].Item2 >= 600000 && vehicleList.VehRegAttempts[(Int16)dataDic["NetworkID"]].Item1 < 5)
+                if (!vehicleList.VehRegAttempts.ContainsKey(netid) || Game.GameTime - vehicleList.VehRegAttempts[netid].Item2 >= 15000 && vehicleList.VehRegAttempts[netid].Item1 < 5)
                 {
-                    if (!vehicleList.MakeSureItExists((Int16)dataDic["NetworkID"], dataDic, out ELSVehicle veh1, PlayerId))
+                    if (!vehicleList.MakeSureItExists(netid, dataDic, out ELSVehicle veh1, PlayerId))
                     {
                         Utils.DebugWriteLine("Failed to register other clients vehicle");
                         return;
@@ -164,30 +167,10 @@ namespace ELS.Manager
                     Utils.DebugWriteLine("Attempting to register be patient");
                 }
             }
-            //var bo = vehicleList.MakeSureItExists((int)dataDic["NetworkID"]
-            //            , dataDic, out ELSVehicle veh1);
-
-            //if (bo && dataDic.ContainsKey("siren") || dataDic.ContainsKey("light") && veh1 != null)
-            //{
-            //    veh1.SetData(dataDic);
-
-            //    Utils.DebugWriteLine($" Applying vehicle data with NETID of {(int)dataDic["NetworkID"]} LOCALID of {CitizenFX.Core.Native.API.NetToVeh((int)dataDic["NetworkID"])}");
-            //} 
-            //else if (veh1 == null && dataDic.ContainsKey("siren") || dataDic.ContainsKey("light"))
-            //{
-            //    Utils.DebugWriteLine("Vehicle is null we are fucking up");
-            //    bo = vehicleList.MakeSureItExists((int)dataDic["NetworkID"], dataDic, out veh1, PlayerId);
-            //    if (!bo)
-            //    {
-            //        Utils.DebugWriteLine("Failed to register other clients vehicle");
-            //        return;
-            //    }
-            //    veh1.SetData(dataDic);
-            //}
-            if (dataDic.ContainsKey("IndState"))
+            if (dataDic.ContainsKey("IndState") && !dataDic.ContainsKey("siren") || !dataDic.ContainsKey("lights"))
             {
-                Utils.DebugWriteLine($"Ind sync data for {dataDic["NetworkID"].ToString()} is {dataDic["IndState"]}");
-                Indicator.ToggleInicatorState((Vehicle)Vehicle.FromHandle(API.NetworkGetEntityFromNetworkId((int)dataDic["NetworkID"])), Indicator.IndStateLib[dataDic["IndState"].ToString()]);
+                Utils.DebugWriteLine($"Ind sync data for {netid} is {dataDic["IndState"]}");
+                Indicator.ToggleInicatorState((Vehicle)Vehicle.FromHandle(API.NetworkGetEntityFromNetworkId(netid)), Indicator.IndStateLib[dataDic["IndState"].ToString()]);
             }
         }
 
@@ -233,7 +216,8 @@ namespace ELS.Manager
             {
                 int netID = int.Parse(struct1.Key);
                 var vehData = (IDictionary<string, object>)struct1.Value;
-                vehicleList.MakeSureItExists((Int16)vehData["NetworkID"],
+                int vehId = int.Parse(vehData["NetworkID"].ToString());
+                vehicleList.MakeSureItExists(vehId,
                         vehData,
                         out ELSVehicle veh
                 );

@@ -67,7 +67,7 @@ namespace ELS.Light
             Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleRIND);
             Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleHAZ);
 
-            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleLIND))
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleLIND) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 if (CurrentIndicatorState(veh) == IndicatorState.Left)
                 {
@@ -84,7 +84,7 @@ namespace ELS.Light
                 ActivateIndicatorTimer = true;
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleInd, veh, true, Game.Player.ServerId);
             }
-            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleRIND))
+            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleRIND) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 if (CurrentIndicatorState(veh) == IndicatorState.Right)
                 {
@@ -101,7 +101,7 @@ namespace ELS.Light
                 ElsUiPanel.PlayUiSound(true);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleInd, veh, true, Game.Player.ServerId);
             }
-            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleHAZ))
+            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleHAZ) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 if (CurrentIndicatorState(veh) == IndicatorState.Hazard)
                 {

@@ -55,13 +55,13 @@ namespace ELS_Server
                 TriggerClientEvent("ELS:VehicleEntered", veh);
             });
             EventHandlers["ELS:FullSync:Unicast"] += new Action(() => { });
-            EventHandlers["ELS:FullSync:Broadcast"] += new Action<System.Dynamic.ExpandoObject, Int16>((dataDic, playerID) =>
+            EventHandlers["ELS:FullSync:Broadcast"] += new Action<System.Dynamic.ExpandoObject, int>((dataDic, playerID) =>
              {
                  var dd = (IDictionary<string, object>)dataDic;
 #if DEBUG
                  Debug.WriteLine($"NetworkID {dd["NetworkID"]}");
 #endif
-                 _cachedData[(Int16)dd["NetworkID"]] = dd;
+                 _cachedData[int.Parse(dd["NetworkID"].ToString())] = dd;
                  BroadcastMessage(dataDic, playerID);
              });
             EventHandlers["ELS:FullSync:Request:All"] += new Action<int>((int source) =>
