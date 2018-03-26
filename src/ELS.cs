@@ -247,6 +247,7 @@ namespace ELS
             CitizenFX.Core.Debug.WriteLine($"Attempting to spawn: {veh}");
             var polModel = new Model((VehicleHash)hash);
             await polModel.Request(-1);
+
             Vehicle _veh = new Vehicle(API.CreateVehicle((uint)Game.GenerateHash(veh), coords.x, coords.y + 5f, coords.z, Game.PlayerPed.Heading, true, false));
             VehicleManager.makenetworked(_veh);
             polModel.MarkAsNoLongerNeeded();
