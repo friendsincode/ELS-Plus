@@ -5,14 +5,15 @@ param(
 
 )
 $pdb2mdb="$PSScriptRoot\..\utils\pdb2mdb\pdb2mdb.exe"
-$FxServerbinary= [System.IO.Path]::Combine($env:FXSERVERBIN,"fxserver.exe")
-if(-not(Test-Path -Path $FxServerbinary)){
-    Write-Host -Object "FXSERVERBIN eviroment varible not specified
-    skipping copying to server folder" -ForegroundColor Yellow
-    #exit
+if($env:FXSERVERBIN){
+    $FxServerbinary= [System.IO.Path]::Combine($env:FXSERVERBIN,"fxserver.exe")
+    if(-not(Test-Path -Path $FxServerbinary)){
+        Write-Host -Object "FXSERVERBIN eviroment varible not specified
+        skipping copying to server folder" -ForegroundColor Yellow
+        #exit
+    }
 }
-
-$FxServerData= [System.IO.Path]::Combine($env:FXSERVERDATA)
+$FxServerData= $env:FXSERVERDATA
 if(!(Test-Path -Path $FxServerData)){
     Write-Host -Object "FXSERVERDATA eviroment varible not specified
     or we could not find the resources directory
