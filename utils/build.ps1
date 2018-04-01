@@ -1,0 +1,2 @@
+$installpath=$(utils/vswhere.exe -property installationPath)
+&"$(../utils/vswhere.exe -property installationPath)/MSBuild/15.0/Bin/msbuild.exe" /p:outDir=tmp/ /p:Configuration=Release /p:PostBuildEvent= /t:Build ELSPlus.sln
