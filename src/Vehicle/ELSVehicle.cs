@@ -17,6 +17,7 @@ namespace ELS
         private Vehicle _vehicle;
         private Vcfroot _vcf;
         int lastdrivetime;
+        internal int cachedNetId;
 
         public ELSVehicle(int handle, [Optional]IDictionary<string, object> data) : base(handle)
         {
@@ -51,6 +52,7 @@ namespace ELS
             _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data?["siren"], _light);
             _light.SetGTASirens(false);
             //_vehicle.SetExistOnAllMachines(true);
+            cachedNetId = _vehicle.GetNetworkId();
 #if DEBUG
             CitizenFX.Core.Debug.WriteLine(CitizenFX.Core.Native.API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
 
@@ -79,7 +81,7 @@ namespace ELS
         {
             if (!_vehicle.Exists() || _vehicle.IsDead)
             {
-                VehicleManager.vehicleList.Remove(GetNetworkId());
+                VehicleManager.vehicleList.Remove(cachedNetId);
                 return;
             }
             _siren.Ticker();
@@ -102,7 +104,7 @@ namespace ELS
         {
             if (!_vehicle.Exists() || _vehicle.IsDead)
             {
-                VehicleManager.vehicleList.Remove(GetNetworkId());
+                VehicleManager.vehicleList.Remove(cachedNetId);
                 return;
             }
             _siren.ExternalTicker();
