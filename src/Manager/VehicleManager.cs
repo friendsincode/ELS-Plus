@@ -94,16 +94,7 @@ namespace ELS.Manager
                             vehicleList.RunExternalTick();
                         }
                     }
-                    if (Game.PlayerPed.IsInVehicle() && (Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed)
-                    && (VehicleClass.Boats != Game.PlayerPed.CurrentVehicle.ClassType || VehicleClass.Trains != Game.PlayerPed.CurrentVehicle.ClassType
-                    || VehicleClass.Planes != Game.PlayerPed.CurrentVehicle.ClassType || VehicleClass.Helicopters != Game.PlayerPed.CurrentVehicle.ClassType))
-                    {
-                        if (Game.PlayerPed.CurrentVehicle.GetNetworkId() == 0)
-                        {
-                            makenetworked(Game.PlayerPed.CurrentVehicle);
-                        }
-                        Indicator.RunAsync(Game.PlayerPed.CurrentVehicle);
-                    }
+                    
 
 
 #if DEBUG
@@ -118,6 +109,15 @@ namespace ELS.Manager
                     //}
                     //Debug.DebugText();
 #endif
+                } else if (Game.PlayerPed.IsInVehicle() && (Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed)
+                    && (VehicleClass.Boats != Game.PlayerPed.CurrentVehicle.ClassType || VehicleClass.Trains != Game.PlayerPed.CurrentVehicle.ClassType
+                    || VehicleClass.Planes != Game.PlayerPed.CurrentVehicle.ClassType || VehicleClass.Helicopters != Game.PlayerPed.CurrentVehicle.ClassType))
+                {
+                    if (Game.PlayerPed.CurrentVehicle.GetNetworkId() == 0)
+                    {
+                        makenetworked(Game.PlayerPed.CurrentVehicle);
+                    }
+                    Indicator.RunAsync(Game.PlayerPed.CurrentVehicle);
                 }
                 else
                 {
@@ -146,7 +146,7 @@ namespace ELS.Manager
 
             Utils.DebugWriteLine($"{PlayerId} has sent us data parsing");
             int netid = int.Parse(dataDic["NetworkID"].ToString());
-            if (vehicleList.ContainsKey(netid) && dataDic.ContainsKey("siren") || dataDic.ContainsKey("lights") && !dataDic.ContainsKey("IndState"))
+            if (vehicleList.ContainsKey(netid) && dataDic.ContainsKey("siren") || dataDic.ContainsKey("lights"))
             {
                 vehicleList[netid].SetData(dataDic);
                 Utils.DebugWriteLine($" Applying vehicle data with NETID of {netid} LOCALID of {API.NetToVeh(netid)}");
@@ -167,7 +167,7 @@ namespace ELS.Manager
                     Utils.DebugWriteLine("Attempting to register be patient");
                 }
             }
-            if (dataDic.ContainsKey("IndState") && !dataDic.ContainsKey("siren") || !dataDic.ContainsKey("lights"))
+            if (dataDic.ContainsKey("IndState") && !dataDic.ContainsKey("siren") && !dataDic.ContainsKey("lights"))
             {
                 Utils.DebugWriteLine($"Ind sync data for {netid} is {dataDic["IndState"]}");
                 Indicator.ToggleInicatorState((Vehicle)Vehicle.FromHandle(API.NetworkGetEntityFromNetworkId(netid)), Indicator.IndStateLib[dataDic["IndState"].ToString()]);

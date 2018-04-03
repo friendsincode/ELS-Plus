@@ -200,27 +200,30 @@ namespace ELS.Extra
                         CleanUp();
                         return;
                     }
-                    if (Pattern.ToCharArray()[count].Equals('0'))
+                    if (count <= Pattern.Length - 1)
                     {
-                        SetState(false);
-                        if (!IsPatternRunning)
+                        if (Pattern.ToCharArray()[count].Equals('0'))
                         {
-                            CleanUp();
-                            return;
+                            SetState(false);
+                            if (!IsPatternRunning)
+                            {
+                                CleanUp();
+                                return;
+                            }
                         }
-                    }
-                    else
-                    {
-                        SetState(true);
-                        if (!IsPatternRunning)
+                        else
                         {
-                            CleanUp();
-                            return;
-                        }
+                            SetState(true);
+                            if (!IsPatternRunning)
+                            {
+                                CleanUp();
+                                return;
+                            }
 
-                    }
-                    count++;
-                    if (count == Pattern.Length - 1)
+                        }
+                        count++;
+                    }                    
+                    if (count >= Pattern.Length - 1)
                     {
                         count = 0;
                     }
