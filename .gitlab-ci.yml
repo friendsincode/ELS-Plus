@@ -13,11 +13,10 @@ build-release:
  stage: build
  script:
    - echo "Building"
-   - cd src
-   - ../utils/build.ps1
+   - utils/build.ps1
  artifacts:
   paths:
-    - src/tmp
+    - ./*
 
 Release:
  tags:
@@ -28,13 +27,10 @@ Release:
    - ls
    - ls src
    - ls src/tmp
-   - mkdir ELS-Plus
-   - cp -R src/tmp/* ELS-Plus
+   - mkdir elsplus
+   - cp -R src/tmp/* elsplus
+   - utils/publish.ps1
  artifacts:
   name: ELS_FiveM-0.0.3.2-gitlab_$CI_JOB_ID
   paths:
-    - ELS-Plus/*
-    - README.md
-    - LICENSE.txt
-    - COPYING.LESSER
-    - docs/*
+    - elsplus/*
