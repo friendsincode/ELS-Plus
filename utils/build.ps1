@@ -1,6 +1,6 @@
 pushd src
 $installpath=$(utils/vswhere.exe -property installationPath)
-&"$(../utils/vswhere.exe -property installationPath)/MSBuild/15.0/Bin/msbuild.exe" /p:outDir=`"$pwd\\tmp\\`" /p:Configuration=Release /p:PostBuildEvent= /t:Build ELSPlus.sln
+&"$(../utils/vswhere.exe -property installationPath)/MSBuild/15.0/Bin/msbuild.exe" /p:outDir=`"$pwd\\tmp\\`" /m /p:Configuration=Release /p:PostBuildEvent= /t:Build ELSPlus.sln
 popd
 
 if(Test-Path -ErrorAction SilentlyContinue -Path "server/ELS-Server/tmp"){
