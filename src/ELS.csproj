@@ -56,11 +56,11 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <!--<PropertyGroup>
+  <PropertyGroup>
     <ReferencePath>
       $([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\libs\CitizenFx\'))
     </ReferencePath>
-  </PropertyGroup>-->
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugREMOTETEST|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\DebugREMOTETEST\</OutputPath>
