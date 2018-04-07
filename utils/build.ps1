@@ -1,10 +1,11 @@
 pushd src
 $installpath=$(utils/vswhere.exe -property installationPath)
-&"$(../utils/vswhere.exe -property installationPath)/MSBuild/15.0/Bin/msbuild.exe" /p:outDir=tmp/ /p:Configuration=Release /p:PostBuildEvent= /t:Build ELSPlus.sln
+&"$(../utils/vswhere.exe -property installationPath)/MSBuild/15.0/Bin/msbuild.exe" /p:outDir=`"$pwd\\tmp\\`" /m /p:Configuration=Release /p:PostBuildEvent= /t:Build ELSPlus.sln
 popd
 
-cp server/ELS-Server/tmp/* src/tmp
-
+if(Test-Path -ErrorAction SilentlyContinue -Path "server/ELS-Server/tmp"){
+    cp server/ELS-Server/tmp/* src/tmp
+}
 pushd src/tmp
 $pdb2mdb="$PSScriptRoot\..\utils\pdb2mdb\pdb2mdb.exe"
 
