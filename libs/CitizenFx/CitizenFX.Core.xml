@@ -30369,7 +30369,7 @@
             Corrected p1. it's basically the 'carriage/trailer number'. So if the train has 3 trailers you'd call the native once with a var or 3 times with 1, 2, 3.
             </summary>
         </member>
-        <member name="F:CitizenFX.Core.Native.Hash.GET_VEHICLE_ACCELERATION">
+        <member name="F:CitizenFX.Core.Native.Hash.GET_VEHICLE_ALARM_TIME_LEFT">
             <summary>
             static - max acceleration
             </summary>
@@ -36007,6 +36007,12 @@
             makes the train all jumbled up and derailed as it moves on the tracks (though that wont stop it from its normal operations)
             </summary>
         </member>
+        <member name="F:CitizenFX.Core.Native.Hash.SET_RICH_PRESENCE">
+            <summary>
+            Sets the player's rich presence detail state for social platform providers to a specified string.
+            
+            </summary>
+        </member>
         <member name="F:CitizenFX.Core.Native.Hash.SET_ROADS_BACK_TO_ORIGINAL">
             <summary>
             missing a last parameter int p6 
@@ -39939,7 +39945,7 @@
             Gets the gameplay camera's near depth of field distance.
             </summary>
         </member>
-        <member name="F:CitizenFX.Core.Native.Hash._GET_GAMEPLAY_CAM_ROT">
+        <member name="F:CitizenFX.Core.Native.Hash._GET_GAMEPLAY_CAM_ROT_2">
             <summary>
             p0 seems to consistently be 2 across scripts
             
@@ -41940,11 +41946,6 @@
         <member name="F:CitizenFX.Core.Native.Hash._SET_NOTIFICATION_MESSAGE">
             <summary>
             List of picNames: pastebin.com/XdpJVbHz
-            </summary>
-        </member>
-        <member name="F:CitizenFX.Core.Native.Hash._SET_NOTIFICATION_MESSAGE_2">
-            <summary>
-            List of picNames: pastebin.com/XdpJVbHz
             
             
             		flash is a bool for fading in.
@@ -41961,6 +41962,11 @@
             
             		"sender" is the very top header. This can be any old string.
             		"subject" is the header under the sender.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash._SET_NOTIFICATION_MESSAGE_2">
+            <summary>
+            List of picNames: pastebin.com/XdpJVbHz
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash._SET_NOTIFICATION_MESSAGE_3">
@@ -42784,6 +42790,16 @@
         <member name="F:CitizenFX.Core.Native.Hash._VEHICLE_HAS_LANDING_GEAR">
             <summary>
             Vehicle has landing gear?
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash._VEHICLE_SET_CUSTOM_PARACHUTE_MODEL">
+            <summary>
+            parachuteModel = 230075693
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash._VEHICLE_SET_CUSTOM_PARACHUTE_TEXTURE">
+            <summary>
+            colorIndex = 0 
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash._ADD_SPECFX_EXPLOSION">
@@ -48199,7 +48215,7 @@
             2-Yaw(Z): -43.886467
             </summary>
         </member>
-        <member name="M:CitizenFX.Core.Native.API.GetGameplayCamRot2(System.Int32)">
+        <member name="M:CitizenFX.Core.Native.API.GetGameplayCamRot_2(System.Int32)">
             <summary>
             p0 seems to consistently be 2 across scripts
             Function is called faily often by CAM::CREATE_CAM_WITH_PARAMS
@@ -48931,8 +48947,8 @@
             Gets the amount of metadata values with the specified key existing in the specified resource's manifest.
             See also: [Resource manifest](https://wiki.fivem.net/wiki/Resource_manifest)
             </summary>
-            <param name="metadataKey">The key to look up in the resource manifest.</param>
             <param name="resourceName">The resource name.</param>
+            <param name="metadataKey">The key to look up in the resource manifest.</param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.GetNumVehicleMods(System.Int32,System.Int32)">
             <summary>
@@ -49669,9 +49685,9 @@
             Gets the metadata value at a specified key/index from a resource's manifest.
             See also: [Resource manifest](https://wiki.fivem.net/wiki/Resource_manifest)
             </summary>
+            <param name="resourceName">The resource name.</param>
             <param name="metadataKey">The key in the resource manifest.</param>
             <param name="index">The value index, in a range from [0..GET_NUM_RESOURCE_METDATA-1].</param>
-            <param name="resourceName">The resource name.</param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.GetRoomKeyFromEntity(System.Int32)">
             <summary>
@@ -50339,9 +50355,9 @@
             Returns the effective handling data of a vehicle as a floating-point value.
             Example: `local fSteeringLock = GetVehicleHandlingFloat(vehicle, 'CHandlingData', 'fSteeringLock')`
             </summary>
-            <param name="fieldName">The field name to get. These match the keys in `handling.meta`.</param>
             <param name="class">The handling class to get. Only "CHandlingData" is supported at this time.</param>
             <param name="vehicle">The vehicle to obtain data for.</param>
+            <param name="fieldName">The field name to get. These match the keys in `handling.meta`.</param>
             <returns>A floating-point value.</returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.GetVehicleHandlingInt(System.Int32,System.String,System.String)">
@@ -50349,9 +50365,9 @@
             Returns the effective handling data of a vehicle as an integer value.
             Example: `local modelFlags = GetVehicleHandlingInt(vehicle, 'CHandlingData', 'strModelFlags')`
             </summary>
-            <param name="fieldName">The field name to get. These match the keys in `handling.meta`.</param>
             <param name="class">The handling class to get. Only "CHandlingData" is supported at this time.</param>
             <param name="vehicle">The vehicle to obtain data for.</param>
+            <param name="fieldName">The field name to get. These match the keys in `handling.meta`.</param>
             <returns>An integer.</returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.GetVehicleHandlingVector(System.Int32,System.String,System.String)">
@@ -50359,9 +50375,9 @@
             Returns the effective handling data of a vehicle as a vector value.
             Example: `local inertiaMultiplier = GetVehicleHandlingVector(vehicle, 'CHandlingData', 'vecInertiaMultiplier')`
             </summary>
-            <param name="fieldName">The field name to get. These match the keys in `handling.meta`.</param>
             <param name="class">The handling class to get. Only "CHandlingData" is supported at this time.</param>
             <param name="vehicle">The vehicle to obtain data for.</param>
+            <param name="fieldName">The field name to get. These match the keys in `handling.meta`.</param>
             <returns>An integer.</returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.GetVehicleHornHash(System.Int32)">
@@ -52433,8 +52449,8 @@
             If executed on the client, this file has to be included in `files` in the resource manifest.
             Example: `local data = LoadResourceFile("devtools", "data.json")`
             </summary>
-            <param name="fileName">The file in the resource.</param>
             <param name="resourceName">The resource name.</param>
+            <param name="fileName">The file in the resource.</param>
             <returns>The file contents</returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.LoadRopeData(System.Int32,System.String)">
@@ -58956,39 +58972,39 @@
             Sets a global handling override for a specific vehicle class. The name is supposed to match the `handlingName` field from handling.meta.
             Example: `SetHandlingField('AIRTUG', 'CHandlingData', 'fSteeringLock', 360.0)`
             </summary>
-            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
-            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="value">The value to set.</param>
+            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="vehicle">The vehicle class to set data for.</param>
+            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SetHandlingFloat(System.String,System.String,System.String,System.Single)">
             <summary>
             Sets a global handling override for a specific vehicle class. The name is supposed to match the `handlingName` field from handling.meta.
             Example: `SetHandlingFloat('AIRTUG', 'CHandlingData', 'fSteeringLock', 360.0)`
             </summary>
-            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
-            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="value">The floating-point value to set.</param>
+            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="vehicle">The vehicle class to set data for.</param>
+            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SetHandlingInt(System.String,System.String,System.String,System.Int32)">
             <summary>
             Sets a global handling override for a specific vehicle class. The name is supposed to match the `handlingName` field from handling.meta.
             </summary>
-            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
-            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="value">The integer value to set.</param>
+            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="vehicle">The vehicle class to set data for.</param>
+            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SetHandlingVector(System.String,System.String,System.String,CitizenFX.Core.Vector3)">
             <summary>
             Sets a global handling override for a specific vehicle class. The name is supposed to match the `handlingName` field from handling.meta.
             Example: `SetHandlingVector('AIRTUG', 'CHandlingData', 'vecCentreOfMassOffset', vector3(0.0, 0.0, -5.0))`
             </summary>
-            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
-            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="value">The Vector3 value to set.</param>
+            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="vehicle">The vehicle class to set data for.</param>
+            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SetHdArea(System.Single,System.Single,System.Single,System.Single)">
             <summary>
@@ -59092,12 +59108,12 @@
             <summary>
             Sets the display info for a minimap overlay.
             </summary>
-            <param name="y">The Y position for the overlay. This is equivalent to a game coordinate Y, except that it's inverted (gfxY = -gameY).</param>
-            <param name="x">The X position for the overlay. This is equivalent to a game coordinate X.</param>
             <param name="miniMap">The minimap overlay ID.</param>
-            <param name="alpha">The alpha value for the overlay. This is equivalent to the Flash _alpha property, therefore 100 = 100%.</param>
             <param name="yScale">The Y scale for the overlay. This is equivalent to the Flash _yscale property.</param>
+            <param name="alpha">The alpha value for the overlay. This is equivalent to the Flash _alpha property, therefore 100 = 100%.</param>
+            <param name="x">The X position for the overlay. This is equivalent to a game coordinate X.</param>
             <param name="xScale">The X scale for the overlay. This is equivalent to the Flash _xscale property, therefore 100 = 100%.</param>
+            <param name="y">The Y position for the overlay. This is equivalent to a game coordinate Y, except that it's inverted (gfxY = -gameY).</param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SetMinimapRevealed(System.Boolean)">
             <summary>
@@ -59399,19 +59415,22 @@
             sets color for notification flash
             </summary>
         </member>
-        <member name="M:CitizenFX.Core.Native.API.SetNotificationMessage(System.String,System.Int32,System.Boolean,System.Int32,System.Boolean,System.String,System.String)">
+        <member name="M:CitizenFX.Core.Native.API.SetNotificationMessage(System.String,System.String,System.Boolean,System.Int32,System.String,System.String)">
             <summary>
             List of picNames: pastebin.com/XdpJVbHz
-            </summary>
-        </member>
-        <member name="M:CitizenFX.Core.Native.API.N_0x2b7e9a4eaaa93c89(System.String,System.Int32,System.Boolean,System.Int32,System.Boolean,System.String,System.String)">
-            <summary>
-            List of picNames: pastebin.com/XdpJVbHz
-            </summary>
-        </member>
-        <member name="M:CitizenFX.Core.Native.API.SetNotificationMessage_2(System.String,System.Int32,System.Boolean,System.Int32,System.Boolean,System.String,System.String)">
-            <summary>
-            List of picNames: pastebin.com/XdpJVbHz
+            flash is a bool for fading in.
+            iconTypes:
+            1 : Chat Box
+            2 : Email
+            3 : Add Friend Request
+            4 : Nothing
+            5 : Nothing
+            6 : Nothing
+            7 : Right Jumping Arrow
+            8 : RP Icon
+            9 : $ Icon
+            "sender" is the very top header. This can be any old string.
+            "subject" is the header under the sender.
             </summary>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SetNotificationMessageClanTag(System.String,System.String,System.Boolean,System.Int32,System.String,System.String,System.Single,System.String)">
@@ -59462,40 +59481,14 @@
             }
             </summary>
         </member>
-        <member name="M:CitizenFX.Core.Native.API.SetNotificationMessage_22(System.String,System.String,System.Boolean,System.Int32,System.String,System.String)">
+        <member name="M:CitizenFX.Core.Native.API.SetNotificationMessage_2(System.String,System.Int32,System.Boolean,System.Int32,System.Boolean,System.String,System.String)">
             <summary>
             List of picNames: pastebin.com/XdpJVbHz
-            flash is a bool for fading in.
-            iconTypes:
-            1 : Chat Box
-            2 : Email
-            3 : Add Friend Request
-            4 : Nothing
-            5 : Nothing
-            6 : Nothing
-            7 : Right Jumping Arrow
-            8 : RP Icon
-            9 : $ Icon
-            "sender" is the very top header. This can be any old string.
-            "subject" is the header under the sender.
             </summary>
         </member>
-        <member name="M:CitizenFX.Core.Native.API.SetNotificationMessage2(System.String,System.String,System.Boolean,System.Int32,System.String,System.String)">
+        <member name="M:CitizenFX.Core.Native.API.N_0x2b7e9a4eaaa93c89(System.String,System.Int32,System.Boolean,System.Int32,System.Boolean,System.String,System.String)">
             <summary>
             List of picNames: pastebin.com/XdpJVbHz
-            flash is a bool for fading in.
-            iconTypes:
-            1 : Chat Box
-            2 : Email
-            3 : Add Friend Request
-            4 : Nothing
-            5 : Nothing
-            6 : Nothing
-            7 : Right Jumping Arrow
-            8 : RP Icon
-            9 : $ Icon
-            "sender" is the very top header. This can be any old string.
-            "subject" is the header under the sender.
             </summary>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SetNotificationMessage_3(System.String,System.String,System.Boolean,System.Int32,System.String,System.String)">
@@ -60889,6 +60882,12 @@
             makes the train all jumbled up and derailed as it moves on the tracks (though that wont stop it from its normal operations)
             </summary>
         </member>
+        <member name="M:CitizenFX.Core.Native.API.SetRichPresence(System.String)">
+            <summary>
+            Sets the player's rich presence detail state for social platform providers to a specified string.
+            </summary>
+            <param name="presenceState">The rich presence string to set.</param>
+        </member>
         <member name="M:CitizenFX.Core.Native.API.SetRoadsBackToOriginal(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
             <summary>
             missing a last parameter int p6
@@ -61289,8 +61288,8 @@
             <summary>
             Disables the vehicle from being repaired when a vehicle extra is enabled.
             </summary>
-            <param name="value">Setting the value to  true prevents the vehicle from being repaired when a extra is enabled. Setting the value to false allows the vehicle from being repaired when a extra is enabled.</param>
             <param name="vehicle">The vehicle to set disable auto vehicle repair.</param>
+            <param name="value">Setting the value to  true prevents the vehicle from being repaired when a extra is enabled. Setting the value to false allows the vehicle from being repaired when a extra is enabled.</param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SetVehicleAutomaticallyAttaches(System.Int32,System.Boolean,System.Int32)">
             <summary>
@@ -61654,38 +61653,38 @@
             Sets a handling override for a specific vehicle. Certain handling flags can only be set globally using `SET_HANDLING_FIELD`, this might require some experimentation.
             Example: `SetVehicleHandlingField(vehicle, 'CHandlingData', 'fSteeringLock', 360.0)`
             </summary>
-            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
-            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="value">The value to set.</param>
+            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="vehicle">The vehicle to set data for.</param>
+            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SetVehicleHandlingFloat(System.Int32,System.String,System.String,System.Single)">
             <summary>
             Sets a handling override for a specific vehicle. Certain handling flags can only be set globally using `SET_HANDLING_FLOAT`, this might require some experimentation.
             Example: `SetVehicleHandlingFloat(vehicle, 'CHandlingData', 'fSteeringLock', 360.0)`
             </summary>
-            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
-            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="value">The floating-point value to set.</param>
+            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="vehicle">The vehicle to set data for.</param>
+            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SetVehicleHandlingInt(System.Int32,System.String,System.String,System.Int32)">
             <summary>
             Sets a handling override for a specific vehicle. Certain handling flags can only be set globally using `SET_HANDLING_INT`, this might require some experimentation.
             </summary>
-            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
-            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="value">The integer value to set.</param>
+            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="vehicle">The vehicle to set data for.</param>
+            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SetVehicleHandlingVector(System.Int32,System.String,System.String,CitizenFX.Core.Vector3)">
             <summary>
             Sets a handling override for a specific vehicle. Certain handling flags can only be set globally using `SET_HANDLING_VECTOR`, this might require some experimentation.
             </summary>
-            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
-            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="value">The Vector3 value to set.</param>
+            <param name="class">The handling class to set. Only "CHandlingData" is supported at this time.</param>
             <param name="vehicle">The vehicle to set data for.</param>
+            <param name="fieldName">The field name to set. These match the keys in `handling.meta`.</param>
         </member>
         <member name="M:CitizenFX.Core.Native.API.SetVehicleHasStrongAxles(System.Int32,System.Boolean)">
             <summary>
@@ -64307,6 +64306,16 @@
         <member name="M:CitizenFX.Core.Native.API.N_0x4198ab0022b15f87(System.Int32)">
             <summary>
             Vehicle has landing gear?
+            </summary>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.VehicleSetCustomParachuteModel(System.Int32,System.UInt32)">
+            <summary>
+            parachuteModel = 230075693
+            </summary>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.VehicleSetCustomParachuteTexture(System.Int32,System.Int32)">
+            <summary>
+            colorIndex = 0
             </summary>
         </member>
         <member name="M:CitizenFX.Core.Native.API.Vmag(System.Single,System.Single,System.Single)">
