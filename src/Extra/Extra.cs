@@ -363,6 +363,9 @@ namespace ELS.Extra
                 case "white":
                     hex = "0xFFFFFF";
                     break;
+                case "green":
+                    hex = "0x06ff00";
+                    break;
             }
             int r = Convert.ToInt32(hex.Substring(2, 2), 16);
             int g = Convert.ToInt32(hex.Substring(4, 2), 16);
