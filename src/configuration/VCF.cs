@@ -86,7 +86,7 @@ namespace ELS.configuration
                     subNodes.Add(node.Name, node);
                 }
                 #region VCF Info
-                CitizenFX.Core.Debug.WriteLine($"Parsing VCF Info for vehicle {name}");
+                Utils.ReleaseWriteLine($"Parsing VCF Info for vehicle {name}");
                 //VCF Description
                 if (doc.RootNode.GetAttribute("Description") != null)
                 {
@@ -100,9 +100,8 @@ namespace ELS.configuration
                 }
                 #endregion
                 #region Interface
-#if DEBUG
-                CitizenFX.Core.Debug.WriteLine("Parsing Interface");
-#endif
+
+                Utils.DebugWriteLine("Parsing Interface");
                 try
                 {
                     foreach (NanoXMLNode n in subNodes["INTERFACE"].SubNodes)
@@ -131,9 +130,8 @@ namespace ELS.configuration
                 #endregion
 
                 #region Extras Override
-#if DEBUG
-                CitizenFX.Core.Debug.WriteLine("Parsing Extras");
-#endif
+                Utils.DebugWriteLine("Parsing Extras");
+
                 try
                 {
                     foreach (NanoXMLNode n in subNodes["EOVERRIDE"].SubNodes)
@@ -246,9 +244,8 @@ namespace ELS.configuration
                 #endregion
 
                 #region MISC
-#if DEBUG
-                CitizenFX.Core.Debug.WriteLine("Parsing Misc");
-#endif
+                Utils.DebugWriteLine("Parsing Misc");
+
                 try
                 {
                     foreach (NanoXMLNode n in subNodes["MISC"].SubNodes)

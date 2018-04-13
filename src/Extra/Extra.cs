@@ -27,7 +27,7 @@ namespace ELS.Extra
     {
 
         Vector3 _posistion;
-        Entity _vehicle;
+        ILight lights;
         int _Id;
         configuration.Extra _extraInfo;
         private bool _state;
@@ -126,9 +126,9 @@ namespace ELS.Extra
         {
             if (_Id == 10)
             {
-                return ((Vehicle)_vehicle).Bones[$"extra_ten"].Position;
+                return lights._vehicle.Bones[$"extra_ten"].Position;
             }
-            return ((Vehicle)_vehicle).Bones[$"extra_{_Id}"].Position;
+            return lights._vehicle.Bones[$"extra_{_Id}"].Position;
         }
 
         internal int Delay { get; set; }
@@ -152,9 +152,9 @@ namespace ELS.Extra
             }
         }
 
-        internal Extra(Entity entity, int id, configuration.Extra ex, string format = "", bool state = false)
+        internal Extra(ILight light, int id, configuration.Extra ex, string format = "", bool state = false)
         {
-            _vehicle = entity;
+            lights = light;
             _Id = id;
             _extraInfo = ex;
             CleanUp();
@@ -171,8 +171,8 @@ namespace ELS.Extra
 
         private void SetTrue()
         {
-            API.SetVehicleExtra(_vehicle.Handle, _Id, false);
-            if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == _vehicle.GetNetworkId())
+            API.SetVehicleExtra(lights._vehicle.Handle, _Id, false);
+            if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())
             {
                 ElsUiPanel.SendLightData(true, $"#extra{_Id}", _extraInfo.Color);
             }
@@ -180,8 +180,11 @@ namespace ELS.Extra
 
         private void SetFalse()
         {
-            API.SetVehicleExtra(_vehicle.Handle, _Id, true);
-            ElsUiPanel.SendLightData(false, $"#extra{_Id}", "");
+            API.SetVehicleExtra(lights._vehicle.Handle, _Id, true);
+            if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())
+            {
+                ElsUiPanel.SendLightData(false, $"#extra{_Id}", _extraInfo.Color);
+            }
         }
 
         int count = 0;
@@ -266,18 +269,18 @@ namespace ELS.Extra
             {
                 return;
             }
-            if (_vehicle == null)
+            if (lights._vehicle == null)
             {
                 CitizenFX.Core.Debug.WriteLine("Vehicle is null!!!");
                 return;
             }
-            var off = _vehicle.GetPositionOffset(GetBone());
+            var off = lights._vehicle.GetPositionOffset(GetBone());
             if (off == null)
             {
                 CitizenFX.Core.Debug.WriteLine("Bone is null for some reason!!!");
                 return;
             }
-            var extraoffset = _vehicle.GetOffsetPosition(off + new Vector3(_extraInfo.OffsetX, _extraInfo.OffsetY, _extraInfo.OffsetZ));
+            var extraoffset = lights._vehicle.GetOffsetPosition(off + new Vector3(_extraInfo.OffsetX, _extraInfo.OffsetY, _extraInfo.OffsetZ));
             API.DrawLightWithRangeAndShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, Color['r'], Color['g'], Color['b'], Global.EnvLightRng, Global.EnvLightInt, 0.01f);
         }
 
@@ -333,7 +336,7 @@ namespace ELS.Extra
                     LightType = LightType.SCL;
                     Pattern = "";
                     IsPatternRunning = false;
-                    spotLight = new SpotLight(_Id, _vehicle.GetNetworkId());
+                    spotLight = new SpotLight(_Id, lights);
 #if DEBUG
                     CitizenFX.Core.Debug.WriteLine("Scene lights setup");
 #endif
@@ -343,7 +346,7 @@ namespace ELS.Extra
                     Delay = Global.PrimDelay;
                     Pattern = "";
                     IsPatternRunning = false;
-                    spotLight = new SpotLight(_Id, _vehicle.GetNetworkId());
+                    spotLight = new SpotLight(_Id, lights);
 #if DEBUG
                     CitizenFX.Core.Debug.WriteLine("Takedown lights setup");
 #endif
@@ -365,6 +368,9 @@ namespace ELS.Extra
                     break;
                 case "white":
                     hex = "0xFFFFFF";
+                    break;
+                case "green": //Credit to Quadster for his PR sorry it could not be implemented via GitHub
+                    hex = "0x06ff00";
                     break;
             }
             int r = Convert.ToInt32(hex.Substring(2, 2), 16);

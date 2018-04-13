@@ -17,7 +17,7 @@ namespace ELS_Server
 
         public VcfSync()
         {
-            Debug.WriteLine("Loading VCF Sync");
+            Utils.DebugWriteLine("Loading VCF Sync");
         }
 
         public async Task CheckVCF(Player player)
@@ -69,9 +69,7 @@ namespace ELS_Server
                         }
                         else
                         {
-#if DEBUG
                         Utils.DebugWriteLine($"XML data for {filename} is not valid");
-#endif
                         }
                     }
             }

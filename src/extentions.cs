@@ -25,7 +25,7 @@ namespace ELS
             {
                 await BaseScript.Delay(0);
             }
-            CitizenFX.Core.Debug.WriteLine("collision loaded");
+            Utils.DebugWriteLine("collision loaded");
             return true;
         }
         //public static void CleanUp(this PoolObject poolObject)

@@ -49,7 +49,7 @@ namespace ELS
             EventHandlers["onClientResourceStart"] += new Action<string>((string obj) =>
                 {
                     //TODO rewrite loader so that it 
-                    if (obj == Function.Call<string>(Hash.GET_CURRENT_RESOURCE_NAME))
+                    if (obj == CurrentResourceName())
                     {
                         //await Delay(500);
                         try
@@ -70,19 +70,6 @@ namespace ELS
                             Screen.ShowNotification($"ERROR:{e.StackTrace}");
                             Tick -= Class1_Tick;
                             throw;
-                        }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            _FileLoader.RunLoader(obj);
-                        }
-                        catch (Exception e)
-                        {
-                            TriggerServerEvent($"ONDEBUG", e.ToString());
-                            Screen.ShowNotification($"ERROR:{e.Message}");
-                            Screen.ShowNotification($"ERROR:{e.StackTrace}");
                         }
                     }
                 });
