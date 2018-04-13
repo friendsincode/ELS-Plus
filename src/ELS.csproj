@@ -103,6 +103,7 @@
     <Compile Include="Debug.cs" />
     <Compile Include="ELS.cs" />
     <Compile Include="Extra\Extra.FullSync.cs" />
+    <Compile Include="Light\ILight.cs" />
     <Compile Include="Light\IMangerEntry.cs" />
     <Compile Include="Light\Indicator.cs" />
     <Compile Include="Light\IPatterns.cs" />

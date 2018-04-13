@@ -2,6 +2,7 @@
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using ELS.FullSync;
+using ELS.Light;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace ELS.Board
 {
     internal class ArrowBoard : IFullSyncComponent
     {
-        Entity _vehicle;
+        ILight lights;
         configuration.MISC _misc;
         string _boardType;
         private bool _hasBoard;
@@ -64,9 +65,9 @@ namespace ELS.Board
             BoardRaised = (bool.Parse(data["raised"].ToString()));
         }
 
-        internal ArrowBoard(Entity entity, configuration.MISC misc)
+        internal ArrowBoard(ILight light, configuration.MISC misc)
         {
-            _vehicle = entity;
+            lights = light;
             _misc = misc;
             _boardType = _misc.ArrowboardType.ToLower();
             RaiseBoardNow = false;
@@ -122,13 +123,13 @@ namespace ELS.Board
             {
                 return;
             }
-            var _angle = API.GetVehicleDoorAngleRatio(_vehicle.Handle, BoardDoorIndex);
-            if (API.IsVehicleDoorFullyOpen(_vehicle.Handle,BoardDoorIndex) != 1 || _angle <= 0.80000001f)
+            var _angle = API.GetVehicleDoorAngleRatio(lights._vehicle.Handle, BoardDoorIndex);
+            if (API.IsVehicleDoorFullyOpen(lights._vehicle.Handle,BoardDoorIndex) != 1 || _angle <= 0.80000001f)
             {
-                API.SetVehicleDoorControl(_vehicle.Handle, BoardDoorIndex, _speed, _angle + 0.029999999f);
+                API.SetVehicleDoorControl(lights._vehicle.Handle, BoardDoorIndex, _speed, _angle + 0.029999999f);
                 if (_boardType.Equals("boots"))
                 {
-                    API.SetVehicleDoorControl(_vehicle.Handle, 6, _speed, _angle);
+                    API.SetVehicleDoorControl(lights._vehicle.Handle, 6, _speed, _angle);
                 }
             }
             if (_angle > .95)
@@ -143,13 +144,13 @@ namespace ELS.Board
             {
                 return;
             }
-            var _angle = API.GetVehicleDoorAngleRatio(_vehicle.Handle, BoardDoorIndex);
-            if (API.IsVehicleDoorFullyOpen(_vehicle.Handle, BoardDoorIndex) == 1 || _angle >= 0.00000001f)
+            var _angle = API.GetVehicleDoorAngleRatio(lights._vehicle.Handle, BoardDoorIndex);
+            if (API.IsVehicleDoorFullyOpen(lights._vehicle.Handle, BoardDoorIndex) == 1 || _angle >= 0.00000001f)
             {
-                API.SetVehicleDoorControl(_vehicle.Handle, BoardDoorIndex, _speed, _angle - 0.029999999f);
+                API.SetVehicleDoorControl(lights._vehicle.Handle, BoardDoorIndex, _speed, _angle - 0.029999999f);
                 if (_boardType.Equals("boots"))
                 {
-                    API.SetVehicleDoorControl(_vehicle.Handle, 6, _speed, _angle);
+                    API.SetVehicleDoorControl(lights._vehicle.Handle, 6, _speed, _angle);
                 }
             }
             if (_angle == 0)

@@ -36,12 +36,12 @@ namespace ELS.Light
 
         private Vector3 dirVector;
         private int _id;
-        private int _veh;
+        private ILight lights;
 
-        public SpotLight(int id, int veh)
+        public SpotLight(int id, ILight light)
         {
+            lights = light;
             _id = id;
-            _veh = veh;
         }
 
         internal void SpotLightReset()
@@ -71,41 +71,40 @@ namespace ELS.Light
 
         public void RunTick()
         {
-            Vehicle veh = new Vehicle(API.NetworkGetEntityFromNetworkId(_veh));
-            Utils.DebugWriteLine($"Spotlight veh handle of {veh.Handle}");
-            if (Game.IsControlPressed(0, Control.PhoneLeft) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == veh.GetNetworkId())
+            Utils.DebugWriteLine($"Spotlight veh handle of {lights._vehicle.Handle}");
+            if (Game.IsControlPressed(0, Control.PhoneLeft) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())
             {
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightLeft, veh, true, Game.Player.ServerId);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightLeft, lights._vehicle, true, Game.Player.ServerId);
                 anglehorizontal++;
                 
             }
-            if (Game.IsControlPressed(0, Control.PhoneRight) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == veh.GetNetworkId()) 
+            if (Game.IsControlPressed(0, Control.PhoneRight) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId()) 
             {
                 
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightRight, veh, true, Game.Player.ServerId);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightRight, lights._vehicle, true, Game.Player.ServerId);
                 anglehorizontal--;
             }
-            if (Game.IsControlPressed(0, Control.PhoneUp) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == veh.GetNetworkId())
+            if (Game.IsControlPressed(0, Control.PhoneUp) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())
             {
                 
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightUp, veh, true, Game.Player.ServerId);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightUp, lights._vehicle, true, Game.Player.ServerId);
                 angleVertical++;
             }
-            if (Game.IsControlPressed(0, Control.PhoneDown) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == veh.GetNetworkId())   
+            if (Game.IsControlPressed(0, Control.PhoneDown) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())   
             {
                 
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightDown, veh, true, Game.Player.ServerId);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightDown, lights._vehicle, true, Game.Player.ServerId);
                 angleVertical--;
             }
 
             //var spotoffset = Game.Player.Character.CurrentVehicle.GetOffsetPosition(new Vector3(-0.9f, 1.15f, 0.5f));
             
-            var off = veh.GetPositionOffset(veh.Bones[$"extra_{_id}"].Position);
-            var spotoffset = veh.GetOffsetPosition(off+new Vector3(0,0.05f,0));
+            var off = lights._vehicle.GetPositionOffset(lights._vehicle.Bones[$"extra_{_id}"].Position);
+            var spotoffset = lights._vehicle.GetOffsetPosition(off+new Vector3(0,0.05f,0));
             
             //Vector3 myPos = Game.PlayerPed.CurrentVehicle.Bones[$"extra_{_id}"].Position;
-            float hx = (float)((double)spotoffset.X + 5 * Math.Cos(((double)anglehorizontal + veh.Rotation.Z) * Math.PI / 180.0));
-            float hy = (float)((double)spotoffset.Y + 5 * Math.Sin(((double)anglehorizontal + veh.Rotation.Z) * Math.PI / 180.0));
+            float hx = (float)((double)spotoffset.X + 5 * Math.Cos(((double)anglehorizontal + lights._vehicle.Rotation.Z) * Math.PI / 180.0));
+            float hy = (float)((double)spotoffset.Y + 5 * Math.Sin(((double)anglehorizontal + lights._vehicle.Rotation.Z) * Math.PI / 180.0));
             float vz = (float)((double)spotoffset.Z + 5 * Math.Sin((double)angleVertical * Math.PI / 180.0));
 
             Vector3 destinationCoords = (new Vector3(hx, hy, vz));

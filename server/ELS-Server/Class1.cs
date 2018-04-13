@@ -21,7 +21,7 @@ namespace ELS_Server
             }
             API.RegisterCommand("vcfrefresh", new Action<int, List<object>, string>((source, arguments, raw) =>
             {
-                Debug.WriteLine($"{Players[source].Name} has activated a VCF Refresh");
+                Utils.ReleaseWriteLine($"{Players[source].Name} has activated a VCF Refresh");
                 foreach (Player p in Players)
                 {
                     TriggerEvent("ELS:VcfSync:Server", p.Handle);
@@ -41,12 +41,16 @@ namespace ELS_Server
 
             EventHandlers["ELS:VcfSync:Server"] += new Action<int>(async (int source) =>
             {
-                Utils.DebugWriteLine($"Sending Data to {Players[source].Name}");
-                 
-
+                Utils.DebugWriteLine($"Sending Data to {Players[source].Name}"); 
                 TriggerClientEvent(Players[source], "ELS:VcfSync:Client", VcfSync.VcfData);
                 TriggerClientEvent(Players[source], "ELS:PatternSync:Client", CustomPatterns.Patterns);
 
+            });
+
+            EventHandlers["ELS:FullSync:RemoveStale"] += new Action<int>(async (int netid) =>
+            {
+                _cachedData.Remove(netid);
+                Utils.DebugWriteLine($"Stale vehicle {netid} removed from cache");
             });
 
             EventHandlers["baseevents:enteredVehicle"] += new Action<int,int,string>((veh,seat,name) =>
@@ -58,24 +62,18 @@ namespace ELS_Server
             EventHandlers["ELS:FullSync:Broadcast"] += new Action<System.Dynamic.ExpandoObject, Int16>((dataDic, playerID) =>
              {
                  var dd = (IDictionary<string, object>)dataDic;
-#if DEBUG
-                 Debug.WriteLine($"NetworkID {dd["NetworkID"]}");
-#endif
+                 Utils.DebugWriteLine($"NetworkID {dd["NetworkID"]}");
                  _cachedData[int.Parse(dd["NetworkID"].ToString())] = dd;
                  BroadcastMessage(dataDic, playerID);
              });
             EventHandlers["ELS:FullSync:Request:All"] += new Action<int>((int source) =>
             {
-#if DEBUG
-                Debug.WriteLine($"{source} is requesting Sync Data");
-#endif
+                Utils.DebugWriteLine($"{source} is requesting Sync Data");
                 TriggerClientEvent(Players[source], "ELS:FullSync:NewSpawnWithData", _cachedData);
             });
             API.RegisterCommand("resync", new Action<int, System.Collections.IList, string>((a, b, c) =>
             {
-#if DEBUG
-                Debug.WriteLine($"{a}, {b}, {c}");
-#endif
+                Utils.DebugWriteLine($"{a}, {b}, {c}");
                 TriggerClientEvent(Players[(int.Parse((string)b[0]))], "ELS:FullSync:NewSpawnWithData", _cachedData);
             }), false);
 

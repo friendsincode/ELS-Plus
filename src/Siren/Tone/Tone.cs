@@ -19,22 +19,22 @@ namespace ELS.Siren
     }
     class Tone
     {
-        
+
         private readonly string _file;
-        private int soundId = Function.Call<int>(Hash.GET_SOUND_ID);
+        private int soundId;
         private Entity _entity;
         private readonly ToneType _type;
         internal string Type;
-        internal bool _state { private set;  get; }
+        internal bool _state { private set; get; }
         internal bool AllowUse { get; set; }
-        internal Tone(string file, Entity entity,ToneType type,bool allow, bool state =false)
+        internal Tone(string file, Entity entity, ToneType type, bool allow, bool state = false)
         {
             _entity = entity;
             _file = file;
             _type = type;
             SetState(state);
             AllowUse = allow;
-            switch(type)
+            switch (type)
             {
                 case ToneType.SrnTon1:
                     Type = "WL";
@@ -49,23 +49,32 @@ namespace ELS.Siren
                     Type = "A2";
                     break;
             }
+            soundId = -1;
         }
 
         internal void SetState(bool state)
         {
-            
-                _state = state;
-                if (_state && AllowUse)
+
+            _state = state;
+            if (_state && AllowUse)
+            {
+                if (soundId == -1)
                 {
+                    soundId = API.GetSoundId();
                     if (!Audio.HasSoundFinished(soundId)) return;
                     Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)_file, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
+                    Utils.DebugWriteLine($"Started sound with id of {soundId}");
                 }
-                else
-                {
-                    Audio.StopSound(soundId);
-                }
+            }
+            else
+            {
+                Audio.StopSound(soundId);
+                Audio.ReleaseSound(soundId);
+                soundId = -1;
+                Utils.DebugWriteLine($"Stopped and released sound with id of {soundId}");
+            }
         }
-        
+
         internal void CleanUp()
         {
 #if DEBUG
