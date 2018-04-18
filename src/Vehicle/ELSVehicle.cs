@@ -95,6 +95,7 @@ namespace ELS
             if (!_vehicle.Exists() || _vehicle.IsDead)
             {
                 VehicleManager.vehicleList.Remove(cachedNetId);
+                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", cachedNetId);
                 return;
             }
             _siren.ExternalTicker();
@@ -127,6 +128,7 @@ namespace ELS
                 _light.CleanUP();
                 _siren.CleanUP();
                 _vehicle.SetExistOnAllMachines(false);
+                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", cachedNetId);
                 API.SetEntityAsMissionEntity(_vehicle.Handle, true, true);
                 VehicleManager.vehicleList.Remove(_vehicle.GetNetworkId());
                 _vehicle.Delete();
