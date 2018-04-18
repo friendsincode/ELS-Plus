@@ -76,6 +76,11 @@ namespace ELS_Server
                 Utils.DebugWriteLine($"{a}, {b}, {c}");
                 TriggerClientEvent(Players[(int.Parse((string)b[0]))], "ELS:FullSync:NewSpawnWithData", _cachedData);
             }), false);
+            API.RegisterCommand("clearcache", new Action<int, System.Collections.IList, string>((a, b, c) =>
+            {
+                _cachedData.Clear();
+                Utils.ReleaseWriteLine("ELS Cache cleared");
+            }),false);
 
             PreloadSyncData();
         }
