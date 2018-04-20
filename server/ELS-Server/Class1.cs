@@ -69,12 +69,12 @@ namespace ELS_Server
             EventHandlers["ELS:FullSync:Request:All"] += new Action<int>((int source) =>
             {
                 Utils.DebugWriteLine($"{source} is requesting Sync Data");
-                TriggerClientEvent(Players[source], "ELS:FullSync:NewSpawnWithData", _cachedData);
+                TriggerClientEvent(Players[source], "ELS:FullSync:NewSpawnWithData", (IDictionary<string, object>)_cachedData);
             });
             API.RegisterCommand("resync", new Action<int, System.Collections.IList, string>((a, b, c) =>
             {
                 Utils.DebugWriteLine($"{a}, {b}, {c}");
-                TriggerClientEvent(Players[(int.Parse((string)b[0]))], "ELS:FullSync:NewSpawnWithData", _cachedData);
+                TriggerClientEvent(Players[(int.Parse((string)b[0]))], "ELS:FullSync:NewSpawnWithData", (IDictionary<string, object>)_cachedData);
             }), false);
             API.RegisterCommand("clearcache", new Action<int, System.Collections.IList, string>((a, b, c) =>
             {
