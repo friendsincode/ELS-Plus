@@ -30,6 +30,10 @@ namespace ELS.Light
             {
                 _extras.BRD.BoardTicker();
             }
+            if (_extras.LDR != null)
+            {
+                _extras.LDR.LadderTicker();
+            }
             if (_extras.SCL != null)
             {
                 _extras.SCL.ExtraTicker();

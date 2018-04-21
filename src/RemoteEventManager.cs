@@ -53,6 +53,10 @@ namespace ELS
             MoveSpotlightDown,
             MoveSpotlightLeft,
             MoveSpotlightRight,
+            MoveLadderUp,
+            MoveLadderDown,
+            MoveLadderLeft,
+            MoveLadderRight,
             ToggleInd,
             ToggleBrd
         }
