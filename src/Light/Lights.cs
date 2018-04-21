@@ -40,6 +40,7 @@ namespace ELS.Light
         internal Extra.Extra SCL;
         internal Extra.Extra TDL;
         internal Board.ArrowBoard BRD;
+        internal Gadgets.Ladder LDR;
     }
 
     partial class Lights : IManagerEntry, ILight
@@ -231,6 +232,10 @@ namespace ELS.Light
                         this._extras.BRD = new Board.ArrowBoard(this, _vcfroot.MISC);
                         break;
                 }
+            }
+            if (_vcfroot.MISC.HasLadderControl)
+            {
+                this._extras.LDR = new Gadgets.Ladder(this, _vcfroot.MISC);
             }
         }
 

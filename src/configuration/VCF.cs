@@ -49,7 +49,7 @@ namespace ELS.configuration
 
         internal static void ParseVcfs(List<dynamic> VcfData)
         {
-            foreach(dynamic vcf in VcfData)
+            foreach (dynamic vcf in VcfData)
             {
                 Utils.DebugWriteLine($"Currently adding {vcf.Item2} from {vcf.Item1}");
                 load(SettingsType.Type.VCF, vcf.Item2, vcf.Item3, vcf.Item1);
@@ -272,6 +272,24 @@ namespace ELS.configuration
                                 data.root.MISC.SceneLights.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
                                 data.root.MISC.SceneLights.IlluminateSidesOnly = bool.Parse(n.GetAttribute("IlluminateSidesOnly").Value);
                                 break;
+                            case "LadderControl":
+                                data.root.MISC.HasLadderControl = bool.Parse(n.GetAttribute("enabled").Value);
+                                foreach (NanoXMLNode sn in n.SubNodes)
+                                {
+                                    switch (sn.Name)
+                                    {
+                                        case "HoriztonalControl":
+                                            data.root.MISC.LadderControl.HorizontalControl = sn.Value;
+                                            break;
+                                        case "VerticalControl":
+                                            data.root.MISC.LadderControl.VerticalControl = sn.Value;
+                                            break;
+                                        case "MovementSpeed":
+                                            data.root.MISC.LadderControl.MovementSpeed = int.Parse(sn.Value);
+                                            break;
+                                    }
+                                }
+                                break;
 
                         }
                     }
@@ -415,7 +433,7 @@ namespace ELS.configuration
                     {
                         data.root.WRNL.DisableAtLstg3 = bool.Parse(subNodes["WRNL"].GetAttribute("DisableAtLstg3").Value);
                     }
-                    
+
                     data.root.WRNL.ExtrasActiveAtLstg1 = subNodes["WRNL"].GetAttribute("ExtrasActiveAtLstg1")?.Value;
                     data.root.WRNL.ExtrasActiveAtLstg2 = subNodes["WRNL"].GetAttribute("ExtrasActiveAtLstg2")?.Value;
                     data.root.WRNL.ExtrasActiveAtLstg3 = subNodes["WRNL"].GetAttribute("ExtrasActiveAtLstg3")?.Value;
@@ -843,7 +861,7 @@ namespace ELS.configuration
 
         internal static void ParsePatterns(List<dynamic> patterns)
         {
-            foreach(dynamic patt in patterns)
+            foreach (dynamic patt in patterns)
             {
                 LoadCustomPattern(patt);
             }
@@ -851,10 +869,10 @@ namespace ELS.configuration
 
         static void LoadCustomPattern(dynamic pattData)
         {
-            Light.Patterns.CustomPattern pattern = new Light.Patterns.CustomPattern(150,200,200,new Dictionary<int, string>());
+            Light.Patterns.CustomPattern pattern = new Light.Patterns.CustomPattern(150, 200, 200, new Dictionary<int, string>());
             NanoXMLDocument doc = new NanoXMLDocument(pattData.Item3);
             List<StringBuilder> builders = new List<StringBuilder>();
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 builders.Add(new StringBuilder());
             }
@@ -953,7 +971,7 @@ namespace ELS.configuration
                 {
                     ELSVehicle[hash].root.CustomPatterns.Add(Path.GetFileNameWithoutExtension(pattData.Item2).ToLower(), pattern);
                 }
-                
+
             }
 
         }
@@ -1046,18 +1064,28 @@ namespace ELS.configuration
         public string ArrowboardType { get; set; }
         public bool UseSteadyBurnLights { get; set; }
         public int DfltSirenLtsActivateAtLstg { get; set; }
+        public bool HasLadderControl { get; set; }
 
         public Takedowns Takedowns { get; set; }
 
         public SceneLights SceneLights { get; set; }
 
+        public LadderControl LadderControl { get; set; }
+
         public MISC()
         {
             Takedowns = new Takedowns();
             SceneLights = new SceneLights();
+            LadderControl = new LadderControl();
         }
     }
 
+    public class LadderControl
+    {
+        public string VerticalControl { get; set; }
+        public string HorizontalControl { get; set; }
+        public int MovementSpeed { get; set; }
+    }
 
     public class UseExtras
     {
