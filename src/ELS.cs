@@ -103,7 +103,7 @@ namespace ELS
             }));
             EventHandlers["ELS:FullSync:NewSpawnWithData"] += new Action<System.Dynamic.ExpandoObject>((a) =>
             {
-                _vehicleManager.SyncAllVehiclesOnFirstSpawn(a);
+                //_vehicleManager.SyncAllVehiclesOnFirstSpawn(a);
                 Tick -= Class1_Tick;
                 Tick += Class1_Tick;
             });
