@@ -49,7 +49,7 @@ namespace ELS.Light
             //foreach (Extra.Extra prim in _extras.PRML.Values)
             for (int i = 0; i < _extras.PRML.Count; i++)
             {
-                _extras.PRML[i].ExtraTicker();
+                _extras.PRML.ElementAt(i).Value.ExtraTicker();
                 if (_stage != null)
                 {
                     switch (_stage.CurrentStage)
@@ -78,7 +78,7 @@ namespace ELS.Light
             //foreach (Extra.Extra sec in _extras.SECL.Values)
             for (int i = 0; i < _extras.SECL.Count; i++)
             {
-                _extras.SECL[i].ExtraTicker();
+                _extras.SECL.ElementAt(i).Value.ExtraTicker();
                 if (_stage != null)
                 {
                     switch (_stage.CurrentStage)
@@ -107,7 +107,7 @@ namespace ELS.Light
             //foreach (Extra.Extra wrn in _extras.WRNL.Values)
             for (int i = 0; i < _extras.WRNL.Count; i++)
             {
-                _extras.WRNL[i].ExtraTicker();
+                _extras.WRNL.ElementAt(i).Value.ExtraTicker();
                 if (_stage != null)
                 {
                     switch (_stage.CurrentStage)
@@ -163,7 +163,7 @@ namespace ELS.Light
             //foreach (Extra.Extra prim in _extras.PRML.Values)
             for (int i =0; i < _extras.PRML.Count; i++)
             {
-                _extras.PRML[i].ExtraTicker();
+                _extras.PRML.ElementAt(i).Value.ExtraTicker();
                 if (_stage != null)
                 {
                     switch (_stage.CurrentStage)
@@ -192,7 +192,7 @@ namespace ELS.Light
             //foreach (Extra.Extra sec in _extras.SECL.Values)
             for (int i = 0; i < _extras.SECL.Count; i++)
             {
-                _extras.SECL[i].ExtraTicker();
+                _extras.SECL.ElementAt(i).Value.ExtraTicker();
                 if (_stage != null)
                 {
                     switch (_stage.CurrentStage)
@@ -221,7 +221,7 @@ namespace ELS.Light
             //foreach (Extra.Extra wrn in _extras.WRNL.Values)
             for (int i = 0; i < _extras.WRNL.Count; i++)
             {
-                _extras.WRNL[i].ExtraTicker();
+                _extras.WRNL.ElementAt(i).Value.ExtraTicker();
                 if (_stage != null)
                 {
                     switch (_stage.CurrentStage)
