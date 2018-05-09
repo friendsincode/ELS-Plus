@@ -46,9 +46,10 @@ namespace ELS.Light
             {
                 _extras.SBRN.ExtraTicker();
             }
-            foreach (Extra.Extra prim in _extras.PRML.Values)
+            //foreach (Extra.Extra prim in _extras.PRML.Values)
+            for (int i = 0; i < _extras.PRML.Count; i++)
             {
-                prim.ExtraTicker();
+                _extras.PRML[i].ExtraTicker();
                 if (_stage != null)
                 {
                     switch (_stage.CurrentStage)
@@ -74,9 +75,10 @@ namespace ELS.Light
                     }
                 }
             }
-            foreach (Extra.Extra sec in _extras.SECL.Values)
+            //foreach (Extra.Extra sec in _extras.SECL.Values)
+            for (int i = 0; i < _extras.SECL.Count; i++)
             {
-                sec.ExtraTicker();
+                _extras.SECL[i].ExtraTicker();
                 if (_stage != null)
                 {
                     switch (_stage.CurrentStage)
@@ -102,9 +104,10 @@ namespace ELS.Light
                     }
                 }
             }
-            foreach (Extra.Extra wrn in _extras.WRNL.Values)
+            //foreach (Extra.Extra wrn in _extras.WRNL.Values)
+            for (int i = 0; i < _extras.WRNL.Count; i++)
             {
-                wrn.ExtraTicker();
+                _extras.WRNL[i].ExtraTicker();
                 if (_stage != null)
                 {
                     switch (_stage.CurrentStage)
@@ -157,9 +160,10 @@ namespace ELS.Light
             {
                 _extras.TDL.ExtraTicker();
             }
-            foreach (Extra.Extra prim in _extras.PRML.Values)
+            //foreach (Extra.Extra prim in _extras.PRML.Values)
+            for (int i =0; i < _extras.PRML.Count; i++)
             {
-                prim.ExtraTicker();
+                _extras.PRML[i].ExtraTicker();
                 if (_stage != null)
                 {
                     switch (_stage.CurrentStage)
@@ -185,9 +189,10 @@ namespace ELS.Light
                     }
                 }
             }
-            foreach (Extra.Extra sec in _extras.SECL.Values)
+            //foreach (Extra.Extra sec in _extras.SECL.Values)
+            for (int i = 0; i < _extras.SECL.Count; i++)
             {
-                sec.ExtraTicker();
+                _extras.SECL[i].ExtraTicker();
                 if (_stage != null)
                 {
                     switch (_stage.CurrentStage)
@@ -213,9 +218,10 @@ namespace ELS.Light
                     }
                 }
             }
-            foreach (Extra.Extra wrn in _extras.WRNL.Values)
+            //foreach (Extra.Extra wrn in _extras.WRNL.Values)
+            for (int i = 0; i < _extras.WRNL.Count; i++)
             {
-                wrn.ExtraTicker();
+                _extras.WRNL[i].ExtraTicker();
                 if (_stage != null)
                 {
                     switch (_stage.CurrentStage)

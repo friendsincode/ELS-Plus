@@ -46,8 +46,6 @@ namespace ELS
             {
                 Utils.ReleaseWriteLine("ELSVehicle.cs:Repair Fix is not enabled on this client");
             }
-
-
             _light = new Light.Lights(_vehicle, _vcf, (IDictionary<string, object>)data?["light"]);
             _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data?["siren"], _light);
             _light.SetGTASirens(false);
