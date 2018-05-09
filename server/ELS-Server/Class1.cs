@@ -11,10 +11,12 @@ namespace ELS_Server
     public class Class1 : BaseScript
     {
         Dictionary<int, object> _cachedData = new Dictionary<int, object>();
-
+        long GameTimer;
         public Class1()
         {
-            Debug.WriteLine("Welcome to ELS+ for FiveM");
+            Utils.ReleaseWriteLine("Welcome to ELS+ for FiveM");
+            GameTimer = API.GetGameTimer();
+            Utils.ReleaseWriteLine($"Setting Game time is {GameTimer}");
             foreach(string s in Configuration.ElsVehicleGroups)
             {
                 API.ExecuteCommand($"add_ace group.{s} command.elscar allow");
@@ -83,6 +85,7 @@ namespace ELS_Server
             }),false);
 
             PreloadSyncData();
+            Tick += Server_Tick;
         }
 
         async Task PreloadSyncData()
@@ -94,6 +97,15 @@ namespace ELS_Server
         void BroadcastMessage(System.Dynamic.ExpandoObject dataDic, int SourcePlayerID)
         {
             TriggerClientEvent("ELS:NewFullSyncData", dataDic,SourcePlayerID);
+        }
+
+        private async Task Server_Tick()
+        {
+            if (API.GetGameTimer() >= GameTimer + Configuration.CacheClear)
+            {
+                _cachedData.Clear();
+                GameTimer = API.GetGameTimer();
+            }
         }
     }
 }

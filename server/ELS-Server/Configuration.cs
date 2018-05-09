@@ -39,6 +39,11 @@ namespace ELS_Server
             get; set;
         }
 
+        internal static long CacheClear
+        {
+            get; set;
+        }
+
         static Configuration()
         {
             var data = API.LoadResourceFile(API.GetCurrentResourceName(), "ELS.ini");
@@ -46,6 +51,7 @@ namespace ELS_Server
             {
                 SharpConfig.Configuration u = SharpConfig.Configuration.LoadFromString(data);
                 ElsCarAdminOnly = u["ADMIN"]["ElsCarAdminOnly"].BoolValue;
+                CacheClear = u["GENERAL"]["ClearCache"].IntValue * 60 * 100;
                 ElsVehicleGroups = new List<string>();
                 foreach(string s in u["ADMIN"]["Groups"].StringValueArray)
                 {
