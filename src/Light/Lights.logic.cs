@@ -479,6 +479,10 @@ namespace ELS.Light
                     {
                         _extras.SBRN.SetState(false);
                     }
+                    if (_vcfroot.MISC.UseSteadyBurnLights && _extras.SBRN != null)
+                    {
+                        _extras.SBRN.SetState(false);
+                    }
                     prmLights = false;
                     secLights = false;
                     wrnLights = false;
@@ -528,6 +532,10 @@ namespace ELS.Light
                     for (int i = 0; i < _extras.WRNL.Count; i++)
                     {
                         _extras.WRNL.ElementAt(i).Value.IsPatternRunning = false;
+                    }
+                    if (_vcfroot.MISC.UseSteadyBurnLights && _extras.SBRN != null)
+                    {
+                        _extras.SBRN.SetState(true);
                     }
                     prmLights = false;
                     secLights = true;
@@ -602,6 +610,10 @@ namespace ELS.Light
                         SetCHP();
                         //_extras.SBRN.Pattern = CHP.LightStage2[CurrentSecPattern][10];
                         //_extras.SBRN.IsPatternRunning = true;
+                        _extras.SBRN.SetState(true);
+                    }
+                    if (_vcfroot.MISC.UseSteadyBurnLights && _extras.SBRN != null)
+                    {
                         _extras.SBRN.SetState(true);
                     }
                     prmLights = true;
@@ -707,6 +719,10 @@ namespace ELS.Light
                         SetCHP();
                         //_extras.SBRN.Pattern = CHP.LightStage3[CurrentWrnPattern][10];
                         //_extras.SBRN.IsPatternRunning = true;
+                        _extras.SBRN.SetState(true);
+                    }
+                    if (_vcfroot.MISC.UseSteadyBurnLights && _extras.SBRN != null)
+                    {
                         _extras.SBRN.SetState(true);
                     }
                     ElsUiPanel.PlayUiSound(true);
