@@ -1,5 +1,11 @@
 # ELS-Plus
 
+### THIS REPO IS NO LONGER MAINTAINED HERE PLEASE GO TO 
+
+https://https://git.friendsincode.com/PFM/ELS-Plus for releases and updated source code :D
+
+###
+
 See: https://github.com/friendsincode/ELS-Plus/issues to submit an issue or use our discord here: . It is important that if you test ELS Plus for FiveM that you submit issues so that we may work to resolve these. Here's some things to consider:
 
 - ELS vehicles are fully supported.
