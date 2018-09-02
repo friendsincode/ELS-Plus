@@ -601,8 +601,10 @@ namespace ELS.Light
                             {
 
                             }
-                            _extras.PRML.ElementAt(i).Value.IsPatternRunning = false;
-                            _extras.PRML.ElementAt(i).Value.IsPatternRunning = true;
+                            //_extras.PRML.ElementAt(i).Value.IsPatternRunning = false;
+                            //_extras.PRML.ElementAt(i).Value.IsPatternRunning = true;
+                            _extras.PRML[extras[i]].IsPatternRunning = false;
+                            _extras.PRML[extras[i]].IsPatternRunning = true;
                         }
                     }
                     if (_vcfroot.PRML.LightingFormat.ToLower().Equals("chp"))

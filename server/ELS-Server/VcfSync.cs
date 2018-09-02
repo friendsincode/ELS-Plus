@@ -13,7 +13,7 @@ namespace ELS_Server
     {
 
         public static List<string> ElsResources = new List<string>();
-        public static List<Tuple<string,string,string>> VcfData = new List<Tuple<string,string,string>>();
+        public static List<Tuple<string, string, string>> VcfData = new List<Tuple<string, string, string>>();
 
         public VcfSync()
         {
@@ -42,7 +42,7 @@ namespace ELS_Server
                     LoadFilesPromScript(name);
                     Utils.DebugWriteLine($"Added {name} to resources");
                 }
-                
+
             }
             Utils.ReleaseWriteLine($"Total ELS Resources: {ElsResources.Count}");
         }
@@ -51,27 +51,33 @@ namespace ELS_Server
         {
             int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "file");
 #if DEBUG
-                Debug.WriteLine($"{num} files for {name}");
+            Debug.WriteLine($"{num} files for {name}");
 #endif
-                
-                for (int i = 0; i < num; i++)
+
+            for (int i = 0; i < num; i++)
+            {
+                var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
+
+                var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
+                Utils.DebugWriteLine($"Checking {filename}");
+                if (Path.GetExtension(filename).ToLower() == ".xml")
                 {
-                    var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
-
-                    var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
-                    Utils.DebugWriteLine($"Checking {filename}");
-                    if (Path.GetExtension(filename).ToLower() == ".xml")
+                    try
                     {
-
                         if (VCF.isValidData(data))
                         {
-                            VcfData.Add(new Tuple<string, string, string>(name,filename,data));
+                            VcfData.Add(new Tuple<string, string, string>(name, filename, data));
                         }
                         else
                         {
-                        Utils.DebugWriteLine($"XML data for {filename} is not valid");
+                            Utils.DebugWriteLine($"XML data for {filename} is not valid");
                         }
                     }
+                    catch (XMLParsingException e)
+                    {
+                        Utils.ReleaseWriteLine($"There was a parsing error in {filename} please validate this XML and try again.");
+                    }
+                }
             }
         }
     }
