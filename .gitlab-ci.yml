@@ -25,7 +25,7 @@ Release:
  script:
    - powershell echo "Do your deploy here"
    - powershell ls
-   - powershell src
+   - powershell ls src
    - powershell ls src/tmp
    - powershell mkdir elsplus
    - powershell cp -R src/tmp/* elsplus
