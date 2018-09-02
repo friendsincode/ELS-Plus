@@ -584,7 +584,7 @@ namespace ELS.Light
                     //foreach (int i in extras)
                     for(int i = 0; i < extras.Length; i++) 
                     {
-                        if (_extras.PRML.ContainsKey(i))
+                        if (_extras.PRML.ContainsKey(extras[i]))
                         {
                             if (_stage.PRML.PresetPatterns.Lstg2.Enabled)
                             {

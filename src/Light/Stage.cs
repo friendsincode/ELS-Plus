@@ -133,7 +133,7 @@ namespace ELS.Light
             int[] arr = { 1, 4 };
             if (!String.IsNullOrEmpty(PRML.ExtrasActiveAtLstg2))
             {
-                switch (PRML.ExtrasActiveAtLstg2)
+                switch (PRML.ExtrasActiveAtLstg2.ToLower())
                 {
                     case "1and4":
                         arr[0] = 1;
