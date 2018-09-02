@@ -12,8 +12,8 @@ build-release:
    - win32
  stage: build
  script:
-   - echo "Building"
-   - utils/build.ps1
+   - powershell echo "Building"
+   - powershell -ExecutionPolicy bypass -File utils/build.ps1
  artifacts:
   paths:
     - ./*
@@ -23,13 +23,13 @@ Release:
    - win32
  stage: deploy
  script:
-   - echo "Do your deploy here"
-   - ls
-   - ls src
-   - ls src/tmp
-   - mkdir elsplus
-   - cp -R src/tmp/* elsplus
-   - utils/publish.ps1
+   - powershell echo "Do your deploy here"
+   - powershell ls
+   - powershell ls src
+   - powershell ls src/tmp
+   - powershell mkdir elsplus
+   - powershell cp -R src/tmp/* elsplus
+   - powershell -ExecutionPolicy bypass -File utils/publish.ps1
  artifacts:
   name: ELS_FiveM-0.0.3.2-gitlab_$CI_JOB_ID
   paths:
