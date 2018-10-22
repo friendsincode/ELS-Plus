@@ -40,7 +40,7 @@ namespace ELS.configuration
 
         internal static async Task LoadUserSettings()
         {
-            API.GetResourceKvpString("SavedVehicles");
+           savedVehicles = JsonConvert.DeserializeObject<Dictionary<string,ELSUserVehicle>>(API.GetResourceKvpString("SavedVehicles"));
             currentUI = ELSUiDic[API.GetResourceKvpString("ELSUI")];            
         }
 

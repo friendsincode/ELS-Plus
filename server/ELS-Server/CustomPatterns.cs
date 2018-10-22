@@ -39,7 +39,6 @@ namespace ELS_Server
             {
                 var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
                 var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
-                var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
                 Utils.DebugWriteLine($"Checking {filename}");
                 if (Path.GetExtension(filename).ToLower() == ".xml")
                 {
