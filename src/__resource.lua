@@ -22,6 +22,7 @@ local NUIEnabled = true
 -- ELS-FiveM Requirements
 client_script 'SharpConfig.net.dll'
 client_script 'els-plus.net.dll'
+client_script 'Newtonsoft.Json.dll'
 
 -- Debug symbols
 files({

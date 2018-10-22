@@ -53,7 +53,7 @@ namespace ELS
                         //await Delay(500);
                         try
                         {
-                            UserSettings.LoadUserSettings().Start();
+                            UserSettings.LoadUserSettings();
                             _FileLoader.RunLoader(obj);
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS Plus\n\n ELS Plus is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://els.friendsincode.com");
                             SetupConnections();
@@ -135,17 +135,29 @@ namespace ELS
             API.RegisterCommand("elsui", new Action<int, List<object>, string>((source, arguments, raw) =>
             {
                 if (arguments.Count != 1) return;
-                if (arguments[0].Equals("enable"))
+                switch (arguments[0].ToString().ToLower())
                 {
-                    ElsUiPanel.EnableUI();
-                }
-                else if (arguments[0].Equals("disable"))
-                {
-                    ElsUiPanel.DisableUI();
-                }
-                else if (arguments[0].Equals("show"))
-                {
-                    ElsUiPanel.ShowUI();
+                    case "enable":
+                        ElsUiPanel.EnableUI();
+                        break;
+                    case "disable":
+                        ElsUiPanel.DisableUI();
+                        break;
+                    case "show":
+                        ElsUiPanel.ShowUI();
+                        break;
+                    case "whelen":
+                        UserSettings.currentUI = UserSettings.ElsUi.Whelen;
+                        UserSettings.SaveUI();
+                        break;
+                    case "new":
+                        UserSettings.currentUI = UserSettings.ElsUi.NewHotness;
+                        UserSettings.SaveUI();
+                        break;
+                    case "old":
+                        UserSettings.currentUI = UserSettings.ElsUi.OldandBusted;
+                        UserSettings.SaveUI();
+                        break;
                 }
             }), false);
 
