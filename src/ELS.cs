@@ -43,7 +43,6 @@ namespace ELS
         {
             bool Loaded = false;
             _controlConfiguration = new ElsConfiguration();
-            
             _FileLoader = new FileLoader(this);
             _vehicleManager = new VehicleManager();
             EventHandlers["onClientResourceStart"] += new Action<string>((string obj) =>

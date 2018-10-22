@@ -8,16 +8,16 @@ using CitizenFX.Core.Native;
 
 namespace ELS_Server
 {
-    public class Class1 : BaseScript
+    public class ELSServer : BaseScript
     {
         Dictionary<int, object> _cachedData = new Dictionary<int, object>();
         long GameTimer;
-        public Class1()
+        public ELSServer()
         {
             Utils.ReleaseWriteLine("Welcome to ELS+ for FiveM");
             GameTimer = API.GetGameTimer();
             Utils.ReleaseWriteLine($"Setting Game time is {GameTimer}");
-            foreach(string s in Configuration.ElsVehicleGroups)
+            foreach (string s in Configuration.ElsVehicleGroups)
             {
                 API.ExecuteCommand($"add_ace group.{s} command.elscar allow");
             }
@@ -43,7 +43,7 @@ namespace ELS_Server
 
             EventHandlers["ELS:VcfSync:Server"] += new Action<int>(async (int source) =>
             {
-                Utils.DebugWriteLine($"Sending Data to {Players[source].Name}"); 
+                Utils.DebugWriteLine($"Sending Data to {Players[source].Name}");
                 TriggerClientEvent(Players[source], "ELS:VcfSync:Client", VcfSync.VcfData);
                 TriggerClientEvent(Players[source], "ELS:PatternSync:Client", CustomPatterns.Patterns);
 
@@ -55,11 +55,11 @@ namespace ELS_Server
                 Utils.DebugWriteLine($"Stale vehicle {netid} removed from cache");
             });
 
-            EventHandlers["baseevents:enteredVehicle"] += new Action<int,int,string>((veh,seat,name) =>
-            {
-                Utils.DebugWriteLine("Vehicle Entered");
-                TriggerClientEvent("ELS:VehicleEntered", veh);
-            });
+            EventHandlers["baseevents:enteredVehicle"] += new Action<int, int, string>((veh, seat, name) =>
+              {
+                  Utils.DebugWriteLine("Vehicle Entered");
+                  TriggerClientEvent("ELS:VehicleEntered", veh);
+              });
             EventHandlers["ELS:FullSync:Unicast"] += new Action(() => { });
             EventHandlers["ELS:FullSync:Broadcast"] += new Action<System.Dynamic.ExpandoObject, Int16>((dataDic, playerID) =>
              {
@@ -82,7 +82,7 @@ namespace ELS_Server
             {
                 _cachedData.Clear();
                 Utils.ReleaseWriteLine("ELS Cache cleared");
-            }),false);
+            }), false);
 
             PreloadSyncData();
             Tick += Server_Tick;
@@ -96,7 +96,7 @@ namespace ELS_Server
 
         void BroadcastMessage(System.Dynamic.ExpandoObject dataDic, int SourcePlayerID)
         {
-            TriggerClientEvent("ELS:NewFullSyncData", dataDic,SourcePlayerID);
+            TriggerClientEvent("ELS:NewFullSyncData", dataDic, SourcePlayerID);
         }
 
         private async Task Server_Tick()

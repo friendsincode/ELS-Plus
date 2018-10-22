@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -118,6 +119,7 @@ namespace ELS.Manager
                         makenetworked(Game.PlayerPed.CurrentVehicle);
                     }
                     Indicator.RunAsync(Game.PlayerPed.CurrentVehicle);
+                    vehicleList.RunExternalTick();
                 }
                 else
                 {
