@@ -1,4 +1,4 @@
-var resourceName = "";
+
 var euro = false;
 
 function controlLights(state, light, color) {
@@ -43,14 +43,7 @@ function ToggleStage(stage) {
 
 $(function () {
     window.addEventListener('message', function (event) {
-        if (event.data.type == "initdata") {
-            resourceName = event.data.name;
-        }
-        else if (event.data.type == "enableui") {
-            document.body.style.display = event.data.enable ? "block" : "none";
-        } else if (event.data.type == "click") {
-            Click(cursorX - 1, cursorY - 1);
-        } else if (event.data.type == "lightControl") {
+       if (event.data.type == "lightControl") {
             controlLights(event.data.state, event.data.light, event.data.color);
         } else if (event.data.type == "setuidesc") {
             //console.log(`setting ${event.data.lighttype} to pattern ${event.data.desc}`);

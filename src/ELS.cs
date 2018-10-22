@@ -123,6 +123,18 @@ namespace ELS
                     VehicleManager.SyncUI(vehicle.GetNetworkId());
                 }
             });
+            EventHandlers["ELS:VehicleExited"] += new Action<int>((veh) =>
+            {
+                if (Global.DisableSirenOnExit)
+                {
+                    Utils.DebugWriteLine("Vehicle exited");
+                    Vehicle vehicle = new Vehicle(veh);
+                    if (vehicle.IsEls() && VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()))
+                    {
+                        VehicleManager.vehicleList[vehicle.GetNetworkId()].DisableSiren();
+                    }
+                }
+            });
             //Take in data and apply it
             EventHandlers["ELS:NewFullSyncData"] += new Action<IDictionary<string, object>,int>(_vehicleManager.SetVehicleSyncData);
 
@@ -147,15 +159,15 @@ namespace ELS
                         ElsUiPanel.ShowUI();
                         break;
                     case "whelen":
-                        UserSettings.currentUI = UserSettings.ElsUi.Whelen;
+                        UserSettings.uiSettings.currentUI = UserSettings.ElsUi.Whelen;
                         UserSettings.SaveUI();
                         break;
                     case "new":
-                        UserSettings.currentUI = UserSettings.ElsUi.NewHotness;
+                        UserSettings.uiSettings.currentUI = UserSettings.ElsUi.NewHotness;
                         UserSettings.SaveUI();
                         break;
                     case "old":
-                        UserSettings.currentUI = UserSettings.ElsUi.OldandBusted;
+                        UserSettings.uiSettings.currentUI = UserSettings.ElsUi.OldandBusted;
                         UserSettings.SaveUI();
                         break;
                 }

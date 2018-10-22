@@ -60,6 +60,11 @@ namespace ELS_Server
                   Utils.DebugWriteLine("Vehicle Entered");
                   TriggerClientEvent("ELS:VehicleEntered", veh);
               });
+            EventHandlers["baseevents:leftVehicle"] += new Action<int, int, string>((veh, seat, name) =>
+            {
+                Utils.DebugWriteLine("Vehicle Entered");
+                TriggerClientEvent("ELS:VehicleExited", veh);
+            });
             EventHandlers["ELS:FullSync:Unicast"] += new Action(() => { });
             EventHandlers["ELS:FullSync:Broadcast"] += new Action<System.Dynamic.ExpandoObject, Int16>((dataDic, playerID) =>
              {

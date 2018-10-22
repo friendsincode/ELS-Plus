@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using CitizenFX.Core.Native;
+using ELS.NUI;
 
 namespace ELS.configuration
 {
@@ -15,10 +16,10 @@ namespace ELS.configuration
 
         internal struct ELSUserVehicle
         {
-            int PrmPatt;
-            int SecPatt;
-            int WrnPatt;
-            string Siren;
+            internal int PrmPatt;
+            internal int SecPatt;
+            internal int WrnPatt;
+            internal string Siren;
         }
 
         internal enum ElsUi
@@ -26,6 +27,12 @@ namespace ELS.configuration
             NewHotness,
             OldandBusted,
             Whelen
+        }
+
+        internal struct UISettings
+        {
+            internal bool enabled;
+            internal ElsUi currentUI;
         }
 
         static Dictionary<string, ElsUi> ELSUiDic = new Dictionary<string, ElsUi>()
@@ -36,12 +43,20 @@ namespace ELS.configuration
         };
 
         internal static Dictionary<string, ELSUserVehicle> savedVehicles = new Dictionary<string, ELSUserVehicle>();
-        internal static ElsUi currentUI = ElsUi.NewHotness;
+        internal static UISettings uiSettings = new UISettings();
 
         internal static async Task LoadUserSettings()
         {
-           savedVehicles = JsonConvert.DeserializeObject<Dictionary<string,ELSUserVehicle>>(API.GetResourceKvpString("SavedVehicles"));
-            currentUI = ELSUiDic[API.GetResourceKvpString("ELSUI")];            
+            string vehs = API.GetResourceKvpString("SavedVehicles");
+            string uiSet = API.GetResourceKvpString("ElsUiSettings");
+            if (!String.IsNullOrEmpty(vehs))
+            {
+                savedVehicles = JsonConvert.DeserializeObject<Dictionary<string, ELSUserVehicle>>(vehs);
+            }
+            if (!String.IsNullOrEmpty(uiSet))
+            {
+                uiSettings = JsonConvert.DeserializeObject<UISettings>(uiSet);
+            }
         }
 
         internal static async Task SaveVehicles()
@@ -51,7 +66,8 @@ namespace ELS.configuration
 
         internal static async Task SaveUI()
         {
-            API.SetResourceKvp("ELSUI", nameof(currentUI));
+            API.SetResourceKvp("ElsUiSettings", JsonConvert.SerializeObject(uiSettings));
+            ElsUiPanel.ReloadUI();
         }
     }
 }

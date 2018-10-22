@@ -110,6 +110,7 @@ namespace ELS.configuration
 
                 ControlsUpdated?.Invoke(KeyBindings);
                 Global.EnabeTrafficControl = u["GENERAL"]["ElsTrafCtrlOn"].BoolValue;
+                Global.DisableSirenOnExit = u["GENERAL"]["ElsSirenOffonExit"].BoolValue;
                 Global.PrimDelay = u["LIGHTING"]["LightFlashDelayMainLts"].IntValue;
                 Global.DeleteInterval = u["Admin"]["VehicleDeleteInterval"].FloatValue * 60 * 1000;
                 Global.EnvLightRng = u["LIGHTING"]["EnvLtMultExtraLts_Rng"].FloatValue * 25f;

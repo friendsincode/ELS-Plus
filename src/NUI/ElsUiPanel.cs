@@ -8,6 +8,8 @@ using System.Dynamic;
 using CitizenFX.Core.Native;
 using System.Threading;
 using System.IO;
+using Newtonsoft.Json.Linq;
+using ELS.configuration;
 
 namespace ELS.NUI
 {
@@ -21,7 +23,23 @@ namespace ELS.NUI
         {
             string name = API.GetCurrentResourceName();
             Utils.DebugWriteLine($"Sending Current resouce name {name}");
-            API.SendNuiMessage($"{{\"type\":\"initdata\", \"name\":\"{name}\"}}");
+            //API.SendNuiMessage($"{{\"type\":\"initdata\", \"name\":\"{name}\"}}");
+            JObject message = new JObject();
+            message["type"] = "initdata";
+            message["name"] = name;
+            message["currentUI"] = UserSettings.uiSettings.currentUI.ToString().ToLower();
+            API.SendNuiMessage(message.ToString());
+        }
+
+        internal static async void ReloadUI()
+        {
+            JObject message = new JObject();
+            message["type"] = "reload";
+            API.SendNuiMessage(message.ToString());
+            await ELS.Delay(5000);
+            Utils.ReleaseWriteLine("Reloaded UI");
+            InitData();
+            ShowUI();
         }
 
         //Enable full ui control and cursor
