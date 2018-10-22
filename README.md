@@ -1,6 +1,6 @@
-# ELS-Plus
+### ELS-Plus
 
-See: https://github.com/friendsincode/ELS-Plus/issues to submit an issue or use our discord here: . It is important that if you test ELS Plus for FiveM that you submit issues so that we may work to resolve these. Here's some things to consider:
+See: https://git.friendsincode.com/PFM/ELS-Plus/issues to submit an issue or use our discord here: . It is important that if you test ELS Plus for FiveM that you submit issues so that we may work to resolve these. Here's some things to consider:
 
 - ELS vehicles are fully supported.
 - Full VCF parsing so you can totally customize vehicles.
@@ -47,10 +47,10 @@ See: https://github.com/friendsincode/ELS-Plus/issues to submit an issue or use 
 
 
 ### How to install
-1. Copy the `els-plus` folder to `cfx-server\resources\`
+1. Copy the `els-plus` folder to your server resource folder
 2. Add `start els-plus` to `server.cfg`
-3. Add `add_ace resource.RESOURCE_NAME command.add_ace allow` to `server.cfg`
-   remember to replace `RESOURCE_NAME` with the name of this resource.
+3. Add `add_ace resource.NAME_OF_ELS_RESOURCE command.add_ace allow` to `server.cfg`
+   remember to replace `NAME_OF_ELS_RESOURCE` with the name of this resource.
 4. Modify settings via ini file how you see fit.
 5. If you set AllowAdminOnly to `true` Add your user to the `group.admin`
    principal with the following `add_principal identifier.[license||steam]:id# group.admin`
@@ -70,15 +70,15 @@ See: https://github.com/friendsincode/ELS-Plus/issues to submit an issue or use 
 
 - When running the rcon command `restart els-plus` or `start els-plus`.
 
-## Contribute
+### Contribute
 if you are a developer and  would like to contribute any help is welcome!
 The contribution guide can be found [here](CONTRIBUTING.md).
 
 ### How to Build and Test
 
-1. Add the enviroment variable `FXSERVERDATA` and set its value to the `resources` directory path.
+1. Add the enviroment variable `FXSERVERDATA` to your computer's environment variables and set its value to the `resources` directory path.
 
-2. `git clone https://github.com/friendsincode/ELS-Plus.git`
+2. `git clone https://git.friendsincode.com/PFM/ELS-Plus.git`
 
 3. Open `ELS-Plus\src\elsplus.sln` in Visual Studio
 
@@ -86,6 +86,6 @@ The contribution guide can be found [here](CONTRIBUTING.md).
 
 5. In the menu bar under Build click on `Build Solution`
 
-6. Copy all the files from `ELS-Plus\src\bin\Release` to `cfx-server\resources\els-plus`
-
+6. Copy all the files from `ELS-Plus\src\bin\Release` to your server resources folder as `els-plus`
+   
 7. Add `start els-plus` to `server.cfg`
