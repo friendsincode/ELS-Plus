@@ -56,8 +56,7 @@ namespace ELS
                         //await Delay(500);
                         try
                         {
-                            Task us = UserSettings.LoadUserSettings();
-                            us.Start();
+                            UserSettings.LoadUserSettings();
                             _FileLoader.RunLoader(obj);
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS Plus\n\n ELS Plus is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://els.friendsincode.com");
                             SetupConnections();
