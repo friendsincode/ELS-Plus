@@ -38,10 +38,13 @@ namespace ELS
         private readonly VehicleManager _vehicleManager;
         private ElsConfiguration _controlConfiguration;
         private bool _firstTick = false;
+        internal static string ServerId;
+        
 
         public ELS()
         {
             bool Loaded = false;
+            ServerId = API.GetConvar("ElsServerId",null);
             _controlConfiguration = new ElsConfiguration();
             _FileLoader = new FileLoader(this);
             _vehicleManager = new VehicleManager();
@@ -53,7 +56,8 @@ namespace ELS
                         //await Delay(500);
                         try
                         {
-                            UserSettings.LoadUserSettings();
+                            Task us = UserSettings.LoadUserSettings();
+                            us.Start();
                             _FileLoader.RunLoader(obj);
                             Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS Plus\n\n ELS Plus is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://els.friendsincode.com");
                             SetupConnections();
@@ -69,7 +73,7 @@ namespace ELS
                             Screen.ShowNotification($"ERROR:{e.Message}");
                             Screen.ShowNotification($"ERROR:{e.StackTrace}");
                             Tick -= Class1_Tick;
-                            throw;
+                            //throw;
                         }
                     }
                 });
@@ -119,7 +123,13 @@ namespace ELS
                 Vehicle vehicle = new Vehicle(veh);
                 if (vehicle.IsEls() && VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()))
                 {
-                    Utils.DebugWriteLine("ELS Vehicle entered syncing UI");
+                    Utils.DebugWriteLine("ELS Vehicle entered syncing UI and settings");
+                    if (UserSettings.savedVehicles.Count > 1)
+                    {
+                        UserSettings.ELSUserVehicle usrVeh = UserSettings.savedVehicles.Find(uv => (uv.VehicleName == vehicle.DisplayName && uv.ServerId == ServerId));
+                    }
+                    
+                    
                     VehicleManager.SyncUI(vehicle.GetNetworkId());
                 }
             });
