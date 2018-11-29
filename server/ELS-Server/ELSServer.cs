@@ -136,7 +136,7 @@ namespace ELS_Server
 #if DEBUG 
             string updateUrl = "http://localhost:3000";
 #else
-            string updateUrl = "https://friendsincode.com/els";
+            string updateUrl = "http://els-stats.friendsincode.com:3000";
 #endif
             Request request = new Request();
             //JObject data = new JObject();
