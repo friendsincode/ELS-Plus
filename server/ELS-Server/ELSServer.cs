@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using GHMatti.Http;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Reflection;
+
 
 namespace ELS_Server
 {
@@ -12,11 +18,23 @@ namespace ELS_Server
     {
         Dictionary<int, object> _cachedData = new Dictionary<int, object>();
         long GameTimer;
+        string serverId;
+        string currentVersion;
         public ELSServer()
         {
-            Utils.ReleaseWriteLine("Welcome to ELS+ for FiveM");
+            currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            Utils.ReleaseWriteLine($"Welcome to ELS+ {currentVersion} for FiveM");
             GameTimer = API.GetGameTimer();
             Utils.ReleaseWriteLine($"Setting Game time is {GameTimer}");
+            serverId = API.LoadResourceFile(API.GetCurrentResourceName(), "ELSId");
+            
+            
+            if (String.IsNullOrEmpty(serverId))
+            {
+                Guid uuid = Guid.NewGuid();
+                API.SaveResourceFile(API.GetCurrentResourceName(), "ELSId", uuid.ToString(), -1);
+                serverId = uuid.ToString();
+            }
             foreach (string s in Configuration.ElsVehicleGroups)
             {
                 API.ExecuteCommand($"add_ace group.{s} command.elscar allow");
@@ -89,14 +107,68 @@ namespace ELS_Server
                 Utils.ReleaseWriteLine("ELS Cache cleared");
             }), false);
 
-            PreloadSyncData();
+            Task task = new Task(() => PreloadSyncData());
+            task.Start();
             Tick += Server_Tick;
+            API.SetConvarReplicated("ELSServerId", serverId);
+            Task updateCheck = new Task(() => CheckForUpdates());
+            updateCheck.Start();
         }
 
         async Task PreloadSyncData()
         {
             await VcfSync.CheckResources();
             await CustomPatterns.CheckCustomPatterns();
+        }
+
+        async Task CheckForUpdates()
+        {
+            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 5");
+            await ELSServer.Delay(1000);
+            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 4");
+            await ELSServer.Delay(1000);
+            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 3");
+            await ELSServer.Delay(1000);
+            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 2");
+            await ELSServer.Delay(1000);
+            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 1");
+            await ELSServer.Delay(1000);
+#if DEBUG 
+            string updateUrl = "http://localhost:3000";
+#else
+            string updateUrl = "https://friendsincode.com/els";
+#endif
+            Request request = new Request();
+            //JObject data = new JObject();
+            //data["serverId"] = serverId;
+            //data["serverName"] = API.GetConvar("sv_hostname", $"ELS Plus Server {serverId}");
+            RequestResponse result = await request.Http(updateUrl,"POST", 
+                $"serverId={serverId}&serverName={API.GetConvar("sv_hostname",$"ELS Plus Server {serverId}")}");
+            switch (result.status)
+            {
+                case HttpStatusCode.NotFound:
+                    Utils.ReleaseWriteLine("ELS Update page not found please try again");
+                    break;
+                case HttpStatusCode.OK:
+                    JObject res = JObject.Parse(result.content);
+                    if (((string)res["current"]).Equals(currentVersion))
+                    {
+                        Utils.ReleaseWriteLine("Thank you for using ELS Plus, currently running latest stable version");
+                    }
+                    else if (((string)res["dev"]).Equals(currentVersion))
+                    {
+                        Utils.ReleaseWriteLine("Thank you for using ELS Plus, currently running latest development version");
+                    }
+                    else
+                    {
+                        Utils.ReleaseWriteLine($"ELS Plus is not up to date please update please update from version {currentVersion} to {(string)res["current"]}");
+                    }
+                    break;
+                case HttpStatusCode.RequestTimeout:
+                    Utils.ReleaseWriteLine("ELS Connection timed out please try again");
+                    break;
+            }
+
         }
 
         void BroadcastMessage(System.Dynamic.ExpandoObject dataDic, int SourcePlayerID)

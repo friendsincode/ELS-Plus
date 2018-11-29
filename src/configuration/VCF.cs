@@ -47,7 +47,7 @@ namespace ELS.configuration
         {
         }
 
-        internal static void ParseVcfs(List<dynamic> VcfData)
+        internal static async void ParseVcfs(List<dynamic> VcfData)
         {
             foreach (dynamic vcf in VcfData)
             {

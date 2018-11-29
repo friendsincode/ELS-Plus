@@ -35,7 +35,8 @@ namespace ELS
         }
         internal void RunLoader(String scriptName)
         {
-            LoadFilesPromScript(scriptName);
+            //LoadFilesPromScript(scriptName);
+            OnSettingsLoaded?.Invoke(SettingsType.Type.GLOBAL, API.LoadResourceFile(scriptName, "ELS.ini"));
         }
 
         private static void LoadFilesPromScript(string name)

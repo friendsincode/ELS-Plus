@@ -27,6 +27,137 @@
             <param name="eventName">The name of the event.</param>
             <param name="args">Arguments to pass to the event.</param>
         </member>
+        <member name="T:CitizenFX.Core.FastStructure">
+            <summary>
+            Provides fast reading and writing of generic structures to a memory location using IL emitted functions.
+            </summary>
+        </member>
+        <member name="M:CitizenFX.Core.FastStructure.GetPtr``1(``0@)">
+            <summary>
+            Retrieve a pointer to the passed generic structure type. This is achieved by emitting a <see cref="T:System.Reflection.Emit.DynamicMethod"/> to retrieve a pointer to the structure.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="structure"></param>
+            <returns>A pointer to the provided structure in memory.</returns>
+            <see cref="F:CitizenFX.Core.FastStructure`1.GetPtr"/>
+        </member>
+        <member name="M:CitizenFX.Core.FastStructure.PtrToStructure``1(System.IntPtr)">
+            <summary>
+            Loads the generic value type <typeparamref name="T"/> from a pointer. This is achieved by emitting a <see cref="T:System.Reflection.Emit.DynamicMethod"/> that returns the value in the memory location as a <typeparamref name="T"/>.
+            <para>The equivalent non-generic C# code:</para>
+            <code>
+            unsafe MyStruct ReadFromPointer(byte* pointer)
+            {
+                return *(MyStruct*)pointer;
+            }
+            </code>
+            </summary>
+            <typeparam name="T">Any value/structure type</typeparam>
+            <param name="pointer">Unsafe pointer to memory to load the value from</param>
+            <returns>The newly loaded value</returns>
+        </member>
+        <member name="M:CitizenFX.Core.FastStructure.StructureToPtr``1(``0@,System.IntPtr)">
+            <summary>
+            Writes the generic value type <typeparamref name="T"/> to the location specified by a pointer. This is achieved by emitting a <see cref="T:System.Reflection.Emit.DynamicMethod"/> that copies the value from the referenced structure into the specified memory location.
+            <para>There is no exact equivalent possible in C#, the closest possible (generates the same IL) is the following code:</para>
+            <code>
+            unsafe void WriteToPointer(ref SharedHeader dest, ref SharedHeader src)
+            {
+                dest = src;
+            }
+            </code>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="pointer"></param>
+            <param name="structure"></param>
+        </member>
+        <member name="M:CitizenFX.Core.FastStructure.SizeOf``1">
+            <summary>
+            Retrieve the cached size of a structure
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+            <remarks>Caches the size by type</remarks>
+            <see cref="F:CitizenFX.Core.FastStructure`1.Size"/>
+        </member>
+        <member name="M:CitizenFX.Core.FastStructure.ReadArray``1(``0[],System.IntPtr,System.Int32,System.Int32)">
+            <summary>
+            Reads a number of elements from a memory location into the provided buffer starting at the specified index.
+            </summary>
+            <typeparam name="T">The structure type</typeparam>
+            <param name="buffer">The destination buffer.</param>
+            <param name="source">The source memory location.</param>
+            <param name="index">The start index within <paramref name="buffer"/>.</param>
+            <param name="count">The number of elements to read.</param>
+        </member>
+        <member name="M:CitizenFX.Core.FastStructure.WriteArray``1(System.IntPtr,``0[],System.Int32,System.Int32)">
+            <summary>
+            Writes a number of elements to a memory location from the provided buffer starting at the specified index.
+            </summary>
+            <typeparam name="T">The structure type</typeparam>
+            <param name="destination">The destination memory location.</param>
+            <param name="buffer">The source buffer.</param>
+            <param name="index">The start index within <paramref name="buffer"/>.</param>
+            <param name="count">The number of elements to write.</param>
+        </member>
+        <member name="T:CitizenFX.Core.FastStructure`1">
+            <summary>
+            Emits optimized IL for the reading and writing of structures to/from memory.
+            <para>For a 32-byte structure with 1 million iterations:</para>
+            <para>The <see cref="F:CitizenFX.Core.FastStructure`1.PtrToStructure"/> method performs approx. 20x faster than
+            <see cref="M:System.Runtime.InteropServices.Marshal.PtrToStructure(System.IntPtr,System.Type)"/> (8ms vs 160ms), and about 1.6x slower than the non-generic equivalent (8ms vs 5ms)</para>
+            <para>The <see cref="F:CitizenFX.Core.FastStructure`1.StructureToPtr"/> method performs approx. 8x faster than 
+            <see cref="M:System.Runtime.InteropServices.Marshal.StructureToPtr(System.Object,System.IntPtr,System.Boolean)"/> (4ms vs 34ms). </para>
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:CitizenFX.Core.FastStructure`1.GetPtrDelegate">
+            <summary>
+            Delegate that returns a pointer to the provided structure. Use with extreme caution.
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CitizenFX.Core.FastStructure`1.PtrToStructureDelegate">
+            <summary>
+            Delegate for loading a structure from the specified memory address
+            </summary>
+            <param name="pointer"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CitizenFX.Core.FastStructure`1.StructureToPtrDelegate">
+            <summary>
+            Delegate for writing a structure to the specified memory address
+            </summary>
+            <param name="value"></param>
+            <param name="pointer"></param>
+        </member>
+        <member name="F:CitizenFX.Core.FastStructure`1.GetPtr">
+            <summary>
+            The <see cref="T:CitizenFX.Core.FastStructure`1.GetPtrDelegate"/> delegate for the generated IL to retrieve a pointer to the structure
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.FastStructure`1.PtrToStructure">
+            <summary>
+            The <see cref="T:CitizenFX.Core.FastStructure`1.PtrToStructureDelegate"/> delegate for the generated IL to retrieve a structure from a specified memory address.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.FastStructure`1.StructureToPtr">
+            <summary>
+            The <see cref="T:CitizenFX.Core.FastStructure`1.StructureToPtrDelegate"/> delegate for the generated IL to store a structure at the specified memory address.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.FastStructure`1.Size">
+            <summary>
+            Cached size of T as determined by <see cref="M:System.Runtime.InteropServices.Marshal.SizeOf(System.Type)"/>.
+            </summary>
+        </member>
+        <member name="M:CitizenFX.Core.FastStructure`1.#cctor">
+            <summary>
+            Performs once of type compatibility check.
+            </summary>
+            <exception cref="T:System.ArgumentException">Thrown if the type T is incompatible</exception>
+        </member>
         <member name="F:CitizenFX.Core.MathUtil.ZeroTolerance">
             <summary>
             The value for which all absolute numbers smaller than are considered equal to zero.
@@ -6338,14 +6469,23 @@
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.CANCEL_EVENT">
             <summary>
-            Cancels the currently executing event. See https://wiki.fivem.net/wiki/CancelEvent
-            
+            Cancels the currently executing event.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.CREATE_VEHICLE">
+            <summary>
+            thisScriptCheck - can be destroyed if it belongs to the calling script.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.FREEZE_ENTITY_POSITION">
+            <summary>
+            No, this should be called SET_ENTITY_KINEMATIC. It does more than just "freeze" it's position.  
+            ^Rockstar Devs named it like that, Now cry about it.
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.GET_CURRENT_RESOURCE_NAME">
             <summary>
             Returns the name of the currently executing resource.
-            
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.GET_GAME_TIMER">
@@ -6353,82 +6493,170 @@
             Gets the current game timer in milliseconds.
             </summary>
         </member>
+        <member name="F:CitizenFX.Core.Native.Hash.GET_HASH_KEY">
+            <summary>
+            This native converts the passed string to a hash.
+            </summary>
+        </member>
         <member name="F:CitizenFX.Core.Native.Hash.GET_NUM_RESOURCE_METADATA">
             <summary>
             Gets the amount of metadata values with the specified key existing in the specified resource's manifest.
-            	See also: [Resource manifest](https://wiki.fivem.net/wiki/Resource_manifest)
-            
+            See also: [Resource manifest](https://docs.fivem.net/resources/manifest/)
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.GET_REGISTERED_COMMANDS">
             <summary>
             Returns all commands that are registered in the command system.
-            	The data returned adheres to the following layout:
-            	```
-            	[
-            		{
-            			"name": "cmdlist"
-            		},
-            		{
-            			"name": "command1"
-            		}
-            	]
-            	```
+            The data returned adheres to the following layout:
             
+            ```
+            [
+            {
+            "name": "cmdlist"
+            },
+            {
+            "name": "command1"
+            }
+            ]
+            ```
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.GET_RESOURCE_METADATA">
             <summary>
             Gets the metadata value at a specified key/index from a resource's manifest.
-            	See also: [Resource manifest](https://wiki.fivem.net/wiki/Resource_manifest)
-            
+            See also: [Resource manifest](https://docs.fivem.net/resources/manifest/)
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.GET_RESOURCE_PATH">
+            <summary>
+            Returns the physical on-disk path of the specified resource.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.GET_RESOURCE_STATE">
+            <summary>
+            Returns the current state of the specified resource.
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.IS_DUPLICITY_VERSION">
             <summary>
-            <summary>Gets whether or not this is the CitizenFX server.</summary>
-            <returns>A boolean value.</returns>
-            
+            Gets whether or not this is the CitizenFX server.
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.LOAD_RESOURCE_FILE">
             <summary>
             Reads the contents of a text file in a specified resource.
-            	If executed on the client, this file has to be included in `files` in the resource manifest.
+            If executed on the client, this file has to be included in `files` in the resource manifest.
+            Example: `local data = LoadResourceFile("devtools", "data.json")`
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.REGISTER_RESOURCE_ASSET">
+            <summary>
+            **Experimental**: This native may be altered or removed in future versions of CitizenFX without warning.
             
-            	Example: `local data = LoadResourceFile("devtools", "data.json")`
+            Registers a cached resource asset with the resource system, similar to the automatic scanning of the `stream/` folder.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.REGISTER_RESOURCE_BUILD_TASK_FACTORY">
+            <summary>
+            Registers a build task factory for resources.
+            The function should return an object (msgpack map) with the following fields:
             
+            ```
+            {
+            // returns whether the specific resource should be built
+            shouldBuild = func(resourceName: string): bool,
+            
+            // asynchronously start building the specific resource.
+            // call cb when completed
+            build = func(resourceName: string, cb: func(success: bool, status: string): void): void
+            }
+            ```
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.SAVE_RESOURCE_FILE">
             <summary>
             Writes the specified data to a file in the specified resource.
-            
-            	Using a length of `-1` will automatically detect the length assuming the data is a C string.
-            
+            Using a length of `-1` will automatically detect the length assuming the data is a C string.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.SET_ENTITY_COORDS">
+            <summary>
+            p7 is always 1 in the scripts. Set to 1, an area around the destination coords for the moved entity is cleared from other entities.   
+            Often ends with 1, 0, 0, 1); in the scripts. It works.   
+            Axis - Invert Axis Flags
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.SET_ENTITY_ROTATION">
+            <summary>
+            rotationOrder refers to the order yaw pitch roll is applied  
+            value ranges from 0 to 5. What you use for rotationOrder when setting must be the same as rotationOrder when getting the rotation.   
+            Unsure what value corresponds to what rotation order, more testing will be needed for that.  
+            For the most part R* uses 1 or 2 as the order.  
+            p5 is usually set as true
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.SET_ENTITY_VELOCITY">
+            <summary>
+            Note that the third parameter(denoted as z) is "up and down" with positive ment.
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.SET_PED_INTO_VEHICLE">
+            <summary>
+            Ped: The ped to warp.  
+            vehicle: The vehicle to warp the ped into.  
+            Seat_Index: [-1 is driver seat, -2 first free passenger seat]  
+            Moreinfo of Seat Index  
+            DriverSeat = -1  
+            Passenger = 0  
+            Left Rear = 1  
+            RightRear = 2
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.SET_PLAYER_WANTED_LEVEL">
+            <summary>
+            Call SET_PLAYER_WANTED_LEVEL_NOW for immediate effect  
+            wantedLevel is an integer value representing 0 to 5 stars even though the game supports the 6th wanted level but no police will appear since no definitions are present for it in the game files  
+            disableNoMission-  Disables When Off Mission- appears to always be false
+            </summary>
+        </member>
+        <member name="F:CitizenFX.Core.Native.Hash.SET_VEHICLE_COLOURS">
+            <summary>
+            colorPrimary &amp; colorSecondary are the paint index for the vehicle.  
+            For a list of valid paint indexes, view: pastebin.com/pwHci0xK  
+            -------------------------------------------------------------------------  
+            Use this to get the number of color indices: pastebin.com/RQEeqTSM  
+            Note: minimum color index is 0, maximum color index is (numColorIndices - 1)
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.TRIGGER_CLIENT_EVENT_INTERNAL">
             <summary>
             The backing function for TriggerClientEvent.
-            
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.TRIGGER_EVENT_INTERNAL">
             <summary>
             The backing function for TriggerEvent.
-            
             </summary>
         </member>
         <member name="F:CitizenFX.Core.Native.Hash.WAS_EVENT_CANCELED">
             <summary>
-            Returns whether or not the currently executing event was canceled. See https://wiki.fivem.net/wiki/WasEventCanceled
-            
+            Returns whether or not the currently executing event was canceled.
             </summary>
         </member>
         <member name="M:CitizenFX.Core.Native.API.CancelEvent">
             <summary>
-            Cancels the currently executing event. See https://wiki.fivem.net/wiki/CancelEvent
+            Cancels the currently executing event.
+            </summary>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.CreateVehicle(System.UInt32,System.Single,System.Single,System.Single,System.Single,System.Boolean,System.Boolean)">
+            <summary>
+            thisScriptCheck - can be destroyed if it belongs to the calling script.
+            </summary>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.FreezeEntityPosition(System.Int32,System.Boolean)">
+            <summary>
+            No, this should be called SET_ENTITY_KINEMATIC. It does more than just "freeze" it's position.
+            ^Rockstar Devs named it like that, Now cry about it.
             </summary>
         </member>
         <member name="M:CitizenFX.Core.Native.API.GetCurrentResourceName">
@@ -6443,10 +6671,15 @@
             </summary>
             <returns>The game time.</returns>
         </member>
+        <member name="M:CitizenFX.Core.Native.API.GetHashKey(System.String)">
+            <summary>
+            This native converts the passed string to a hash.
+            </summary>
+        </member>
         <member name="M:CitizenFX.Core.Native.API.GetNumResourceMetadata(System.String,System.String)">
             <summary>
             Gets the amount of metadata values with the specified key existing in the specified resource's manifest.
-            See also: [Resource manifest](https://wiki.fivem.net/wiki/Resource_manifest)
+            See also: [Resource manifest](https://docs.fivem.net/resources/manifest/)
             </summary>
             <param name="resourceName">The resource name.</param>
             <param name="metadataKey">The key to look up in the resource manifest.</param>
@@ -6471,11 +6704,25 @@
         <member name="M:CitizenFX.Core.Native.API.GetResourceMetadata(System.String,System.String,System.Int32)">
             <summary>
             Gets the metadata value at a specified key/index from a resource's manifest.
-            See also: [Resource manifest](https://wiki.fivem.net/wiki/Resource_manifest)
+            See also: [Resource manifest](https://docs.fivem.net/resources/manifest/)
             </summary>
+            <param name="resourceName">The resource name.</param>
             <param name="metadataKey">The key in the resource manifest.</param>
             <param name="index">The value index, in a range from [0..GET_NUM_RESOURCE_METDATA-1].</param>
-            <param name="resourceName">The resource name.</param>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.GetResourcePath(System.String)">
+            <summary>
+            Returns the physical on-disk path of the specified resource.
+            </summary>
+            <param name="resourceName">The name of the resource.</param>
+            <returns>The resource directory name, possibly without trailing slash.</returns>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.GetResourceState(System.String)">
+            <summary>
+            Returns the current state of the specified resource.
+            </summary>
+            <param name="resourceName">The name of the resource.</param>
+            <returns>The resource state. One of `"missing", "started", "starting", "stopped", "stopping", "uninitialized" or "unknown"`.</returns>
         </member>
         <member name="M:CitizenFX.Core.Native.API.IsDuplicityVersion">
             <summary>
@@ -6493,16 +6740,91 @@
             <param name="fileName">The file in the resource.</param>
             <returns>The file contents</returns>
         </member>
+        <member name="M:CitizenFX.Core.Native.API.RegisterResourceAsset(System.String,System.String)">
+            <summary>
+            **Experimental**: This native may be altered or removed in future versions of CitizenFX without warning.
+            Registers a cached resource asset with the resource system, similar to the automatic scanning of the `stream/` folder.
+            </summary>
+            <param name="resourceName">The resource to add the asset to.</param>
+            <param name="fileName">A file name in the resource.</param>
+            <returns>A cache string to pass to `REGISTER_STREAMING_FILE_FROM_CACHE` on the client.</returns>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.RegisterResourceBuildTaskFactory(System.String,CitizenFX.Core.Native.InputArgument)">
+            <summary>
+            Registers a build task factory for resources.
+            The function should return an object (msgpack map) with the following fields:
+            ```
+            {
+            // returns whether the specific resource should be built
+            shouldBuild = func(resourceName: string): bool,
+            // asynchronously start building the specific resource.
+            // call cb when completed
+            build = func(resourceName: string, cb: func(success: bool, status: string): void): void
+            }
+            ```
+            </summary>
+            <param name="factoryId">The identifier for the build task.</param>
+            <param name="factoryFn">The factory function.</param>
+        </member>
         <member name="M:CitizenFX.Core.Native.API.SaveResourceFile(System.String,System.String,System.String,System.Int32)">
             <summary>
             Writes the specified data to a file in the specified resource.
             Using a length of `-1` will automatically detect the length assuming the data is a C string.
             </summary>
-            <param name="dataLength">The length of the written data.</param>
-            <param name="fileName">The name of the file.</param>
             <param name="resourceName">The name of the resource.</param>
+            <param name="fileName">The name of the file.</param>
             <param name="data">The data to write to the file.</param>
+            <param name="dataLength">The length of the written data.</param>
             <returns>A value indicating if the write succeeded.</returns>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.SetEntityCoords(System.Int32,System.Single,System.Single,System.Single,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            p7 is always 1 in the scripts. Set to 1, an area around the destination coords for the moved entity is cleared from other entities.
+            Often ends with 1, 0, 0, 1); in the scripts. It works.
+            Axis - Invert Axis Flags
+            </summary>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.SetEntityRotation(System.Int32,System.Single,System.Single,System.Single,System.Int32,System.Boolean)">
+            <summary>
+            rotationOrder refers to the order yaw pitch roll is applied
+            value ranges from 0 to 5. What you use for rotationOrder when setting must be the same as rotationOrder when getting the rotation.
+            Unsure what value corresponds to what rotation order, more testing will be needed for that.
+            For the most part R* uses 1 or 2 as the order.
+            p5 is usually set as true
+            </summary>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.SetEntityVelocity(System.Int32,System.Single,System.Single,System.Single)">
+            <summary>
+            Note that the third parameter(denoted as z) is "up and down" with positive ment.
+            </summary>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.SetPedIntoVehicle(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Ped: The ped to warp.
+            vehicle: The vehicle to warp the ped into.
+            Seat_Index: [-1 is driver seat, -2 first free passenger seat]
+            Moreinfo of Seat Index
+            DriverSeat = -1
+            Passenger = 0
+            Left Rear = 1
+            RightRear = 2
+            </summary>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.SetPlayerWantedLevel(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Call SET_PLAYER_WANTED_LEVEL_NOW for immediate effect
+            wantedLevel is an integer value representing 0 to 5 stars even though the game supports the 6th wanted level but no police will appear since no definitions are present for it in the game files
+            disableNoMission-  Disables When Off Mission- appears to always be false
+            </summary>
+        </member>
+        <member name="M:CitizenFX.Core.Native.API.SetVehicleColours(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            colorPrimary &amp; colorSecondary are the paint index for the vehicle.
+            For a list of valid paint indexes, view: pastebin.com/pwHci0xK
+            -------------------------------------------------------------------------
+            Use this to get the number of color indices: pastebin.com/RQEeqTSM
+            Note: minimum color index is 0, maximum color index is (numColorIndices - 1)
+            </summary>
         </member>
         <member name="M:CitizenFX.Core.Native.API.TriggerClientEventInternal(System.String,System.String,System.String,System.Int32)">
             <summary>
@@ -6516,9 +6838,15 @@
         </member>
         <member name="M:CitizenFX.Core.Native.API.WasEventCanceled">
             <summary>
-            Returns whether or not the currently executing event was canceled. See https://wiki.fivem.net/wiki/WasEventCanceled
+            Returns whether or not the currently executing event was canceled.
             </summary>
             <returns>A boolean.</returns>
+        </member>
+        <member name="M:CitizenFX.Core.Player.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:CitizenFX.Core.Player.GetHashCode">
+            <inheritdoc />
         </member>
         <member name="P:CitizenFX.Core.IdentifierCollection.Item(System.String)">
             <summary>

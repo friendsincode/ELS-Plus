@@ -29,7 +29,8 @@ namespace ELS.configuration
         {
             LIGHTING,
             GLOBAL,
-            VCF
+            VCF,
+            USER
         }
     }
 }

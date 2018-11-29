@@ -118,7 +118,7 @@ namespace ELS.configuration
                 Global.TkdnRng = u["LIGHTING"]["EnvLtMultTakedwns_Rng"].FloatValue * 25f;
                 Global.TkdnInt = u["LIGHTING"]["EnvLtMultTakedwns_Int"].FloatValue * 1f;
                 Global.AllowController = u["CONTROL"]["AllowController"].BoolValue;
-                Utils.DebugWrite($"Configuration ran \n ---------------------- \n Traffic Control: {Global.EnabeTrafficControl} \n Delay: {Global.PrimDelay} \n Delete Interval: {Global.DeleteInterval} \n Env Lighting Range: {Global.EnvLightRng}");
+                Utils.DebugWrite($"Configuration ran \n ---------------------- \n Traffic Control: {Global.EnabeTrafficControl} \n Delay: {Global.PrimDelay} \n Delete Interval: {Global.DeleteInterval} \n Env Lighting Range: {Global.EnvLightRng}\n");
             }
         }
         internal class ELSControls
