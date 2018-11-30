@@ -16,6 +16,7 @@ namespace ELS_Server
         {
             if (String.IsNullOrEmpty(data)) return false;
             NanoXMLDocument doc = new NanoXMLDocument(data);
+
             //TODO change how below is detected to account for xml meta tag being before it.
             return doc.RootNode.Name == "pattern";
         }
@@ -27,7 +28,7 @@ namespace ELS_Server
             {
                 ParsePatterns(name);
             }
-            
+
         }
 
         internal static void ParsePatterns(string name)
@@ -35,13 +36,14 @@ namespace ELS_Server
             int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "file");
             string isElsResource = API.GetResourceMetadata(name, "is_els", 0);
             for (int i = 0; i < num; i++)
+            {
+                var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
+                var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
+                Utils.DebugWriteLine($"Checking {filename}");
+                if (Path.GetExtension(filename).ToLower() == ".xml")
                 {
-                    var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
-                    var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
-                    Utils.DebugWriteLine($"Checking {filename}");
-                    if (Path.GetExtension(filename).ToLower() == ".xml")
+                    try
                     {
-
                         if (CustomPatterns.IsValidPatternData(data))
                         {
                             Patterns.Add(new Tuple<string, string, string>(name, filename, data));
@@ -51,7 +53,12 @@ namespace ELS_Server
                             Utils.DebugWriteLine($"XML Pattern data for {filename} is not valid");
                         }
                     }
+                    catch (Exception e)
+                    {
+                        Utils.DebugWriteLine($"There was a parsing error in {filename} please validate this XML and try again.");
+                    }
                 }
+            }
         }
     }
 }

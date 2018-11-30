@@ -22,6 +22,7 @@ local NUIEnabled = true
 -- ELS-FiveM Requirements
 client_script 'SharpConfig.net.dll'
 client_script 'els-plus.net.dll'
+client_script 'Newtonsoft.Json.dll'
 
 -- Debug symbols
 files({
@@ -35,14 +36,23 @@ if NUIEnabled then
 
 	files({
     'NUI/app/index.html',
-    'NUI/app/js/jquery-3.2.1.min.js',    
-    'NUI/app/js/popper.js',
-    'NUI/app/js/bootstrap.bundle.min.js',
-    'NUI/app/js/bootstrap-toggle.min.js',
-    'NUI/app/js/main.js',
-    'NUI/app/css/bootstrap.min.css',
-    'NUI/app/css/bootstrap-toggle.min.css',
-    'NUI/app/css/main.css'
+    'NUI/app/js/ui.js',
+    'NUI/app/js/jquery-3.2.1.min.js',
+    -- New Hotness
+    'NUI/app/newhotness/index.html',    
+    'NUI/app/newhotness/js/popper.js',
+    'NUI/app/newhotness/js/bootstrap.bundle.min.js',
+    'NUI/app/newhotness/js/bootstrap-toggle.min.js',
+    'NUI/app/newhotness/js/main.js',
+    'NUI/app/newhotness/css/bootstrap.min.css',
+    'NUI/app/newhotness/css/bootstrap-toggle.min.css',
+    'NUI/app/newhotness/css/main.css',
+    -- Old and Busted (JK love the ui Arthur)
+    'NUI/app/oldandbusted/css/main.css',
+    'NUI/app/oldandbusted/js/main.js',
+    'NUI/app/oldandbusted/index.html',
+    --Whelen UI
+    'NUI/app/whelen/notthereyet.haha'
 })
 
 end

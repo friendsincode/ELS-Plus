@@ -118,6 +118,15 @@ namespace ELS
             return CitizenFX.Core.Native.Function.Call<bool>(CitizenFX.Core.Native.Hash.DOES_ENTITY_EXIST, _vehicle);
         }
 
+        public void DisableSiren()
+        {
+            if (_siren._mainSiren._enable)
+            {
+                _siren._mainSiren.SetEnable(false);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MainSiren, _vehicle, true, Game.Player.ServerId);
+            }
+        }
+
         public override void Delete()
         {
             try

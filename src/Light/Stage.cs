@@ -159,6 +159,25 @@ namespace ELS.Light
                         arr[0] = 3;
                         arr[1] = 4;
                         break;
+                    case "1":
+                        arr = new int[] { 1 };
+                        break;
+                    case "2":
+                        arr = new int[] { 2 };
+                        break;
+                    case "3":
+                        arr = new int[] { 3 };
+                        break;
+                    case "4":
+                        arr = new int[] { 4 };
+                        break;
+                    case "5":
+                        arr = new int[] { 5 };
+                        break;
+                    case "6":
+                        arr = new int[] { 6 };
+                        break;
+
                 }
 
             }
