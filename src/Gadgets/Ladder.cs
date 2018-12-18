@@ -128,7 +128,7 @@ namespace ELS.Gadgets
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveLadderDown, lights._vehicle, true, Game.Player.ServerId);
                 VerticalAngle = VerticalAngle - 0.029999999f;
             }
-            if (API.IsVehicleDoorFullyOpen(lights._vehicle.Handle, LadderVerticalIndex) != 1 || VerticalAngle <= 0.80000001f)
+            if (API.IsVehicleDoorFullyOpen(lights._vehicle.Handle, LadderVerticalIndex) || VerticalAngle <= 0.80000001f)
             {
                 API.SetVehicleDoorControl(lights._vehicle.Handle, LadderVerticalIndex, _speed, VerticalAngle);
             }
@@ -153,7 +153,7 @@ namespace ELS.Gadgets
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveLadderRight, lights._vehicle, true, Game.Player.ServerId);
                 HorizontalAngle = HorizontalAngle - 0.019999999f;
             }
-            if (API.IsVehicleDoorFullyOpen(lights._vehicle.Handle, LadderHorizontalIndex) != 1 || VerticalAngle <= 0.80000001f)
+            if (API.IsVehicleDoorFullyOpen(lights._vehicle.Handle, LadderHorizontalIndex) || VerticalAngle <= 0.80000001f)
             {
                 API.SetVehicleDoorControl(lights._vehicle.Handle, LadderHorizontalIndex, _speed, VerticalAngle);
             }
