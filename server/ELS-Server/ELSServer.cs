@@ -26,9 +26,7 @@ namespace ELS_Server
             Utils.ReleaseWriteLine($"Welcome to ELS+ {currentVersion} for FiveM");
             GameTimer = API.GetGameTimer();
             Utils.ReleaseWriteLine($"Setting Game time is {GameTimer}");
-            serverId = API.LoadResourceFile(API.GetCurrentResourceName(), "ELSId");
-            
-            
+            serverId = API.LoadResourceFile(API.GetCurrentResourceName(), "ELSId");]
             if (String.IsNullOrEmpty(serverId))
             {
                 Guid uuid = Guid.NewGuid();
@@ -110,7 +108,13 @@ namespace ELS_Server
             Task task = new Task(() => PreloadSyncData());
             task.Start();
             Tick += Server_Tick;
-            API.SetConvarReplicated("ELSServerId", serverId);
+            try
+            {
+                API.SetConvarReplicated("ELSServerId", serverId);
+            } catch (Exception e)
+            {
+                Utils.ReleaseWriteLine("Please update your CitizenFX server to the latest artifact version to enable update check and server tracking");
+            }
             Task updateCheck = new Task(() => CheckForUpdates());
             updateCheck.Start();
         }
