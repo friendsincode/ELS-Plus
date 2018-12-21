@@ -26,7 +26,7 @@ namespace ELS_Server
             Utils.ReleaseWriteLine($"Welcome to ELS+ {currentVersion} for FiveM");
             GameTimer = API.GetGameTimer();
             Utils.ReleaseWriteLine($"Setting Game time is {GameTimer}");
-            serverId = API.LoadResourceFile(API.GetCurrentResourceName(), "ELSId");]
+            serverId = API.LoadResourceFile(API.GetCurrentResourceName(), "ELSId");
             if (String.IsNullOrEmpty(serverId))
             {
                 Guid uuid = Guid.NewGuid();
