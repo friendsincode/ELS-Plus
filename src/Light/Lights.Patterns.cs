@@ -15,6 +15,9 @@ namespace ELS.Light
         private int _prmPatt = 0;
         private int _secPatt = 0;
         private int _wrnPatt = 0;
+        internal int _oldprm = 0;
+        internal int _oldsec = 0;
+        internal int _oldwrn = 0;
         private string _prefix;
         private int _prmPatterns;
         private int _secPatterns;
@@ -31,6 +34,7 @@ namespace ELS.Light
             }
             set
             {
+                _oldprm = _prmPatt;
                 _prmPatt = value;
                 foreach (Extra.Extra e in _extras.PRML.Values)
                 {
@@ -152,6 +156,7 @@ namespace ELS.Light
             }
             set
             {
+                _oldsec = _oldprm;
                 _secPatt = value;
                 foreach (Extra.Extra e in _extras.SECL.Values)
                 {
@@ -244,6 +249,7 @@ namespace ELS.Light
             }
             set
             {
+                _oldwrn = _wrnPatt;
                 _wrnPatt = value;
                 foreach (Extra.Extra e in _extras.WRNL.Values)
                 {

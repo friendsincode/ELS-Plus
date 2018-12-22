@@ -181,6 +181,9 @@ namespace ELS
             return vehDic;
         }
 
-
+        internal void SetOutofVeh()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
