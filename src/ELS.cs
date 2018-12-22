@@ -123,7 +123,6 @@ namespace ELS
                 Tick -= Class1_Tick;
                 Tick += Class1_Tick;
             });
-
             EventHandlers["ELS:VehicleEntered"] += new Action<int>((veh) =>
             {
                 Utils.DebugWriteLine("Vehicle entered");
@@ -136,6 +135,7 @@ namespace ELS
                         UserSettings.ELSUserVehicle usrVeh = UserSettings.savedVehicles.Find(uv => (uv.VehicleName == vehicle.DisplayName && uv.ServerId == ServerId));
                     }                    
                     VehicleManager.SyncUI(vehicle.GetNetworkId());
+                    VehicleManager.vehicleList[vehicle.GetNetworkId()].SetInofVeh();
                 }
             });
             EventHandlers["ELS:VehicleExited"] += new Action<int>((veh) =>
@@ -147,6 +147,7 @@ namespace ELS
                     if (vehicle.IsEls() && VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()))
                     {
                         VehicleManager.vehicleList[vehicle.GetNetworkId()].DisableSiren();
+                        VehicleManager.vehicleList[vehicle.GetNetworkId()].SetOutofVeh();
                     }
                 }
             });

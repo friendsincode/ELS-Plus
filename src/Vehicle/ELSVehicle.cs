@@ -183,7 +183,34 @@ namespace ELS
 
         internal void SetOutofVeh()
         {
-            throw new NotImplementedException();
+            if (_vcf.PRML.ForcedPatterns.OutOfVeh.Enabled)
+            {
+                _light.CurrentPrmPattern = _vcf.PRML.ForcedPatterns.OutOfVeh.IntPattern;
+            }
+            if (_vcf.SECL.ForcedPatterns.OutOfVeh.Enabled)
+            {
+                _light.CurrentSecPattern = _vcf.SECL.ForcedPatterns.OutOfVeh.IntPattern;
+            }
+            if (_vcf.WRNL.ForcedPatterns.OutOfVeh.Enabled)
+            {
+                _light.CurrentWrnPattern = _vcf.WRNL.ForcedPatterns.OutOfVeh.IntPattern;
+            }
+        }
+
+        internal void SetInofVeh()
+        {
+            if (_vcf.PRML.ForcedPatterns.OutOfVeh.Enabled)
+            {
+                _light.CurrentPrmPattern = _light._oldprm;
+            }
+            if (_vcf.SECL.ForcedPatterns.OutOfVeh.Enabled)
+            {
+                _light.CurrentSecPattern = _light._oldsec;
+            }
+            if (_vcf.WRNL.ForcedPatterns.OutOfVeh.Enabled)
+            {
+                _light.CurrentWrnPattern = _light._oldwrn;
+            }
         }
     }
 }
