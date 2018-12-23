@@ -16,6 +16,8 @@ namespace ELS.configuration
 
         internal struct ELSUserVehicle
         {
+            internal string VehicleName;
+            internal string ServerId;
             internal int PrmPatt;
             internal int SecPatt;
             internal int WrnPatt;
@@ -42,7 +44,7 @@ namespace ELS.configuration
             {"Whelen", ElsUi.Whelen }
         };
 
-        internal static Dictionary<string, ELSUserVehicle> savedVehicles = new Dictionary<string, ELSUserVehicle>();
+        internal static List<ELSUserVehicle> savedVehicles = new List<ELSUserVehicle>();
         internal static UISettings uiSettings = new UISettings();
 
         internal static async Task LoadUserSettings()
@@ -51,11 +53,12 @@ namespace ELS.configuration
             string uiSet = API.GetResourceKvpString("ElsUiSettings");
             if (!String.IsNullOrEmpty(vehs))
             {
-                savedVehicles = JsonConvert.DeserializeObject<Dictionary<string, ELSUserVehicle>>(vehs);
+                savedVehicles = JsonConvert.DeserializeObject<List<ELSUserVehicle>>(vehs);
             }
             if (!String.IsNullOrEmpty(uiSet))
             {
                 uiSettings = JsonConvert.DeserializeObject<UISettings>(uiSet);
+                ElsUiPanel.ReloadUI();
             }
         }
 
