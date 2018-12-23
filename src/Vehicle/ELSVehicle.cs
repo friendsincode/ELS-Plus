@@ -181,19 +181,63 @@ namespace ELS
             return vehDic;
         }
 
+        internal void SetSaveSettings(UserSettings.ELSUserVehicle veh)
+        {
+            _light.CurrentPrmPattern = veh.PrmPatt;
+            _light.CurrentSecPattern = veh.SecPatt;
+            _light.CurrentWrnPattern = veh.WrnPatt;
+            
+            VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangePrmPatt, this.GetNetworkId(), Game.Player.ServerId);
+            VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeSecPatt, this.GetNetworkId(), Game.Player.ServerId);
+            VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeWrnPatt, this.GetNetworkId(), Game.Player.ServerId);
+            switch(veh.Siren)
+            {
+                case "WL":
+                    _siren._mainSiren.setMainTone(_siren._tones.tone1);
+                    break;
+                case "YP":
+                    _siren._mainSiren.setMainTone(_siren._tones.tone2);
+                    break;
+                case "A1":
+                    _siren._mainSiren.setMainTone(_siren._tones.tone3);
+                    break;
+                case "A2":
+                    _siren._mainSiren.setMainTone(_siren._tones.tone4);
+                    break;
+            }
+            VehicleManager.SyncRequestReply(RemoteEventManager.Commands.MainSiren, this.GetNetworkId(), Game.Player.ServerId);
+        }
+
+        internal void GetSaveSettings()
+        {
+            UserSettings.ELSUserVehicle veh = new UserSettings.ELSUserVehicle()
+            {
+                ServerId = ELS.ServerId,
+                PrmPatt = _light.CurrentPrmPattern,
+                SecPatt = _light.CurrentSecPattern,
+                WrnPatt = _light.CurrentWrnPattern,
+                Siren = _siren._mainSiren.currentTone.Type
+            };
+            Task task = new Task(() => UserSettings.SaveVehicles());
+            task.Start();
+        }
+
         internal void SetOutofVeh()
         {
             if (_vcf.PRML.ForcedPatterns.OutOfVeh.Enabled)
             {
                 _light.CurrentPrmPattern = _vcf.PRML.ForcedPatterns.OutOfVeh.IntPattern;
+                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangePrmPatt, this.GetNetworkId(), Game.Player.ServerId);
             }
             if (_vcf.SECL.ForcedPatterns.OutOfVeh.Enabled)
             {
                 _light.CurrentSecPattern = _vcf.SECL.ForcedPatterns.OutOfVeh.IntPattern;
+                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeSecPatt, this.GetNetworkId(), Game.Player.ServerId);
             }
             if (_vcf.WRNL.ForcedPatterns.OutOfVeh.Enabled)
             {
                 _light.CurrentWrnPattern = _vcf.WRNL.ForcedPatterns.OutOfVeh.IntPattern;
+                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeWrnPatt, this.GetNetworkId(), Game.Player.ServerId);
             }
         }
 
@@ -202,14 +246,17 @@ namespace ELS
             if (_vcf.PRML.ForcedPatterns.OutOfVeh.Enabled)
             {
                 _light.CurrentPrmPattern = _light._oldprm;
+                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangePrmPatt, this.GetNetworkId(), Game.Player.ServerId);
             }
             if (_vcf.SECL.ForcedPatterns.OutOfVeh.Enabled)
             {
                 _light.CurrentSecPattern = _light._oldsec;
+                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeSecPatt, this.GetNetworkId(), Game.Player.ServerId);
             }
             if (_vcf.WRNL.ForcedPatterns.OutOfVeh.Enabled)
             {
                 _light.CurrentWrnPattern = _light._oldwrn;
+                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeWrnPatt, this.GetNetworkId(), Game.Player.ServerId);
             }
         }
     }

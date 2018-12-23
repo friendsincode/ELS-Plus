@@ -28,6 +28,7 @@ using ELS.Manager;
 using ELS.NUI;
 using System.Dynamic;
 using ELS.configuration;
+using System.Reflection;
 
 namespace ELS
 {
@@ -38,6 +39,7 @@ namespace ELS
         private readonly VehicleManager _vehicleManager;
         private ElsConfiguration _controlConfiguration;
         private bool _firstTick = false;
+        internal static string ServerId;
 
         public ELS()
         {
@@ -50,12 +52,16 @@ namespace ELS
                     //TODO rewrite loader so that it 
                     if (obj == CurrentResourceName())
                     {
-                        //await Delay(500);
                         try
                         {
-                            UserSettings.LoadUserSettings();
+
+                            ServerId = API.GetConvar("ElsServerId", null);
+                            Task settingsTask = new Task(() => UserSettings.LoadUserSettings());
+                            Utils.ReleaseWriteLine($"Welcome to ELS Plus on {ServerId} using version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
+                            settingsTask.Start();
+
                             _FileLoader.RunLoader(obj);
-                            Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS Plus\n\n ELS Plus is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://els.friendsincode.com");
+                            //Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS Plus\n\n ELS Plus is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://els.friendsincode.com");
                             SetupConnections();
                             TriggerServerEvent("ELS:VcfSync:Server", Game.Player.ServerId);
                             TriggerServerEvent("ELS:FullSync:Request:All", Game.Player.ServerId);
@@ -124,8 +130,14 @@ namespace ELS
                         ElsUiPanel.ShowUI();
                     }
                     VehicleManager.SyncUI(vehicle.GetNetworkId());
+                    UserSettings.ELSUserVehicle usrVeh = UserSettings.savedVehicles.Find(uveh => uveh.VehicleName == vehicle.DisplayName && uveh.ServerId == ServerId);
+                    if (!String.IsNullOrEmpty(usrVeh.ServerId))
+                    {
+                        VehicleManager.vehicleList[vehicle.GetNetworkId()].SetSaveSettings(usrVeh);
+                    }
                     VehicleManager.vehicleList[vehicle.GetNetworkId()].SetInofVeh();
                 }
+                
             });
             EventHandlers["ELS:VehicleExited"] += new Action<int>((veh) =>
             {
@@ -136,8 +148,11 @@ namespace ELS
                     if (vehicle.IsEls() && VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()))
                     {
                         VehicleManager.vehicleList[vehicle.GetNetworkId()].DisableSiren();
+                        VehicleManager.vehicleList[vehicle.GetNetworkId()].GetSaveSettings();
                         VehicleManager.vehicleList[vehicle.GetNetworkId()].SetOutofVeh();
                     }
+                    
+                    
                 }
             });
             //Take in data and apply it
@@ -151,6 +166,7 @@ namespace ELS
 
             API.RegisterCommand("elsui", new Action<int, List<object>, string>((source, arguments, raw) =>
             {
+                Task task = new Task(() => UserSettings.SaveUI());
                 if (arguments.Count != 1) return;
                 switch (arguments[0].ToString().ToLower())
                 {
@@ -160,26 +176,22 @@ namespace ELS
                     case "disable":
                         ElsUiPanel.DisableUI();
                         UserSettings.uiSettings.enabled = false;
-                        UserSettings.SaveUI();
                         break;
                     case "show":
                         ElsUiPanel.ShowUI();
                         UserSettings.uiSettings.enabled = true;
-                        UserSettings.SaveUI();
                         break;
                     case "whelen":
                         UserSettings.uiSettings.currentUI = UserSettings.ElsUi.Whelen;
-                        UserSettings.SaveUI();
                         break;
                     case "new":
                         UserSettings.uiSettings.currentUI = UserSettings.ElsUi.NewHotness;
-                        UserSettings.SaveUI();
                         break;
                     case "old":
                         UserSettings.uiSettings.currentUI = UserSettings.ElsUi.OldandBusted;
-                        UserSettings.SaveUI();
                         break;
                 }
+                task.Start();
             }), false);
 
             API.RegisterCommand("elslist", new Action<int, List<object>, string>((source, args, raw) =>
@@ -338,14 +350,14 @@ namespace ELS
                         {
                             ElsUiPanel.ShowUI();
                             UserSettings.uiSettings.enabled = true;
-                            UserSettings.SaveUI();
                         }
                         else if (ElsUiPanel._enabled == 1)
                         {
                             ElsUiPanel.DisableUI();
                             UserSettings.uiSettings.enabled = false;
-                            UserSettings.SaveUI();
                         }
+                        Task task = new Task(() => UserSettings.SaveUI());
+                        task.Start();
                     }
                 }
                 else
