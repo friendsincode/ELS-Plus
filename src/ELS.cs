@@ -69,7 +69,7 @@ namespace ELS
                             Screen.ShowNotification($"ERROR:{e.Message}");
                             Screen.ShowNotification($"ERROR:{e.StackTrace}");
                             Tick -= Class1_Tick;
-                            throw;
+                            Utils.ReleaseWriteLine($"Error: {e.Message}");
                         }
                     }
                 });
@@ -120,6 +120,10 @@ namespace ELS
                 if (vehicle.IsEls() && VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()))
                 {
                     Utils.DebugWriteLine("ELS Vehicle entered syncing UI");
+                    if (UserSettings.uiSettings.enabled)
+                    {
+                        ElsUiPanel.ShowUI();
+                    }
                     VehicleManager.SyncUI(vehicle.GetNetworkId());
                 }
             });
@@ -154,9 +158,13 @@ namespace ELS
                         break;
                     case "disable":
                         ElsUiPanel.DisableUI();
+                        UserSettings.uiSettings.enabled = false;
+                        UserSettings.SaveUI();
                         break;
                     case "show":
                         ElsUiPanel.ShowUI();
+                        UserSettings.uiSettings.enabled = true;
+                        UserSettings.SaveUI();
                         break;
                     case "whelen":
                         UserSettings.uiSettings.currentUI = UserSettings.ElsUi.Whelen;
@@ -328,10 +336,14 @@ namespace ELS
                         if (ElsUiPanel._enabled == 0)
                         {
                             ElsUiPanel.ShowUI();
+                            UserSettings.uiSettings.enabled = true;
+                            UserSettings.SaveUI();
                         }
                         else if (ElsUiPanel._enabled == 1)
                         {
                             ElsUiPanel.DisableUI();
+                            UserSettings.uiSettings.enabled = false;
+                            UserSettings.SaveUI();
                         }
                     }
                 }
