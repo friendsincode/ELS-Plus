@@ -1,5 +1,5 @@
 ﻿/*
-    ELS Plus for FiveM - An ELS implementation for FiveM
+    ELS FiveM - A ELS implementation for FiveM
     Copyright (C) 2017  E.J. Bevenour
 
     This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,6 @@ using ELS.Manager;
 using ELS.NUI;
 using System.Dynamic;
 using ELS.configuration;
-using System.Reflection;
 
 namespace ELS
 {
@@ -39,8 +38,6 @@ namespace ELS
         private readonly VehicleManager _vehicleManager;
         private ElsConfiguration _controlConfiguration;
         private bool _firstTick = false;
-        internal static string ServerId;
-        
 
         public ELS()
         {
@@ -56,12 +53,9 @@ namespace ELS
                         //await Delay(500);
                         try
                         {
-                            ServerId = API.GetConvar("ElsServerId", null);
-                            Task settingsTask = new Task(() => UserSettings.LoadUserSettings());
-                            Utils.ReleaseWriteLine($"Welcome to ELS Plus on {ServerId} using version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
-                            settingsTask.Start();
+                            UserSettings.LoadUserSettings();
                             _FileLoader.RunLoader(obj);
-                            //Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS Plus\n\n ELS Plus is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://els.friendsincode.com");
+                            Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS Plus\n\n ELS Plus is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://els.friendsincode.com");
                             SetupConnections();
                             TriggerServerEvent("ELS:VcfSync:Server", Game.Player.ServerId);
                             TriggerServerEvent("ELS:FullSync:Request:All", Game.Player.ServerId);
@@ -71,14 +65,11 @@ namespace ELS
                         }
                         catch (Exception e)
                         {
-                            //TriggerServerEvent($"ONDEBUG", e.ToString());
-                            Screen.ShowNotification($"ERROR:ELS Plus has not loaded properly please take a look at log for more info");
-                            //Screen.ShowNotification($"ERROR:{e.StackTrace}");
-                            Utils.ReleaseWriteLine("ELS Plus has encountered an unrecoverable error. Please make sure you are using the latest client and server artifact");
-                            Utils.ReleaseWriteLine($"ERROR:{e.Message}");
-                            Utils.ReleaseWriteLine($"ERROR:{e.StackTrace}");
+                            TriggerServerEvent($"ONDEBUG", e.ToString());
+                            Screen.ShowNotification($"ERROR:{e.Message}");
+                            Screen.ShowNotification($"ERROR:{e.StackTrace}");
                             Tick -= Class1_Tick;
-                            //throw;
+                            Utils.ReleaseWriteLine($"Error: {e.Message}");
                         }
                     }
                 });
@@ -103,14 +94,12 @@ namespace ELS
             });
             EventHandlers["ELS:VcfSync:Client"] += new Action<List<dynamic>>((vcfs) =>
               {
-                  Task task = new Task(() => VCF.ParseVcfs(vcfs));
-                  task.Start();
+                  VCF.ParseVcfs(vcfs);
               });
             EventHandlers.Add("ELS:PatternSync:Client", new Action<List<dynamic>>((patterns) =>
             {
 
-                Task task = new Task (() => VCF.ParsePatterns(patterns));
-                task.Start();
+                VCF.ParsePatterns(patterns);
             }));
             EventHandlers["ELS:FullSync:NewSpawnWithData"] += new Action<System.Dynamic.ExpandoObject>((a) =>
             {
@@ -129,11 +118,11 @@ namespace ELS
                 Vehicle vehicle = new Vehicle(veh);
                 if (vehicle.IsEls() && VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()))
                 {
-                    Utils.DebugWriteLine("ELS Vehicle entered syncing UI and settings");
-                    if (UserSettings.savedVehicles.Count >= 1)
+                    Utils.DebugWriteLine("ELS Vehicle entered syncing UI");
+                    if (UserSettings.uiSettings.enabled)
                     {
-                        UserSettings.ELSUserVehicle usrVeh = UserSettings.savedVehicles.Find(uv => (uv.VehicleName == vehicle.DisplayName && uv.ServerId == ServerId));
-                    }                    
+                        ElsUiPanel.ShowUI();
+                    }
                     VehicleManager.SyncUI(vehicle.GetNetworkId());
                     VehicleManager.vehicleList[vehicle.GetNetworkId()].SetInofVeh();
                 }
@@ -159,38 +148,36 @@ namespace ELS
             {
                 TriggerServerEvent("ELS:VcfSync:Server", Game.Player.ServerId);
             }), false);
-            
+
             API.RegisterCommand("elsui", new Action<int, List<object>, string>((source, arguments, raw) =>
             {
-               
                 if (arguments.Count != 1) return;
-                
                 switch (arguments[0].ToString().ToLower())
                 {
-                     
                     case "enable":
                         ElsUiPanel.EnableUI();
                         break;
                     case "disable":
                         ElsUiPanel.DisableUI();
+                        UserSettings.uiSettings.enabled = false;
+                        UserSettings.SaveUI();
                         break;
                     case "show":
                         ElsUiPanel.ShowUI();
+                        UserSettings.uiSettings.enabled = true;
+                        UserSettings.SaveUI();
                         break;
                     case "whelen":
                         UserSettings.uiSettings.currentUI = UserSettings.ElsUi.Whelen;
-                        Task task = new Task(() => UserSettings.SaveUI());
-                        task.Start();
+                        UserSettings.SaveUI();
                         break;
                     case "new":
                         UserSettings.uiSettings.currentUI = UserSettings.ElsUi.NewHotness;
-                        task = new Task(() => UserSettings.SaveUI());
-                        task.Start();
+                        UserSettings.SaveUI();
                         break;
                     case "old":
                         UserSettings.uiSettings.currentUI = UserSettings.ElsUi.OldandBusted;
-                        task = new Task(() => UserSettings.SaveUI());
-                        task.Start();
+                        UserSettings.SaveUI();
                         break;
                 }
             }), false);
@@ -204,9 +191,7 @@ namespace ELS
                 {
                     if (entry.modelHash.IsValid)
                     {
-                        string vehiclename = System.IO.Path.GetFileNameWithoutExtension(entry.filename);
-                        listString += $"{vehiclename}\n";
-                        TriggerEvent("chatMessage", "ELS Plus", new[] { 0, 0, 255 }, $"{vehiclename}");
+                        listString += $"{System.IO.Path.GetFileNameWithoutExtension(entry.filename)}\n";
                     }
                 }
                 CitizenFX.Core.Debug.WriteLine(listString);
@@ -352,10 +337,14 @@ namespace ELS
                         if (ElsUiPanel._enabled == 0)
                         {
                             ElsUiPanel.ShowUI();
+                            UserSettings.uiSettings.enabled = true;
+                            UserSettings.SaveUI();
                         }
                         else if (ElsUiPanel._enabled == 1)
                         {
                             ElsUiPanel.DisableUI();
+                            UserSettings.uiSettings.enabled = false;
+                            UserSettings.SaveUI();
                         }
                     }
                 }
