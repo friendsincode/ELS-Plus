@@ -216,9 +216,11 @@ namespace ELS
                 PrmPatt = _light.CurrentPrmPattern,
                 SecPatt = _light.CurrentSecPattern,
                 WrnPatt = _light.CurrentWrnPattern,
-                Siren = _siren._mainSiren.currentTone.Type
+                Siren = _siren._mainSiren.currentTone.Type,
+                VehicleName = _vehicle.DisplayName
             };
-            Task task = new Task(() => UserSettings.SaveVehicles());
+            
+            Task task = new Task(() => UserSettings.SaveVehicles(veh));
             task.Start();
         }
 

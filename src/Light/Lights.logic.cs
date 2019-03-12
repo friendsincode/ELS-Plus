@@ -42,7 +42,7 @@ namespace ELS.Light
         internal void ToggleWrnLights()
         {
             //foreach (Extra.Extra ex in _extras.WRNL.Values)
-            for (int i = 0; i < _extras.SECL.Count; i++)
+            for (int i = 0; i < _extras.WRNL.Count; i++)
             {
                 if (_extras.WRNL.ElementAt(i).Value.IsPatternRunning)
                 {
@@ -460,6 +460,7 @@ namespace ELS.Light
             {
                 case 0:
                     SetGTASirens(false);
+                    ElsUiPanel.ToggleUiBtnState(false, "WW");
                     //foreach (Extra.Extra e in _extras.PRML.Values)
                     for (int i = 0; i < _extras.PRML.Count; i++)
                     {
@@ -495,6 +496,7 @@ namespace ELS.Light
                     if (_vcfroot.MISC.DfltSirenLtsActivateAtLstg == 1)
                     {
                         SetGTASirens(true);
+                        ElsUiPanel.ToggleUiBtnState(true, "WW");
                     }
                     //foreach (Extra.Extra e in _extras.SECL.Values)
                     for (int i = 0; i < _extras.SECL.Count; i++)
@@ -549,6 +551,7 @@ namespace ELS.Light
                     if (_vcfroot.MISC.DfltSirenLtsActivateAtLstg == 2)
                     {
                         SetGTASirens(true);
+                        ElsUiPanel.ToggleUiBtnState(true, "WW");
                     }
                     //foreach (Extra.Extra e in _extras.PRML.Values)
                     for (int i = 0; i < _extras.PRML.Count; i++)
@@ -630,6 +633,7 @@ namespace ELS.Light
                     if (_vcfroot.MISC.DfltSirenLtsActivateAtLstg == 3)
                     {
                         SetGTASirens(true);
+                        ElsUiPanel.ToggleUiBtnState(true, "WW");
                     }
                     //foreach (Extra.Extra e in _extras.SECL.Values)
                     for (int i = 0; i < _extras.SECL.Count; i++)

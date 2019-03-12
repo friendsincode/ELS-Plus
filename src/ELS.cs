@@ -137,7 +137,6 @@ namespace ELS
                     }
                     VehicleManager.vehicleList[vehicle.GetNetworkId()].SetInofVeh();
                 }
-                
             });
             EventHandlers["ELS:VehicleExited"] += new Action<int>((veh) =>
             {
@@ -166,7 +165,7 @@ namespace ELS
 
             API.RegisterCommand("elsui", new Action<int, List<object>, string>((source, arguments, raw) =>
             {
-                Task task = new Task(() => UserSettings.SaveUI());
+                Task task = new Task(() => UserSettings.SaveUI(true));
                 if (arguments.Count != 1) return;
                 switch (arguments[0].ToString().ToLower())
                 {
@@ -356,7 +355,7 @@ namespace ELS
                             ElsUiPanel.DisableUI();
                             UserSettings.uiSettings.enabled = false;
                         }
-                        Task task = new Task(() => UserSettings.SaveUI());
+                        Task task = new Task(() => UserSettings.SaveUI(false));
                         task.Start();
                     }
                 }

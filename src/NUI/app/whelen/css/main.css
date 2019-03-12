@@ -1,0 +1,142 @@
+.sm-pill {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+.bg-pill {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+.btn {
+    font-size: .75rem;
+    height: 45px;
+    width: 45px;
+    color: #222;
+    padding: 5px;
+}
+
+.slidercontainer {
+    /* Width of the outside container */
+    bottom: 10px;
+    right: 10px;
+}
+
+.stage2-offset {
+    right: 10px;
+}
+
+#stagehandle {
+    background-color: #222;
+}
+
+#stagehandle .slider-track {
+    background: #000;
+}
+
+#stagehandle .slider-selection {
+    background: #000;
+}
+
+#stagehandle .slider-handle {
+    background-color: #000;
+    background-image: -webkit-linear-gradient(top, #000 0%, #222 100%);
+    background-image: -o-linear-gradient(top, #000 0%, #222 100%);
+    background-image: linear-gradient(to bottom, #000 0%, #222 100%);
+    background-repeat: repeat-x;
+}
+
+.btn-glow-red {
+    box-shadow: 1px 1px 12px #720000;
+}
+
+.btn-glow-neon-green {
+    box-shadow: 1px 1px 12px rgb(157, 255, 0);
+}
+
+.btn-glow-yellow {
+    box-shadow: 1px 1px 12px #ffee00;
+}
+
+.btn-glow-white {
+    box-shadow: 1px 1px 12px #fff;
+}
+
+.btn-glow-green {
+    box-shadow: 1px 1px 12px #007200;
+}
+
+.btn-glow-blue {
+    box-shadow: 1px 1px 12px #000072;
+}
+
+.sm-header {
+    padding: .25em;
+    text-align: center;
+}
+
+.card-body-sm {
+    padding: 0.25em;
+}
+
+.els-ui {
+    position: absolute;
+    bottom: 400;
+    right: 0;
+    border-width: 15px;
+    width: 500px;
+}
+
+body {
+    background-color: transparent;
+    font-size: .85rem;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: (6, 1fr);
+    grid-gap: 2px;
+    bottom: 10px;
+}
+
+.stage-ind-middle {
+    left: 10px;
+}
+
+.pri-lights {
+    width: 20px;
+    height: 20px;
+}
+
+.sec-lights {
+    width: 10px;
+    height: 10px;
+}
+
+.red {
+    background-color: red;
+}
+
+.yellow {
+    background-color: #ffff00;
+}
+
+.blue {
+    background-color: blue;
+}
+
+.amber {
+    background-color: #FF7E00;
+}
+
+.neon-green {
+    background-color: rgb(136, 255, 0);
+}
+
+.white {
+    background-color: #eee
+}
+
+.off {
+    background-color: grey;
+}

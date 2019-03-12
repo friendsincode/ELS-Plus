@@ -45,12 +45,18 @@ namespace ELS.configuration
         };
 
         internal static List<ELSUserVehicle> savedVehicles = new List<ELSUserVehicle>();
-        internal static UISettings uiSettings = new UISettings();
+        internal static UISettings uiSettings = new UISettings()
+        {
+            currentUI = ElsUi.NewHotness,
+            enabled = false
+        };
 
-        internal static async Task LoadUserSettings()
+        internal static async void LoadUserSettings()
         {
             string vehs = API.GetResourceKvpString("SavedVehicles");
             string uiSet = API.GetResourceKvpString("ElsUiSettings");
+            Utils.DebugWriteLine($"got ui settings as: {uiSet}");
+            Utils.DebugWriteLine($"got vehicle settings as: {vehs}");
             if (!String.IsNullOrEmpty(vehs))
             {
                 savedVehicles = JsonConvert.DeserializeObject<List<ELSUserVehicle>>(vehs);
@@ -62,15 +68,29 @@ namespace ELS.configuration
             }
         }
 
-        internal static async Task SaveVehicles()
+        internal static async void SaveVehicles(ELSUserVehicle veh)
         {
-            API.SetResourceKvp("SavedVehicles", JsonConvert.SerializeObject(savedVehicles));
+            int usrVeh = UserSettings.savedVehicles.FindIndex(uveh => uveh.VehicleName == veh.VehicleName && veh.ServerId == uveh.ServerId);
+            if (usrVeh != -1)
+            {
+                savedVehicles[usrVeh] = veh;
+            }
+            else
+            {
+                savedVehicles.Add(veh);
+            }
+            API.SetResourceKvp("SavedVehicles", JsonConvert.SerializeObject(savedVehicles).ToString());
+            Utils.DebugWriteLine($"Vehicle Settings Saved: {API.GetResourceKvpString("SavedVehicles")}");
         }
 
-        internal static async Task SaveUI()
+        internal static async void SaveUI(bool reload)
         {
-            API.SetResourceKvp("ElsUiSettings", JsonConvert.SerializeObject(uiSettings));
-            ElsUiPanel.ReloadUI();
+            API.SetResourceKvp("ElsUiSettings", JsonConvert.SerializeObject(uiSettings).ToString());
+            Utils.DebugWriteLine($"Ui Settings Saved: {API.GetResourceKvpString("ElsUiSettings")}");
+            if (reload)
+            {
+                ElsUiPanel.ReloadUI();
+            }
         }
     }
 }

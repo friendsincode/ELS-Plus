@@ -36,10 +36,17 @@ namespace ELS.NUI
             JObject message = new JObject();
             message["type"] = "reload";
             API.SendNuiMessage(message.ToString());
-            await ELS.Delay(5000);
+            await ELS.Delay(10000);
             Utils.ReleaseWriteLine("Reloaded UI");
             InitData();
-            ShowUI();
+            if (UserSettings.uiSettings.enabled)
+            {
+                ShowUI();
+            }
+            else
+            {
+                DisableUI();
+            }
         }
 
         //Enable full ui control and cursor

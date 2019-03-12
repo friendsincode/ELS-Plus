@@ -25,11 +25,6 @@ namespace ELS.Light
             ToggleSclKB();
             ToggleLightStageKB();
             
-            //Part that runs the ticks
-            if (_extras.BRD.HasBoard)
-            {
-                _extras.BRD.BoardTicker();
-            }
             if (_extras.LDR != null)
             {
                 _extras.LDR.LadderTicker();
@@ -142,11 +137,6 @@ namespace ELS.Light
                 && !_vehicle.IsEngineRunning)
             {
                 _vehicle.IsEngineRunning = true;
-            }
-
-            if (_extras.BRD.HasBoard)
-            {
-                _extras.BRD.BoardTicker();
             }
             if (_extras.SBRN != null)
             {
@@ -289,7 +279,7 @@ namespace ELS.Light
         internal void ToggleBrdKB()
         {
             //Game.DisableControlThisFrame(0, Control.CharacterWheel);
-            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleBoard) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            if (Game.IsControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleBoard) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
 #if DEBUG
                 CitizenFX.Core.Debug.WriteLine($"Is Board raised  {_extras.BRD.BoardRaised}");
