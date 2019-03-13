@@ -35,13 +35,25 @@ namespace ELS.Light
         private float angleVertical = 0f;
 
         private Vector3 dirVector;
-        private int _id;
-        private ILight lights;
 
-        public SpotLight(int id, ILight light)
+        private ILight lights;
+        private bool _on;
+        internal bool TurnedOn
+        {
+            get { return _on; }
+            set
+            {
+                _on = value;
+                if (!value && Global.ResetTakedownSpotlight)
+                {
+                    SpotLightReset();
+                }
+            }
+        }
+        public SpotLight(ILight light)
         {
             lights = light;
-            _id = id;
+           
         }
 
         internal void SpotLightReset()
@@ -57,6 +69,7 @@ namespace ELS.Light
 
             dic.Add("horizontal", anglehorizontal);
             dic.Add("vertical", angleVertical);
+            dic.Add("TurnedOn", TurnedOn);
             return dic;
         }
 
@@ -64,13 +77,14 @@ namespace ELS.Light
         {
             anglehorizontal = float.Parse(data["horizontal"].ToString());
             angleVertical = float.Parse(data["vertical"].ToString());
-#if DEBUG
-            CitizenFX.Core.Debug.WriteLine($"Got spotlight data for {_id} set horizontal {anglehorizontal} and vertical {angleVertical}");
-#endif
+            TurnedOn = bool.Parse(data["TurnedOn"].ToString());
+            Utils.DebugWriteLine($"Got spotlight data for {lights._vehicle.GetNetworkId()} set horizontal {anglehorizontal} and vertical {angleVertical}");
+
         }
 
         public void RunTick()
         {
+           
             Utils.DebugWriteLine($"Spotlight veh handle of {lights._vehicle.Handle}");
             if (Game.IsControlPressed(0, Control.PhoneLeft) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())
             {
@@ -99,8 +113,9 @@ namespace ELS.Light
 
             //var spotoffset = Game.Player.Character.CurrentVehicle.GetOffsetPosition(new Vector3(-0.9f, 1.15f, 0.5f));
             
-            var off = lights._vehicle.GetPositionOffset(lights._vehicle.Bones[$"extra_{_id}"].Position);
-            var spotoffset = lights._vehicle.GetOffsetPosition(off+new Vector3(0,0.05f,0));
+            var off = lights._vehicle.GetPositionOffset(lights._vehicle.Bones[$"window_lf"].Position);
+
+            var spotoffset = lights._vehicle.GetOffsetPosition(off+new Vector3(-.25f,1f,0.1f));
             
             //Vector3 myPos = Game.PlayerPed.CurrentVehicle.Bones[$"extra_{_id}"].Position;
             float hx = (float)((double)spotoffset.X + 5 * Math.Cos(((double)anglehorizontal + lights._vehicle.Rotation.Z) * Math.PI / 180.0));
@@ -112,7 +127,7 @@ namespace ELS.Light
             dirVector = destinationCoords - spotoffset;
             dirVector.Normalize();
             //Function.Call(Hash.DRAW_SPOT_LIGHT, spotoffset.X, spotoffset.Y, spotoffset.Z, dirVector.X, dirVector.Y, dirVector.Z, 255, 255, 255, 100.0f, 1f, 0.0f, 13.0f, 1f,100f);
-            API.DrawSpotLightWithShadow(spotoffset.X,spotoffset.Y,spotoffset.Z, dirVector.X,dirVector.Y,dirVector.Z, 255,255,255,Global.TkdnRng,Global.TkdnInt,1f,13f,1f,0);
+            API.DrawSpotLightWithShadow(spotoffset.X,spotoffset.Y,spotoffset.Z, dirVector.X,dirVector.Y,dirVector.Z, 255,255,255,Global.TkdnRng,Global.TkdnInt,1f,18f,1f,0);
         }
 
     }

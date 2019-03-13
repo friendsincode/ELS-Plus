@@ -22,6 +22,9 @@ namespace ELS_Server
         string currentVersion;
         public ELSServer()
         {
+#if DEBUG
+            API.SetConvarReplicated("elsplus_debug", "true");
+#endif
             currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             Utils.ReleaseWriteLine($"Welcome to ELS+ {currentVersion} for FiveM");
             GameTimer = API.GetGameTimer();

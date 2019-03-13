@@ -36,7 +36,6 @@ namespace ELS.Extra
         private LightType LightType { get; set; }
         private string _pattern;
         private string _pattType;
-        private SpotLight spotLight;
 
         internal string Pattern
         {
@@ -90,15 +89,27 @@ namespace ELS.Extra
                 _on = value;
                 if (TurnedOn)
                 {
+                    if (Id == 11)
+                    {
+                        lights.spotLight.TurnedOn = true;
+                    }
+                    else if (Id == 12)
+                    {
+                        lights.scene.TurnedOn = true;
+                    }
                     SetState(true);
                 }
                 else
                 {
-                    SetState(false);
-                    if (spotLight != null)
+                    if (Id == 11)
                     {
-                        spotLight.SpotLightReset();
+                        lights.spotLight.TurnedOn = false;
                     }
+                    else if (Id == 12)
+                    {
+                        lights.scene.TurnedOn = false;
+                    }
+                    SetState(false);
                 }
             }
         }
@@ -140,6 +151,7 @@ namespace ELS.Extra
                 if (value)
                 {
                     SetTrue();
+
                 }
                 else
                 {
@@ -239,10 +251,7 @@ namespace ELS.Extra
                 flashrate = Game.GameTime;
 
             }
-            if (TurnedOn && spotLight != null)
-            {
-                spotLight.RunTick();
-            }
+            
 
             if (IsPatternRunning)
             {
@@ -271,13 +280,13 @@ namespace ELS.Extra
             }
             if (lights._vehicle == null)
             {
-                CitizenFX.Core.Debug.WriteLine("Vehicle is null!!!");
+                Utils.DebugWriteLine("Vehicle is null!!!");
                 return;
             }
             var off = lights._vehicle.GetPositionOffset(GetBone());
             if (off == null)
             {
-                CitizenFX.Core.Debug.WriteLine("Bone is null for some reason!!!");
+                Utils.DebugWriteLine("Bone is null for some reason!!!");
                 return;
             }
             var extraoffset = lights._vehicle.GetOffsetPosition(off + new Vector3(_extraInfo.OffsetX, _extraInfo.OffsetY, _extraInfo.OffsetZ));
@@ -336,20 +345,21 @@ namespace ELS.Extra
                     LightType = LightType.SCL;
                     Pattern = "";
                     IsPatternRunning = false;
-                    spotLight = new SpotLight(_Id, lights);
-#if DEBUG
-                    CitizenFX.Core.Debug.WriteLine("Scene lights setup");
-#endif
+                    lights.spotLight = new SpotLight(lights);
+
+                    Utils.DebugWriteLine("Takedown lights setup");
+
                     break;
                 case 12:
                     LightType = LightType.TDL;
                     Delay = Global.PrimDelay;
                     Pattern = "";
                     IsPatternRunning = false;
-                    spotLight = new SpotLight(_Id, lights);
-#if DEBUG
-                    CitizenFX.Core.Debug.WriteLine("Takedown lights setup");
-#endif
+                    lights.scene = new Scene(lights);
+                    
+
+                    Utils.DebugWriteLine("Scene lights setup");
+
                     break;
             }
 
@@ -364,6 +374,9 @@ namespace ELS.Extra
                     hex = "0x000AFF";
                     break;
                 case "amber":
+                    hex = "0xFF7E00";
+                    break;
+                case "orange":
                     hex = "0xFF7E00";
                     break;
                 case "white":

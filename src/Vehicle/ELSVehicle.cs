@@ -82,6 +82,7 @@ namespace ELS
             }
             _siren.Ticker();
             _light.Ticker();
+            API.SetVehicleAutoRepairDisabled(_vehicle.Handle, true);
             if (_siren._mainSiren._enable && _light._stage.CurrentStage != 3)
             {
                 _siren._mainSiren.SetEnable(false);
@@ -96,6 +97,7 @@ namespace ELS
                 ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", cachedNetId);
                 return;
             }
+            API.SetVehicleAutoRepairDisabled(_vehicle.Handle, true);
             _siren.ExternalTicker();
             _light.ExternalTicker();
         }

@@ -34,6 +34,7 @@ namespace ELS.configuration
         internal static float TkdnRng { get; set; }
         internal static bool AllowController { get; set; }
         internal static bool DisableSirenOnExit { get; set; }
+        internal static bool ResetTakedownSpotlight { get; set; }
 
         public Global()
         {

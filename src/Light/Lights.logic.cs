@@ -122,16 +122,30 @@ namespace ELS.Light
 
         internal void ToggleTdl()
         {
-            _extras.TDL.TurnedOn = !_extras.TDL.State;
-            ElsUiPanel.ToggleUiBtnState(_extras.TDL.TurnedOn, "TDL");
-            ElsUiPanel.PlayUiSound(_extras.TDL.TurnedOn);
+            if (_extras.TDL != null)
+            {
+                _extras.TDL.TurnedOn = !_extras.TDL.State;
+            }
+            else if (spotLight != null)
+            {
+                spotLight.TurnedOn = !spotLight.TurnedOn;
+            }
+            ElsUiPanel.ToggleUiBtnState(spotLight.TurnedOn, "TDL");
+            ElsUiPanel.PlayUiSound(spotLight.TurnedOn);
         }
 
         internal void ToggleScl()
         {
-            _extras.SCL.TurnedOn = !_extras.SCL.State;
-            ElsUiPanel.ToggleUiBtnState(_extras.SCL.TurnedOn, "SCL");
-            ElsUiPanel.PlayUiSound(_extras.SCL.TurnedOn);
+            if (_extras.SCL != null)
+            {
+                _extras.SCL.TurnedOn = !_extras.SCL.State;
+            }
+            else if (scene != null)
+            {
+                scene.TurnedOn = !scene.TurnedOn;
+            }
+            ElsUiPanel.ToggleUiBtnState(scene.TurnedOn, "SCL");
+            ElsUiPanel.PlayUiSound(scene.TurnedOn);
         }
 
         internal async void ChgPrmPatt(bool decrement)

@@ -24,110 +24,112 @@ namespace ELS.Light
             ToggleTdlKB();
             ToggleSclKB();
             ToggleLightStageKB();
+
+            //if (_extras.LDR != null)
+            //{
+            //    _extras.LDR.LadderTicker();
+            //}
+            //if (_extras.SCL != null)
+            //{
+            //    _extras.SCL.ExtraTicker();
+            //}
+            //if (_extras.TDL != null)
+            //{
+            //    _extras.TDL.ExtraTicker();
+            //}
+            //if (_extras.SBRN != null)
+            //{
+            //    _extras.SBRN.ExtraTicker();
+            //}
+            ////foreach (Extra.Extra prim in _extras.PRML.Values)
+            //for (int i = 0; i < _extras.PRML.Count; i++)
+            //{
+            //    _extras.PRML.ElementAt(i).Value.ExtraTicker();
+            //    if (_stage != null)
+            //    {
+            //        switch (_stage.CurrentStage)
+            //        {
+            //            case 1:
+            //                if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
+            //                {
+            //                    ScanPatternTicker();
+            //                }
+            //                break;
+            //            case 2:
+            //                if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
+            //                {
+            //                    ScanPatternTicker();
+            //                }
+            //                break;
+            //            case 3:
+            //                if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
+            //                {
+            //                    ScanPatternTicker();
+            //                }
+            //                break;
+            //        }
+            //    }
+            //}
+            ////foreach (Extra.Extra sec in _extras.SECL.Values)
+            //for (int i = 0; i < _extras.SECL.Count; i++)
+            //{
+            //    _extras.SECL.ElementAt(i).Value.ExtraTicker();
+            //    if (_stage != null)
+            //    {
+            //        switch (_stage.CurrentStage)
+            //        {
+            //            case 1:
+            //                if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
+            //                {
+            //                    ScanPatternTicker();
+            //                }
+            //                break;
+            //            case 2:
+            //                if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
+            //                {
+            //                    ScanPatternTicker();
+            //                }
+            //                break;
+            //            case 3:
+            //                if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
+            //                {
+            //                    ScanPatternTicker();
+            //                }
+            //                break;
+            //        }
+            //    }
+            //}
+            ////foreach (Extra.Extra wrn in _extras.WRNL.Values)
+            //for (int i = 0; i < _extras.WRNL.Count; i++)
+            //{
+            //    _extras.WRNL.ElementAt(i).Value.ExtraTicker();
+            //    if (_stage != null)
+            //    {
+            //        switch (_stage.CurrentStage)
+            //        {
+            //            case 1:
+            //                if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
+            //                {
+            //                    ScanPatternTicker();
+            //                }
+            //                break;
+            //            case 2:
+            //                if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
+            //                {
+            //                    ScanPatternTicker();
+            //                }
+            //                break;
+            //            case 3:
+            //                if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
+            //                {
+            //                    ScanPatternTicker();
+            //                }
+            //                break;
+            //        }
+            //    }
+            //}
+            ExternalTicker();
             
-            if (_extras.LDR != null)
-            {
-                _extras.LDR.LadderTicker();
-            }
-            if (_extras.SCL != null)
-            {
-                _extras.SCL.ExtraTicker();
-            }
-            if (_extras.TDL != null)
-            {
-                _extras.TDL.ExtraTicker();
-            }
-            if (_extras.SBRN != null)
-            {
-                _extras.SBRN.ExtraTicker();
-            }
-            //foreach (Extra.Extra prim in _extras.PRML.Values)
-            for (int i = 0; i < _extras.PRML.Count; i++)
-            {
-                _extras.PRML.ElementAt(i).Value.ExtraTicker();
-                if (_stage != null)
-                {
-                    switch (_stage.CurrentStage)
-                    {
-                        case 1:
-                            if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                        case 2:
-                            if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                        case 3:
-                            if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                    }
-                }
-            }
-            //foreach (Extra.Extra sec in _extras.SECL.Values)
-            for (int i = 0; i < _extras.SECL.Count; i++)
-            {
-                _extras.SECL.ElementAt(i).Value.ExtraTicker();
-                if (_stage != null)
-                {
-                    switch (_stage.CurrentStage)
-                    {
-                        case 1:
-                            if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                        case 2:
-                            if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                        case 3:
-                            if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                    }
-                }
-            }
-            //foreach (Extra.Extra wrn in _extras.WRNL.Values)
-            for (int i = 0; i < _extras.WRNL.Count; i++)
-            {
-                _extras.WRNL.ElementAt(i).Value.ExtraTicker();
-                if (_stage != null)
-                {
-                    switch (_stage.CurrentStage)
-                    {
-                        case 1:
-                            if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                        case 2:
-                            if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                        case 3:
-                            if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                    }
-                }
-            }
         }
 
         public async void ExternalTicker()
@@ -149,6 +151,15 @@ namespace ELS.Light
             if (_extras.TDL != null)
             {
                 _extras.TDL.ExtraTicker();
+            }
+
+            if (spotLight != null && spotLight.TurnedOn)
+            {
+                spotLight.RunTick();
+            }
+            if (scene != null && scene.TurnedOn)
+            {
+                scene.RunTick();
             }
             //foreach (Extra.Extra prim in _extras.PRML.Values)
             for (int i =0; i < _extras.PRML.Count; i++)
@@ -311,10 +322,7 @@ namespace ELS.Light
             Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleTdl);
             if ((Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleTdl) && !Game.IsControlPressed(0, Control.CharacterWheel)) && Game.CurrentInputMode == InputMode.MouseAndKeyboard || (Global.AllowController && Game.IsControlJustPressed(2, Control.Talk) && Game.CurrentInputMode == InputMode.GamePad))
             {
-                if (_extras.TDL != null)
-                {
-                    ToggleTdl();
-                }
+                ToggleTdl();
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleTDL, _vehicle, true, Game.Player.ServerId);
             }
         }
@@ -324,10 +332,7 @@ namespace ELS.Light
             Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleTdl);
             if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleTdl) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
-                if (_extras.SCL != null)
-                {
-                    ToggleScl();
-                }
+                ToggleScl();
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleSCL, _vehicle, true, Game.Player.ServerId);
             }
         }

@@ -126,6 +126,7 @@
     <Compile Include="Light\Patterns\Rotary.cs" />
     <Compile Include="Light\Patterns\Strobe.cs" />
     <Compile Include="Light\Patterns\TrafficAdvisor.cs" />
+    <Compile Include="Light\Scene.cs" />
     <Compile Include="Light\Stage.cs" />
     <Compile Include="TrafficControl\Vehicles.cs" />
     <Compile Include="TrafficControl\Vehicles.logic.cs" />
