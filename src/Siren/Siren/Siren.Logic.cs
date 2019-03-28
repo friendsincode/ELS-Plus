@@ -114,7 +114,7 @@ namespace ELS.Siren
                     ElsUiPanel.ToggleUiBtnState(_mainSiren._enable, "SRN");
                     if (Global.BtnClicksBtwnSrnTones)
                     {
-                        ElsUiPanel.PlayUiSound("sirenclick");
+                        ElsUiPanel.PlayUiSound("sirenclickoff");
                     }
                 }
             }
@@ -159,7 +159,7 @@ namespace ELS.Siren
                 ElsUiPanel.ToggleUiBtnState(_mainSiren._enable, "SRN");
                 if (Global.BtnClicksBtwnSrnTones)
                 {
-                    ElsUiPanel.PlayUiSound("sirenclick");
+                    ElsUiPanel.PlayUiSound("sirenclickoff");
                 }
             }
         }
@@ -199,12 +199,12 @@ namespace ELS.Siren
                 ElsUiPanel.ToggleUiBtnState(_mainSiren._enable, "SRN");
                 if (Global.BtnClicksBtwnSrnTones)
                 {
-                    ElsUiPanel.PlayUiSound("sirenclick");
+                    ElsUiPanel.PlayUiSound("sirenclickoff");
                 }
             }
             if (Global.BtnClicksBtwnSrnTones)
             {
-                ElsUiPanel.PlayUiSound("sirenclick");
+                ElsUiPanel.PlayUiSound("sirenclickoff");
             }
         }
         void SirenTone4Logic(bool pressed, bool disableControls = false)
@@ -244,7 +244,7 @@ namespace ELS.Siren
                 ElsUiPanel.ToggleUiBtnState(_mainSiren._enable, "SRN");
                 if (Global.BtnClicksBtwnSrnTones)
                 {
-                    ElsUiPanel.PlayUiSound("sirenclick");
+                    ElsUiPanel.PlayUiSound("sirenclickoff");
                 }
             }
         }
@@ -256,7 +256,7 @@ namespace ELS.Siren
             {
                 _mainSiren.SetEnable(!_mainSiren._enable);
                 ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
-                ElsUiPanel.PlayUiSound("sirenclick");
+                ElsUiPanel.PlayUiSound("sirenclickoff");
             }
             
         }
@@ -320,6 +320,7 @@ namespace ELS.Siren
                 Utils.DebugWriteLine($"Dual Siren {dual_siren}");
             }
             ElsUiPanel.ToggleUiBtnState(dual_siren, "DUAL");
+            ElsUiPanel.PlayUiSound("sirenclickoff");
         }
         void PanicAlarmLogic(bool toggle,bool disableControls = false)
         {

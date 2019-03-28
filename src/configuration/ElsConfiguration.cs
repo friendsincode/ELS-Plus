@@ -118,7 +118,7 @@ namespace ELS.configuration
                 Global.EnvLightInt = u["LIGHTING"]["EnvLtMultExtraLts_Int"].FloatValue * .02f;
                 Global.TkdnRng = u["LIGHTING"]["EnvLtMultTakedwns_Rng"].FloatValue * 25f;
                 Global.TkdnInt = u["LIGHTING"]["EnvLtMultTakedwns_Int"].FloatValue * 1f;
-                Global.SoundVolume = u["AUDIO"]["BtnClicksVolume"].IntValue / 100;
+                Global.SoundVolume = u["AUDIO"]["BtnClicksVolume"].FloatValue / 100;
                 Global.BtnClicksBtwnSrnTones = u["AUDIO"]["BtnClicksBtwnSrnTones"].BoolValue;
                 Global.BtnClicksBtwnHrnTones = u["AUDIO"]["BtnClicksBtwnHrnTones"].BoolValue;
                 Global.AllowController = u["CONTROL"]["AllowController"].BoolValue;

@@ -35,7 +35,7 @@ namespace ELS.Light
             }
             secLights = !secLights;
             ElsUiPanel.ToggleUiBtnState(secLights, "SECL");
-            ElsUiPanel.PlayUiSound("sirenclick");
+            ElsUiPanel.PlayUiSound("sirenclickoff");
         }
 
         bool wrnLights = false;
@@ -56,7 +56,7 @@ namespace ELS.Light
             }
             wrnLights = !wrnLights;
             ElsUiPanel.ToggleUiBtnState(wrnLights, "WRNL");
-            ElsUiPanel.PlayUiSound("sirenclick");
+            ElsUiPanel.PlayUiSound("sirenclickoff");
         }
 
         bool crsLights = false;
@@ -117,7 +117,7 @@ namespace ELS.Light
             }
             crsLights = !crsLights;
             ElsUiPanel.ToggleUiBtnState(crsLights, "CRS");
-            ElsUiPanel.PlayUiSound("sirenclick");
+            ElsUiPanel.PlayUiSound("sirenclickoff");
         }
 
         internal void ToggleTdl()
@@ -131,7 +131,7 @@ namespace ELS.Light
                 spotLight.TurnedOn = !spotLight.TurnedOn;
             }
             ElsUiPanel.ToggleUiBtnState(spotLight.TurnedOn, "TDL");
-            ElsUiPanel.PlayUiSound("sirenclick");
+            ElsUiPanel.PlayUiSound("sirenclickoff");
         }
 
         internal void ToggleScl()
@@ -145,7 +145,7 @@ namespace ELS.Light
                 scene.TurnedOn = !scene.TurnedOn;
             }
             ElsUiPanel.ToggleUiBtnState(scene.TurnedOn, "SCL");
-            ElsUiPanel.PlayUiSound("sirenclick");
+            ElsUiPanel.PlayUiSound("sirenclickoff");
         }
 
         internal async void ChgPrmPatt(bool decrement)
@@ -160,7 +160,7 @@ namespace ELS.Light
                 {
                     CurrentPrmPattern--;
                 }
-                ElsUiPanel.PlayUiSound("sirenclick");
+                ElsUiPanel.PlayUiSound("sirenclickoff");
             }
             else
             {
@@ -172,7 +172,7 @@ namespace ELS.Light
                 {
                     CurrentPrmPattern++;
                 }
-                ElsUiPanel.PlayUiSound("sirenclick");
+                ElsUiPanel.PlayUiSound("sirenclickoff");
             }
         }
 
@@ -188,7 +188,7 @@ namespace ELS.Light
                 {
                     CurrentSecPattern--;
                 }
-                ElsUiPanel.PlayUiSound("sirenclick");
+                ElsUiPanel.PlayUiSound("sirenclickoff");
             }
             else
             {
@@ -200,7 +200,7 @@ namespace ELS.Light
                 {
                     CurrentSecPattern++;
                 }
-                ElsUiPanel.PlayUiSound("sirenclick");
+                ElsUiPanel.PlayUiSound("sirenclickoff");
             }
         }
 
@@ -216,7 +216,7 @@ namespace ELS.Light
                 {
                     CurrentWrnPattern--;
                 }
-                ElsUiPanel.PlayUiSound("sirenclick");
+                ElsUiPanel.PlayUiSound("sirenclickoff");
             }
             else
             {
@@ -228,7 +228,7 @@ namespace ELS.Light
                 {
                     CurrentWrnPattern++;
                 }
-                ElsUiPanel.PlayUiSound("sirenclick");
+                ElsUiPanel.PlayUiSound("sirenclickoff");
             }
         }
 
