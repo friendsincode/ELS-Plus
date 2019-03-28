@@ -28,10 +28,15 @@ namespace ELS.Manager
             Add(NetworkID,veh);
         }
         public bool IsReadOnly => throw new NotImplementedException();
-        public void RunTick()
-        {
 
+        public void RunTick(bool inVehicle = false)
+        {
+            for(int i = 0; i < Count; i++)
+            {
+                this.ElementAt(i).Value.RunTick();
+            }
         }
+
         public void RunExternalTick([Optional] ELSVehicle vehicle)
         {
             try

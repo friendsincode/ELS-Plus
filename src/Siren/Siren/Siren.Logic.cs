@@ -26,6 +26,10 @@ namespace ELS.Siren
                 patts[2] = _patternController.CurrentWrnPattern;
                 ElsUiPanel.ToggleUiBtnState(true, "HRN");
                 ElsUiPanel.SetUiDesc("AH", "HRN");
+                if (Global.BtnClicksBtwnHrnTones)
+                {
+                    ElsUiPanel.PlayUiSound("sirenclickoff");
+                }
                 if (_vcf.PRML.ForcedPatterns.MainHorn.Enabled)
                 {
                     _patternController.CurrentPrmPattern = _vcf.PRML.ForcedPatterns.MainHorn.IntPattern;
@@ -108,7 +112,10 @@ namespace ELS.Siren
                     }
                     ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
                     ElsUiPanel.ToggleUiBtnState(_mainSiren._enable, "SRN");
-                    ElsUiPanel.PlayUiSound(true);
+                    if (Global.BtnClicksBtwnSrnTones)
+                    {
+                        ElsUiPanel.PlayUiSound("sirenclick");
+                    }
                 }
             }
 
@@ -150,7 +157,10 @@ namespace ELS.Siren
                 }
                 ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
                 ElsUiPanel.ToggleUiBtnState(_mainSiren._enable, "SRN");
-                ElsUiPanel.PlayUiSound(true);
+                if (Global.BtnClicksBtwnSrnTones)
+                {
+                    ElsUiPanel.PlayUiSound("sirenclick");
+                }
             }
         }
         void SirenTone3Logic(bool pressed, bool disableControls = false)
@@ -187,9 +197,15 @@ namespace ELS.Siren
                 }
                 ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
                 ElsUiPanel.ToggleUiBtnState(_mainSiren._enable, "SRN");
-                ElsUiPanel.PlayUiSound(true);
+                if (Global.BtnClicksBtwnSrnTones)
+                {
+                    ElsUiPanel.PlayUiSound("sirenclick");
+                }
             }
-            ElsUiPanel.PlayUiSound(true);
+            if (Global.BtnClicksBtwnSrnTones)
+            {
+                ElsUiPanel.PlayUiSound("sirenclick");
+            }
         }
         void SirenTone4Logic(bool pressed, bool disableControls = false)
         {
@@ -226,7 +242,10 @@ namespace ELS.Siren
                 }
                 ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
                 ElsUiPanel.ToggleUiBtnState(_mainSiren._enable, "SRN");
-                ElsUiPanel.PlayUiSound(true);
+                if (Global.BtnClicksBtwnSrnTones)
+                {
+                    ElsUiPanel.PlayUiSound("sirenclick");
+                }
             }
         }
 
@@ -237,7 +256,7 @@ namespace ELS.Siren
             {
                 _mainSiren.SetEnable(!_mainSiren._enable);
                 ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
-                ElsUiPanel.PlayUiSound(_mainSiren._enable);
+                ElsUiPanel.PlayUiSound("sirenclick");
             }
             
         }
@@ -257,6 +276,10 @@ namespace ELS.Siren
                     _mainSiren.nextTone();
                 }
                 ElsUiPanel.ToggleUiBtnState(true, "MAN");
+                if (Global.BtnClicksBtwnSrnTones)
+                {
+                    ElsUiPanel.PlayUiSound("sirenclickoff");
+                }
             }
             else
             {

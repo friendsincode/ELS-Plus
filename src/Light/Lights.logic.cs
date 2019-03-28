@@ -35,7 +35,7 @@ namespace ELS.Light
             }
             secLights = !secLights;
             ElsUiPanel.ToggleUiBtnState(secLights, "SECL");
-            ElsUiPanel.PlayUiSound(secLights);
+            ElsUiPanel.PlayUiSound("sirenclick");
         }
 
         bool wrnLights = false;
@@ -56,7 +56,7 @@ namespace ELS.Light
             }
             wrnLights = !wrnLights;
             ElsUiPanel.ToggleUiBtnState(wrnLights, "WRNL");
-            ElsUiPanel.PlayUiSound(wrnLights);
+            ElsUiPanel.PlayUiSound("sirenclick");
         }
 
         bool crsLights = false;
@@ -117,7 +117,7 @@ namespace ELS.Light
             }
             crsLights = !crsLights;
             ElsUiPanel.ToggleUiBtnState(crsLights, "CRS");
-            ElsUiPanel.PlayUiSound(crsLights);
+            ElsUiPanel.PlayUiSound("sirenclick");
         }
 
         internal void ToggleTdl()
@@ -131,7 +131,7 @@ namespace ELS.Light
                 spotLight.TurnedOn = !spotLight.TurnedOn;
             }
             ElsUiPanel.ToggleUiBtnState(spotLight.TurnedOn, "TDL");
-            ElsUiPanel.PlayUiSound(spotLight.TurnedOn);
+            ElsUiPanel.PlayUiSound("sirenclick");
         }
 
         internal void ToggleScl()
@@ -145,7 +145,7 @@ namespace ELS.Light
                 scene.TurnedOn = !scene.TurnedOn;
             }
             ElsUiPanel.ToggleUiBtnState(scene.TurnedOn, "SCL");
-            ElsUiPanel.PlayUiSound(scene.TurnedOn);
+            ElsUiPanel.PlayUiSound("sirenclick");
         }
 
         internal async void ChgPrmPatt(bool decrement)
@@ -160,7 +160,7 @@ namespace ELS.Light
                 {
                     CurrentPrmPattern--;
                 }
-                ElsUiPanel.PlayUiSound(false);
+                ElsUiPanel.PlayUiSound("sirenclick");
             }
             else
             {
@@ -172,7 +172,7 @@ namespace ELS.Light
                 {
                     CurrentPrmPattern++;
                 }
-                ElsUiPanel.PlayUiSound(true);
+                ElsUiPanel.PlayUiSound("sirenclick");
             }
         }
 
@@ -188,7 +188,7 @@ namespace ELS.Light
                 {
                     CurrentSecPattern--;
                 }
-                ElsUiPanel.PlayUiSound(false);
+                ElsUiPanel.PlayUiSound("sirenclick");
             }
             else
             {
@@ -200,7 +200,7 @@ namespace ELS.Light
                 {
                     CurrentSecPattern++;
                 }
-                ElsUiPanel.PlayUiSound(true);
+                ElsUiPanel.PlayUiSound("sirenclick");
             }
         }
 
@@ -216,7 +216,7 @@ namespace ELS.Light
                 {
                     CurrentWrnPattern--;
                 }
-                ElsUiPanel.PlayUiSound(false);
+                ElsUiPanel.PlayUiSound("sirenclick");
             }
             else
             {
@@ -228,7 +228,7 @@ namespace ELS.Light
                 {
                     CurrentWrnPattern++;
                 }
-                ElsUiPanel.PlayUiSound(true);
+                ElsUiPanel.PlayUiSound("sirenclick");
             }
         }
 
@@ -504,7 +504,7 @@ namespace ELS.Light
                     ElsUiPanel.ToggleUiBtnState(prmLights, "PRML");
                     ElsUiPanel.ToggleUiBtnState(secLights, "SECL");
                     ElsUiPanel.ToggleUiBtnState(wrnLights, "WRNL");
-                    ElsUiPanel.PlayUiSound(false);
+                    ElsUiPanel.PlayUiSound("sirenclick");
                     break;
                 case 1:
                     if (_vcfroot.MISC.DfltSirenLtsActivateAtLstg == 1)
@@ -559,7 +559,7 @@ namespace ELS.Light
                     ElsUiPanel.ToggleUiBtnState(prmLights, "PRML");
                     ElsUiPanel.ToggleUiBtnState(secLights, "SECL");
                     ElsUiPanel.ToggleUiBtnState(wrnLights, "WRNL");
-                    ElsUiPanel.PlayUiSound(true);
+                    ElsUiPanel.PlayUiSound("sirenclick");
                     break;
                 case 2:
                     if (_vcfroot.MISC.DfltSirenLtsActivateAtLstg == 2)
@@ -641,7 +641,7 @@ namespace ELS.Light
                     ElsUiPanel.ToggleUiBtnState(prmLights, "PRML");
                     ElsUiPanel.ToggleUiBtnState(secLights, "SECL");
                     ElsUiPanel.ToggleUiBtnState(wrnLights, "WRNL");
-                    ElsUiPanel.PlayUiSound(true);
+                    ElsUiPanel.PlayUiSound("sirenclick");
                     break;
                 case 3:
                     if (_vcfroot.MISC.DfltSirenLtsActivateAtLstg == 3)
@@ -745,7 +745,7 @@ namespace ELS.Light
                     {
                         _extras.SBRN.SetState(true);
                     }
-                    ElsUiPanel.PlayUiSound(true);
+                    ElsUiPanel.PlayUiSound("sirenclick");
                     break;
             }
         }

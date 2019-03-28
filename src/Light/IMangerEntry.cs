@@ -11,7 +11,7 @@ namespace ELS.Light
     {
         void CleanUP();
         void Ticker();
-        void ExternalTicker();
+        void ControlTicker();
         void LightsControlsRemote();
         Vehicle _vehicle { get; set; }
     }

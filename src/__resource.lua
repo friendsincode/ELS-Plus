@@ -37,6 +37,10 @@ if NUIEnabled then
 	files({
     'NUI/app/index.html',
     'NUI/app/js/ui.js',
+    'NUI/app/js/sirenclick.ogg',
+    'NUI/app/js/sirenclickoff.ogg',
+    'NUI/app/js/indon.ogg',
+    'NUI/app/js/indoff.ogg',
     'NUI/app/js/jquery-3.2.1.min.js',
     -- New Hotness
     'NUI/app/newhotness/index.html',    
@@ -87,7 +91,4 @@ files({
 })
 
 
-exports {
-	'SpawnCar',
-	'SpawnCarWithCoords'
-}
+dependencies {"baseevents"}

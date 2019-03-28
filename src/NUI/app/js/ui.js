@@ -1,5 +1,5 @@
 var resourceName = "";
-
+var soundPlayer = null;
 function ChangeUi(uiname) {
     console.log(`Changing ui to ${uiname}`);  
     $.get(`${uiname}/index.html`, function(data) {
@@ -20,6 +20,13 @@ $(function () {
         } else if (event.data.type == "reload") {
             console.log("ELS UI Reload");
             document.location.reload();
+        } else if (event.data.type == "playsound") {
+            if (soundPlayer != null) {
+                soundPlayer.pause();
+            }
+            soundPlayer = new Howl({ src: [`./js/${event.data.sound}.ogg`] });
+            soundPlayer.volume(event.data.volume);
+            soundPlayer.play();
         }
     });
 

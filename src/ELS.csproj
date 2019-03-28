@@ -277,6 +277,18 @@
     <Content Include="NUI\app\whelen\js\popper.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="NUI\app\js\indoff.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="NUI\app\js\indon.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="NUI\app\js\sirenclick.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="NUI\app\js\sirenclickoff.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="ELS.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
