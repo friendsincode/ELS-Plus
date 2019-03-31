@@ -23,7 +23,7 @@ Pop-Location
 if (Test-Path -ErrorAction SilentlyContinue -Path "server/ELS-Server/tmp") {
     Copy-Item server/ELS-Server/tmp/* $buildpath
 }
-Push-Location src/tmp
+Push-Location $buildpath
 $pdb2mdb = "$PSScriptRoot\..\utils\pdb2mdb\pdb2mdb.exe"
 
 "Converting pdbs to mdbs"
