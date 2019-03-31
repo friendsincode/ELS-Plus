@@ -37,11 +37,6 @@ Deploy-release:
  stage: deploy
  script:
    - echo "Do your deploy here"
-   - ls
-   - ls src
-   - ls src/tmp-release
-   - mkdir elsplus
-   - cp -R src/tmp-release/* elsplus
    - ./utils/publish.ps1
  artifacts:
   name: ELS_Plus-$CI_JOB_ID_Deploy_Release
@@ -54,11 +49,6 @@ Deploy-debug:
  stage: deploy
  script:
    - echo "Do your deploy here"
-   - ls
-   - ls src
-   - ls src/tmp
-   - mkdir elsplus
-   - cp -R src/tmp/* elsplus
    - ./utils/publish.ps1 -builddebug $true
  artifacts:
   name: ELS_Plus-$CI_JOB_ID_Deploy_Debug
