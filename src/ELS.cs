@@ -60,17 +60,16 @@ namespace ELS
                             userSettings = new UserSettings();
                             Task settingsTask = new Task(() => userSettings.LoadUserSettings());
                             Utils.ReleaseWriteLine($"Welcome to ELS Plus on {ServerId} using version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
-                            settingsTask.Start();
-
+                            settingsTask.Start();                            
                             _FileLoader.RunLoader(obj);
                             //Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS Plus\n\n ELS Plus is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://els.friendsincode.com");
                             SetupConnections();
                             TriggerServerEvent("ELS:VcfSync:Server", Game.Player.ServerId);
-
-
                             SetupExports();
                             Tick -= Class1_Tick;
                             Tick += Class1_Tick;
+                            Function.Call((Hash)3520272001, "car.defaultlight.night.emissive.on", Global.NightLtBrightness);
+                            Function.Call((Hash)3520272001, "car.defaultlight.day.emissive.on", Global.DayLtBrightness);
                         }
                         catch (Exception e)
                         {
@@ -128,7 +127,7 @@ namespace ELS
                 Vehicle vehicle = new Vehicle(veh);
                 Delay(5000);
                 Utils.DebugWriteLine("Vehicle is in list moving on");
-                if (vehicle.IsEls())
+                if (vehicle.Exists() && vehicle.IsEls() && (vehicle.GetNetworkId() == LocalPlayer.Character.CurrentVehicle.GetNetworkId()))
                 {
                     Utils.DebugWriteLine("ELS Vehicle entered syncing UI");
                     if (userSettings.uiSettings.enabled)
@@ -151,7 +150,7 @@ namespace ELS
             EventHandlers["ELS:VehicleExited"] += new Action<int>((veh) =>
             {
                 Vehicle vehicle = new Vehicle(veh);
-                if (vehicle.IsEls() && VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()))
+                if (vehicle.Exists() && vehicle.IsEls() && VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()) && (vehicle.GetNetworkId() == LocalPlayer.Character.LastVehicle.GetNetworkId()))
                 {
                     if (Global.DisableSirenOnExit)
                     {
@@ -347,7 +346,8 @@ namespace ELS
                     _firstTick = true;
                 }
                 _vehicleManager.RunTickAsync();
-
+                //Function.Call((Hash)3520272001, "car.defaultlight.night.emissive.on", 1100.0f);
+                //Function.Call((Hash)3520272001, "car.defaultlight.day.emissive.on", 1700.0f);
                 if (Game.PlayerPed.IsInVehicle() && Game.PlayerPed.CurrentVehicle.IsEls())
                 {
                     Game.DisableControlThisFrame(0, Control.FrontendPause);

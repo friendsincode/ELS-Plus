@@ -118,9 +118,12 @@ namespace ELS.configuration
                 Global.EnvLightInt = u["LIGHTING"]["EnvLtMultExtraLts_Int"].FloatValue * .02f;
                 Global.TkdnRng = u["LIGHTING"]["EnvLtMultTakedwns_Rng"].FloatValue * 25f;
                 Global.TkdnInt = u["LIGHTING"]["EnvLtMultTakedwns_Int"].FloatValue * 1f;
+                Global.DayLtBrightness = u["LIGHTING"]["DayLtBrightness"].FloatValue * 100f;
+                Global.NightLtBrightness = u["LIGHTING"]["NightLtBrightness"].FloatValue * 100f;
                 Global.SoundVolume = u["AUDIO"]["BtnClicksVolume"].FloatValue / 100;
                 Global.BtnClicksBtwnSrnTones = u["AUDIO"]["BtnClicksBtwnSrnTones"].BoolValue;
                 Global.BtnClicksBtwnHrnTones = u["AUDIO"]["BtnClicksBtwnHrnTones"].BoolValue;
+                Global.BtnClicksIndicators = u["AUDIO"]["BtnClicksIndicators"].BoolValue;
                 Global.AllowController = u["CONTROL"]["AllowController"].BoolValue;
                 Utils.DebugWrite($"Configuration ran \n ---------------------- \n Traffic Control: {Global.EnabeTrafficControl} \n Delay: {Global.PrimDelay} \n Delete Interval: {Global.DeleteInterval} \n Env Lighting Range: {Global.EnvLightRng}\n");
             }

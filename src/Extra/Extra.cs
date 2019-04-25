@@ -97,9 +97,9 @@ namespace ELS.Extra
                     {
                         lights.scene.TurnedOn = true;
                     }
-                    API.SetVehicleAutoRepairDisabled(lights._vehicle.Handle, true);
+                    
                     SetState(true);
-                    API.SetVehicleAutoRepairDisabled(lights._vehicle.Handle, true);
+                    
                 }
                 else
                 {
@@ -111,9 +111,9 @@ namespace ELS.Extra
                     {
                         lights.scene.TurnedOn = false;
                     }
-                    API.SetVehicleAutoRepairDisabled(lights._vehicle.Handle, true);
+                    
                     SetState(false);
-                    API.SetVehicleAutoRepairDisabled(lights._vehicle.Handle, true);
+                   
                 }
             }
         }
@@ -154,11 +154,12 @@ namespace ELS.Extra
                 _state = value;
                 if (value)
                 {
+                    API.SetVehicleAutoRepairDisabled(lights._vehicle.Handle, true);
                     SetTrue();
-
                 }
                 else
                 {
+                    API.SetVehicleAutoRepairDisabled(lights._vehicle.Handle, true);
                     SetFalse();
                 }
             }
