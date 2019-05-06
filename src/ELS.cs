@@ -83,6 +83,7 @@ namespace ELS
                 });
 
         }
+        int lastVehicle = -1;
         private void SetupConnections()
         {
             EventHandlers["onClientResourceStop"] += new Action<string>(async (string obj) =>
@@ -130,6 +131,7 @@ namespace ELS
                 if (vehicle.Exists() && vehicle.IsEls() && (vehicle.GetNetworkId() == LocalPlayer.Character.CurrentVehicle.GetNetworkId()))
                 {
                     Utils.DebugWriteLine("ELS Vehicle entered syncing UI");
+                    lastVehicle = vehicle.GetNetworkId();
                     if (userSettings.uiSettings.enabled)
                     {
                         ElsUiPanel.ShowUI();
@@ -150,7 +152,7 @@ namespace ELS
             EventHandlers["ELS:VehicleExited"] += new Action<int>((veh) =>
             {
                 Vehicle vehicle = new Vehicle(veh);
-                if (vehicle.Exists() && vehicle.IsEls() && VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()) && (vehicle.GetNetworkId() == LocalPlayer.Character.LastVehicle.GetNetworkId()))
+                if (vehicle.Exists() && vehicle.IsEls() && VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()) && (vehicle.GetNetworkId() == lastVehicle))
                 {
                     if (Global.DisableSirenOnExit)
                     {

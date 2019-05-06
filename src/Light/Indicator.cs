@@ -63,59 +63,77 @@ namespace ELS.Light
 
         internal static void RunAsync(Vehicle veh)
         {
-            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleLIND);
-            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleRIND);
-            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleHAZ);
+            //Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleLIND);
+            //Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleRIND);
+            //Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleHAZ);
 
-            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleLIND) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            if (Game.IsControlJustPressed(0, ElsConfiguration.KBBindings.ToggleLIND) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 if (CurrentIndicatorState(veh) == IndicatorState.Left)
                 {
                     Utils.DebugWriteLine("Toggle Off");
                     ToggleInicatorState(veh, IndicatorState.Off);
                     ActivateIndicatorTimer = false;
-                    ElsUiPanel.PlayUiSound("indoff");
+                    if (Global.BtnClicksIndicators)
+                    {
+                        ElsUiPanel.PlayUiSound("indoff");
+                    }
                     RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleInd, veh, true, Game.Player.ServerId);
                     return;
                 }
                 Utils.DebugWriteLine("Toggle Left");
                 ToggleInicatorState(veh, IndicatorState.Left);
-                ElsUiPanel.PlayUiSound("indon");
+                if (Global.BtnClicksIndicators)
+                {
+                    ElsUiPanel.PlayUiSound("indon");
+                }
                 ActivateIndicatorTimer = true;
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleInd, veh, true, Game.Player.ServerId);
             }
-            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleRIND) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            else if (Game.IsControlJustPressed(0, ElsConfiguration.KBBindings.ToggleRIND) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 if (CurrentIndicatorState(veh) == IndicatorState.Right)
                 {
                     Utils.DebugWriteLine("Toggle Off");
                     ToggleInicatorState(veh, IndicatorState.Off);
                     ActivateIndicatorTimer = false;
-                    ElsUiPanel.PlayUiSound("indoff");
+                    if (Global.BtnClicksIndicators)
+                    {
+                        ElsUiPanel.PlayUiSound("indoff");
+                    }
                     RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleInd, veh, true, Game.Player.ServerId);
                     return;
                 }
                 Utils.DebugWriteLine("Toggle Right");
                 ToggleInicatorState(veh, IndicatorState.Right);
                 ActivateIndicatorTimer = true;
-                ElsUiPanel.PlayUiSound("indon");
+                if (Global.BtnClicksIndicators)
+                {
+                    ElsUiPanel.PlayUiSound("indon");
+                }
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleInd, veh, true, Game.Player.ServerId);
             }
-            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleHAZ) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            else if (Game.IsControlJustPressed(0, ElsConfiguration.KBBindings.ToggleHAZ) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 if (CurrentIndicatorState(veh) == IndicatorState.Hazard)
                 {
                     Utils.DebugWriteLine("Toggle Off");
                     ToggleInicatorState(veh, IndicatorState.Off);
                     ActivateIndicatorTimer = false;
-                    ElsUiPanel.PlayUiSound("indoff");
+                    if (Global.BtnClicksIndicators)
+                    {
+                        ElsUiPanel.PlayUiSound("indoff");
+                    }
                     RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleInd, veh, true, Game.Player.ServerId);
                     return;
                 }
                 Utils.DebugWriteLine("Toggle Hazard");
                 ToggleInicatorState(veh, IndicatorState.Hazard);
                 ActivateIndicatorTimer = true;
-                ElsUiPanel.PlayUiSound("indon");
+                if (Global.BtnClicksIndicators)
+                {
+                    ElsUiPanel.PlayUiSound("indon");
+                }
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleInd, veh, true, Game.Player.ServerId);
             }
 

@@ -15,7 +15,7 @@ namespace ELS.Siren
         {
             if (disableControls)
             {
-                Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Sound_Ahorn);
+                Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Sound_Ahorn);
                 Game.DisableControlThisFrame(2, Control.ScriptPadDown);
             }
             if (pressed)
@@ -80,7 +80,7 @@ namespace ELS.Siren
 
         void SirenTone1Logic(bool pressed, bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Snd_SrnTon1);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Snd_SrnTon1);
 
             if (pressed && _tones.tone1.AllowUse)
             {
@@ -122,7 +122,7 @@ namespace ELS.Siren
         }
         void SirenTone2Logic(bool pressed, bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Snd_SrnTon2);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Snd_SrnTon2);
 
             if (pressed && _tones.tone2.AllowUse)
             {
@@ -165,7 +165,7 @@ namespace ELS.Siren
         }
         void SirenTone3Logic(bool pressed, bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Snd_SrnTon3);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Snd_SrnTon3);
             if (pressed && _tones.tone3.AllowUse)
             {
                 if (_mainSiren._enable)
@@ -209,7 +209,7 @@ namespace ELS.Siren
         }
         void SirenTone4Logic(bool pressed, bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Snd_SrnTon4);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Snd_SrnTon4);
             if (pressed && _tones.tone4.AllowUse)
             {
                 if (_mainSiren._enable)
@@ -251,7 +251,7 @@ namespace ELS.Siren
 
         private void MainSirenToggleLogic(bool toggle, bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Toggle_SIRN);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Toggle_SIRN);
             if (toggle)
             {
                 _mainSiren.SetEnable(!_mainSiren._enable);
@@ -263,7 +263,7 @@ namespace ELS.Siren
 
         void ManualSoundLogic(bool pressed, bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Sound_Manul);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Sound_Manul);
             if (pressed)
             {
                 if (!_mainSiren._enable || (!_mainSiren._enable && _vcf.SOUNDS.MainHorn.InterruptsSiren &&
@@ -298,7 +298,7 @@ namespace ELS.Siren
 
         void DualSirenLogic(bool toggle, bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Toggle_DSRN);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Toggle_DSRN);
             if (toggle)
             {
                 dual_siren = !dual_siren;
@@ -322,9 +322,10 @@ namespace ELS.Siren
             ElsUiPanel.ToggleUiBtnState(dual_siren, "DUAL");
             ElsUiPanel.PlayUiSound("sirenclickoff");
         }
+
         void PanicAlarmLogic(bool toggle,bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Snd_SrnPnic);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Snd_SrnPnic);
             //CitizenFX.Core.UI.Screen.ShowNotification($"{toggle}");
             this._tones.panicAlarm.SetState(toggle);
             if (toggle)

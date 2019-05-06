@@ -25,7 +25,7 @@ namespace ELS.Light
                 _on = value;
                 if (!iLight._vcfroot.MISC.SceneLights.IlluminateSidesOnly)
                 {
-                    iLight.spotLight.TurnedOn = TurnedOn;                    
+                    iLight.spotLight.TurnedOn = TurnedOn;
                 }
             }
         }

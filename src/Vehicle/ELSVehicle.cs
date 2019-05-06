@@ -100,6 +100,7 @@ namespace ELS
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.MainSiren, _vehicle, true, Game.Player.ServerId);
             }
         }
+
         internal void RunExternalTick()
         {
             if (!_vehicle.Exists() || _vehicle.IsDead)
