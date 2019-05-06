@@ -150,7 +150,7 @@ namespace ELS_Server
             //data["serverId"] = serverId;
             //data["serverName"] = API.GetConvar("sv_hostname", $"ELS Plus Server {serverId}");
             RequestResponse result = await request.Http(updateUrl,"POST", 
-                $"serverId={serverId}&serverName={API.GetConvar("sv_hostname",$"ELS Plus Server {serverId}")}");
+                $"serverId={serverId}&serverName={Uri.EscapeDataString(API.GetConvar("sv_hostname",$"ELS Plus Server {serverId}"))}");
             switch (result.status)
             {
                 case HttpStatusCode.NotFound:
