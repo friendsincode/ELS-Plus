@@ -2,7 +2,7 @@
 
 ### THIS REPO IS NO LONGER MAINTAINED HERE PLEASE GO TO 
 
-https://https://git.friendsincode.com/PFM/ELS-Plus for releases and updated source code :D
+https://git.friendsincode.com/PFM/ELS-Plus for releases and updated source code :D
 
 ###
 
