@@ -127,7 +127,7 @@ namespace ELS.configuration
                 GPBindings.ToggleLstg = (Control)t;
 
                 t = u["GAMEPAD"]["Toggle_SIRN"].IntValue;
-                KBBindings.Toggle_SIRN = (Control)t;
+                GPBindings.Toggle_SIRN = (Control)t;
 
 
                 //ControlsUpdated?.Invoke(KeyBindings);
