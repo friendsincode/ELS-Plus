@@ -102,7 +102,7 @@ namespace ELS.Siren
                             _patternController.CurrentWrnPattern = _vcf.WRNL.ForcedPatterns.SrnTone1.IntPattern;
                         }
                     }
-                    if (_mainSiren._enable && dual_siren && !_tones.tone1._state)
+                    if (_mainSiren._enable && dual_siren)
                     {
                         Utils.DebugWriteLine("Setting Dual Siren tone 2");
                         _tones.tone4.SetState(false);
@@ -147,7 +147,7 @@ namespace ELS.Siren
                     }
                     
                 }
-                if (_mainSiren._enable && dual_siren && !_tones.tone2._state)
+                if (_mainSiren._enable && dual_siren)
                 {
                     Utils.DebugWriteLine("Setting Dual Siren tone 3");
                     _tones.tone4.SetState(false);
@@ -187,7 +187,7 @@ namespace ELS.Siren
                         }
                     }
                 }
-                if (_mainSiren._enable && dual_siren && !_tones.tone3._state)
+                if (_mainSiren._enable && dual_siren)
                 {
                     Utils.DebugWriteLine("Setting Dual Siren tone 4");
                     _tones.tone3.SetState(false);
@@ -232,7 +232,7 @@ namespace ELS.Siren
                     }
                 }
                 
-                if (_mainSiren._enable && dual_siren && !_tones.tone4._state)
+                if (_mainSiren._enable && dual_siren)
                 {
                     Utils.DebugWriteLine("Setting Dual Siren tone 1");
                     _tones.tone4.SetState(true);
@@ -255,6 +255,10 @@ namespace ELS.Siren
             if (toggle)
             {
                 _mainSiren.SetEnable(!_mainSiren._enable);
+                if (dual_siren)
+                {
+                    dual_siren = _mainSiren._enable;
+                }
                 ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
                 ElsUiPanel.PlayUiSound("sirenclickoff");
             }
