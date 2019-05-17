@@ -128,7 +128,7 @@ namespace ELS
                 Vehicle vehicle = new Vehicle(veh);
                 Delay(5000);
                 Utils.DebugWriteLine("Vehicle is in list moving on");
-                if (vehicle.Exists() && vehicle.IsEls() && (vehicle.GetNetworkId() == LocalPlayer.Character.CurrentVehicle.GetNetworkId()))
+                if (vehicle != null && vehicle.Exists() && vehicle.IsEls() && (vehicle.GetNetworkId() == LocalPlayer.Character.CurrentVehicle.GetNetworkId()))
                 {
                     Utils.DebugWriteLine("ELS Vehicle entered syncing UI");
                     lastVehicle = vehicle.GetNetworkId();
@@ -152,7 +152,7 @@ namespace ELS
             EventHandlers["ELS:VehicleExited"] += new Action<int>((veh) =>
             {
                 Vehicle vehicle = new Vehicle(veh);
-                if (vehicle.Exists() && vehicle.IsEls() && VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()) && (vehicle.GetNetworkId() == lastVehicle))
+                if (vehicle != null && vehicle.Exists() && vehicle.IsEls() && VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()) && (vehicle.GetNetworkId() == lastVehicle))
                 {
                     if (Global.DisableSirenOnExit)
                     {
