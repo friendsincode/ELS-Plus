@@ -60,7 +60,7 @@ namespace ELS
                             userSettings = new UserSettings();
                             Task settingsTask = new Task(() => userSettings.LoadUserSettings());
                             Utils.ReleaseWriteLine($"Welcome to ELS Plus on {ServerId} using version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
-                            settingsTask.Start();                            
+                            settingsTask.Start();
                             _FileLoader.RunLoader(obj);
                             //Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS Plus\n\n ELS Plus is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://els.friendsincode.com");
                             SetupConnections();
@@ -126,43 +126,65 @@ namespace ELS
             {
                 Utils.DebugWriteLine("Vehicle entered checking list");
                 Vehicle vehicle = new Vehicle(veh);
-                Delay(5000);
-                Utils.DebugWriteLine("Vehicle is in list moving on");
-                if (vehicle != null && vehicle.Exists() && vehicle.IsEls() && (vehicle.GetNetworkId() == LocalPlayer.Character.CurrentVehicle.GetNetworkId()))
+                Delay(1000);                
+                try
                 {
-                    Utils.DebugWriteLine("ELS Vehicle entered syncing UI");
-                    lastVehicle = vehicle.GetNetworkId();
-                    if (userSettings.uiSettings.enabled)
+                    if (vehicle.Exists() && vehicle.IsEls())
                     {
-                        ElsUiPanel.ShowUI();
-                    }
-                    VehicleManager.SyncUI(vehicle.GetNetworkId());
+                        if ((vehicle.GetNetworkId() == LocalPlayer.Character.CurrentVehicle.GetNetworkId()))
+                        {
+                            Utils.DebugWriteLine("Vehicle is in list moving on");
+                            Utils.DebugWriteLine("ELS Vehicle entered syncing UI");
+                            lastVehicle = vehicle.GetNetworkId();
+                            if (userSettings.uiSettings.enabled)
+                            {
+                                ElsUiPanel.ShowUI();
+                            }
+                            VehicleManager.SyncUI(vehicle.GetNetworkId());
 
-                    UserSettings.ELSUserVehicle usrVeh = userSettings.savedVehicles.Find(uveh => uveh.Model == vehicle.Model.Hash && uveh.ServerId == ServerId);
-                    Utils.DebugWriteLine($"got usrveh of {usrVeh.Model} on server {usrVeh.ServerId}m");
-                    if (ServerId.Equals(usrVeh.ServerId))
-                    {
-                        Utils.DebugWrite("Got Saved Vehicle Settings applying");
-                        VehicleManager.vehicleList[vehicle.GetNetworkId()].SetSaveSettings(usrVeh);
+                            UserSettings.ELSUserVehicle usrVeh = userSettings.savedVehicles.Find(uveh => uveh.Model == vehicle.Model.Hash && uveh.ServerId == ServerId);
+                            Utils.DebugWriteLine($"got usrveh of {usrVeh.Model} on server {usrVeh.ServerId}m");
+                            if (ServerId.Equals(usrVeh.ServerId))
+                            {
+                                Utils.DebugWrite("Got Saved Vehicle Settings applying");
+                                VehicleManager.vehicleList[vehicle.GetNetworkId()].SetSaveSettings(usrVeh);
+                            }
+                            VehicleManager.vehicleList[vehicle.GetNetworkId()].SetInofVeh();
+                        }
+                        Utils.DebugWriteLine($"Vehicle {vehicle.GetNetworkId()}({Game.PlayerPed.CurrentVehicle.GetNetworkId()}) entered");
                     }
-                    VehicleManager.vehicleList[vehicle.GetNetworkId()].SetInofVeh();
                 }
-                Utils.DebugWriteLine($"Vehicle {vehicle.GetNetworkId()}({Game.PlayerPed.CurrentVehicle.GetNetworkId()}) entered");
+                catch (Exception e)
+                {
+                    Utils.ReleaseWriteLine("Exception caught via vehicle entered");
+                }
+
             });
             EventHandlers["ELS:VehicleExited"] += new Action<int>((veh) =>
             {
                 Vehicle vehicle = new Vehicle(veh);
-                if (vehicle != null && vehicle.Exists() && vehicle.IsEls() && VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()) && (vehicle.GetNetworkId() == lastVehicle))
+                try
                 {
-                    if (Global.DisableSirenOnExit)
+                    if (vehicle.Exists() && vehicle.IsEls())
                     {
-                        VehicleManager.vehicleList[vehicle.GetNetworkId()].DisableSiren();
+                        if (VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()) && (vehicle.GetNetworkId() == lastVehicle))
+                        {
+                            if (Global.DisableSirenOnExit)
+                            {
+                                VehicleManager.vehicleList[vehicle.GetNetworkId()].DisableSiren();
+                            }
+                            Utils.DebugWriteLine("save settings for vehicle it");
+                            VehicleManager.vehicleList[vehicle.GetNetworkId()].GetSaveSettings();
+                            VehicleManager.vehicleList[vehicle.GetNetworkId()].SetOutofVeh();
+                        }
+                        Utils.DebugWriteLine($"Vehicle {vehicle.GetNetworkId()}({Game.PlayerPed.LastVehicle.GetNetworkId()}) exited");
                     }
-                    Utils.DebugWriteLine("save settings for vehicle it");
-                    VehicleManager.vehicleList[vehicle.GetNetworkId()].GetSaveSettings();
-                    VehicleManager.vehicleList[vehicle.GetNetworkId()].SetOutofVeh();
                 }
-                Utils.DebugWriteLine($"Vehicle {vehicle.GetNetworkId()}({Game.PlayerPed.LastVehicle.GetNetworkId()}) exited");
+                catch (Exception e)
+                {
+                    Utils.ReleaseWriteLine("Exception caught via vehicle exited");
+                }
+
             });
             //Take in data and apply it
             EventHandlers["ELS:NewFullSyncData"] += new Action<IDictionary<string, object>, int>(_vehicleManager.SetVehicleSyncData);
