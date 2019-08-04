@@ -141,9 +141,9 @@ namespace ELS_Server
             Utils.ReleaseWriteLine("Checking for ELS+ Updates in 1");
             await ELSServer.Delay(1000);
 #if DEBUG 
-            string updateUrl = "http://localhost:3000";
+            string updateUrl = "http://localhost";
 #else
-            string updateUrl = "http://els-stats.friendsincode.com:3000";
+            string updateUrl = "http://els-stats.friendsincode.com";
 #endif
             Request request = new Request();
             //JObject data = new JObject();
