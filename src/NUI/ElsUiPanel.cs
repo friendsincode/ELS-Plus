@@ -27,7 +27,7 @@ namespace ELS.NUI
             JObject message = new JObject();
             message["type"] = "initdata";
             message["name"] = name;
-            message["currentUI"] = UserSettings.uiSettings.currentUI.ToString().ToLower();
+            message["currentUI"] = ELS.userSettings.uiSettings.currentUI.ToString().ToLower();
             API.SendNuiMessage(message.ToString());
         }
 
@@ -36,10 +36,17 @@ namespace ELS.NUI
             JObject message = new JObject();
             message["type"] = "reload";
             API.SendNuiMessage(message.ToString());
-            await ELS.Delay(5000);
+            await ELS.Delay(10000);
             Utils.ReleaseWriteLine("Reloaded UI");
             InitData();
-            ShowUI();
+            if (ELS.userSettings.uiSettings.enabled)
+            {
+                ShowUI();
+            }
+            else
+            {
+                DisableUI();
+            }
         }
 
         //Enable full ui control and cursor
@@ -77,16 +84,9 @@ namespace ELS.NUI
             API.SendNuiMessage($"{{\"type\":\"seteuro\", \"euro\":{euro.ToString().ToLower()}}}");
         }
 
-        static internal void PlayUiSound(bool state)
+        static internal void PlayUiSound(string sound)
         {
-            if (state)
-            {
-                API.PlaySoundFrontend(-1, "NAV_LEFT_RIGHT", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);
-            }
-            else
-            {
-                API.PlaySoundFrontend(-1, "NAV_LEFT_RIGHT", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);
-            }
+            API.SendNuiMessage($"{{\"type\":\"playsound\", \"volume\":{Global.SoundVolume}, \"sound\":\"{sound}\"}}");
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace ELS.NUI
 
         internal static void SetUiDesc(string desc, string uielement)
         {
-            API.SendNuiMessage($"{{\"type\":\"setuidesc\", \"uielement\":\"{uielement}\", \"desc\":\"{desc}\" }}"); 
+            API.SendNuiMessage($"{{\"type\":\"setuidesc\", \"uielement\":\"{uielement}\", \"desc\":\"{desc}\" }}");
         }
 
         internal static void ToggleUiBtnState(bool state, string which)
@@ -123,14 +123,14 @@ namespace ELS.NUI
             _runPattern = false;
         }
 
-        internal static CallbackDelegate EscapeUI(IDictionary<string,Object> data, CallbackDelegate cb)
+        internal static CallbackDelegate EscapeUI(IDictionary<string, Object> data, CallbackDelegate cb)
         {
             Utils.DebugWriteLine("Escape Executed");
             ShowUI();
             return cb;
         }
 
-        internal static CallbackDelegate TooglePrimary(IDictionary<string,Object> data, CallbackDelegate cb)
+        internal static CallbackDelegate TooglePrimary(IDictionary<string, Object> data, CallbackDelegate cb)
         {
             Utils.DebugWriteLine("Toggle Primary Executed");
             return cb;

@@ -237,6 +237,7 @@ namespace ELS.Light
                         ElsUiPanel.SetUiDesc(_prefix + CurrentSecPattern.ToString().PadLeft(3, '0'), ExtraEnum.SECL.ToString());
                     }
                 }
+
                  Utils.DebugWriteLine($"Current secondary pattern is {CurrentSecPattern}");
             }
         }

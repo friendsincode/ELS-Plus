@@ -12,25 +12,45 @@ build-release:
    - win32
  stage: build
  script:
-   - powershell echo "Building"
-   - powershell -ExecutionPolicy bypass -File utils/build.ps1
+   - echo "Building"
+   - ./utils/build.ps1
  artifacts:
+  name: ELS_Plus-$CI_JOB_ID_Build_Debug
   paths:
     - ./*
 
-Release:
+build-debug:
+ tags:
+   - win32
+ stage: build
+ script:
+   -  echo "Building"
+   -  ./utils/build.ps1 -BuildDebug $true
+ artifacts:
+  name: ELS_Plus-$CI_JOB_ID_Build_Release
+  paths:
+    - ./*
+
+Deploy-release:
  tags:
    - win32
  stage: deploy
  script:
-   - powershell echo "Do your deploy here"
-   - powershell ls
-   - powershell ls src
-   - powershell ls src/tmp
-   - powershell mkdir elsplus
-   - powershell cp -R src/tmp/* elsplus
-   - powershell -ExecutionPolicy bypass -File utils/publish.ps1
+   - echo "Do your deploy here"
+   - ./utils/publish.ps1
  artifacts:
-  name: ELS_FiveM-0.0.3.2-gitlab_$CI_JOB_ID
+  name: ELS_Plus-$CI_JOB_ID_Deploy_Release
+  paths:
+    - elsplus/*
+
+Deploy-debug:
+ tags:
+   - win32
+ stage: deploy
+ script:
+   - echo "Do your deploy here"
+   - ./utils/publish.ps1 -builddebug $true
+ artifacts:
+  name: ELS_Plus-$CI_JOB_ID_Deploy_Debug
   paths:
     - elsplus/*

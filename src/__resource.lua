@@ -37,6 +37,10 @@ if NUIEnabled then
 	files({
     'NUI/app/index.html',
     'NUI/app/js/ui.js',
+    'NUI/app/js/sirenclick.ogg',
+    'NUI/app/js/sirenclickoff.ogg',
+    'NUI/app/js/indon.ogg',
+    'NUI/app/js/indoff.ogg',
     'NUI/app/js/jquery-3.2.1.min.js',
     -- New Hotness
     'NUI/app/newhotness/index.html',    
@@ -52,7 +56,29 @@ if NUIEnabled then
     'NUI/app/oldandbusted/js/main.js',
     'NUI/app/oldandbusted/index.html',
     --Whelen UI
-    'NUI/app/whelen/notthereyet.haha'
+    'NUI/app/whelen/index.html',
+    'NUI/app/whelen/css/main.css',
+    'NUI/app/whelen/css/bootstrap.min.css',
+    'NUI/app/whelen/css/bootstrap-slider.min.css',
+    'NUI/app/whelen/images/2tone.png',
+    'NUI/app/whelen/images/aux1.png',
+    'NUI/app/whelen/images/aux2.png',
+    'NUI/app/whelen/images/blank.png',
+    'NUI/app/whelen/images/cruise.png',
+    'NUI/app/whelen/images/horn.png',
+    'NUI/app/whelen/images/man1.png',
+    'NUI/app/whelen/images/man2.png',
+    'NUI/app/whelen/images/scene.png',
+    'NUI/app/whelen/images/stby.png',
+    'NUI/app/whelen/images/tkdn.png',
+    'NUI/app/whelen/images/wail.png',
+    'NUI/app/whelen/images/whelen_logo.png',
+    'NUI/app/whelen/images/wigwag.png',
+    'NUI/app/whelen/images/yelp.png',
+    'NUI/app/whelen/js/popper.js',
+    'NUI/app/whelen/js/bootstrap.bundle.min.js',
+    'NUI/app/whelen/js/bootstrap-slider.min.js',
+    'NUI/app/whelen/js/main.js',
 })
 
 end
@@ -65,7 +91,4 @@ files({
 })
 
 
-exports {
-	'SpawnCar',
-	'SpawnCarWithCoords'
-}
+dependencies {"baseevents"}

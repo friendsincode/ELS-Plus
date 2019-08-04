@@ -11,7 +11,7 @@ namespace ELS.Light
     partial class Lights
     {
 
-        public async void Ticker()
+        public async void ControlTicker()
         {
             //KB Controls
             ToggleSecLKB();
@@ -24,130 +24,18 @@ namespace ELS.Light
             ToggleTdlKB();
             ToggleSclKB();
             ToggleLightStageKB();
-            
-            //Part that runs the ticks
-            if (_extras.BRD.HasBoard)
-            {
-                _extras.BRD.BoardTicker();
-            }
-            if (_extras.LDR != null)
-            {
-                _extras.LDR.LadderTicker();
-            }
-            if (_extras.SCL != null)
-            {
-                _extras.SCL.ExtraTicker();
-            }
-            if (_extras.TDL != null)
-            {
-                _extras.TDL.ExtraTicker();
-            }
-            if (_extras.SBRN != null)
-            {
-                _extras.SBRN.ExtraTicker();
-            }
-            //foreach (Extra.Extra prim in _extras.PRML.Values)
-            for (int i = 0; i < _extras.PRML.Count; i++)
-            {
-                _extras.PRML.ElementAt(i).Value.ExtraTicker();
-                if (_stage != null)
-                {
-                    switch (_stage.CurrentStage)
-                    {
-                        case 1:
-                            if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                        case 2:
-                            if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                        case 3:
-                            if (!String.IsNullOrEmpty(_stage.PRML.PresetPatterns.Lstg1.Pattern) && _stage.PRML.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                    }
-                }
-            }
-            //foreach (Extra.Extra sec in _extras.SECL.Values)
-            for (int i = 0; i < _extras.SECL.Count; i++)
-            {
-                _extras.SECL.ElementAt(i).Value.ExtraTicker();
-                if (_stage != null)
-                {
-                    switch (_stage.CurrentStage)
-                    {
-                        case 1:
-                            if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                        case 2:
-                            if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                        case 3:
-                            if (!String.IsNullOrEmpty(_stage.SECL.PresetPatterns.Lstg1.Pattern) && _stage.SECL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                    }
-                }
-            }
-            //foreach (Extra.Extra wrn in _extras.WRNL.Values)
-            for (int i = 0; i < _extras.WRNL.Count; i++)
-            {
-                _extras.WRNL.ElementAt(i).Value.ExtraTicker();
-                if (_stage != null)
-                {
-                    switch (_stage.CurrentStage)
-                    {
-                        case 1:
-                            if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg1.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                        case 2:
-                            if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg2.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                        case 3:
-                            if (!String.IsNullOrEmpty(_stage.WRNL.PresetPatterns.Lstg1.Pattern) && _stage.WRNL.PresetPatterns.Lstg3.Pattern.ToLower().Equals("scan") && _scan)
-                            {
-                                ScanPatternTicker();
-                            }
-                            break;
-                    }
-                }
-            }
         }
 
-        public async void ExternalTicker()
+
+
+        public async void Ticker()
         {
-            if (crsLights || prmLights || secLights || wrnLights || 
-                (_extras.TDL != null && _extras.TDL.TurnedOn) || (_extras.SCL != null && _extras.SCL.TurnedOn) 
+            if (crsLights || prmLights || secLights || wrnLights ||
+                (_extras.TDL != null && _extras.TDL.TurnedOn) || (_extras.SCL != null && _extras.SCL.TurnedOn)
                 && !_vehicle.IsEngineRunning)
             {
                 _vehicle.IsEngineRunning = true;
             }
-
-            if (_extras.BRD.HasBoard)
-            {
-                _extras.BRD.BoardTicker();
-            }
             if (_extras.SBRN != null)
             {
                 _extras.SBRN.ExtraTicker();
@@ -160,8 +48,17 @@ namespace ELS.Light
             {
                 _extras.TDL.ExtraTicker();
             }
+
+            if (spotLight != null && spotLight.TurnedOn)
+            {
+                spotLight.RunTick();
+            }
+            if (scene != null && scene.TurnedOn)
+            {
+                scene.RunTick();
+            }
             //foreach (Extra.Extra prim in _extras.PRML.Values)
-            for (int i =0; i < _extras.PRML.Count; i++)
+            for (int i = 0; i < _extras.PRML.Count; i++)
             {
                 _extras.PRML.ElementAt(i).Value.ExtraTicker();
                 if (_stage != null)
@@ -268,8 +165,8 @@ namespace ELS.Light
 
         internal void ToggleSecLKB()
         {
-            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleSecL);
-            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleSecL) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.ToggleSecL);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KBBindings.ToggleSecL) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 ToggleSecLights();
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleSecL, _vehicle, true, Game.Player.ServerId);
@@ -278,8 +175,8 @@ namespace ELS.Light
 
         internal void ToggleWrnLKB()
         {
-            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleWrnL);
-            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleWrnL) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.ToggleWrnL);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KBBindings.ToggleWrnL) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 ToggleWrnLights();
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleWrnL, _vehicle, true, Game.Player.ServerId);
@@ -289,7 +186,7 @@ namespace ELS.Light
         internal void ToggleBrdKB()
         {
             //Game.DisableControlThisFrame(0, Control.CharacterWheel);
-            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleBoard) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            if (Game.IsControlJustPressed(0, ElsConfiguration.KBBindings.ToggleBoard) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
 #if DEBUG
                 CitizenFX.Core.Debug.WriteLine($"Is Board raised  {_extras.BRD.BoardRaised}");
@@ -308,8 +205,8 @@ namespace ELS.Light
 
         internal void ToggleCrsKB()
         {
-            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleCrsL);
-            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleCrsL) && !Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.ToggleCrsL);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KBBindings.ToggleCrsL) && !Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 ToggleCrs();
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleCrsL, _vehicle, true, Game.Player.ServerId);
@@ -318,39 +215,33 @@ namespace ELS.Light
 
         internal void ToggleTdlKB()
         {
-            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleTdl);
-            if ((Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleTdl) && !Game.IsControlPressed(0, Control.CharacterWheel)) && Game.CurrentInputMode == InputMode.MouseAndKeyboard || (Global.AllowController && Game.IsControlJustPressed(2, Control.Talk) && Game.CurrentInputMode == InputMode.GamePad))
+            Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.ToggleTdl);
+            if ((Game.IsDisabledControlJustPressed(0, ElsConfiguration.KBBindings.ToggleTdl) && !Game.IsControlPressed(0, Control.CharacterWheel)) && Game.CurrentInputMode == InputMode.MouseAndKeyboard || (Global.AllowController && Game.IsControlJustPressed(2, ElsConfiguration.GPBindings.ToggleTdl) && Game.CurrentInputMode == InputMode.GamePad))
             {
-                if (_extras.TDL != null)
-                {
-                    ToggleTdl();
-                }
+                ToggleTdl();
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleTDL, _vehicle, true, Game.Player.ServerId);
             }
         }
 
         internal void ToggleSclKB()
         {
-            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleTdl);
-            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleTdl) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.ToggleTdl);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KBBindings.ToggleTdl) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
-                if (_extras.SCL != null)
-                {
-                    ToggleScl();
-                }
+                ToggleScl();
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleSCL, _vehicle, true, Game.Player.ServerId);
             }
         }
 
         internal void ChgPrmPattKB()
         {
-            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ChgPattPrmL);
-            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ChgPattPrmL) && !Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.ChgPattPrmL);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KBBindings.ChgPattPrmL) && !Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 ChgPrmPatt(false);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChgPattPrmL, _vehicle, true, Game.Player.ServerId);
             }
-            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ChgPattPrmL) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KBBindings.ChgPattPrmL) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 ChgPrmPatt(true);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChgPattPrmL, _vehicle, true, Game.Player.ServerId);
@@ -359,13 +250,13 @@ namespace ELS.Light
 
         internal void ChgSecPattKB()
         {
-            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ChgPattSecL);
-            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ChgPattSecL) && !Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.ChgPattSecL);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KBBindings.ChgPattSecL) && !Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 ChgSecPatt(false);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChangeSecPatt, _vehicle, true, Game.Player.ServerId);
             }
-            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ChgPattSecL) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KBBindings.ChgPattSecL) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 ChgSecPatt(true);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChangeSecPatt, _vehicle, true, Game.Player.ServerId);
@@ -374,13 +265,13 @@ namespace ELS.Light
 
         internal void ChgWrnPattKB()
         {
-            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ChgPattWrnL);
-            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ChgPattWrnL) && !Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.ChgPattWrnL);
+            if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KBBindings.ChgPattWrnL) && !Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 ChgWrnPatt(false);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChgPattWrnL, _vehicle, true, Game.Player.ServerId);
             }
-            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ChgPattWrnL) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KBBindings.ChgPattWrnL) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 ChgWrnPatt(true);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ChgPattWrnL, _vehicle, true, Game.Player.ServerId);
@@ -389,14 +280,14 @@ namespace ELS.Light
 
         internal void ToggleLightStageKB()
         {
-            Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.ToggleLstg);
-            if ((Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleLstg) && !Game.IsControlPressed(0, Control.CharacterWheel)) && Game.CurrentInputMode == InputMode.MouseAndKeyboard || (Global.AllowController && Game.IsControlJustPressed(2, Control.Detonate) && Game.CurrentInputMode == InputMode.GamePad))
+            Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.ToggleLstg);
+            if ((Game.IsDisabledControlJustPressed(0, ElsConfiguration.KBBindings.ToggleLstg) && !Game.IsControlPressed(0, Control.CharacterWheel)) && Game.CurrentInputMode == InputMode.MouseAndKeyboard || (Global.AllowController && Game.IsControlJustPressed(2, ElsConfiguration.GPBindings.ToggleLstg) && Game.CurrentInputMode == InputMode.GamePad))
             {
                 Utils.DebugWriteLine("Toggle Light stage");
                 ToggleLightStage();
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.ToggleLstg, _vehicle, true, Game.Player.ServerId);
             }
-            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KeyBindings.ToggleLstg) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+            else if (Game.IsDisabledControlJustPressed(0, ElsConfiguration.KBBindings.ToggleLstg) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {
                 Utils.DebugWriteLine("Toggle Light stage Inverse");
                 ToggleLightStageInverse();

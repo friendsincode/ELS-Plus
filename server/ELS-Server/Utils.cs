@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CitizenFX.Core.Native;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -15,9 +16,11 @@ namespace ELS_Server
         /// <param name="data">Data to print in console</param>
         static internal void DebugWrite(string data)
         {
-#if DEBUG
-            CitizenFX.Core.Debug.Write($"ELS-Plus: {data}");
-#endif
+            if (bool.Parse(API.GetConvar("elsplus_debug", "false")))
+            {
+                CitizenFX.Core.Debug.Write($"ELS-Plus: {data}");
+            }
+
         }
 
         /// <summary>
@@ -27,16 +30,18 @@ namespace ELS_Server
         /// /// <param name="args">Arugments to be formated into data</param>
         static internal void DebugWriteLine(string data, [Optional]object[] args)
         {
-#if DEBUG
-            if (args != null)
+            if (bool.Parse(API.GetConvar("elsplus_debug", "false")))
             {
-                CitizenFX.Core.Debug.WriteLine($"ELS-Plus: {data}", args);
+                if (args != null)
+                {
+                    CitizenFX.Core.Debug.WriteLine($"ELS-Plus: {data}", args);
+                }
+                else
+                {
+                    CitizenFX.Core.Debug.WriteLine($"ELS-Plus: {data}");
+                }
             }
-            else
-            {
-                CitizenFX.Core.Debug.WriteLine($"ELS-Plus: {data}");
-            }
-#endif
+
         }
         /// <summary>
         /// Print out a message only if the program is compiled for all release types.

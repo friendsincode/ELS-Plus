@@ -72,7 +72,7 @@ namespace ELS
 
         internal Vehicle GetVehicle { get { return _vehicle; } }
 
-        internal void RunTick()
+        internal void RunControlTick()
         {
             if (!_vehicle.Exists() || _vehicle.IsDead)
             {
@@ -81,14 +81,10 @@ namespace ELS
                 return;
             }
             _siren.Ticker();
-            _light.Ticker();
-            if (_siren._mainSiren._enable && _light._stage.CurrentStage != 3)
-            {
-                _siren._mainSiren.SetEnable(false);
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MainSiren, _vehicle, true, Game.Player.ServerId);
-            }
+            _light.ControlTicker();
         }
-        internal void RunExternalTick()
+
+        internal void RunTick()
         {
             if (!_vehicle.Exists() || _vehicle.IsDead)
             {
@@ -96,8 +92,24 @@ namespace ELS
                 ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", cachedNetId);
                 return;
             }
+            _light.Ticker();
+            
+            if (_siren._mainSiren._enable && _light._stage.CurrentStage != 3)
+            {
+                _siren._mainSiren.SetEnable(false);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MainSiren, _vehicle, true, Game.Player.ServerId);
+            }
+        }
+
+        internal void RunExternalTick()
+        {
+            if (!_vehicle.Exists() || _vehicle.IsDead)
+            {
+                VehicleManager.vehicleList.Remove(cachedNetId);
+                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", cachedNetId);
+                return;
+            }            
             _siren.ExternalTicker();
-            _light.ExternalTicker();
         }
 
         internal Vector3 GetBonePosistion()
@@ -124,6 +136,14 @@ namespace ELS
             {
                 _siren._mainSiren.SetEnable(false);
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.MainSiren, _vehicle, true, Game.Player.ServerId);
+            }
+            if (_siren.dual_siren)
+            {
+                _siren._tones.tone1.SetState(false);
+                _siren._tones.tone2.SetState(false);
+                _siren._tones.tone3.SetState(false);
+                _siren._tones.tone4.SetState(false);
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.DualSiren, _vehicle, true, Game.Player.ServerId);
             }
         }
 
@@ -216,10 +236,10 @@ namespace ELS
                 PrmPatt = _light.CurrentPrmPattern,
                 SecPatt = _light.CurrentSecPattern,
                 WrnPatt = _light.CurrentWrnPattern,
-                Siren = _siren._mainSiren.currentTone.Type
+                Siren = _siren._mainSiren.currentTone.Type,
+                Model = _vehicle.Model.Hash
             };
-            Task task = new Task(() => UserSettings.SaveVehicles());
-            task.Start();
+            ELS.userSettings.SaveVehicles(veh);
         }
 
         internal void SetOutofVeh()

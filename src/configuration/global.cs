@@ -32,8 +32,16 @@ namespace ELS.configuration
         internal static float EnvLightInt { get; set; }
         internal static float TkdnInt { get; set; }
         internal static float TkdnRng { get; set; }
+        internal static float DayLtBrightness { get; set; }
+        internal static float NightLtBrightness { get; set; }
+        internal static float SoundVolume { get; set; }
         internal static bool AllowController { get; set; }
         internal static bool DisableSirenOnExit { get; set; }
+        internal static bool ResetTakedownSpotlight { get; set; }
+        internal static bool BtnClicksBtwnHrnTones { get; set; }
+        internal static bool BtnClicksBtwnSrnTones { get; set; }
+        internal static bool BtnClicksIndicators { get; set; }
+
 
         public Global()
         {

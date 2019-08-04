@@ -15,7 +15,7 @@ namespace ELS.Siren
         {
             if (disableControls)
             {
-                Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Sound_Ahorn);
+                Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Sound_Ahorn);
                 Game.DisableControlThisFrame(2, Control.ScriptPadDown);
             }
             if (pressed)
@@ -26,6 +26,10 @@ namespace ELS.Siren
                 patts[2] = _patternController.CurrentWrnPattern;
                 ElsUiPanel.ToggleUiBtnState(true, "HRN");
                 ElsUiPanel.SetUiDesc("AH", "HRN");
+                if (Global.BtnClicksBtwnHrnTones)
+                {
+                    ElsUiPanel.PlayUiSound("sirenclickoff");
+                }
                 if (_vcf.PRML.ForcedPatterns.MainHorn.Enabled)
                 {
                     _patternController.CurrentPrmPattern = _vcf.PRML.ForcedPatterns.MainHorn.IntPattern;
@@ -76,7 +80,7 @@ namespace ELS.Siren
 
         void SirenTone1Logic(bool pressed, bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Snd_SrnTon1);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Snd_SrnTon1);
 
             if (pressed && _tones.tone1.AllowUse)
             {
@@ -98,7 +102,7 @@ namespace ELS.Siren
                             _patternController.CurrentWrnPattern = _vcf.WRNL.ForcedPatterns.SrnTone1.IntPattern;
                         }
                     }
-                    if (_mainSiren._enable && dual_siren && !_tones.tone1._state)
+                    if (_mainSiren._enable && dual_siren)
                     {
                         Utils.DebugWriteLine("Setting Dual Siren tone 2");
                         _tones.tone4.SetState(false);
@@ -107,14 +111,18 @@ namespace ELS.Siren
                         _tones.tone3.SetState(false);
                     }
                     ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
-                    ElsUiPanel.PlayUiSound(true);
+                    ElsUiPanel.ToggleUiBtnState(_mainSiren._enable, "SRN");
+                    if (Global.BtnClicksBtwnSrnTones)
+                    {
+                        ElsUiPanel.PlayUiSound("sirenclickoff");
+                    }
                 }
             }
 
         }
         void SirenTone2Logic(bool pressed, bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Snd_SrnTon2);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Snd_SrnTon2);
 
             if (pressed && _tones.tone2.AllowUse)
             {
@@ -139,7 +147,7 @@ namespace ELS.Siren
                     }
                     
                 }
-                if (_mainSiren._enable && dual_siren && !_tones.tone2._state)
+                if (_mainSiren._enable && dual_siren)
                 {
                     Utils.DebugWriteLine("Setting Dual Siren tone 3");
                     _tones.tone4.SetState(false);
@@ -148,12 +156,16 @@ namespace ELS.Siren
                     _tones.tone3.SetState(true);
                 }
                 ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
-                ElsUiPanel.PlayUiSound(true);
+                ElsUiPanel.ToggleUiBtnState(_mainSiren._enable, "SRN");
+                if (Global.BtnClicksBtwnSrnTones)
+                {
+                    ElsUiPanel.PlayUiSound("sirenclickoff");
+                }
             }
         }
         void SirenTone3Logic(bool pressed, bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Snd_SrnTon3);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Snd_SrnTon3);
             if (pressed && _tones.tone3.AllowUse)
             {
                 if (_mainSiren._enable)
@@ -174,10 +186,8 @@ namespace ELS.Siren
                             _patternController.CurrentWrnPattern = _vcf.WRNL.ForcedPatterns.SrnTone3.IntPattern;
                         }
                     }
-                    ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
                 }
-
-                if (_mainSiren._enable && dual_siren && !_tones.tone3._state)
+                if (_mainSiren._enable && dual_siren)
                 {
                     Utils.DebugWriteLine("Setting Dual Siren tone 4");
                     _tones.tone3.SetState(false);
@@ -185,12 +195,21 @@ namespace ELS.Siren
                     _tones.tone2.SetState(false);
                     _tones.tone4.SetState(true);
                 }
+                ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
+                ElsUiPanel.ToggleUiBtnState(_mainSiren._enable, "SRN");
+                if (Global.BtnClicksBtwnSrnTones)
+                {
+                    ElsUiPanel.PlayUiSound("sirenclickoff");
+                }
             }
-            ElsUiPanel.PlayUiSound(true);
+            if (Global.BtnClicksBtwnSrnTones)
+            {
+                ElsUiPanel.PlayUiSound("sirenclickoff");
+            }
         }
         void SirenTone4Logic(bool pressed, bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Snd_SrnTon4);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Snd_SrnTon4);
             if (pressed && _tones.tone4.AllowUse)
             {
                 if (_mainSiren._enable)
@@ -211,10 +230,9 @@ namespace ELS.Siren
                             _patternController.CurrentWrnPattern = _vcf.WRNL.ForcedPatterns.SrnTone4.IntPattern;
                         }
                     }
-                    ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
                 }
                 
-                if (_mainSiren._enable && dual_siren && !_tones.tone4._state)
+                if (_mainSiren._enable && dual_siren)
                 {
                     Utils.DebugWriteLine("Setting Dual Siren tone 1");
                     _tones.tone4.SetState(true);
@@ -222,24 +240,34 @@ namespace ELS.Siren
                     _tones.tone2.SetState(false);
                     _tones.tone3.SetState(false);
                 }
+                ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
+                ElsUiPanel.ToggleUiBtnState(_mainSiren._enable, "SRN");
+                if (Global.BtnClicksBtwnSrnTones)
+                {
+                    ElsUiPanel.PlayUiSound("sirenclickoff");
+                }
             }
-            ElsUiPanel.PlayUiSound(true);
         }
 
         private void MainSirenToggleLogic(bool toggle, bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Toggle_SIRN);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Toggle_SIRN);
             if (toggle)
             {
                 _mainSiren.SetEnable(!_mainSiren._enable);
+                if (dual_siren)
+                {
+                    dual_siren = _mainSiren._enable;
+                }
                 ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
-                ElsUiPanel.PlayUiSound(_mainSiren._enable);
+                ElsUiPanel.PlayUiSound("sirenclickoff");
             }
+            
         }
 
         void ManualSoundLogic(bool pressed, bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Sound_Manul);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Sound_Manul);
             if (pressed)
             {
                 if (!_mainSiren._enable || (!_mainSiren._enable && _vcf.SOUNDS.MainHorn.InterruptsSiren &&
@@ -250,6 +278,11 @@ namespace ELS.Siren
                 else 
                 {
                     _mainSiren.nextTone();
+                }
+                ElsUiPanel.ToggleUiBtnState(true, "MAN");
+                if (Global.BtnClicksBtwnSrnTones)
+                {
+                    ElsUiPanel.PlayUiSound("sirenclickoff");
                 }
             }
             else
@@ -263,12 +296,13 @@ namespace ELS.Siren
                 {
                     _mainSiren.previousTone();
                 }
+                ElsUiPanel.ToggleUiBtnState(false, "MAN");
             }
         }
 
         void DualSirenLogic(bool toggle, bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Toggle_DSRN);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Toggle_DSRN);
             if (toggle)
             {
                 dual_siren = !dual_siren;
@@ -289,10 +323,13 @@ namespace ELS.Siren
                 }
                 Utils.DebugWriteLine($"Dual Siren {dual_siren}");
             }
+            ElsUiPanel.ToggleUiBtnState(dual_siren, "DUAL");
+            ElsUiPanel.PlayUiSound("sirenclickoff");
         }
+
         void PanicAlarmLogic(bool toggle,bool disableControls = false)
         {
-            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KeyBindings.Snd_SrnPnic);
+            if (disableControls) Game.DisableControlThisFrame(0, ElsConfiguration.KBBindings.Snd_SrnPnic);
             //CitizenFX.Core.UI.Screen.ShowNotification($"{toggle}");
             this._tones.panicAlarm.SetState(toggle);
             if (toggle)

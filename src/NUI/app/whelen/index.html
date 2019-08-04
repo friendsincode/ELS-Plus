@@ -1,0 +1,269 @@
+<html>
+    <link rel="stylesheet" href="whelen/css/bootstrap.min.css">
+    <link rel="stylesheet" href="whelen/css/bootstrap-slider.min.css">
+    <link rel="stylesheet" href="whelen/css/main.css">
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="whelen/js/popper.js"></script>
+    <script src="whelen/js/bootstrap.bundle.min.js"></script>
+    <script src="whelen/js/bootstrap-slider.min.js"></script>
+    <script src="whelen/js/main.js"></script>
+
+<body>
+    <div class="card bg-dark text-white els-ui ">
+        <div class="card-body">
+            <div class="row justify-content-center">
+                <div class="col">
+                    <div class="row justify-content-center">
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="standbyInd" class="sec-lights rounded-circle neon-green btn-glow-neon-green"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="standby" class="btn red btn-glow-red">
+                                        <img src="whelen/images/stby.png" class="btn-img" alt="standby">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="dualToneInd" class="sec-lights rounded-circle neon-green btn-glow-neon-green"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="dualTone" class="btn neon-green btn-glow-neon-green">
+                                        <img src="whelen/images/2tone.png" class="btn-img" alt="2tone">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="wailInd" class="sec-lights rounded-circle red btn-glow-red"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="wail" class="btn neon-green btn-glow-neon-green">
+                                        <img src="whelen/images/wail.png" class="btn-img" alt="wail">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="yelpInd" class="sec-lights rounded-circle neon-green btn-glow-neon-green"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="yelp" class="btn neon-green btn-glow-neon-green">
+                                        <img src="whelen/images/yelp.png" class="btn-img" alt="YELP">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col">
+                            <div class="row mt-2">
+                                <img src="whelen/images/whelen_logo.png" class="" alt="WHELEN">
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <div id="stage1" class="sec-lights float-left rounded-circle off"></div>
+                                </div>
+                                <div class="col">
+                                    <div id="stage2" class="sec-lights ml-3 rounded-circle off"></div>
+                                </div>
+                                <div class="col">
+                                    <div id="stage3" class="sec-lights float-right rounded-circle off"></div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center mt-2">
+                                <div class="col">
+                                    <input id="stageslider" class="span2" type="text" value="" data-slider-min="1" data-provide="slider"
+                                        data-slider-max="3" data-slider-step="1" data-slider-value="0" data-slider-id="stagehandle"
+                                        data-slider-tooltip="hide" data-slider-handle="round" /></div>
+                            </div>
+                            <div class="row justify-content-center mt-2">
+                                <div id="extra7" class="sec-lights rounded-circle off m-1"></div>
+                                <div id="extra5" class="sec-lights rounded-circle off m-1"></div>
+                                <div id="extra1" class="sec-lights rounded-circle off m-1"></div>
+                                <div id="extra2" class="sec-lights rounded-circle off m-1"></div>
+                                <div id="extra3" class="sec-lights rounded-circle off m-1"></div>
+                                <div id="extra4" class="sec-lights rounded-circle off m-1"></div>
+                                <div id="extra6" class="sec-lights rounded-circle off m-1"></div>
+                                <div id="extra9" class="sec-lights rounded-circle off m-1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row justify-content-center">
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="aux1Ind" class="sec-lights rounded-circle neon-green btn-glow-neon-green"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="aux1" class="btn neon-green btn-glow-neon-green">
+                                        <img src="whelen/images/aux1.png" class="btn-img" alt="aux1">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="aux2Ind" class="sec-lights rounded-circle neon-green btn-glow-neon-green"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="aux2" class="btn neon-green btn-glow-neon-green">
+                                        <img src="whelen/images/aux2.png" class="btn-img" alt="aux2">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="man1Ind" class="sec-lights rounded-circle neon-green btn-glow-neon-green"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="man1" class="btn neon-green btn-glow-neon-green">
+                                        <img src="whelen/images/man1.png" class="btn-img" alt="man1">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="man2Ind" class="sec-lights rounded-circle neon-green btn-glow-neon-green"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="man2" class="btn neon-green btn-glow-neon-green">
+                                        <img src="whelen/images/man2.png" class="btn-img" alt="man2">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="hornInd" class="sec-lights rounded-circle neon-green btn-glow-neon-green"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="horn" class="btn neon-green btn-glow-neon-green">
+                                        <img src="whelen/images/horn.png" class="btn-img" alt="horn">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="tkdnInd" class="sec-lights rounded-circle neon-green btn-glow-neon-green"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="tkdn" class="btn neon-green btn-glow-neon-green">
+                                        <img src="whelen/images/tkdn.png" class="btn-img" alt="TKDN">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="scnInd" class="sec-lights rounded-circle neon-green btn-glow-neon-green"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="scn" class="btn neon-green btn-glow-neon-green">
+                                        <img src="whelen/images/scene.png" class="btn-img" alt="SCN">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="cruiseInd" class="sec-lights rounded-circle neon-green btn-glow-neon-green"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="cruise" class="btn neon-green btn-glow-neon-green">
+                                        <img src="whelen/images/cruise.png" class="btn-img" alt="CRS">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="wigwagInd" class="sec-lights rounded-circle neon-green btn-glow-neon-green"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="wigwag" class="btn neon-green btn-glow-neon-green">
+                                        <img src="whelen/images/wigwag.png" class="btn-img" alt="WIGWAG">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="blank1Ind" class="sec-lights rounded-circle off"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="blank1" class="btn neon-green btn-glow-neon-green">
+                                        <img src="whelen/images/blank.png" class="btn-img" alt="TKDN">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="blank2Ind" class="sec-lights rounded-circle off"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="blank2" class="btn neon-green btn-glow-neon-green">
+                                        <img src="whelen/images/blank.png" class="btn-img" alt="SCN">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="row justify-content-center mt-1">
+                                <div id="blank3Ind" class="sec-lights rounded-circle off"></div>
+                            </div>
+                            <div class="row justify-content-center mt-1">
+                                <div class="card text-white bg-secondary btn-card">
+                                    <button id="blank3" class="btn neon-green btn-glow-neon-green">
+                                        <img src="whelen/images/blank.png" class="btn-img" alt="CRS">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

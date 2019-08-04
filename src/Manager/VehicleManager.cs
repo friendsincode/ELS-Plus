@@ -69,10 +69,10 @@ namespace ELS.Manager
                 {
                     if (vehicleList.ContainsKey(Game.PlayerPed.CurrentVehicle.GetNetworkId()))
                     {
-                        Utils.DebugWriteLine("Vehicle is in the list running ticks");
+                        //Utils.DebugWriteLine("Vehicle is in the list running ticks");
                         ELSVehicle _currentVehicle = vehicleList[Game.PlayerPed.CurrentVehicle.GetNetworkId()];
-                        _currentVehicle?.RunTick();
-                        vehicleList.RunExternalTick(_currentVehicle);
+                        _currentVehicle?.RunControlTick();
+                        //vehicleList.RunExternalTick(_currentVehicle);
                         Game.PlayerPed.CurrentVehicle.SetExistOnAllMachines(true);
                     }
                     else
@@ -81,23 +81,14 @@ namespace ELS.Manager
                         {
                             if (vehicleList.MakeSureItExists(API.VehToNet(Game.PlayerPed.CurrentVehicle.Handle), vehicle: out ELSVehicle _currentVehicle))
                             {
-                                _currentVehicle?.RunTick();
-                                vehicleList.RunExternalTick(_currentVehicle);
+                                _currentVehicle?.RunControlTick();
+                                // vehicleList.RunExternalTick(_currentVehicle);
                                 Game.PlayerPed.CurrentVehicle.SetExistOnAllMachines(true);
                             }
-                            else
-                            {
-                                vehicleList.RunExternalTick();
-                            }
-                        }
-                        else
-                        {
-                            vehicleList.RunExternalTick();
                         }
                     }
-                    
-
-
+                    vehicleList.RunTick();
+                    Indicator.RunAsync(Game.PlayerPed.CurrentVehicle);
 #if DEBUG
                     //if (Game.IsControlJustPressed(0, Control.Cover))
                     //{
@@ -110,7 +101,8 @@ namespace ELS.Manager
                     //}
                     //Debug.DebugText();
 #endif
-                } else if (Game.PlayerPed.IsInVehicle() && (Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed)
+                }
+                else if (Game.PlayerPed.IsInVehicle() && (Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed)
                     && (VehicleClass.Boats != Game.PlayerPed.CurrentVehicle.ClassType || VehicleClass.Trains != Game.PlayerPed.CurrentVehicle.ClassType
                     || VehicleClass.Planes != Game.PlayerPed.CurrentVehicle.ClassType || VehicleClass.Helicopters != Game.PlayerPed.CurrentVehicle.ClassType))
                 {
@@ -119,10 +111,11 @@ namespace ELS.Manager
                         makenetworked(Game.PlayerPed.CurrentVehicle);
                     }
                     Indicator.RunAsync(Game.PlayerPed.CurrentVehicle);
-                    vehicleList.RunExternalTick();
+                    vehicleList.RunTick();
                 }
                 else
                 {
+                    vehicleList.RunTick();
                     vehicleList.RunExternalTick();
                 }
             }
@@ -138,7 +131,7 @@ namespace ELS.Manager
         /// Proxies the sync data to a certain vehicle
         /// </summary>
         /// <param name="dataDic">data</param>
-        async internal void SetVehicleSyncData(IDictionary<string, object> dataDic,int PlayerId)
+        async internal void SetVehicleSyncData(IDictionary<string, object> dataDic, int PlayerId)
         {
             if (Game.Player.ServerId == PlayerId)
             {
@@ -152,28 +145,28 @@ namespace ELS.Manager
             {
                 vehicleList[netid].SetData(dataDic);
                 Utils.DebugWriteLine($" Applying vehicle data with NETID of {netid} LOCALID of {API.NetToVeh(netid)}");
-            } 
+                return;
+            }
+            if (!vehicleList.VehRegAttempts.ContainsKey(netid) || Game.GameTime - vehicleList.VehRegAttempts[netid].Item2 >= 15000 && vehicleList.VehRegAttempts[netid].Item1 < 5)
+            {
+                if (!vehicleList.MakeSureItExists(netid, dataDic, out ELSVehicle veh1, PlayerId))
+                {
+                    Utils.DebugWriteLine("Failed to register other clients vehicle");
+                    return;
+                }
+                //veh1.SetData(dataDic);
+            }
             else
             {
-                if (!vehicleList.VehRegAttempts.ContainsKey(netid) || Game.GameTime - vehicleList.VehRegAttempts[netid].Item2 >= 15000 && vehicleList.VehRegAttempts[netid].Item1 < 5)
-                {
-                    if (!vehicleList.MakeSureItExists(netid, dataDic, out ELSVehicle veh1, PlayerId))
-                    {
-                        Utils.DebugWriteLine("Failed to register other clients vehicle");
-                        return;
-                    }
-                    veh1.SetData(dataDic);
-                }
-                else
-                {
-                    Utils.DebugWriteLine("Attempting to register be patient");
-                }
+                Utils.DebugWriteLine("Attempting to register be patient");
             }
+
             if (dataDic.ContainsKey("IndState") && !dataDic.ContainsKey("siren") && !dataDic.ContainsKey("lights"))
             {
                 Utils.DebugWriteLine($"Ind sync data for {netid} is {dataDic["IndState"]}");
                 Vehicle veh = (Vehicle)Vehicle.FromHandle(API.NetworkGetEntityFromNetworkId(netid));
-                if (veh != null) {
+                if (veh != null)
+                {
                     Indicator.ToggleInicatorState(veh, Indicator.IndStateLib[dataDic["IndState"].ToString()]);
                 }
             }
@@ -189,7 +182,7 @@ namespace ELS.Manager
             vehicleList[netId].SyncUi();
         }
 
-        internal static void SyncRequestReply(Commands command,int NetworkId,int PlayerId)
+        internal static void SyncRequestReply(Commands command, int NetworkId, int PlayerId)
         {
             if (NetworkId == 0)
             {
@@ -215,7 +208,7 @@ namespace ELS.Manager
         }
         internal void SyncAllVehiclesOnFirstSpawn(System.Dynamic.ExpandoObject data)
         {
-            dynamic k = data;
+            //dynamic k = data;
             var y = data.ToArray();
             foreach (var struct1 in y)
             {
@@ -236,7 +229,7 @@ namespace ELS.Manager
 
         void RemoveStallVehicles()
         {
-            
+
         }
         internal void CleanUP()
         {

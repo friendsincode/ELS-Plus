@@ -22,6 +22,9 @@ namespace ELS_Server
         string currentVersion;
         public ELSServer()
         {
+#if DEBUG
+            API.SetConvarReplicated("elsplus_debug", "true");
+#endif
             currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             Utils.ReleaseWriteLine($"Welcome to ELS+ {currentVersion} for FiveM");
             GameTimer = API.GetGameTimer();
@@ -146,33 +149,41 @@ namespace ELS_Server
             //JObject data = new JObject();
             //data["serverId"] = serverId;
             //data["serverName"] = API.GetConvar("sv_hostname", $"ELS Plus Server {serverId}");
-            RequestResponse result = await request.Http(updateUrl,"POST", 
-                $"serverId={serverId}&serverName={API.GetConvar("sv_hostname",$"ELS Plus Server {serverId}")}");
-            switch (result.status)
+            try
             {
-                case HttpStatusCode.NotFound:
-                    Utils.ReleaseWriteLine("ELS Update page not found please try again");
-                    break;
-                case HttpStatusCode.OK:
-                    JObject res = JObject.Parse(result.content);
-                    if (((string)res["current"]).Equals(currentVersion))
-                    {
-                        Utils.ReleaseWriteLine("Thank you for using ELS Plus, currently running latest stable version");
-                    }
-                    else if (((string)res["dev"]).Equals(currentVersion))
-                    {
-                        Utils.ReleaseWriteLine("Thank you for using ELS Plus, currently running latest development version");
-                    }
-                    else
-                    {
-                        Utils.ReleaseWriteLine($"ELS Plus is not up to date please update please update from version {currentVersion} to {(string)res["current"]}");
-                    }
-                    break;
-                case HttpStatusCode.RequestTimeout:
-                    Utils.ReleaseWriteLine("ELS Connection timed out please try again");
-                    break;
+                RequestResponse result = await request.Http(updateUrl, "POST",
+                                $"serverId={serverId}&serverName={Uri.EscapeDataString(API.GetConvar("sv_hostname", $"ELS Plus Server {serverId}"))}");
+                switch (result.status)
+                {
+                    case HttpStatusCode.NotFound:
+                        Utils.ReleaseWriteLine("ELS Update page not found please try again");
+                        break;
+                    case HttpStatusCode.OK:
+                        JObject res = JObject.Parse(result.content);
+                        if (((string)res["current"]).Equals(currentVersion))
+                        {
+                            Utils.ReleaseWriteLine("Thank you for using ELS Plus, currently running latest stable version");
+                        }
+                        else if (((string)res["dev"]).Equals(currentVersion))
+                        {
+                            Utils.ReleaseWriteLine("Thank you for using ELS Plus, currently running latest development version");
+                        }
+                        else
+                        {
+                            Utils.ReleaseWriteLine($"ELS Plus is not up to date please update please update from version {currentVersion} to {(string)res["current"]}");
+                        }
+                        break;
+                    case HttpStatusCode.RequestTimeout:
+                        Utils.ReleaseWriteLine("ELS Connection timed out please try again");
+                        break;
+                }
             }
-
+            catch (Exception ex)
+            {
+                Utils.ReleaseWriteLine($"ELS threw an exception checking for a new version of ELS+" +
+                    $"\nERROR:{ex.Message}" +
+                    $"\nERROR:{ex.StackTrace}");
+            }
         }
 
         void BroadcastMessage(System.Dynamic.ExpandoObject dataDic, int SourcePlayerID)

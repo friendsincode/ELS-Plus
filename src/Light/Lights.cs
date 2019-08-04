@@ -52,9 +52,11 @@ namespace ELS.Light
             SECL = new Dictionary<int, Extra.Extra>(),
         };
 
-        private Vcfroot _vcfroot;
+        public Vcfroot _vcfroot { get; set; }
         public Vehicle _vehicle { get; set; }
         internal Stage _stage;
+        public Scene scene { get; set; }
+        public SpotLight spotLight { get; set; }
        
 
         internal Lights(Vehicle vehicle, Vcfroot vcfroot, [Optional]IDictionary<string, object> data)
@@ -91,13 +93,13 @@ namespace ELS.Light
             ElsUiPanel.ToggleUiBtnState(secLights, "SECL");
             ElsUiPanel.ToggleUiBtnState(wrnLights, "WRNL");
             ElsUiPanel.ToggleUiBtnState(crsLights, "CRS");
-            if (_extras.SCL != null)
+            if (scene != null)
             {
-                ElsUiPanel.ToggleUiBtnState(_extras.SCL.TurnedOn, "SCL");
+                ElsUiPanel.ToggleUiBtnState(scene.TurnedOn, "SCL");
             }
-            if (_extras.TDL != null)
+            if (spotLight != null)
             {
-                ElsUiPanel.ToggleUiBtnState(_extras.TDL.TurnedOn, "TDL");
+                ElsUiPanel.ToggleUiBtnState(spotLight.TurnedOn, "TDL");
             }
         }
 
@@ -193,17 +195,25 @@ namespace ELS.Light
                         break;
                     case 11:
                         {
-                            if (API.DoesExtraExist(_vehicle.Handle, 11) && _vcfroot.EOVERRIDE.Extra11.IsElsControlled)
+                            if (API.DoesExtraExist(_vehicle.Handle, 11) && _vcfroot.EOVERRIDE.Extra11.IsElsControlled && _vcfroot.MISC.Takedowns.AllowUse)
                             {
                                 this._extras.TDL = new Extra.Extra(this, 11, _vcfroot.EOVERRIDE.Extra11);
+                            }
+                            else if (_vcfroot.MISC.Takedowns.AllowUse)
+                            {
+                                spotLight = new SpotLight(this);
                             }
                         }
                         break;
                     case 12:
                         {
-                            if (API.DoesExtraExist(_vehicle.Handle, 12) && _vcfroot.EOVERRIDE.Extra12.IsElsControlled)
+                            if (API.DoesExtraExist(_vehicle.Handle, 12) && _vcfroot.EOVERRIDE.Extra12.IsElsControlled && _vcfroot.MISC.SceneLights.AllowUse)
                             {
                                 this._extras.SCL = new Extra.Extra(this, 12, _vcfroot.EOVERRIDE.Extra12);
+                            }
+                            else if (_vcfroot.MISC.SceneLights.AllowUse)
+                            {
+                                scene = new Scene(this);
                             }
                         }
                         break;

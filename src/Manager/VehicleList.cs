@@ -28,19 +28,26 @@ namespace ELS.Manager
             Add(NetworkID,veh);
         }
         public bool IsReadOnly => throw new NotImplementedException();
-        public void RunTick()
-        {
 
+        public void RunTick(bool inVehicle = false)
+        {
+            for(int i = 0; i < Count; i++)
+            {
+                this.ElementAt(i).Value.RunTick();
+            }
         }
+
         public void RunExternalTick([Optional] ELSVehicle vehicle)
         {
             try
             {
-                foreach (var t in Values)
+                for (int i = 0; i < Count; i++)
+                //foreach (var t in Values)
                 {
-                    if (vehicle == null || t.Handle != vehicle.Handle)
+                    if (vehicle == null || this.ElementAt(i).Value.Handle != vehicle.Handle)
                     {
-                        t.RunExternalTick();
+                        //t.RunExternalTick();
+                        this.ElementAt(i).Value.RunTick();
                     } 
                 }
             }
@@ -49,6 +56,7 @@ namespace ELS.Manager
                 Utils.DebugWriteLine($"VehicleList Error: {e.Message}");
             }
         }
+
         public bool MakeSureItExists(int NetworkID, [Optional]out ELSVehicle vehicle)
         {
             if (NetworkID == 0)
@@ -101,6 +109,7 @@ namespace ELS.Manager
                 return true;
             }
         }
+
         public bool MakeSureItExists(int NetworkID, IDictionary<string, object> data,  [Optional]out ELSVehicle vehicle, int PlayerId = -1)
         {
             if (NetworkID == 0)
