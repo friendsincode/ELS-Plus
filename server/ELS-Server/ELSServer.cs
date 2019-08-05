@@ -143,16 +143,16 @@ namespace ELS_Server
 #if DEBUG 
             string updateUrl = "http://localhost";
 #else
-            string updateUrl = "http://els-stats.friendsincode.com";
+            string updateUrl = "https://els-stats.friendsincode.com";
 #endif
             Request request = new Request();
-            //JObject data = new JObject();
-            //data["serverId"] = serverId;
-            //data["serverName"] = API.GetConvar("sv_hostname", $"ELS Plus Server {serverId}");
+            JObject data = new JObject();
+            data["serverId"] = serverId;
+            data["serverName"] = Uri.EscapeDataString(API.GetConvar("sv_hostname", $"ELS Plus Server {serverId}"));
             try
             {
                 RequestResponse result = await request.Http(updateUrl, "POST",
-                                $"serverId={serverId}&serverName={Uri.EscapeDataString(API.GetConvar("sv_hostname", $"ELS Plus Server {serverId}"))}");
+                                data.ToString());
                 switch (result.status)
                 {
                     case HttpStatusCode.NotFound:
