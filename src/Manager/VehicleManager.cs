@@ -133,6 +133,7 @@ namespace ELS.Manager
         /// <param name="dataDic">data</param>
         async internal void SetVehicleSyncData(IDictionary<string, object> dataDic, int PlayerId)
         {
+            
             if (Game.Player.ServerId == PlayerId)
             {
                 Utils.DebugWriteLine("We are player exiting set sync data");
@@ -141,11 +142,19 @@ namespace ELS.Manager
 
             Utils.DebugWriteLine($"{PlayerId} has sent us data parsing");
             int netid = int.Parse(dataDic["NetworkID"].ToString());
+            Vehicle veh = (Vehicle)Vehicle.FromHandle(API.NetworkGetEntityFromNetworkId(netid));
             if (vehicleList.ContainsKey(netid) && dataDic.ContainsKey("siren") || dataDic.ContainsKey("lights"))
             {
-                vehicleList[netid].SetData(dataDic);
-                Utils.DebugWriteLine($" Applying vehicle data with NETID of {netid} LOCALID of {API.NetToVeh(netid)}");
-                return;
+                if (veh.Exists())
+                {
+                    vehicleList[netid].SetData(dataDic);
+                    Utils.DebugWriteLine($" Applying vehicle data with NETID of {netid} LOCALID of {API.NetToVeh(netid)}");
+                    return;
+                } else
+                {
+                    Utils.DebugWriteLine($"Vehicle with NETID of {netid} does not exist currently on this client return");
+                    return;
+                }
             }
             if (!vehicleList.VehRegAttempts.ContainsKey(netid) || Game.GameTime - vehicleList.VehRegAttempts[netid].Item2 >= 15000 && vehicleList.VehRegAttempts[netid].Item1 < 5)
             {
@@ -164,7 +173,7 @@ namespace ELS.Manager
             if (dataDic.ContainsKey("IndState") && !dataDic.ContainsKey("siren") && !dataDic.ContainsKey("lights"))
             {
                 Utils.DebugWriteLine($"Ind sync data for {netid} is {dataDic["IndState"]}");
-                Vehicle veh = (Vehicle)Vehicle.FromHandle(API.NetworkGetEntityFromNetworkId(netid));
+                //Vehicle veh = (Vehicle)Vehicle.FromHandle(API.NetworkGetEntityFromNetworkId(netid));
                 if (veh != null)
                 {
                     Indicator.ToggleInicatorState(veh, Indicator.IndStateLib[dataDic["IndState"].ToString()]);
