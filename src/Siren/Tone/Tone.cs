@@ -63,6 +63,7 @@ namespace ELS.Siren
                     soundId = API.GetSoundId();
                     if (!Audio.HasSoundFinished(soundId)) return;
                     Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)_file, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
+                    //API.PlaySoundFromEntity(soundId, _file, _entity.Handle, "0", false, 0);
                     Utils.DebugWriteLine($"Started sound with id of {soundId}");
                 }
             }

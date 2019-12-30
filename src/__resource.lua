@@ -18,6 +18,12 @@
 resource_manifest_version '05cfa83c-a124-4cfa-a768-c24a5811d8f9'
 local NUIEnabled = true
 
+name 'ELS Plus'
+description 'Fully synced version of ELS Plus for FiveM'
+author 'Friends in Code'
+version '0.3.1.0'
+url 'https://git.friendsincode.com/dexslab/elsplus'
+
 
 -- ELS-FiveM Requirements
 client_script 'SharpConfig.net.dll'

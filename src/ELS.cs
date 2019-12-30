@@ -68,8 +68,10 @@ namespace ELS
                             SetupExports();
                             Tick -= Class1_Tick;
                             Tick += Class1_Tick;
-                            Function.Call((Hash)3520272001, "car.defaultlight.night.emissive.on", Global.NightLtBrightness);
-                            Function.Call((Hash)3520272001, "car.defaultlight.day.emissive.on", Global.DayLtBrightness);
+                            //Function.Call((Hash)3520272001, "car.defaultlight.night.emissive.on", Global.NightLtBrightness);
+                            //Function.Call((Hash)3520272001, "car.defaultlight.day.emissive.on", Global.DayLtBrightness);
+                            API.SetVisualSettingFloat("car.defaultlight.night.emissive.on", Global.NightLtBrightness);
+                            API.SetVisualSettingFloat("car.defaultlight.day.emissive.on", Global.DayLtBrightness);
                         }
                         catch (Exception e)
                         {
