@@ -313,4 +313,7 @@
   <PropertyGroup>
     <PostBuildEvent>powershell -ExecutionPolicy Bypass -File "$(SolutionDir)..\libs\copy.ps1" -projectName "$(SolutionName)" -assemblyname "$(TargetName)" -src "$(TargetDir) "</PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>powershell -ExecutionPolicy Bypass -File "$(SolutionDir)..\prebuild.ps1" -dir "$(SolutionDir).."</PreBuildEvent>
+  </PropertyGroup>
 </Project>
