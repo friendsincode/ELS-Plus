@@ -13,10 +13,10 @@ else {
     $buildpath = "$pwd\\tmp-release\\"
 }
 if ($BuildDebug) {
-    &"$installpath/MSBuild/15.0/Bin/msbuild.exe" /p:outDir=`"$buildpath`" /m /p:Configuration=Debug /p:PostBuildEvent= /t:Build ELSPlus.sln
+    &"$installpath/MSBuild/Current/Bin/msbuild.exe" /p:outDir=`"$buildpath`" /m /p:Configuration=Debug /p:PostBuildEvent= /t:Build ELSPlus.sln
 }
 else {
-    &"$installpath/MSBuild/15.0/Bin/msbuild.exe" /p:outDir=`"$buildpath`" /m /p:Configuration=Release /p:PostBuildEvent= /t:Build ELSPlus.sln
+    &"$installpath/MSBuild/Current/Bin/msbuild.exe" /p:outDir=`"$buildpath`" /m /p:Configuration=Release /p:PostBuildEvent= /t:Build ELSPlus.sln
 }
 Pop-Location
 
