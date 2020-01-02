@@ -174,7 +174,7 @@ namespace ELS.Manager
             {
                 Utils.DebugWriteLine($"Ind sync data for {netid} is {dataDic["IndState"]}");
                 //Vehicle veh = (Vehicle)Vehicle.FromHandle(API.NetworkGetEntityFromNetworkId(netid));
-                if (veh != null)
+                if (veh != null && veh.Exists())
                 {
                     Indicator.ToggleInicatorState(veh, Indicator.IndStateLib[dataDic["IndState"].ToString()]);
                 }
