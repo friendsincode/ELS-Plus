@@ -48,7 +48,7 @@ namespace ELS.Siren
             _mainSiren = new MainSiren(ref _tones);
 
             if (data != null) SetData(data);
-            ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
+            ElsUiPanel.SetUiDesc(_mainSiren.MainTones[_mainSiren.currentTone].Type, "SRN");
             ElsUiPanel.SetUiDesc("--", "HRN");
         }
 

@@ -73,9 +73,9 @@ namespace ELS.Siren
 
         void MainSirenToggleControlsKB()
         {
-            if ((Game.IsControlJustPressed(0, ElsConfiguration.KBBindings.Toggle_SIRN) 
+            if ((Game.IsControlJustReleased(0, ElsConfiguration.KBBindings.Toggle_SIRN) 
                 && Game.CurrentInputMode == InputMode.MouseAndKeyboard) || (Global.AllowController 
-                && Game.IsControlJustPressed(2, ElsConfiguration.GPBindings.Toggle_SIRN) 
+                && Game.IsControlJustReleased(2, ElsConfiguration.GPBindings.Toggle_SIRN) 
                 && Game.CurrentInputMode == InputMode.GamePad))
             {
 #if !REMOTETEST

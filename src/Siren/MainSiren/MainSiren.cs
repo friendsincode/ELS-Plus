@@ -12,13 +12,13 @@ namespace ELS.Siren
         {
             internal bool _enable { get; private set; }
             internal bool interupted = false;
-            internal Tone currentTone;
+            internal int currentTone;
 
-            private List<Tone> MainTones;
+            internal List<Tone> MainTones;
             internal MainSiren(ref Tones tonesl)
             {
                 MainTones = new List<Tone>(new[] { tonesl.tone1, tonesl.tone2, tonesl.tone3, tonesl.tone4 });
-                currentTone = MainTones[0];
+                currentTone = 0;
             }
             /// <summary>
             /// Enables or disables the MainSiren
@@ -30,7 +30,7 @@ namespace ELS.Siren
                 _enable = enable;
                 if (_enable) //turning the main siren on
                 {
-                    currentTone.SetState(true);
+                    MainTones[currentTone].SetState(true);
                     if (Game.PlayerPed.IsSittingInELSVehicle())
                     {
                         ElsUiPanel.ToggleUiBtnState(_enable, "SRN");
@@ -38,7 +38,7 @@ namespace ELS.Siren
                 }
                 else
                 {
-                    currentTone.SetState(false);
+                    MainTones[currentTone].SetState(false);
                     if (Game.PlayerPed.IsSittingInELSVehicle())
                     {
                         ElsUiPanel.ToggleUiBtnState(_enable, "SRN");
@@ -51,43 +51,43 @@ namespace ELS.Siren
             /// else it will disable the current tone and enable the <paramref name="tone"/>
             /// </summary>
             /// <param name="tone"></param>
-            internal void setMainTone(Tone tone)
+            internal void setMainTone(int tone)
             {
-                _setMainTone(MainTones.Find((maintone) => maintone == tone));
+                _setMainTone(tone);
             }
 
-            private void _setMainTone(Tone tone)
+            private void _setMainTone(int tone)
             {
-                if (currentTone == tone) SetEnable(false);
+                if (currentTone == tone) { SetEnable(false); }
                 else
                 {
-                    currentTone.SetState(false);
+                    MainTones[currentTone].SetState(false);
                     currentTone = tone;
-                    currentTone.SetState(true);
+                    MainTones[currentTone].SetState(true);
                 }
             }
             internal void nextTone()
             {
 
-                currentTone.SetState(false);
+                MainTones[currentTone].SetState(false);
                 //OverflowCatch
-                if (MainTones.IndexOf(currentTone) + 1 >= MainTones.Count) currentTone = MainTones[0];
+                if (currentTone + 1 >= MainTones.Count) { currentTone = 0; }
                 else
                 {
-                    currentTone = MainTones[MainTones.IndexOf(currentTone) + 1];
-                    if (_enable) currentTone.SetState(true);
+                    currentTone += 1;
+                    if (_enable) { MainTones[currentTone].SetState(true); }
                 }
             }
 
             internal void previousTone()
             {
-                currentTone.SetState(false);
+                MainTones[currentTone].SetState(false);
                 //Underflow Check
-                if (MainTones.IndexOf(currentTone) - 1 < 0) currentTone = MainTones[MainTones.Count-1];
+                if (currentTone - 1 < 0) { currentTone = MainTones.Count - 1; }
                 else
                 {
-                    currentTone = MainTones[MainTones.IndexOf(currentTone) - 1];
-                    if (_enable) currentTone.SetState(true);
+                    currentTone = currentTone - 1;
+                    if (_enable) { MainTones[currentTone].SetState(true); }
                 }
                
             }

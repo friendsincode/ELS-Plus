@@ -8,15 +8,19 @@ namespace ELS.Siren
     {
         public void SetData(IDictionary<string, object> data)
         {
+            Utils.DebugWriteLine("Setting data for sirens");
             if (data.ContainsKey("_mainSiren"))
             {
+                Utils.DebugWriteLine("Got Main Siren Data");
                 _mainSiren.SetData((IDictionary<string, object>)data["_mainSiren"]);
             }
             if (data.ContainsKey("_tones")) {
+                Utils.DebugWriteLine("Got Tone Data");
                 _tones.SetData((IDictionary<string,object>)data["_tones"]);
             }
             if(data.TryGetValue("dual_siren", out object res))
             {
+                Utils.DebugWriteLine("Got Dual Siren Data");
                 dual_siren = (bool)res;
             }
         }

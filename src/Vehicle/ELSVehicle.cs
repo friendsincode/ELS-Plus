@@ -186,8 +186,16 @@ namespace ELS
         /// <param name="dataDic"></param>
         public void SetData(IDictionary<string, object> data)
         {
-            _siren.SetData((IDictionary<string, object>)data["siren"]);
-            _light.SetData((IDictionary<string, object>)data["light"]);
+            if (data["siren"] != null)
+            {
+                Utils.DebugWriteLine($"Got siren data for vehicle {_vehicle.NetworkId} with cached net id of {cachedNetId}");
+                _siren.SetData((IDictionary<string, object>)data["siren"]);
+            }
+            if (data["light"] != null)
+            {
+                Utils.DebugWriteLine($"Got siren data for vehicle {_vehicle.NetworkId} with cached net id of {cachedNetId}");
+                _light.SetData((IDictionary<string, object>)data["light"]);
+            }
         }
 
         public Dictionary<string, object> GetData()
@@ -213,16 +221,16 @@ namespace ELS
             switch(veh.Siren)
             {
                 case "WL":
-                    _siren._mainSiren.setMainTone(_siren._tones.tone1);
+                    _siren._mainSiren.setMainTone(0);
                     break;
                 case "YP":
-                    _siren._mainSiren.setMainTone(_siren._tones.tone2);
+                    _siren._mainSiren.setMainTone(1);
                     break;
                 case "A1":
-                    _siren._mainSiren.setMainTone(_siren._tones.tone3);
+                    _siren._mainSiren.setMainTone(2);
                     break;
                 case "A2":
-                    _siren._mainSiren.setMainTone(_siren._tones.tone4);
+                    _siren._mainSiren.setMainTone(3);
                     break;
             }
             VehicleManager.SyncRequestReply(RemoteEventManager.Commands.MainSiren, this.GetNetworkId(), Game.Player.ServerId);
@@ -236,8 +244,8 @@ namespace ELS
                 PrmPatt = _light.CurrentPrmPattern,
                 SecPatt = _light.CurrentSecPattern,
                 WrnPatt = _light.CurrentWrnPattern,
-                Siren = _siren._mainSiren.currentTone.Type,
-                Model = _vehicle.Model.Hash
+                Siren = _siren._mainSiren.MainTones[_siren._mainSiren.currentTone].Type,
+            Model = _vehicle.Model.Hash
             };
             ELS.userSettings.SaveVehicles(veh);
         }

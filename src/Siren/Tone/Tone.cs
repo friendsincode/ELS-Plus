@@ -54,33 +54,37 @@ namespace ELS.Siren
 
         internal void SetState(bool state)
         {
-
+            Utils.DebugWriteLine($"Setting state to {state} for {Type}");
             _state = state;
             if (_state && AllowUse)
             {
+                Utils.DebugWriteLine($"Getting ready to start sound for {Type}");
                 if (soundId == -1)
                 {
+                    //soundId = Audio.PlaySoundFromEntity(_entity, _file);
                     soundId = API.GetSoundId();
+                    Utils.DebugWriteLine($"1. Sound id of {soundId} with networkid of {_entity.GetNetworkId()} with network sound id of {API.GetSoundIdFromNetworkId(_entity.GetNetworkId())}");
                     if (!Audio.HasSoundFinished(soundId)) return;
                     Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)_file, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
+                    Utils.DebugWriteLine($"2. Sound id of {soundId} with networkid of {_entity.GetNetworkId()} with network sound id of {API.GetSoundIdFromNetworkId(_entity.GetNetworkId())}");
                     //API.PlaySoundFromEntity(soundId, _file, _entity.Handle, "0", false, 0);
                     Utils.DebugWriteLine($"Started sound with id of {soundId}");
                 }
             }
             else
             {
+                Utils.DebugWriteLine($"Stopping sound {soundId} and setting to -1 for {Type} with networkid of {_entity.GetNetworkId()} and network sound if of {API.GetNetworkIdFromSoundId(soundId)}");
                 Audio.StopSound(soundId);
                 Audio.ReleaseSound(soundId);
-                soundId = -1;
                 Utils.DebugWriteLine($"Stopped and released sound with id of {soundId}");
+                soundId = -1;
             }
         }
 
         internal void CleanUp()
         {
-#if DEBUG
-            CitizenFX.Core.Debug.WriteLine("Tone deconstructor ran");
-#endif
+
+            Utils.DebugWriteLine("Tone deconstructor ran");
             Audio.StopSound(soundId);
             Audio.ReleaseSound(soundId);
         }

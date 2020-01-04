@@ -210,6 +210,7 @@ namespace ELS.Manager
                     FullSync.FullSyncManager.SendDataBroadcast(dict, PlayerId);
                     break;
                 default:
+                    Utils.DebugWriteLine($"Sending {command} from {PlayerId} for network id {NetworkId}");
                     FullSync.FullSyncManager.SendDataBroadcast(vehicleList[NetworkId].GetData(), PlayerId);
                     break;
 
