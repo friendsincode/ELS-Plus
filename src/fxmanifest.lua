@@ -1,4 +1,4 @@
- --[[
+﻿ --[[
     ELS FiveM - A ELS implementation for FiveM
     Copyright (C) 2017  E.J. Bevenour
 
@@ -15,14 +15,16 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]
-resource_manifest_version '05cfa83c-a124-4cfa-a768-c24a5811d8f9'
+fx_version 'bodacious'
+games { 'gta5' }
+
 local NUIEnabled = true
 
 name 'ELS Plus'
 description 'Fully synced version of ELS Plus for FiveM'
-author 'Friends in Code'
-version '0.3.1.0'
-url 'https://git.friendsincode.com/dexslab/elsplus'
+author 'Friends in Code: Dex\'s Lab'
+version '0.3.1.29'
+url 'https://git.friendsincode.com/friendsincode-public/elsplus'
 
 
 -- ELS-FiveM Requirements
@@ -47,7 +49,7 @@ if NUIEnabled then
     'NUI/app/js/sirenclickoff.ogg',
     'NUI/app/js/indon.ogg',
     'NUI/app/js/indoff.ogg',
-    'NUI/app/js/jquery-3.2.1.min.js',
+    'NUI/app/js/jquery-0.3.1.29min.js',
     -- New Hotness
     'NUI/app/newhotness/index.html',    
     'NUI/app/newhotness/js/popper.js',

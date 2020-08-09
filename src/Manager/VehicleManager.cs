@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using ELS.configuration;
 using ELS.Light;
 using static ELS.RemoteEventManager;
+using System.Dynamic;
 
 namespace ELS.Manager
 {
@@ -19,9 +20,11 @@ namespace ELS.Manager
     {
         internal static VehicleList vehicleList;
         static bool notified = false;
+        long lastServerSync;
         public VehicleManager()
         {
             vehicleList = new VehicleList();
+            lastServerSync = Game.GameTime;
         }
 
         internal static void makenetworked(Vehicle veh)
@@ -88,6 +91,7 @@ namespace ELS.Manager
                         }
                     }
                     vehicleList.RunTick();
+                    vehicleList.RunExternalTick();
                     Indicator.RunAsync(Game.PlayerPed.CurrentVehicle);
 #if DEBUG
                     //if (Game.IsControlJustPressed(0, Control.Cover))
@@ -123,8 +127,14 @@ namespace ELS.Manager
             {
                 CitizenFX.Core.Debug.WriteLine($"VehicleManager Error: {e.Message} \n Stacktrace: {e.StackTrace}");
             }
-
+            if (Game.GameTime - lastServerSync  >= 5000)
+            {
+                lastServerSync = Game.GameTime;
+                ELS.TriggerServerEvent("ELS:FullSync:Request:All");
+                Utils.DebugWriteLine("Requested Sync Data from server");
+            }
             //TODO Chnage how I check for the panic alarm
+
         }
 
         /// <summary>
@@ -133,7 +143,6 @@ namespace ELS.Manager
         /// <param name="dataDic">data</param>
         async internal void SetVehicleSyncData(IDictionary<string, object> dataDic, int PlayerId)
         {
-            
             if (Game.Player.ServerId == PlayerId)
             {
                 Utils.DebugWriteLine("We are player exiting set sync data");
@@ -142,19 +151,11 @@ namespace ELS.Manager
 
             Utils.DebugWriteLine($"{PlayerId} has sent us data parsing");
             int netid = int.Parse(dataDic["NetworkID"].ToString());
-            Vehicle veh = (Vehicle)Vehicle.FromHandle(API.NetworkGetEntityFromNetworkId(netid));
             if (vehicleList.ContainsKey(netid) && dataDic.ContainsKey("siren") || dataDic.ContainsKey("lights"))
             {
-                if (veh.Exists())
-                {
-                    vehicleList[netid].SetData(dataDic);
-                    Utils.DebugWriteLine($" Applying vehicle data with NETID of {netid} LOCALID of {API.NetToVeh(netid)}");
-                    return;
-                } else
-                {
-                    Utils.DebugWriteLine($"Vehicle with NETID of {netid} does not exist currently on this client return");
-                    return;
-                }
+                vehicleList[netid].SetData(dataDic);
+                Utils.DebugWriteLine($" Applying vehicle data with NETID of {netid} LOCALID of {API.NetToVeh(netid)}");
+                return;
             }
             if (!vehicleList.VehRegAttempts.ContainsKey(netid) || Game.GameTime - vehicleList.VehRegAttempts[netid].Item2 >= 15000 && vehicleList.VehRegAttempts[netid].Item1 < 5)
             {
@@ -173,8 +174,8 @@ namespace ELS.Manager
             if (dataDic.ContainsKey("IndState") && !dataDic.ContainsKey("siren") && !dataDic.ContainsKey("lights"))
             {
                 Utils.DebugWriteLine($"Ind sync data for {netid} is {dataDic["IndState"]}");
-                //Vehicle veh = (Vehicle)Vehicle.FromHandle(API.NetworkGetEntityFromNetworkId(netid));
-                if (veh != null && veh.Exists())
+                Vehicle veh = (Vehicle)Vehicle.FromHandle(API.NetworkGetEntityFromNetworkId(netid));
+                if (veh != null)
                 {
                     Indicator.ToggleInicatorState(veh, Indicator.IndStateLib[dataDic["IndState"].ToString()]);
                 }
@@ -210,26 +211,32 @@ namespace ELS.Manager
                     FullSync.FullSyncManager.SendDataBroadcast(dict, PlayerId);
                     break;
                 default:
-                    Utils.DebugWriteLine($"Sending {command} from {PlayerId} for network id {NetworkId}");
                     FullSync.FullSyncManager.SendDataBroadcast(vehicleList[NetworkId].GetData(), PlayerId);
                     break;
 
             }
         }
-        internal void SyncAllVehiclesOnFirstSpawn(System.Dynamic.ExpandoObject data)
+        internal void SyncAllVehiclesOnFirstSpawn(ExpandoObject data)
         {
-            //dynamic k = data;
+            Utils.DebugWriteLine("Got broadcast to sync all data");
+            dynamic k = data;
             var y = data.ToArray();
+            //Utils.DebugWriteLine("0");
             foreach (var struct1 in y)
             {
+                //Utils.DebugWriteLine("1");
                 int netID = int.Parse(struct1.Key);
+                //Utils.DebugWriteLine("2");
                 var vehData = (IDictionary<string, object>)struct1.Value;
-                int vehId = int.Parse(vehData["NetworkID"].ToString());
-                vehicleList.MakeSureItExists(vehId,
+                //Utils.DebugWriteLine("3");
+                Utils.DebugWriteLine($"Setting data for netid {netID} and {vehData["NetworkID"]}");
+                vehicleList.MakeSureItExists(netID,
                         vehData,
                         out ELSVehicle veh
                 );
             }
+
+
         }
 
         void GetAllVehicles()

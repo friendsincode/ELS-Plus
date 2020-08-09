@@ -54,7 +54,7 @@ function setVersionInDir($dir, $version) {
     
     # Set the Assembly version
     #$info_files = Get-ChildItem $dir -Recurse -Include "AssemblyInfo.cs" | where { $_ -match 'ELS' }
-     $info_files = "$dir\src\Properties\AssemblyInfo.cs", "$dir\server\ELS-Server\Properties\AssemblyInfo.cs"
+     $info_files = "$dir\src\Properties\AssemblyInfo.cs", "$dir\server\ELS-Server\Properties\AssemblyInfo.cs", "$dir\src\fxmanifest.lua"
     foreach ($file in $info_files) {
         SetVersion $file $version
     }

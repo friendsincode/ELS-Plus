@@ -293,7 +293,7 @@
     <None Include="ELS.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="__resource.lua">
+    <None Include="fxmanifest.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
