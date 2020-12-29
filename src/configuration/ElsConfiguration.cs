@@ -146,6 +146,9 @@ namespace ELS.configuration
                 Global.BtnClicksBtwnSrnTones = u["AUDIO"]["BtnClicksBtwnSrnTones"].BoolValue;
                 Global.BtnClicksBtwnHrnTones = u["AUDIO"]["BtnClicksBtwnHrnTones"].BoolValue;
                 Global.BtnClicksIndicators = u["AUDIO"]["BtnClicksIndicators"].BoolValue;
+                Global.EnableDLCSound = u["AUDIO"]["EnableDLCSound"].BoolValue;
+                Global.DLCSoundBank = u["AUDIO"]["DLCSoundBank"].StringValue;
+                Global.DLCSoundSet = u["AUDIO"]["DLCSoundSet"].StringValue;
                 Global.AllowController = u["GAMEPAD"]["AllowController"].BoolValue;
                 Utils.DebugWrite($"Configuration ran \n ---------------------- \n Traffic Control: {Global.EnabeTrafficControl} \n Delay: {Global.PrimDelay} \n Delete Interval: {Global.DeleteInterval} \n Env Lighting Range: {Global.EnvLightRng}\n");
             }

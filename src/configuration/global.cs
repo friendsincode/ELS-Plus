@@ -41,6 +41,9 @@ namespace ELS.configuration
         internal static bool BtnClicksBtwnHrnTones { get; set; }
         internal static bool BtnClicksBtwnSrnTones { get; set; }
         internal static bool BtnClicksIndicators { get; set; }
+        internal static bool EnableDLCSound { get; set; }
+        internal static string DLCSoundBank { get; set; }
+        internal static string DLCSoundSet { get; set; }
 
 
         public Global()

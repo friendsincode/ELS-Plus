@@ -74,6 +74,11 @@ namespace ELS_Server
                 Utils.DebugWriteLine($"Stale vehicle {netid} removed from cache");
             });
 
+            EventHandlers["ELS:getServerNetworkId"] += new Action<int,int>(async (int player, int entity) =>
+            {
+                Players[player].TriggerEvent("ELS:networkId", API.NetworkGetEntityFromNetworkId(entity));
+            });
+
             EventHandlers["baseevents:enteredVehicle"] += new Action<int, int, string>((veh, seat, name) =>
               {
                   Utils.DebugWriteLine("Vehicle Entered");

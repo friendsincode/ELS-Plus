@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using ELS.configuration;
 
 namespace ELS.Siren
 {
@@ -65,7 +66,15 @@ namespace ELS.Siren
                     soundId = API.GetSoundId();
                     Utils.DebugWriteLine($"1. Sound id of {soundId} with networkid of {_entity.GetNetworkId()} with network sound id of {API.GetSoundIdFromNetworkId(_entity.GetNetworkId())}");
                     if (!Audio.HasSoundFinished(soundId)) return;
-                    Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)_file, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
+                    if (Global.EnableDLCSound)
+                    {
+                        API.PlaySoundFromEntity(soundId, _file, _entity.Handle, Global.DLCSoundSet, false, 0);
+                    }
+                    else
+                    {
+                        //Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)_file, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
+                        API.PlaySoundFromEntity(soundId, _file, _entity.Handle, "0", false, 0);
+                    }
                     Utils.DebugWriteLine($"2. Sound id of {soundId} with networkid of {_entity.GetNetworkId()} with network sound id of {API.GetSoundIdFromNetworkId(_entity.GetNetworkId())}");
                     //API.PlaySoundFromEntity(soundId, _file, _entity.Handle, "0", false, 0);
                     Utils.DebugWriteLine($"Started sound with id of {soundId}");

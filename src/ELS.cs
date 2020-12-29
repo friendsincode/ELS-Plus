@@ -72,6 +72,10 @@ namespace ELS
                             //Function.Call((Hash)3520272001, "car.defaultlight.day.emissive.on", Global.DayLtBrightness);
                             API.SetVisualSettingFloat("car.defaultlight.night.emissive.on", Global.NightLtBrightness);
                             API.SetVisualSettingFloat("car.defaultlight.day.emissive.on", Global.DayLtBrightness);
+                            if (Global.EnableDLCSound)
+                            {
+                                API.RequestScriptAudioBank(Global.DLCSoundBank, false);
+                            }
                         }
                         catch (Exception e)
                         {
@@ -116,6 +120,10 @@ namespace ELS
             {
                 _vehicleManager.SyncAllVehiclesOnFirstSpawn(a);
 
+            });
+
+            EventHandlers["ELS:networkId"] += new Action<int>((a) =>
+            {
             });
             EventHandlers["ELS:FullSync:NewSpawn"] += new Action(() =>
             {
