@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     ELS FiveM - A ELS implementation for FiveM
     Copyright (C) 2017  E.J. Bevenour
 
