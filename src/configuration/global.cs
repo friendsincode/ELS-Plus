@@ -1,4 +1,4 @@
-﻿/*
+/*
     ELS FiveM - A ELS implementation for FiveM
     Copyright (C) 2017  E.J. Bevenour
 
@@ -41,10 +41,7 @@ namespace ELS.configuration
         internal static bool BtnClicksBtwnHrnTones { get; set; }
         internal static bool BtnClicksBtwnSrnTones { get; set; }
         internal static bool BtnClicksIndicators { get; set; }
-        internal static bool EnableDLCSound { get; set; }
-        internal static string DLCSoundBank { get; set; }
-        internal static string DLCSoundSet { get; set; }
-
+        internal static List<string> RegisterdSoundBanks { get; set; }
 
         public Global()
         {

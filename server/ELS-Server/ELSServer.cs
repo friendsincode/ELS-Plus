@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -74,9 +74,20 @@ namespace ELS_Server
                 Utils.DebugWriteLine($"Stale vehicle {netid} removed from cache");
             });
 
-            EventHandlers["ELS:getServerNetworkId"] += new Action<int,int>(async (int player, int entity) =>
+            EventHandlers["ELS:getServerNetworkId"] += new Action<int,int, int>(async (int player, int entity, int netid) =>
             {
-                Players[player].TriggerEvent("ELS:networkId", API.NetworkGetEntityFromNetworkId(entity));
+                
+                try
+                {
+                    Utils.DebugWrite($"server entity {API.NetworkGetEntityFromNetworkId(netid)} for client entity {entity} with net id of {netid}");
+                    Utils.DebugWrite($"Got Server net id of {API.NetworkGetNetworkIdFromEntity(entity)} for client entity {entity} with net id of {netid}");
+
+                    Players[player].TriggerEvent("ELS:serverNetworkId", API.NetworkGetNetworkIdFromEntity(entity), API.NetworkGetEntityFromNetworkId(netid), entity, netid);
+                } catch (Exception e)
+                {
+                    Utils.DebugWrite(e.Message);
+                }
+
             });
 
             EventHandlers["baseevents:enteredVehicle"] += new Action<int, int, string>((veh, seat, name) =>
@@ -124,7 +135,7 @@ namespace ELS_Server
                 Utils.ReleaseWriteLine("Please update your CitizenFX server to the latest artifact version to enable update check and server tracking");
             }
             Task updateCheck = new Task(() => CheckForUpdates());
-            updateCheck.Start();
+            //updateCheck.Start();
         }
 
         async Task PreloadSyncData()

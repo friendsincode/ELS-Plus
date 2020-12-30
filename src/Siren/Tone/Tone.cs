@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,7 +28,8 @@ namespace ELS.Siren
         internal string Type;
         internal bool _state { private set; get; }
         internal bool AllowUse { get; set; }
-        internal Tone(string file, Entity entity, ToneType type, bool allow, bool state = false)
+        internal string DLCSoundSet { get; set; }
+        internal Tone(string file, Entity entity, ToneType type, bool allow, string soundbank, string soundset, bool state = false)
         {
             _entity = entity;
             _file = file;
@@ -51,6 +52,17 @@ namespace ELS.Siren
                     break;
             }
             soundId = -1;
+            if (!String.IsNullOrEmpty(soundbank) && !Global.RegisterdSoundBanks.Contains(soundbank))
+            {
+                Utils.DebugWriteLine($"Registering sound bank {soundset}");
+                API.RequestScriptAudioBank(soundbank, false);
+                Global.RegisterdSoundBanks.Add(soundbank);
+            }
+            if (!String.IsNullOrEmpty(soundset))
+            {
+                Utils.DebugWriteLine($"Adding soundset {soundset} for {_file}");
+                DLCSoundSet = soundset;
+            }
         }
 
         internal void SetState(bool state)
@@ -66,18 +78,35 @@ namespace ELS.Siren
                     soundId = API.GetSoundId();
                     Utils.DebugWriteLine($"1. Sound id of {soundId} with networkid of {_entity.GetNetworkId()} with network sound id of {API.GetSoundIdFromNetworkId(_entity.GetNetworkId())}");
                     if (!Audio.HasSoundFinished(soundId)) return;
-                    if (Global.EnableDLCSound)
+                    if (!String.IsNullOrEmpty(DLCSoundSet))
                     {
-                        API.PlaySoundFromEntity(soundId, _file, _entity.Handle, Global.DLCSoundSet, false, 0);
+                        Utils.DebugWriteLine($"DLC enabled sound using file  {_file}");
+                        API.PlaySoundFromEntity(soundId, _file, _entity.Handle, DLCSoundSet, false, 0);
+                        //Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)Global.DLCSoundSet, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
                     }
                     else
                     {
-                        //Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)_file, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
-                        API.PlaySoundFromEntity(soundId, _file, _entity.Handle, "0", false, 0);
+                        Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)_file, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
+                        Utils.DebugWriteLine($"DLC disabled sound using file  {_file}");
+                        //API.PlaySoundFromEntity(soundId, _file, _entity.Handle, "0", false, 0);
                     }
                     Utils.DebugWriteLine($"2. Sound id of {soundId} with networkid of {_entity.GetNetworkId()} with network sound id of {API.GetSoundIdFromNetworkId(_entity.GetNetworkId())}");
                     //API.PlaySoundFromEntity(soundId, _file, _entity.Handle, "0", false, 0);
                     Utils.DebugWriteLine($"Started sound with id of {soundId}");
+                } 
+                else
+                {
+                    if (!String.IsNullOrEmpty(DLCSoundSet))
+                    {
+                        Utils.DebugWriteLine($"DLC enabled sound using file  {_file}");
+                        API.PlaySoundFromEntity(soundId, _file, _entity.Handle, DLCSoundSet, false, 0);
+                    }
+                    else
+                    {
+                        //Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, soundId, (InputArgument)_file, (InputArgument)_entity.Handle, (InputArgument)0, (InputArgument)0, (InputArgument)0);
+                        Utils.DebugWriteLine($"DLC disabled sound using file  {_file}");
+                        API.PlaySoundFromEntity(soundId, _file, _entity.Handle, "0", false, 0);
+                    }
                 }
             }
             else

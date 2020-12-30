@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +37,7 @@ namespace ELS.Manager
             //if (!veh.Model.IsLoaded) veh.Model.Request(-1);
             var net1 = API.VehToNet(veh.Handle);
             var attempts = 0;
+
             do
             {
                 Utils.DebugWriteLine($"Attempt {attempts} of {veh.Handle} driven by {veh.GetPedOnSeat(VehicleSeat.Driver).Handle}");
@@ -48,6 +49,7 @@ namespace ELS.Manager
                 API.SetNetworkIdExistsOnAllMachines(netid, true);
                 API.NetworkRequestControlOfEntity(veh.Handle);
                 attempts++;
+                
             }
             while (!API.NetworkDoesEntityExistWithNetworkId(veh.Handle) && attempts < 20);
             if (attempts == 20 && !notified)
@@ -70,6 +72,7 @@ namespace ELS.Manager
                         (Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed
                         || Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Passenger) == Game.PlayerPed))
                 {
+                    //ELS.TriggerServerEvent("ELS:getServerNetworkId", Game.PlayerPed.CurrentVehicle.Handle, Game.PlayerPed.CurrentVehicle.GetNetworkId());
                     if (vehicleList.ContainsKey(Game.PlayerPed.CurrentVehicle.GetNetworkId()))
                     {
                         //Utils.DebugWriteLine("Vehicle is in the list running ticks");

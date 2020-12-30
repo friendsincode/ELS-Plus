@@ -1,4 +1,4 @@
-﻿/*
+/*
     ELS FiveM - A ELS implementation for FiveM
     Copyright (C) 2017  E.J. Bevenour
 
@@ -379,39 +379,57 @@ namespace ELS.configuration
                         {
                             case "ManTone1":
                                 data.root.SOUNDS.ManTone1.AudioString = n.GetAttribute("AudioString").Value;
+                                data.root.SOUNDS.ManTone1.SoundBank = n.GetAttribute("SoundBank")?.Value;
+                                data.root.SOUNDS.ManTone1.SoundSet = n.GetAttribute("SoundSet")?.Value;
                                 data.root.SOUNDS.ManTone1.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
                                 break;
                             case "ManTone2":
                                 data.root.SOUNDS.ManTone2.AudioString = n.GetAttribute("AudioString").Value;
                                 data.root.SOUNDS.ManTone2.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
+                                data.root.SOUNDS.ManTone2.SoundBank = n.GetAttribute("SoundBank")?.Value;
+                                data.root.SOUNDS.ManTone2.SoundSet = n.GetAttribute("SoundSet")?.Value;
                                 break;
                             case "MainHorn":
                                 data.root.SOUNDS.MainHorn.AudioString = n.GetAttribute("AudioString").Value;
                                 data.root.SOUNDS.MainHorn.InterruptsSiren = bool.Parse(n.GetAttribute("InterruptsSiren").Value);
+                                data.root.SOUNDS.MainHorn.SoundBank = n.GetAttribute("SoundBank")?.Value;
+                                data.root.SOUNDS.MainHorn.SoundSet = n.GetAttribute("SoundSet")?.Value;
                                 break;
                             case "SrnTone1":
                                 data.root.SOUNDS.SrnTone1.AudioString = n.GetAttribute("AudioString").Value;
                                 data.root.SOUNDS.SrnTone1.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
+                                data.root.SOUNDS.SrnTone1.SoundBank = n.GetAttribute("SoundBank")?.Value;
+                                data.root.SOUNDS.SrnTone1.SoundSet = n.GetAttribute("SoundSet")?.Value;
                                 break;
                             case "SrnTone2":
                                 data.root.SOUNDS.SrnTone2.AudioString = n.GetAttribute("AudioString").Value;
                                 data.root.SOUNDS.SrnTone2.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
+                                data.root.SOUNDS.SrnTone2.SoundBank = n.GetAttribute("SoundBank")?.Value;
+                                data.root.SOUNDS.SrnTone2.SoundSet = n.GetAttribute("SoundSet")?.Value;
                                 break;
                             case "SrnTone3":
                                 data.root.SOUNDS.SrnTone3.AudioString = n.GetAttribute("AudioString").Value;
                                 data.root.SOUNDS.SrnTone3.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
+                                data.root.SOUNDS.SrnTone3.SoundBank = n.GetAttribute("SoundBank")?.Value;
+                                data.root.SOUNDS.SrnTone3.SoundSet = n.GetAttribute("SoundSet")?.Value;
                                 break;
                             case "SrnTone4":
                                 data.root.SOUNDS.SrnTone4.AudioString = n.GetAttribute("AudioString").Value;
                                 data.root.SOUNDS.SrnTone4.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
+                                data.root.SOUNDS.SrnTone4.SoundBank = n.GetAttribute("SoundBank")?.Value;
+                                data.root.SOUNDS.SrnTone4.SoundSet = n.GetAttribute("SoundSet")?.Value;
                                 break;
                             case "AuxSiren":
                                 data.root.SOUNDS.AuxSiren.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
                                 data.root.SOUNDS.AuxSiren.AudioString = n.GetAttribute("AudioString").Value;
+                                data.root.SOUNDS.AuxSiren.SoundBank = n.GetAttribute("SoundBank")?.Value;
+                                data.root.SOUNDS.AuxSiren.SoundSet = n.GetAttribute("SoundSet")?.Value;
                                 break;
                             case "PanicMde":
                                 data.root.SOUNDS.PanicMde.AllowUse = bool.Parse(n.GetAttribute("AllowUse").Value);
                                 data.root.SOUNDS.PanicMde.AudioString = n.GetAttribute("AudioString").Value;
+                                data.root.SOUNDS.PanicMde.SoundBank = n.GetAttribute("SoundBank")?.Value;
+                                data.root.SOUNDS.PanicMde.SoundSet = n.GetAttribute("SoundSet")?.Value;
                                 break;
 
                         }
@@ -1165,6 +1183,10 @@ namespace ELS.configuration
         public bool InterruptsSiren { get; set; }
 
         public string AudioString { get; set; }
+
+        public string SoundBank { get; set; }
+
+        public string SoundSet { get; set; }
     }
 
     public class SrnTone
@@ -1173,6 +1195,10 @@ namespace ELS.configuration
         public bool AllowUse { get; set; }
 
         public string AudioString { get; set; }
+
+        public string SoundBank { get; set; }
+
+        public string SoundSet { get; set; }
     }
 
     public class TonePattern

@@ -1,4 +1,4 @@
-﻿/*
+/*
     ELS FiveM - A ELS implementation for FiveM
     Copyright (C) 2017  E.J. Bevenour
 
@@ -58,6 +58,7 @@ namespace ELS
 
                             ServerId = API.GetConvar("ElsServerId", null);
                             userSettings = new UserSettings();
+                            Global.RegisterdSoundBanks = new List<string>();
                             Task settingsTask = new Task(() => userSettings.LoadUserSettings());
                             Utils.ReleaseWriteLine($"Welcome to ELS Plus on {ServerId} using version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
                             settingsTask.Start();
@@ -72,10 +73,7 @@ namespace ELS
                             //Function.Call((Hash)3520272001, "car.defaultlight.day.emissive.on", Global.DayLtBrightness);
                             API.SetVisualSettingFloat("car.defaultlight.night.emissive.on", Global.NightLtBrightness);
                             API.SetVisualSettingFloat("car.defaultlight.day.emissive.on", Global.DayLtBrightness);
-                            if (Global.EnableDLCSound)
-                            {
-                                API.RequestScriptAudioBank(Global.DLCSoundBank, false);
-                            }
+                            
                         }
                         catch (Exception e)
                         {
@@ -122,8 +120,9 @@ namespace ELS
 
             });
 
-            EventHandlers["ELS:networkId"] += new Action<int>((a) =>
+            EventHandlers["ELS:serverNetworkId"] += new Action<int, int, int, int>((servernetid, serverentityid, sententid, sentnetid) =>
             {
+                Utils.DebugWrite($"Got Server net id of {servernetid} for server entity {serverentityid} for client entity {sententid} with net id of {sentnetid}");
             });
             EventHandlers["ELS:FullSync:NewSpawn"] += new Action(() =>
             {

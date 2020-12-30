@@ -1,5 +1,5 @@
---[[
-    ELS FiveM - A ELS implementation for FiveM
+﻿--[[
+    ELS Plus - A ELS implementation for FiveM
     Copyright (C) 2017  E.J. Bevenour
 
     This program is free software: you can redistribute it and/or modify
@@ -23,10 +23,10 @@ local NUIEnabled = true
 name "ELS Plus"
 description "Fully synced version of ELS Plus for FiveM"
 author "Friends in Code: Dex's Lab"
-version "0.3.1.35"
+version "0.3.1.62"
 url "https://git.friendsincode.com/friendsincode-public/elsplus"
 
--- ELS-FiveM Requirements
+-- ELS Plus Client Scripts
 client_script "SharpConfig.net.dll"
 client_script "els-plus.net.dll"
 client_script "Newtonsoft.Json.dll"
@@ -50,7 +50,7 @@ if NUIEnabled then
             "NUI/app/js/sirenclickoff.ogg",
             "NUI/app/js/indon.ogg",
             "NUI/app/js/indoff.ogg",
-            "NUI/app/js/jquery-0.3.1.35min.js",
+            "NUI/app/js/jquery-0.3.1.62min.js",
             -- New Hotness
             "NUI/app/newhotness/index.html",
             "NUI/app/newhotness/js/popper.js",
@@ -92,7 +92,7 @@ if NUIEnabled then
     )
 end
 
--- Server Events
+-- ELS Plus Server Scripts
 server_script "els-server.net.dll"
 
 files(
