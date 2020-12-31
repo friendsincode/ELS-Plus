@@ -166,9 +166,6 @@
     <Content Include="NUI\app\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="NUI\app\js\jquery-3.2.1.min.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="NUI\app\js\ui.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -293,9 +290,9 @@
     <None Include="ELS.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="fxmanifest.lua">
+    <Content Include="fxmanifest.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libs\SharpConfig-master\SharpConfig\SharpConfig.csproj">

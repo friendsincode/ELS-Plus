@@ -76,18 +76,12 @@ namespace ELS_Server
 
             EventHandlers["ELS:getServerNetworkId"] += new Action<int,int, int>(async (int player, int entity, int netid) =>
             {
+                int veh = API.GetVehiclePedIsIn(player, false);
+                int srvnetid = API.NetworkGetNetworkIdFromEntity(veh);
+               
+                Utils.DebugWriteLine($"Server network id for {entity} ({veh}) is {srvnetid}");
                 
-                try
-                {
-                    Utils.DebugWrite($"server entity {API.NetworkGetEntityFromNetworkId(netid)} for client entity {entity} with net id of {netid}");
-                    Utils.DebugWrite($"Got Server net id of {API.NetworkGetNetworkIdFromEntity(entity)} for client entity {entity} with net id of {netid}");
-
-                    Players[player].TriggerEvent("ELS:serverNetworkId", API.NetworkGetNetworkIdFromEntity(entity), API.NetworkGetEntityFromNetworkId(netid), entity, netid);
-                } catch (Exception e)
-                {
-                    Utils.DebugWrite(e.Message);
-                }
-
+                
             });
 
             EventHandlers["baseevents:enteredVehicle"] += new Action<int, int, string>((veh, seat, name) =>
