@@ -1,4 +1,4 @@
-﻿using CitizenFX.Core;
+using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using System;
 using System.Collections;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ELS.Manager
 {
-    class VehicleList : Dictionary<int, ELSVehicle>
+    class VehicleList : Dictionary<string, ELSVehicle>
     {
         internal Dictionary<int, Tuple<int, int>> VehRegAttempts;
         //public new void Add(ELSVehicle veh)
@@ -22,216 +22,229 @@ namespace ELS.Manager
         {
             VehRegAttempts = new Dictionary<int, Tuple<int, int>>();
         }
-        public void Add(int NetworkID)
+        public void Add(int handle)
         {
-            var veh = new ELSVehicle(API.NetToVeh(NetworkID));
-            Add(NetworkID, veh);
+            var veh = new ELSVehicle(handle);
+            Add(API.GetVehicleNumberPlateText(handle), veh);
         }
+
+        public void Add(int handle, IDictionary<string, object> data)
+        {
+            var veh = new ELSVehicle(handle, data);
+            Add(API.GetVehicleNumberPlateText(handle), veh);
+        }
+
+
         public bool IsReadOnly => throw new NotImplementedException();
 
-        public void RunTick(bool inVehicle = false)
-        {
-            for (int i = 0; i < Count; i++)
-            {
-                this.ElementAt(i).Value.RunTick();
-            }
-        }
+        //public void RunTick(bool inVehicle = false)
+        //{
+        //    for (int i = 0; i < Count; i++)
+        //    {
+        //        this.ElementAt(i).Value.RunTick();
+        //    }
+        //}
 
-        public void RunExternalTick([Optional] ELSVehicle vehicle)
-        {
-            try
-            {
-                for (int i = 0; i < Count; i++)
-                //foreach (var t in Values)
-                {
-                    if (vehicle == null || this.ElementAt(i).Value.Handle != vehicle.Handle)
-                    {
-                        //t.RunExternalTick();
-                        this.ElementAt(i).Value.RunTick();
-                    }
-                    else
-                    {
-                        vehicle.RunTick();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Utils.DebugWriteLine($"VehicleList Error: {e.Message}");
-            }
-        }
+        //public void RunExternalTick([Optional] ELSVehicle vehicle)
+        //{
+        //    try
+        //    {
+        //        for (int i = 0; i < Count; i++)
+        //        //foreach (var t in Values)
+        //        {
+        //            if (vehicle == null || this.ElementAt(i).Value.Handle != vehicle.Handle)
+        //            {
+        //                //t.RunExternalTick();
+        //                this.ElementAt(i).Value.RunTick();
+        //            }
+        //            else
+        //            {
+        //                vehicle.RunTick();
+        //            }
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Utils.DebugWriteLine($"VehicleList Error: {e.Message}");
+        //    }
+        //}
 
-        public bool MakeSureItExists(int NetworkID, [Optional]out ELSVehicle vehicle)
-        {
-            if (NetworkID == 0)
-            {
-                Utils.DebugWriteLine("ERROR Try to add vehicle\nNetwordID equals 0");
-                vehicle = null;
-                return false;
-            }
+        //public bool MakeSureItExists(int NetworkID, [Optional]out ELSVehicle vehicle)
+        //{
+        //    if (NetworkID == 0)
+        //    {
+        //        Utils.DebugWriteLine("ERROR Try to add vehicle\nNetwordID equals 0");
+        //        vehicle = null;
+        //        return false;
+        //    }
 
-            if (VehRegAttempts.ContainsKey(NetworkID))
-            {
-                VehRegAttempts[NetworkID] = new Tuple<int, int>(VehRegAttempts[NetworkID].Item1 + 1, Game.GameTime);
-            }
-            else
-            {
-                VehRegAttempts.Add(NetworkID, new Tuple<int, int>(1, Game.GameTime));
-            }
-            if (!ContainsKey(NetworkID))
-            {
+        //    if (VehRegAttempts.ContainsKey(NetworkID))
+        //    {
+        //        VehRegAttempts[NetworkID] = new Tuple<int, int>(VehRegAttempts[NetworkID].Item1 + 1, Game.GameTime);
+        //    }
+        //    else
+        //    {
+        //        VehRegAttempts.Add(NetworkID, new Tuple<int, int>(1, Game.GameTime));
+        //    }
+        //    if (!ContainsKey(NetworkID))
+        //    {
 
-                try
-                {
+        //        try
+        //        {
 
-                    ELSVehicle veh = null;
-                    int handle = API.NetworkGetEntityFromNetworkId(NetworkID);
+        //            ELSVehicle veh = null;
+        //            int handle = API.NetworkGetEntityFromNetworkId(NetworkID);
 
-                    if (handle == 0)
-                    {
+        //            if (handle == 0)
+        //            {
 
-                        veh = new ELSVehicle(Game.PlayerPed.CurrentVehicle.Handle);
+        //                veh = new ELSVehicle(Game.PlayerPed.CurrentVehicle.Handle);
 
-                    }
-                    else
-                    {
+        //            }
+        //            else
+        //            {
 
-                        veh = new ELSVehicle(handle);
+        //                veh = new ELSVehicle(handle);
 
-                    }
-                    if (veh != null)
-                    {
+        //            }
+        //            if (veh != null)
+        //            {
 
-                        Add(NetworkID, veh);
-                        //CurrentlyRegisteringVehicle.Remove(NetworkID);
-                        vehicle = veh;
-                        return true;
-                    }
-                    else
-                    {
-                        vehicle = null;
-                        return false;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Utils.DebugWriteLine($"Exists Error: {ex.Message} due to {ex.InnerException}");
-                    //CurrentlyRegisteringVehicle.Remove(NetworkID);
-                    vehicle = null;
-                    return false;
-                    throw ex;
-                }
+        //                Add(NetworkID, veh);
+        //                //CurrentlyRegisteringVehicle.Remove(NetworkID);
+        //                vehicle = veh;
+        //                return true;
+        //            }
+        //            else
+        //            {
+        //                vehicle = null;
+        //                return false;
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Utils.DebugWriteLine($"Exists Error: {ex.Message} due to {ex.InnerException}");
+        //            //CurrentlyRegisteringVehicle.Remove(NetworkID);
+        //            vehicle = null;
+        //            return false;
+        //            throw ex;
+        //        }
 
-            }
-            else
-            {
-                vehicle = this[NetworkID];//Find(poolObject => ((ELSVehicle)poolObject).GetNetworkId() == NetworkID);
-                return true;
-            }
-        }
+        //    }
+        //    else
+        //    {
+        //        vehicle = this[NetworkID];//Find(poolObject => ((ELSVehicle)poolObject).GetNetworkId() == NetworkID);
+        //        return true;
+        //    }
+        //}
 
-        public bool MakeSureItExists(int NetworkID, IDictionary<string, object> data, [Optional]out ELSVehicle vehicle, int PlayerId = -1)
-        {
+        //internal bool ContainsKey(int v)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-            if (NetworkID == 0)
-            {
-                Utils.DebugWriteLine("ERROR NetwordID equals 0");
-                vehicle = null;
-                return false;
-            }
-            Player player = new Player(API.GetPlayerFromServerId(PlayerId));
-            if (VehRegAttempts.ContainsKey(NetworkID))
-            {
-                VehRegAttempts[NetworkID] = new Tuple<int, int>(VehRegAttempts[NetworkID].Item1 + 1, Game.GameTime);
-            }
-            else
-            {
-                VehRegAttempts.Add(NetworkID, new Tuple<int, int>(1, Game.GameTime));
-            }
+        //public bool MakeSureItExists(int NetworkID, IDictionary<string, object> data, [Optional]out ELSVehicle vehicle, int PlayerId = -1)
+        //{
 
-            if (data == null)
-            {
-                Utils.DebugWriteLine("Data is null");
-                vehicle = null;
-                return false;
-            }
+        //    if (NetworkID == 0)
+        //    {
+        //        Utils.DebugWriteLine("ERROR NetwordID equals 0");
+        //        vehicle = null;
+        //        return false;
+        //    }
+        //    Player player = new Player(API.GetPlayerFromServerId(PlayerId));
+        //    if (VehRegAttempts.ContainsKey(NetworkID))
+        //    {
+        //        VehRegAttempts[NetworkID] = new Tuple<int, int>(VehRegAttempts[NetworkID].Item1 + 1, Game.GameTime);
+        //    }
+        //    else
+        //    {
+        //        VehRegAttempts.Add(NetworkID, new Tuple<int, int>(1, Game.GameTime));
+        //    }
 
-            if (!ContainsKey(NetworkID))
-            {
+        //    if (data == null)
+        //    {
+        //        Utils.DebugWriteLine("Data is null");
+        //        vehicle = null;
+        //        return false;
+        //    }
 
-                try
-                {
-                    ELSVehicle veh = null;
-                    int handle = API.NetworkGetEntityFromNetworkId(NetworkID);
-                    if (handle == 0 && PlayerId != -1)
-                    {
+        //    if (!ContainsKey(NetworkID))
+        //    {
+
+        //        try
+        //        {
+        //            ELSVehicle veh = null;
+        //            int handle = API.NetworkGetEntityFromNetworkId(NetworkID);
+        //            if (handle == 0 && PlayerId != -1)
+        //            {
                         
-                        Utils.DebugWriteLine($"Registering vehicle with netid of {NetworkID} to list from {player.Name}");
-                        if (!player.Character.IsSittingInELSVehicle())
-                        {
-                            Utils.DebugWriteLine($"{player.Name} is not in an Els vehicle");
-                            vehicle = null;
-                            return false;
-                        }
-                        veh = new ELSVehicle(player.Character.CurrentVehicle.Handle, data);
-                    }
-                    else
-                    {
-                        Utils.DebugWriteLine($"Registering vehicle {NetworkID} to list from netid to veh");
-                        veh = new ELSVehicle(handle, data);
-                    }
-                    if (veh != null)
-                    {
-                        //CurrentlyRegisteringVehicle.Remove(NetworkID);
-                        Add(NetworkID, veh);
-                        Utils.DebugWriteLine($"Added {NetworkID} to vehicle list");
-                        vehicle = veh;
-                        return true;
-                    }
-                    else
-                    {
-                        //CurrentlyRegisteringVehicle.Remove(NetworkID);
-                        Utils.DebugWriteLine("Failed to add vehicle to list please try again");
-                        vehicle = null;
-                        return false;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //CurrentlyRegisteringVehicle.Remove(NetworkID);
-                    Utils.DebugWriteLine($"Exsits Error With Data: {ex.Message} attempting alternate registration");
+        //                Utils.DebugWriteLine($"Registering vehicle with netid of {NetworkID} to list from {player.Name}");
+        //                if (!player.Character.IsSittingInELSVehicle())
+        //                {
+        //                    Utils.DebugWriteLine($"{player.Name} is not in an Els vehicle");
+        //                    vehicle = null;
+        //                    return false;
+        //                }
+        //                veh = new ELSVehicle(player.Character.CurrentVehicle.Handle, data);
+        //            }
+        //            else
+        //            {
+        //                Utils.DebugWriteLine($"Registering vehicle {NetworkID} to list from netid to veh");
+        //                veh = new ELSVehicle(handle, data);
+        //            }
+        //            if (veh != null)
+        //            {
+        //                //CurrentlyRegisteringVehicle.Remove(NetworkID);
+        //                Add(NetworkID, veh);
+        //                Utils.DebugWriteLine($"Added {NetworkID} to vehicle list");
+        //                vehicle = veh;
+        //                return true;
+        //            }
+        //            else
+        //            {
+        //                //CurrentlyRegisteringVehicle.Remove(NetworkID);
+        //                Utils.DebugWriteLine("Failed to add vehicle to list please try again");
+        //                vehicle = null;
+        //                return false;
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            //CurrentlyRegisteringVehicle.Remove(NetworkID);
+        //            Utils.DebugWriteLine($"Exsits Error With Data: {ex.Message} attempting alternate registration");
 
-                    vehicle = null;
-                    return false;
-                    throw ex;
-                }
+        //            vehicle = null;
+        //            return false;
+        //            throw ex;
+        //        }
 
-            }
-            else
-            {
-                if (!player.Character.IsSittingInELSVehicle())
-                {
-                    Utils.DebugWriteLine($"{player.Name} is not in an Els vehicle");
-                    vehicle = null;
-                    return false;
-                }
-                if (player.Character.CurrentVehicle.GetNetworkId() == NetworkID)
-                {
-                    Utils.DebugWriteLine($"Returning vehicle {NetworkID} from list");
-                    vehicle = this[NetworkID];
-                    return true;
-                }
-                else
-                {
-                    Utils.DebugWriteLine($"Vehicle {NetworkID} was in list but not right one, rereg with new id of {player.Character.CurrentVehicle.GetNetworkId()}");
-                    Remove(NetworkID);
-                    ELSVehicle veh = new ELSVehicle(player.Character.CurrentVehicle.Handle, data);
-                    Add(player.Character.CurrentVehicle.GetNetworkId(), veh);
-                    vehicle = veh;
-                    return true;
-                }
-            }
-        }
+        //    }
+        //    else
+        //    {
+        //        if (!player.Character.IsSittingInELSVehicle())
+        //        {
+        //            Utils.DebugWriteLine($"{player.Name} is not in an Els vehicle");
+        //            vehicle = null;
+        //            return false;
+        //        }
+        //        if (player.Character.CurrentVehicle.GetNetworkId() == NetworkID)
+        //        {
+        //            Utils.DebugWriteLine($"Returning vehicle {NetworkID} from list");
+        //            vehicle = this[NetworkID];
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            Utils.DebugWriteLine($"Vehicle {NetworkID} was in list but not right one, rereg with new id of {player.Character.CurrentVehicle.GetNetworkId()}");
+        //            Remove(NetworkID);
+        //            ELSVehicle veh = new ELSVehicle(player.Character.CurrentVehicle.Handle, data);
+        //            Add(API.array.Character.CurrentVehicle.handle, veh);
+        //            vehicle = veh;
+        //            return true;
+        //        }
+        //    }
+        //}
 
 
         public void CleanUP()

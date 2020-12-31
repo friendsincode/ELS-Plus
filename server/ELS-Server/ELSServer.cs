@@ -16,7 +16,7 @@ namespace ELS_Server
 {
     public class ELSServer : BaseScript
     {
-        Dictionary<int, object> _cachedData = new Dictionary<int, object>();
+        Dictionary<string, object> _cachedData = new Dictionary<string, object>();
         long GameTimer;
         string serverId;
         string currentVersion;
@@ -68,10 +68,11 @@ namespace ELS_Server
 
             });
 
-            EventHandlers["ELS:FullSync:RemoveStale"] += new Action<int>(async (int netid) =>
+            EventHandlers["ELS:FullSync:RemoveStale"] += new Action<string>(async (string plate) =>
             {
-                _cachedData.Remove(netid);
-                Utils.DebugWriteLine($"Stale vehicle {netid} removed from cache");
+                _cachedData.Remove(plate);
+                TriggerClientEvent("ELS:removeStaleFromList", plate);
+                Utils.DebugWriteLine($"Stale vehicle {plate} removed from cache");
             });
 
             EventHandlers["ELS:getServerNetworkId"] += new Action<int,int, int>(async (int player, int entity, int netid) =>
@@ -98,8 +99,8 @@ namespace ELS_Server
             EventHandlers["ELS:FullSync:Broadcast"] += new Action<System.Dynamic.ExpandoObject, Int16>((dataDic, playerID) =>
              {
                  var dd = (IDictionary<string, object>)dataDic;
-                 Utils.DebugWriteLine($"NetworkID {dd["NetworkID"]}");
-                 _cachedData[int.Parse(dd["NetworkID"].ToString())] = dd;
+                 Utils.DebugWriteLine($"plate {dd["plate"]}");
+                 _cachedData[dd["plate"].ToString()] = dd;
                  BroadcastMessage(dataDic, playerID);
              });
             EventHandlers["ELS:FullSync:Request:All"] += new Action<int>((int source) =>
@@ -115,6 +116,7 @@ namespace ELS_Server
             API.RegisterCommand("clearcache", new Action<int, System.Collections.IList, string>((a, b, c) =>
             {
                 _cachedData.Clear();
+                TriggerClientEvent("ELS:clearVehicleList");
                 Utils.ReleaseWriteLine("ELS Cache cleared");
             }), false);
 

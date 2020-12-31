@@ -149,16 +149,16 @@ namespace ELS
                             {
                                 ElsUiPanel.ShowUI();
                             }
-                            VehicleManager.SyncUI(vehicle.GetNetworkId());
+                            VehicleManager.SyncUI(API.GetVehicleNumberPlateText(vehicle.Handle));
 
                             UserSettings.ELSUserVehicle usrVeh = userSettings.savedVehicles.Find(uveh => uveh.Model == vehicle.Model.Hash && uveh.ServerId == ServerId);
                             Utils.DebugWriteLine($"got usrveh of {usrVeh.Model} on server {usrVeh.ServerId}m");
                             if (ServerId.Equals(usrVeh.ServerId))
                             {
                                 Utils.DebugWrite("Got Saved Vehicle Settings applying");
-                                VehicleManager.vehicleList[vehicle.GetNetworkId()].SetSaveSettings(usrVeh);
+                                VehicleManager.vehicleList[API.GetVehicleNumberPlateText(vehicle.Handle)].SetSaveSettings(usrVeh);
                             }
-                            VehicleManager.vehicleList[vehicle.GetNetworkId()].SetInofVeh();
+                            VehicleManager.vehicleList[API.GetVehicleNumberPlateText(vehicle.Handle)].SetInofVeh();
                         }
                         Utils.DebugWriteLine($"Vehicle {vehicle.GetNetworkId()}({Game.PlayerPed.CurrentVehicle.GetNetworkId()}) entered");
                     }
@@ -176,15 +176,15 @@ namespace ELS
                 {
                     if (vehicle.Exists() && vehicle.IsEls())
                     {
-                        if (VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()) && (vehicle.GetNetworkId() == lastVehicle))
+                        if (VehicleManager.vehicleList.ContainsKey(API.GetVehicleNumberPlateText(vehicle.Handle)) && (vehicle.GetNetworkId() == lastVehicle))
                         {
                             if (Global.DisableSirenOnExit)
                             {
-                                VehicleManager.vehicleList[vehicle.GetNetworkId()].DisableSiren();
+                                VehicleManager.vehicleList[API.GetVehicleNumberPlateText(vehicle.Handle)].DisableSiren();
                             }
                             Utils.DebugWriteLine("save settings for vehicle it");
-                            VehicleManager.vehicleList[vehicle.GetNetworkId()].GetSaveSettings();
-                            VehicleManager.vehicleList[vehicle.GetNetworkId()].SetOutofVeh();
+                            VehicleManager.vehicleList[API.GetVehicleNumberPlateText(vehicle.Handle)].GetSaveSettings();
+                            VehicleManager.vehicleList[API.GetVehicleNumberPlateText(vehicle.Handle)].SetOutofVeh();
                         }
                         Utils.DebugWriteLine($"Vehicle {vehicle.GetNetworkId()}({Game.PlayerPed.LastVehicle.GetNetworkId()}) exited");
                     }
@@ -197,6 +197,16 @@ namespace ELS
             });
             //Take in data and apply it
             EventHandlers["ELS:NewFullSyncData"] += new Action<IDictionary<string, object>, int>(_vehicleManager.SetVehicleSyncData);
+
+            EventHandlers["ELS:removeStaleFromList"] += new Action<string>((plate) =>
+            {
+                VehicleManager.vehicleList.Remove(plate);
+            });
+
+            EventHandlers["ELS:clearVehicleList"] += new Action<string>((plate) =>
+            {
+                VehicleManager.vehicleList.Clear();
+            });
 
 
             API.RegisterCommand("vcfsync", new Action<int, List<object>, string>((source, arguments, raw) =>
@@ -267,9 +277,9 @@ namespace ELS
             {
                 if (Game.PlayerPed.CurrentVehicle.IsEls())
                 {
-                    if (VehicleManager.vehicleList.ContainsKey(Game.PlayerPed.CurrentVehicle.GetNetworkId()))
+                    if (VehicleManager.vehicleList.ContainsKey(API.GetVehicleNumberPlateText(Game.PlayerPed.CurrentVehicle.Handle)))
                     {
-                        VehicleManager.vehicleList[Game.PlayerPed.CurrentVehicle.GetNetworkId()].Delete();
+                        VehicleManager.vehicleList[API.GetVehicleNumberPlateText(Game.PlayerPed.CurrentVehicle.Handle)].Delete();
                     }
                     else
                     {
@@ -309,7 +319,7 @@ namespace ELS
             {
                 if (Game.PlayerPed.CurrentVehicle.IsEls())
                 {
-                    VehicleManager.vehicleList[Game.PlayerPed.CurrentVehicle.GetNetworkId()].Delete();
+                    VehicleManager.vehicleList[API.GetVehicleNumberPlateText(Game.PlayerPed.CurrentVehicle.Handle)].Delete();
                 }
                 else
                 {

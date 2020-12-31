@@ -17,7 +17,8 @@ namespace ELS
         private Vehicle _vehicle;
         private Vcfroot _vcf;
         int lastdrivetime;
-        internal int cachedNetId;
+        internal string plate;
+        
 
         public ELSVehicle(int handle, [Optional]IDictionary<string, object> data) : base(handle)
         {
@@ -49,7 +50,7 @@ namespace ELS
             _light = new Light.Lights(_vehicle, _vcf, (IDictionary<string, object>)data?["light"]);
             _siren = new Siren.Siren(_vehicle, _vcf, (IDictionary<string, object>)data?["siren"], _light);
             _light.SetGTASirens(false);
-            cachedNetId = _vehicle.GetNetworkId();
+            plate = API.GetVehicleNumberPlateText(_vehicle.Handle);
 
             Utils.DebugWriteLine(API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
             Utils.DebugWriteLine($"ELSVehicle.cs:registering netid:{_vehicle.GetNetworkId()}\n" +
@@ -74,10 +75,10 @@ namespace ELS
 
         internal void RunControlTick()
         {
-            if (!_vehicle.Exists() || _vehicle.IsDead)
+            if (_vehicle.IsDead)
             {
-                VehicleManager.vehicleList.Remove(cachedNetId);
-                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", cachedNetId);
+                //VehicleManager.vehicleList.Remove(plate);
+                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", plate);
                 return;
             }
             _siren.Ticker();
@@ -86,10 +87,10 @@ namespace ELS
 
         internal void RunTick()
         {
-            if (!_vehicle.Exists() || _vehicle.IsDead)
+            if (_vehicle.IsDead)
             {
-                VehicleManager.vehicleList.Remove(cachedNetId);
-                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", cachedNetId);
+               // VehicleManager.vehicleList.Remove(plate);
+                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", plate);
                 return;
             }
             _light.Ticker();
@@ -103,10 +104,10 @@ namespace ELS
 
         internal void RunExternalTick()
         {
-            if (!_vehicle.Exists() || _vehicle.IsDead)
+            if (_vehicle.IsDead)
             {
-                VehicleManager.vehicleList.Remove(cachedNetId);
-                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", cachedNetId);
+               // VehicleManager.vehicleList.Remove(cachedNetId);
+                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", plate);
                 return;
             }            
             _siren.ExternalTicker();
@@ -155,9 +156,9 @@ namespace ELS
                 _light.CleanUP();
                 _siren.CleanUP();
                 _vehicle.SetExistOnAllMachines(false);
-                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", cachedNetId);
+                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", plate);
                 API.SetEntityAsMissionEntity(_vehicle.Handle, true, true);
-                VehicleManager.vehicleList.Remove(_vehicle.GetNetworkId());
+                //VehicleManager.vehicleList.Remove(_vehicle.GetNetworkId());
                 _vehicle.Delete();
             }
             catch (Exception e)
@@ -188,12 +189,12 @@ namespace ELS
         {
             if (data["siren"] != null)
             {
-                Utils.DebugWriteLine($"Got siren data for vehicle {_vehicle.NetworkId} with cached net id of {cachedNetId}");
+                Utils.DebugWriteLine($"Got siren data for vehicle {_vehicle.NetworkId} with cached plate of {plate}");
                 _siren.SetData((IDictionary<string, object>)data["siren"]);
             }
             if (data["light"] != null)
             {
-                Utils.DebugWriteLine($"Got siren data for vehicle {_vehicle.NetworkId} with cached net id of {cachedNetId}");
+                Utils.DebugWriteLine($"Got siren data for vehicle {_vehicle.NetworkId} with cached plate of {plate}");
                 _light.SetData((IDictionary<string, object>)data["light"]);
             }
         }
@@ -215,9 +216,9 @@ namespace ELS
             _light.CurrentSecPattern = veh.SecPatt;
             _light.CurrentWrnPattern = veh.WrnPatt;
             
-            VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangePrmPatt, this.GetNetworkId(), Game.Player.ServerId);
-            VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeSecPatt, this.GetNetworkId(), Game.Player.ServerId);
-            VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeWrnPatt, this.GetNetworkId(), Game.Player.ServerId);
+            VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangePrmPatt, plate, Game.Player.ServerId);
+            VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeSecPatt, plate, Game.Player.ServerId);
+            VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeWrnPatt, plate, Game.Player.ServerId);
             switch(veh.Siren)
             {
                 case "WL":
@@ -233,7 +234,7 @@ namespace ELS
                     _siren._mainSiren.setMainTone(3);
                     break;
             }
-            VehicleManager.SyncRequestReply(RemoteEventManager.Commands.MainSiren, this.GetNetworkId(), Game.Player.ServerId);
+            VehicleManager.SyncRequestReply(RemoteEventManager.Commands.MainSiren, plate, Game.Player.ServerId);
         }
 
         internal void GetSaveSettings()
@@ -255,17 +256,17 @@ namespace ELS
             if (_vcf.PRML.ForcedPatterns.OutOfVeh.Enabled)
             {
                 _light.CurrentPrmPattern = _vcf.PRML.ForcedPatterns.OutOfVeh.IntPattern;
-                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangePrmPatt, this.GetNetworkId(), Game.Player.ServerId);
+                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangePrmPatt, plate, Game.Player.ServerId);
             }
             if (_vcf.SECL.ForcedPatterns.OutOfVeh.Enabled)
             {
                 _light.CurrentSecPattern = _vcf.SECL.ForcedPatterns.OutOfVeh.IntPattern;
-                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeSecPatt, this.GetNetworkId(), Game.Player.ServerId);
+                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeSecPatt, plate, Game.Player.ServerId);
             }
             if (_vcf.WRNL.ForcedPatterns.OutOfVeh.Enabled)
             {
                 _light.CurrentWrnPattern = _vcf.WRNL.ForcedPatterns.OutOfVeh.IntPattern;
-                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeWrnPatt, this.GetNetworkId(), Game.Player.ServerId);
+                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeWrnPatt, plate, Game.Player.ServerId);
             }
         }
 
@@ -274,17 +275,17 @@ namespace ELS
             if (_vcf.PRML.ForcedPatterns.OutOfVeh.Enabled)
             {
                 _light.CurrentPrmPattern = _light._oldprm;
-                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangePrmPatt, this.GetNetworkId(), Game.Player.ServerId);
+                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangePrmPatt, plate, Game.Player.ServerId);
             }
             if (_vcf.SECL.ForcedPatterns.OutOfVeh.Enabled)
             {
                 _light.CurrentSecPattern = _light._oldsec;
-                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeSecPatt, this.GetNetworkId(), Game.Player.ServerId);
+                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeSecPatt, plate, Game.Player.ServerId);
             }
             if (_vcf.WRNL.ForcedPatterns.OutOfVeh.Enabled)
             {
                 _light.CurrentWrnPattern = _light._oldwrn;
-                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeWrnPatt, this.GetNetworkId(), Game.Player.ServerId);
+                VehicleManager.SyncRequestReply(RemoteEventManager.Commands.ChangeWrnPatt, plate, Game.Player.ServerId);
             }
         }
     }
