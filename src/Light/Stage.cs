@@ -14,11 +14,11 @@ namespace ELS.Light
         internal configuration.Lights PRML;
         internal configuration.Lights SECL;
         internal configuration.Lights WRNL;
-        private int vehicleId;
+        private string vehicleId;
         private string ActivationType = "manual";
         private int stage = 0;
 
-        internal Stage(configuration.Lights prml, configuration.Lights secl, configuration.Lights wrnl, int veh, string acttype)
+        internal Stage(configuration.Lights prml, configuration.Lights secl, configuration.Lights wrnl, string veh, string acttype)
         {
             PRML = prml;
             SECL = secl;
@@ -35,7 +35,7 @@ namespace ELS.Light
             private set
             {
                 stage = value;
-                if (Game.PlayerPed.IsSittingInELSVehicle() && vehicleId == Game.PlayerPed.CurrentVehicle.GetNetworkId())
+                if (Game.PlayerPed.IsSittingInELSVehicle() && vehicleId == Game.PlayerPed.CurrentVehicle.Plate())
                 {
                     ElsUiPanel.ToggleStages(CurrentStage);
                 }

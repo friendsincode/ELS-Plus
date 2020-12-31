@@ -49,7 +49,7 @@ namespace ELS.Light
         {
 
             TurnedOn = bool.Parse(data["TurnedOn"].ToString());
-            Utils.DebugWriteLine($"Got scene data for {iLight._vehicle.GetNetworkId()}");
+            Utils.DebugWriteLine($"Got scene data for {iLight._vehicle.Plate()}");
 
         }
 
@@ -70,9 +70,9 @@ namespace ELS.Light
             var roff = iLight._vehicle.GetPositionOffset(iLight._vehicle.Bones[$"window_rf"].Position);
             var rspotoffset = iLight._vehicle.GetOffsetPosition(roff + new Vector3(0.5f, -0.5f, 0.5f));
 
-            float rhx = (float)((double)rspotoffset.X + 5 * - Math.Cos(((double)180 + iLight._vehicle.Rotation.Z) * Math.PI / 180.0));
-            float rhy = (float)((double)rspotoffset.Y + 5 * - Math.Sin(((double)180 + iLight._vehicle.Rotation.Z) * Math.PI / 180.0));
-            float rvz = (float)((double)rspotoffset.Z + 5 * - Math.Sin((double)180 * Math.PI / 180.0));
+            float rhx = (float)((double)rspotoffset.X + 5 * -Math.Cos(((double)180 + iLight._vehicle.Rotation.Z) * Math.PI / 180.0));
+            float rhy = (float)((double)rspotoffset.Y + 5 * -Math.Sin(((double)180 + iLight._vehicle.Rotation.Z) * Math.PI / 180.0));
+            float rvz = (float)((double)rspotoffset.Z + 5 * -Math.Sin((double)180 * Math.PI / 180.0));
 
             Vector3 rdestinationCoords = (new Vector3(rhx, rhy, rvz));
 

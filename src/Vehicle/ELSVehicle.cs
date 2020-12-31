@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using CitizenFX.Core;
@@ -31,10 +31,6 @@ namespace ELS
             {
                 throw new Exception("ELSVehicle.cs:Vehicle not found");
             }
-            else if (_vehicle.GetNetworkId() == 0)
-            {
-                throw new Exception("ELSVehicle.cs:NetworkId is 0");
-            }
             else if (VCF.ELSVehicle.ContainsKey(_vehicle.Model))
             {
                 _vcf = VCF.ELSVehicle[_vehicle.Model].root;
@@ -53,7 +49,7 @@ namespace ELS
             plate = API.GetVehicleNumberPlateText(_vehicle.Handle);
 
             Utils.DebugWriteLine(API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
-            Utils.DebugWriteLine($"ELSVehicle.cs:registering netid:{_vehicle.GetNetworkId()}\n" +
+            Utils.DebugWriteLine($"ELSVehicle.cs:registering plate:{_vehicle.Plate()}\n" +
                 $"Does entity belong to this script:{CitizenFX.Core.Native.API.DoesEntityBelongToThisScript(_vehicle.Handle, false)}");
             Utils.DebugWriteLine($"ELSVehicle.cs:created vehicle");
         }
@@ -75,24 +71,24 @@ namespace ELS
 
         internal void RunControlTick()
         {
-            if (_vehicle.IsDead)
-            {
-                //VehicleManager.vehicleList.Remove(plate);
-                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", plate);
-                return;
-            }
+            //if (_vehicle.IsDead)
+            //{
+            //    //VehicleManager.vehicleList.Remove(plate);
+            //    ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", plate);
+            //    return;
+            //}
             _siren.Ticker();
             _light.ControlTicker();
         }
 
         internal void RunTick()
         {
-            if (_vehicle.IsDead)
-            {
-               // VehicleManager.vehicleList.Remove(plate);
-                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", plate);
-                return;
-            }
+            //if (_vehicle.IsDead)
+            //{
+            //   // VehicleManager.vehicleList.Remove(plate);
+            //    ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", plate);
+            //    return;
+            //}
             _light.Ticker();
             
             if (_siren._mainSiren._enable && _light._stage.CurrentStage != 3)
@@ -104,12 +100,12 @@ namespace ELS
 
         internal void RunExternalTick()
         {
-            if (_vehicle.IsDead)
-            {
-               // VehicleManager.vehicleList.Remove(cachedNetId);
-                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", plate);
-                return;
-            }            
+            //if (_vehicle.IsDead)
+            //{
+            //   // VehicleManager.vehicleList.Remove(cachedNetId);
+            //    ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", plate);
+            //    return;
+            //}            
             _siren.ExternalTicker();
         }
 
@@ -158,7 +154,7 @@ namespace ELS
                 _vehicle.SetExistOnAllMachines(false);
                 ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", plate);
                 API.SetEntityAsMissionEntity(_vehicle.Handle, true, true);
-                //VehicleManager.vehicleList.Remove(_vehicle.GetNetworkId());
+                //VehicleManager.vehicleList.Remove(_vehicle.Plate());
                 _vehicle.Delete();
             }
             catch (Exception e)
@@ -177,10 +173,6 @@ namespace ELS
             _light.LightsControlsRemote();
         }
 
-        internal int GetNetworkId()
-        {
-            return _vehicle.GetNetworkId();
-        }
         /// <summary>
         /// Proxies sync data to the lighting and siren sub components
         /// </summary>
@@ -189,12 +181,12 @@ namespace ELS
         {
             if (data["siren"] != null)
             {
-                Utils.DebugWriteLine($"Got siren data for vehicle {_vehicle.NetworkId} with cached plate of {plate}");
+                Utils.DebugWriteLine($"Got siren data for vehicle {_vehicle.Handle} with cached plate of {plate}");
                 _siren.SetData((IDictionary<string, object>)data["siren"]);
             }
             if (data["light"] != null)
             {
-                Utils.DebugWriteLine($"Got siren data for vehicle {_vehicle.NetworkId} with cached plate of {plate}");
+                Utils.DebugWriteLine($"Got siren data for vehicle {_vehicle.Handle} with cached plate of {plate}");
                 _light.SetData((IDictionary<string, object>)data["light"]);
             }
         }
@@ -205,7 +197,7 @@ namespace ELS
             {
                 {"siren",_siren.GetData() },
                 {"light",_light.GetData() },
-                {"NetworkID",_vehicle.GetNetworkId() }
+                {"plate", plate }
             };
             return vehDic;
         }

@@ -76,7 +76,7 @@ namespace ELS.Siren
                 {
                     //soundId = Audio.PlaySoundFromEntity(_entity, _file);
                     soundId = API.GetSoundId();
-                    Utils.DebugWriteLine($"1. Sound id of {soundId} with networkid of {_entity.GetNetworkId()} with network sound id of {API.GetSoundIdFromNetworkId(_entity.GetNetworkId())}");
+                    //Utils.DebugWriteLine($"1. Sound id of {soundId} with networkid of {_entity.Plate()} with network sound id of {API.GetSoundIdFromNetworkId(_entity.Plate())}");
                     if (!Audio.HasSoundFinished(soundId)) return;
                     if (!String.IsNullOrEmpty(DLCSoundSet))
                     {
@@ -90,10 +90,10 @@ namespace ELS.Siren
                         Utils.DebugWriteLine($"DLC disabled sound using file  {_file}");
                         //API.PlaySoundFromEntity(soundId, _file, _entity.Handle, "0", false, 0);
                     }
-                    Utils.DebugWriteLine($"2. Sound id of {soundId} with networkid of {_entity.GetNetworkId()} with network sound id of {API.GetSoundIdFromNetworkId(_entity.GetNetworkId())}");
+                    //Utils.DebugWriteLine($"2. Sound id of {soundId} with networkid of {((Vehicle)_entity).Plate()} with network sound id of {API.GetSoundIdFromNetworkId(_entity.Plate())}");
                     //API.PlaySoundFromEntity(soundId, _file, _entity.Handle, "0", false, 0);
                     Utils.DebugWriteLine($"Started sound with id of {soundId}");
-                } 
+                }
                 else
                 {
                     if (!String.IsNullOrEmpty(DLCSoundSet))
@@ -111,7 +111,7 @@ namespace ELS.Siren
             }
             else
             {
-                Utils.DebugWriteLine($"Stopping sound {soundId} and setting to -1 for {Type} with networkid of {_entity.GetNetworkId()} and network sound if of {API.GetNetworkIdFromSoundId(soundId)}");
+                //Utils.DebugWriteLine($"Stopping sound {soundId} and setting to -1 for {Type} with networkid of {((Vehicle)_entity).Plate()} and network sound if of {API.GetNetworkIdFromSoundId(soundId)}");
                 Audio.StopSound(soundId);
                 Audio.ReleaseSound(soundId);
                 Utils.DebugWriteLine($"Stopped and released sound with id of {soundId}");

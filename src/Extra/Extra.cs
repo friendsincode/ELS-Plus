@@ -189,7 +189,7 @@ namespace ELS.Extra
         private void SetTrue()
         {
             API.SetVehicleExtra(lights._vehicle.Handle, _Id, false);
-            if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())
+            if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.Plate() == lights._vehicle.Plate())
             {
                 ElsUiPanel.SendLightData(true, $"#extra{_Id}", _extraInfo.Color);
             }
@@ -198,7 +198,7 @@ namespace ELS.Extra
         private void SetFalse()
         {
             API.SetVehicleExtra(lights._vehicle.Handle, _Id, true);
-            if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())
+            if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.Plate() == lights._vehicle.Plate())
             {
                 ElsUiPanel.SendLightData(false, $"#extra{_Id}", _extraInfo.Color);
             }

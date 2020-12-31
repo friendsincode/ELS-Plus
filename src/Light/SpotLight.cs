@@ -78,7 +78,7 @@ namespace ELS.Light
             anglehorizontal = float.Parse(data["horizontal"].ToString());
             angleVertical = float.Parse(data["vertical"].ToString());
             TurnedOn = bool.Parse(data["TurnedOn"].ToString());
-            Utils.DebugWriteLine($"Got spotlight data for {lights._vehicle.GetNetworkId()} set horizontal {anglehorizontal} and vertical {angleVertical}");
+            Utils.DebugWriteLine($"Got spotlight data for {lights._vehicle.Plate()} set horizontal {anglehorizontal} and vertical {angleVertical}");
 
         }
 
@@ -86,25 +86,25 @@ namespace ELS.Light
         {
            
             Utils.DebugWriteLine($"Spotlight veh handle of {lights._vehicle.Handle}");
-            if (Game.IsControlPressed(0, Control.PhoneLeft) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())
+            if (Game.IsControlPressed(0, Control.PhoneLeft) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.Plate() == lights._vehicle.Plate())
             {
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightLeft, lights._vehicle, true, Game.Player.ServerId);
                 anglehorizontal++;
                 
             }
-            if (Game.IsControlPressed(0, Control.PhoneRight) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId()) 
+            if (Game.IsControlPressed(0, Control.PhoneRight) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.Plate() == lights._vehicle.Plate()) 
             {
                 
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightRight, lights._vehicle, true, Game.Player.ServerId);
                 anglehorizontal--;
             }
-            if (Game.IsControlPressed(0, Control.PhoneUp) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())
+            if (Game.IsControlPressed(0, Control.PhoneUp) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.Plate() == lights._vehicle.Plate())
             {
                 
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightUp, lights._vehicle, true, Game.Player.ServerId);
                 angleVertical++;
             }
-            if (Game.IsControlPressed(0, Control.PhoneDown) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())   
+            if (Game.IsControlPressed(0, Control.PhoneDown) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.Plate() == lights._vehicle.Plate())   
             {
                 
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightDown, lights._vehicle, true, Game.Player.ServerId);

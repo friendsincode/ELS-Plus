@@ -116,13 +116,13 @@ namespace ELS.Gadgets
         internal void RaiseLowerLadder()
         {
             VerticalAngle = API.GetVehicleDoorAngleRatio(lights._vehicle.Handle, LadderVerticalIndex);
-            if (Game.IsControlPressed(0, Control.PhoneUp) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())
+            if (Game.IsControlPressed(0, Control.PhoneUp) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.Plate() == lights._vehicle.Plate())
             {
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveLadderUp, lights._vehicle, true, Game.Player.ServerId);
                 VerticalAngle = VerticalAngle + 0.029999999f;
 
             }
-            if (Game.IsControlPressed(0, Control.PhoneDown) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())
+            if (Game.IsControlPressed(0, Control.PhoneDown) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.Plate() == lights._vehicle.Plate())
             {
 
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveLadderDown, lights._vehicle, true, Game.Player.ServerId);
@@ -141,13 +141,13 @@ namespace ELS.Gadgets
         internal void RotateLadder()
         {
             VerticalAngle = API.GetVehicleDoorAngleRatio(lights._vehicle.Handle, LadderVerticalIndex);
-            if (Game.IsControlPressed(0, Control.PhoneUp) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())
+            if (Game.IsControlPressed(0, Control.PhoneUp) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.Plate() == lights._vehicle.Plate())
             {
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveLadderLeft, lights._vehicle, true, Game.Player.ServerId);
                 HorizontalAngle = HorizontalAngle + 0.029999999f;
 
             }
-            if (Game.IsControlPressed(0, Control.PhoneDown) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())
+            if (Game.IsControlPressed(0, Control.PhoneDown) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.Plate() == lights._vehicle.Plate())
             {
 
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveLadderRight, lights._vehicle, true, Game.Player.ServerId);

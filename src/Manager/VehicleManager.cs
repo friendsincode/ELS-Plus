@@ -67,21 +67,30 @@ namespace ELS.Manager
         internal async void RunTickAsync()
         {
             List<Vehicle> vehicles = new List<Vehicle>(World.GetAllVehicles());
-            Utils.DebugWriteLine($"We have found {vehicles.Count} in the game");
+            
             for(int i = 0; i < vehicles.Count; i++)
             {
-                string plate = API.GetVehicleNumberPlateText(vehicles[i].Handle);
+                string plate = vehicles[i].Plate();
                 if (vehicles[i].IsEls())
                 {
                     if (vehicleList.ContainsKey(plate) && vehicles[i].Exists())
                     {
-                        vehicleList[plate].RunControlTick();
+                        //Utils.DebugWriteLine($"We have found {plate} in the list running tick");
+                        if ((vehicles[i].GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed
+                                   || vehicles[i].GetPedOnSeat(VehicleSeat.Passenger) == Game.PlayerPed) && Game.PlayerPed.CurrentVehicle.Plate().Equals(plate))
+                        {
+                            vehicleList[plate].RunControlTick();
+                        }
                         vehicleList[plate].RunExternalTick();
                         vehicleList[plate].RunTick();
+                       
                     }
-                    else
+                    else if (vehicles[i].Exists())
                     {
+                        //Utils.DebugWriteLine($"We have not found {plate} in the list adding and running tick");
                         vehicleList.Add(vehicles[i].Handle);
+                        vehicleList[plate].RunExternalTick();
+                        vehicleList[plate].RunTick();
                     }
                 }
             }
@@ -149,12 +158,12 @@ namespace ELS.Manager
             //            {
             //                CitizenFX.Core.Debug.WriteLine($"VehicleManager Error: {e.Message} \n Stacktrace: {e.StackTrace}");
             //            }
-            //            if (Game.GameTime - lastServerSync  >= 5000)
-            //            {
-            //                lastServerSync = Game.GameTime;
-            //                ELS.TriggerServerEvent("ELS:FullSync:Request:All");
-            //                Utils.DebugWriteLine("Requested Sync Data from server");
-            //            }
+            //if (Game.GameTime - lastServerSync >= 5000)
+            //{
+            //    lastServerSync = Game.GameTime;
+            //    ELS.TriggerServerEvent("ELS:FullSync:Request:All");
+            //    Utils.DebugWriteLine("Requested Sync Data from server");
+            //}
             //TODO Chnage how I check for the panic alarm
 
         }
@@ -176,7 +185,7 @@ namespace ELS.Manager
             if (vehicleList.ContainsKey(plate) && dataDic.ContainsKey("siren") || dataDic.ContainsKey("lights"))
             {
                 vehicleList[plate].SetData(dataDic);
-                Utils.DebugWriteLine($" Applying vehicle data with NETID of {plate}");
+                Utils.DebugWriteLine($" Applying vehicle data with plate of {plate}");
                 return;
             }
             //if (!vehicleList.VehRegAttempts.ContainsKey(plate) || Game.GameTime - vehicleList.VehRegAttempts[plate].Item2 >= 15000 && vehicleList.VehRegAttempts[plate].Item1 < 5)
@@ -218,7 +227,7 @@ namespace ELS.Manager
         {
             if (String.IsNullOrEmpty(plate))
             {
-                Utils.DebugWriteLine("ERROR sending vehicle data NetwordID equals 0\n");
+                Utils.DebugWriteLine("ERROR sending vehicle data plate is null\n");
                 return;
             }
             switch (command)
@@ -252,8 +261,8 @@ namespace ELS.Manager
                 //Utils.DebugWriteLine("2");
                 var vehData = (IDictionary<string, object>)struct1.Value;
                 //Utils.DebugWriteLine("3");
-                Utils.DebugWriteLine($"Setting data for plate {plate} and {vehData["NetworkID"]}");
-                Vehicle veh = vehicles.Find(v => API.GetVehicleNumberPlateText(v.Handle).Equals(plate));
+                Utils.DebugWriteLine($"Setting data for plate {plate}");
+                Vehicle veh = vehicles.Find(v => v.Plate().Equals(plate));
                 vehicleList.Add(veh.Handle, vehData);
             }
 

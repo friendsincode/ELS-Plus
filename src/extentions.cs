@@ -17,6 +17,11 @@ namespace ELS
             return (ped.IsSittingInVehicle() && ped.CurrentVehicle.IsEls()) ? true : false ; 
         }
 
+        public static string Plate(this Vehicle vehicle)
+        {
+            return API.GetVehicleNumberPlateText(vehicle.Handle);
+        }
+
         async public static Task<bool> RequestCollision(this Vehicle vehicle)
         {
 

@@ -23,7 +23,7 @@ local NUIEnabled = true
 name "ELS Plus"
 description "Fully synced version of ELS Plus for FiveM"
 author "Friends in Code: Dex's Lab"
-version "0.3.1.79"
+version "0.3.1.96"
 url "https://git.friendsincode.com/friendsincode-public/elsplus"
 
 -- ELS Plus Client Scripts
@@ -50,7 +50,7 @@ if NUIEnabled then
             "NUI/app/js/sirenclickoff.ogg",
             "NUI/app/js/indon.ogg",
             "NUI/app/js/indoff.ogg",
-            "NUI/app/js/jquery-0.3.1.79min.js",
+            "NUI/app/js/jquery-0.3.1.96min.js",
             -- New Hotness
             "NUI/app/newhotness/index.html",
             "NUI/app/newhotness/js/popper.js",

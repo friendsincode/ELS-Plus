@@ -133,7 +133,7 @@ namespace ELS.Light
                 }
 
                Utils.DebugWriteLine($"Current primary pattern is {CurrentPrmPattern}");
-                if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == _vehicle.GetNetworkId())
+                if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.Plate() == _vehicle.Plate())
                 {
                     if (_vcfroot.PRML.LightingFormat.Equals("custom"))
                     {
@@ -225,7 +225,7 @@ namespace ELS.Light
                         CitizenFX.Core.Debug.WriteLine($"{e.Id} error {ex.Message}");
                     }
                 }
-                if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == _vehicle.GetNetworkId())
+                if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.Plate() == _vehicle.Plate())
                 {
                     if (_vcfroot.SECL.LightingFormat.Equals("custom"))
                     {
@@ -304,7 +304,7 @@ namespace ELS.Light
                         CitizenFX.Core.Debug.WriteLine($"{e.Id} error {ex.Message}");
                     }
                 }
-                if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == _vehicle.GetNetworkId())
+                if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.Plate() == _vehicle.Plate())
                 {
                     if (_vcfroot.SECL.LightingFormat.Equals("custom"))
                     {

@@ -72,7 +72,7 @@ namespace ELS.Light
 
         private void LightStagesSetup()
         {
-            _stage = new Stage(_vcfroot.PRML, _vcfroot.SECL, _vcfroot.WRNL, _vehicle.GetNetworkId(), _vcfroot.INTERFACE.LstgActivationType);
+            _stage = new Stage(_vcfroot.PRML, _vcfroot.SECL, _vcfroot.WRNL, _vehicle.Plate(), _vcfroot.INTERFACE.LstgActivationType);
         }
 
         internal void SyncUi()

@@ -48,6 +48,7 @@ namespace ELS
             _controlConfiguration = new ElsConfiguration();
             _FileLoader = new FileLoader(this);
             _vehicleManager = new VehicleManager();
+            API.DecorRegister("els_id", 3);
             EventHandlers["onClientResourceStart"] += new Action<string>((string obj) =>
                 {
                     //TODO rewrite loader so that it 
@@ -87,7 +88,7 @@ namespace ELS
                 });
 
         }
-        int lastVehicle = -1;
+        string lastVehicle = "";
         private void SetupConnections()
         {
             EventHandlers["onClientResourceStop"] += new Action<string>(async (string obj) =>
@@ -135,16 +136,16 @@ namespace ELS
             {
                 Utils.DebugWriteLine("Vehicle entered checking list");
                 Vehicle vehicle = new Vehicle(veh);
-                Delay(1000);                
+                Delay(1000);
                 try
                 {
                     if (vehicle.Exists() && vehicle.IsEls())
                     {
-                        if ((vehicle.GetNetworkId() == LocalPlayer.Character.CurrentVehicle.GetNetworkId()))
+                        if ((vehicle.Plate() == LocalPlayer.Character.CurrentVehicle.Plate()))
                         {
                             Utils.DebugWriteLine("Vehicle is in list moving on");
                             Utils.DebugWriteLine("ELS Vehicle entered syncing UI");
-                            lastVehicle = vehicle.GetNetworkId();
+                            lastVehicle = vehicle.Plate();
                             if (userSettings.uiSettings.enabled)
                             {
                                 ElsUiPanel.ShowUI();
@@ -160,7 +161,7 @@ namespace ELS
                             }
                             VehicleManager.vehicleList[API.GetVehicleNumberPlateText(vehicle.Handle)].SetInofVeh();
                         }
-                        Utils.DebugWriteLine($"Vehicle {vehicle.GetNetworkId()}({Game.PlayerPed.CurrentVehicle.GetNetworkId()}) entered");
+                        Utils.DebugWriteLine($"Vehicle {vehicle.Plate()}({Game.PlayerPed.CurrentVehicle.Plate()}) entered");
                     }
                 }
                 catch (Exception e)
@@ -176,7 +177,7 @@ namespace ELS
                 {
                     if (vehicle.Exists() && vehicle.IsEls())
                     {
-                        if (VehicleManager.vehicleList.ContainsKey(API.GetVehicleNumberPlateText(vehicle.Handle)) && (vehicle.GetNetworkId() == lastVehicle))
+                        if (VehicleManager.vehicleList.ContainsKey(API.GetVehicleNumberPlateText(vehicle.Handle)) && (vehicle.Plate() == lastVehicle))
                         {
                             if (Global.DisableSirenOnExit)
                             {
@@ -186,7 +187,7 @@ namespace ELS
                             VehicleManager.vehicleList[API.GetVehicleNumberPlateText(vehicle.Handle)].GetSaveSettings();
                             VehicleManager.vehicleList[API.GetVehicleNumberPlateText(vehicle.Handle)].SetOutofVeh();
                         }
-                        Utils.DebugWriteLine($"Vehicle {vehicle.GetNetworkId()}({Game.PlayerPed.LastVehicle.GetNetworkId()}) exited");
+                        Utils.DebugWriteLine($"Vehicle {vehicle.Plate()}({Game.PlayerPed.LastVehicle.Plate()}) exited");
                     }
                 }
                 catch (Exception e)
