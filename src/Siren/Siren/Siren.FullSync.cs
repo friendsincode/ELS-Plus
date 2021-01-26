@@ -2,38 +2,46 @@
 using CitizenFX.Core;
 using ELS.FullSync;
 
+
 namespace ELS.Siren
 {
-    partial class Siren : IManagerEntry, IFullSyncComponent
+    public struct SirenFSData
     {
-        public void SetData(IDictionary<string, object> data)
+        public bool Dual { get; set; }
+        public MainSirenFSData MainSiren { get; set; }
+        public TonesFSData Tones { get; set; }
+    }
+
+    partial class Siren : IManagerEntry, IFullSyncComponent<SirenFSData>
+    {
+        public void SetData(SirenFSData data)
         {
+            if (data.Equals(null))
+            {
+                return;
+            }
             Utils.DebugWriteLine("Setting data for sirens");
-            if (data.ContainsKey("_mainSiren"))
-            {
-                Utils.DebugWriteLine("Got Main Siren Data");
-                _mainSiren.SetData((IDictionary<string, object>)data["_mainSiren"]);
-            }
-            if (data.ContainsKey("_tones")) {
-                Utils.DebugWriteLine("Got Tone Data");
-                _tones.SetData((IDictionary<string,object>)data["_tones"]);
-            }
-            if(data.TryGetValue("dual_siren", out object res))
-            {
-                Utils.DebugWriteLine("Got Dual Siren Data");
-                dual_siren = (bool)res;
-            }
+
+
+            _mainSiren.SetData(data.MainSiren);
+
+
+            _tones.SetData(data.Tones);
+
+            dual_siren = data.Dual;
+
         }
 
-        public Dictionary<string, object> GetData()
+        public SirenFSData GetData()
         {
-            var dic = new Dictionary<string, object>
-            {
-                {"_mainSiren",_mainSiren.GetData() },
-                { "_tones",_tones.GetData()},
-                {"dual_siren",dual_siren }
-            };
-            return dic;
+            //var dic = new Dictionary<string, object>
+            //{
+            //    {"_mainSiren",_mainSiren.GetData() },
+            //    { "_tones",_tones.GetData()},
+            //    {"dual_siren",dual_siren }
+            //};
+            return new SirenFSData() { Dual = dual_siren, Tones = _tones.GetData(), MainSiren = _mainSiren.GetData() };
         }
+
     }
 }

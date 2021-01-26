@@ -16,7 +16,7 @@ namespace ELS.FullSync
     {
         internal FullSyncManager()
         {
-            
+
         }
 
         internal static void RequestData(long NetworkID)
@@ -24,26 +24,27 @@ namespace ELS.FullSync
             ELS.TriggerServerEvent("ELS:FullSync:Request", NetworkID);
         }
 
-        internal static void SendDataBroadcast(IDictionary dic,int PlayerId)
+        internal static void SendDataBroadcast(string dic, int PlayerId)
         {
-            ELS.TriggerServerEvent("ELS:FullSync:Broadcast",dic,PlayerId);
+            Utils.DebugWriteLine($"ELS FS Dic is {dic.GetType()}");
+            ELS.TriggerServerEvent("ELS:FullSync:Broadcast", dic, PlayerId);
         }
-        internal static void SendDataUnicast(IDictionary dic,int PlayerID)
+        internal static void SendDataUnicast(string dic, int PlayerID)
         {
-            ELS.TriggerServerEvent("ELS:FullSync:Unicast", dic,PlayerID);
+            ELS.TriggerServerEvent("ELS:FullSync:Unicast", dic, PlayerID);
         }
     }
     internal static class SetData
     {
-//        SetData()
-//        {
-//
-//        }
+        //        SetData()
+        //        {
+        //
+        //        }
     }
 
-    internal interface IFullSyncComponent
+    internal interface IFullSyncComponent<T>
     {
-        void SetData(IDictionary<string, object> data);
-        Dictionary<string, object> GetData();
+        void SetData(T data);
+         T GetData();
     }
 }

@@ -48,15 +48,21 @@ namespace ELS
         }
         internal static void DebugText()
         {
-#if DEBUG
-            if (Game.Player.Character.LastVehicle == null) return;
-            var bonePos = Game.Player.Character.LastVehicle.Bones["door_dside_f"].Position;
-            var pos = Game.Player.Character.GetPositionOffset(bonePos);
-            var text = new Text($"X:{pos.X} Y:{pos.Y} Z:{pos.Z} Lenght:{pos.Length()}", new PointF(Screen.Width / 2.0f, 10f), 0.5f);
-            text.Alignment = Alignment.Center;
-            if (pos.Length() < 1.5) text.Color = Color.FromArgb(255, 0, 0);
+            if (Game.Player.Character.CurrentVehicle == null )
+            {
+                return;
+            }
+            if (!Game.Player.Character.CurrentVehicle.IsEls() || !API.DecorExistOn(Game.Player.Character.CurrentVehicle.Handle, "elsplus_id")) { return; }
+            int id = API.DecorGetInt(Game.Player.Character.CurrentVehicle.Handle, "elsplus_id");
+            //var bonePos = Game.Player.Character.LastVehicle.Bones["door_dside_f"].Position;
+            //var pos = Game.Player.Character.GetPositionOffset(bonePos);
+            /*X:{pos.X} Y:{pos.Y} Z:{pos.Z} Lenght:{pos.Length()}*/
+            var text = new Text($" ELS ID of Currently {id}", new PointF(Screen.Width / 2.0f, 10f), 0.5f)
+            {
+                Alignment = Alignment.Center
+            };
+            text.Color = Color.FromArgb(255, 0, 0);
             text.Draw();
-#endif
         }
     }
 }

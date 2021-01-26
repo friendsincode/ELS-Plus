@@ -10,13 +10,13 @@ using GHMatti.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
-
+using System.Dynamic;
 
 namespace ELS_Server
 {
     public class ELSServer : BaseScript
     {
-        Dictionary<string, object> _cachedData = new Dictionary<string, object>();
+        Dictionary<int, string> _cachedData = new Dictionary<int, string>();
         long GameTimer;
         string serverId;
         string currentVersion;
@@ -68,11 +68,11 @@ namespace ELS_Server
 
             });
 
-            EventHandlers["ELS:FullSync:RemoveStale"] += new Action<string>(async (string plate) =>
+            EventHandlers["ELS:FullSync:RemoveStale"] += new Action<int>(async (int id) =>
             {
-                _cachedData.Remove(plate);
-                TriggerClientEvent("ELS:removeStaleFromList", plate);
-                Utils.DebugWriteLine($"Stale vehicle {plate} removed from cache");
+                _cachedData.Remove(id);
+                TriggerClientEvent("ELS:removeStaleFromList", id);
+                Utils.DebugWriteLine($"Stale vehicle {id} removed from cache");
             });
 
             EventHandlers["ELS:getServerNetworkId"] += new Action<int,int, int>(async (int player, int entity, int netid) =>
@@ -96,13 +96,27 @@ namespace ELS_Server
                 TriggerClientEvent("ELS:VehicleExited", veh);
             });
             EventHandlers["ELS:FullSync:Unicast"] += new Action(() => { });
-            EventHandlers["ELS:FullSync:Broadcast"] += new Action<System.Dynamic.ExpandoObject, Int16>((dataDic, playerID) =>
-             {
-                 var dd = (IDictionary<string, object>)dataDic;
-                 Utils.DebugWriteLine($"plate {dd["plate"]}");
-                 _cachedData[dd["plate"].ToString()] = dd;
-                 BroadcastMessage(dataDic, playerID);
-             });
+            //EventHandlers["ELS:FullSync:Broadcast"] += new Action<ExpandoObject, int>(BroadcastMessage);
+            EventHandlers["ELS:FullSync:Broadcast"] += new Action<string, Int16>((dataDic, playerID) =>
+            {
+            var dd = JsonConvert.DeserializeObject<JObject>(dataDic);
+                if (dd.ContainsKey("Id"))
+                {
+                    Utils.DebugWriteLine($"Got Broadcaset from ELS Plus ID: {dd["Id"]}");
+                    if (_cachedData.ContainsKey((int)dd["Id"]))
+                    {
+                        _cachedData[int.Parse(dd["Id"].ToString())] = dataDic;
+                    }
+                    else
+                    {
+                        _cachedData.Add((int)dd["Id"], dataDic);
+                    }
+                }
+                
+                API.SetConvarReplicated("elsplus_data", JsonConvert.SerializeObject(_cachedData));
+                BroadcastMessage(dataDic, playerID);
+            });
+
             EventHandlers["ELS:FullSync:Request:All"] += new Action<int>((int source) =>
             {
                 Utils.DebugWriteLine($"{source} is requesting Sync Data");
@@ -122,7 +136,7 @@ namespace ELS_Server
 
             Task task = new Task(() => PreloadSyncData());
             task.Start();
-            Tick += Server_Tick;
+            //Tick += Server_Tick;
             try
             {
                 API.SetConvarReplicated("ELSServerId", serverId);
@@ -198,18 +212,32 @@ namespace ELS_Server
             }
         }
 
-        void BroadcastMessage(System.Dynamic.ExpandoObject dataDic, int SourcePlayerID)
+        //void BroadcastMessage(ExpandoObject dataDic, int SourcePlayerID)
+        //{
+            
+        //    var dd = (IDictionary<string, object>)dataDic;
+
+        //    Utils.DebugWriteLine($"elsid {dd["id"]}");
+        //    _cachedData[int.Parse(dd["id"].ToString())] = dd;
+        //    API.SetConvarReplicated("elsplus_data", JsonConvert.SerializeObject(_cachedData));
+
+        //    TriggerClientEvent("ELS:NewFullSyncData", dataDic, SourcePlayerID);
+        //}
+
+        void BroadcastMessage(string dataDic, int SourcePlayerID)
         {
             TriggerClientEvent("ELS:NewFullSyncData", dataDic, SourcePlayerID);
         }
 
+
         private async Task Server_Tick()
         {
-            if (API.GetGameTimer() >= GameTimer + Configuration.CacheClear)
-            {
-                _cachedData.Clear();
-                GameTimer = API.GetGameTimer();
-            }
+            //if (API.GetGameTimer() >= GameTimer + Configuration.CacheClear)
+            //{
+            //    _cachedData.Clear();
+            //    GameTimer = API.GetGameTimer();
+            //    await Delay(10000);
+            //}
         }
     }
 }

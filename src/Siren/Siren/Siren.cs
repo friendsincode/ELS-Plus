@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using ELS.NUI;
 using ELS.Light;
 
+
 namespace ELS.Siren
 {
     internal delegate void StateChangedHandler(Tone tone);
@@ -25,14 +26,14 @@ namespace ELS.Siren
         public MainSiren _mainSiren;
         IPatterns _patternController;
         internal Tones _tones;
-        public Siren(Vehicle vehicle, Vcfroot vcfroot, [Optional] IDictionary<string, object> data, IPatterns patt)
+        public Siren(Vehicle vehicle, Vcfroot vcfroot,  IPatterns patt, [Optional] SirenFSData data)
         {
             _vcf = vcfroot;
             _vehicle = vehicle;
             _patternController = patt;
             Function.Call(Hash.DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, _vehicle, true);
             Utils.DebugWriteLine(_vehicle.DisplayName);
-           
+
             _tones = new Tones
             {
                 horn = new Tone(vcfroot.SOUNDS.MainHorn.AudioString, _vehicle, ToneType.Horn, true, vcfroot.SOUNDS.MainHorn.SoundBank, vcfroot.SOUNDS.MainHorn.SoundSet),
@@ -47,7 +48,7 @@ namespace ELS.Siren
 
             _mainSiren = new MainSiren(ref _tones);
 
-            if (data != null) SetData(data);
+            if (!data.Equals(null)) SetData(data);
             ElsUiPanel.SetUiDesc(_mainSiren.MainTones[_mainSiren.currentTone].Type, "SRN");
             ElsUiPanel.SetUiDesc("--", "HRN");
         }

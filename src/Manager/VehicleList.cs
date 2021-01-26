@@ -1,5 +1,7 @@
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ELS.Manager
 {
-    class VehicleList : Dictionary<string, ELSVehicle>
+    class VehicleList : Dictionary<int, ELSVehicle>
     {
         internal Dictionary<int, Tuple<int, int>> VehRegAttempts;
         //public new void Add(ELSVehicle veh)
@@ -25,15 +27,21 @@ namespace ELS.Manager
         public void Add(int handle)
         {
             var veh = new ELSVehicle(handle);
-            Add(API.GetVehicleNumberPlateText(handle), veh);
+            Add(veh.GetVehicle.GetElsId(), veh);
         }
 
-        public void Add(int handle, IDictionary<string, object> data)
+        public void Add(int handle, ELSVehicleFSData  data)
         {
-            var veh = new ELSVehicle(handle, data);
-            Add(API.GetVehicleNumberPlateText(handle), veh);
+            if (this.ContainsKey(data.Id))
+            {
+                this[data.Id] = new ELSVehicle(handle, data);
+            }
+            else
+            {
+                ELSVehicle veh = new ELSVehicle(handle, data);
+                Add(veh.GetVehicle.GetElsId(), veh);
+            }
         }
-
 
         public bool IsReadOnly => throw new NotImplementedException();
 
@@ -143,7 +151,7 @@ namespace ELS.Manager
         //    throw new NotImplementedException();
         //}
 
-        //public bool MakeSureItExists(int NetworkID, IDictionary<string, object> data, [Optional]out ELSVehicle vehicle, int PlayerId = -1)
+        //public bool MakeSureItExists(int NetworkID, Dictionary<string, object> data, [Optional]out ELSVehicle vehicle, int PlayerId = -1)
         //{
 
         //    if (NetworkID == 0)
@@ -178,7 +186,7 @@ namespace ELS.Manager
         //            int handle = API.NetworkGetEntityFromNetworkId(NetworkID);
         //            if (handle == 0 && PlayerId != -1)
         //            {
-                        
+
         //                Utils.DebugWriteLine($"Registering vehicle with netid of {NetworkID} to list from {player.Name}");
         //                if (!player.Character.IsSittingInELSVehicle())
         //                {

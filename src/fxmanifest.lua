@@ -23,13 +23,11 @@ local NUIEnabled = true
 name "ELS Plus"
 description "Fully synced version of ELS Plus for FiveM"
 author "Friends in Code: Dex's Lab"
-version "0.3.1.96"
+version "0.3.2.172"
 url "https://git.friendsincode.com/friendsincode-public/elsplus"
 
 -- ELS Plus Client Scripts
-client_script "SharpConfig.net.dll"
 client_script "els-plus.net.dll"
-client_script "Newtonsoft.Json.dll"
 
 -- Debug symbols
 files(
@@ -50,7 +48,7 @@ if NUIEnabled then
             "NUI/app/js/sirenclickoff.ogg",
             "NUI/app/js/indon.ogg",
             "NUI/app/js/indoff.ogg",
-            "NUI/app/js/jquery-0.3.1.96min.js",
+            "NUI/app/js/jquery-0.3.2.172min.js",
             -- New Hotness
             "NUI/app/newhotness/index.html",
             "NUI/app/newhotness/js/popper.js",
@@ -98,6 +96,8 @@ server_script "els-server.net.dll"
 files(
     {
         "ELS.ini"
+        "SharpConfig.net.dll",
+        "Newtonsoft.Json.dll"
     }
 )
 

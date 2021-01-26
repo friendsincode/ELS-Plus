@@ -72,8 +72,9 @@ namespace ELS
 
         internal static void SendEvent(Commands type, Vehicle vehicle, bool state, int playerID)
         {
-            Utils.DebugWriteLine($"sending data for netID {vehicle.Plate()}");
-            Manager.VehicleManager.SyncRequestReply(type, API.GetVehicleNumberPlateText(vehicle.Handle), playerID);
+            int id = vehicle.GetElsId();
+            Utils.DebugWriteLine($"sending data for netID {id}");
+            Manager.VehicleManager.SyncRequestReply(type, id, playerID);
 
             //var netId = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);
             //var ped = vehicle.GetPedOnSeat(VehicleSeat.Driver);

@@ -1,6 +1,7 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using ELS.configuration;
+using ELS.FullSync;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,11 @@ using System.Threading.Tasks;
 
 namespace ELS.Light
 {
-    internal class Scene
+    public struct SceneFSData
+    {
+        public bool TurnedOn { get; set; }
+    }
+    internal class Scene : IFullSyncComponent<SceneFSData>
     {
         ILight iLight;
         private Vector3 ldirVector;
@@ -35,23 +40,21 @@ namespace ELS.Light
             TurnedOn = false;
         }
 
-        public Dictionary<string, object> GetData()
+        public SceneFSData GetData()
         {
 
-            Dictionary<string, object> dic = new Dictionary<string, object>();
-
-
-            dic.Add("TurnedOn", TurnedOn);
-            return dic;
+            
+            return new SceneFSData() { TurnedOn = TurnedOn };
         }
 
-        public void SetData(IDictionary<string, object> data)
+        public void SetData(SceneFSData data)
         {
 
-            TurnedOn = bool.Parse(data["TurnedOn"].ToString());
-            Utils.DebugWriteLine($"Got scene data for {iLight._vehicle.Plate()}");
+            TurnedOn = data.TurnedOn;
+            Utils.DebugWriteLine($"Got scene data for {iLight._vehicle.GetElsId()}");
 
         }
+
 
         public void RunTick()
         {

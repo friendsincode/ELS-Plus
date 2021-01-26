@@ -23,15 +23,17 @@ namespace ELS.Siren
 
         private readonly string _file;
         private int soundId;
-        private Entity _entity;
+        private Vehicle _entity;
         private readonly ToneType _type;
         internal string Type;
         internal bool _state { private set; get; }
         internal bool AllowUse { get; set; }
         internal string DLCSoundSet { get; set; }
-        internal Tone(string file, Entity entity, ToneType type, bool allow, string soundbank, string soundset, bool state = false)
+        internal int elsid { get; set; }
+        internal Tone(string file, Vehicle entity, ToneType type, bool allow, string soundbank, string soundset, bool state = false)
         {
             _entity = entity;
+            elsid = entity.GetElsId();
             _file = file;
             _type = type;
             SetState(state);
@@ -67,7 +69,14 @@ namespace ELS.Siren
 
         internal void SetState(bool state)
         {
+            int id = _entity.GetElsId();
+            if (id != elsid)
+            {
+                Utils.DebugWriteLine($"{id} and {elsid} do not match not setting state for this tone");
+                return;
+            }
             Utils.DebugWriteLine($"Setting state to {state} for {Type}");
+            
             _state = state;
             if (_state && AllowUse)
             {
@@ -76,7 +85,7 @@ namespace ELS.Siren
                 {
                     //soundId = Audio.PlaySoundFromEntity(_entity, _file);
                     soundId = API.GetSoundId();
-                    //Utils.DebugWriteLine($"1. Sound id of {soundId} with networkid of {_entity.Plate()} with network sound id of {API.GetSoundIdFromNetworkId(_entity.Plate())}");
+                    Utils.DebugWriteLine($"1. Sound id of {soundId} with networkid of {_entity.GetElsId()} with network sound id");
                     if (!Audio.HasSoundFinished(soundId)) return;
                     if (!String.IsNullOrEmpty(DLCSoundSet))
                     {

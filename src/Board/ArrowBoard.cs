@@ -5,7 +5,11 @@ using System.Collections.Generic;
 
 namespace ELS.Board
 {
-    internal class ArrowBoard : IFullSyncComponent
+    public struct ArrowBoardFSData
+    {
+        public bool Raised { get; set; }
+    }
+    internal class ArrowBoard : IFullSyncComponent<ArrowBoardFSData>
     {
         ILight lights;
         configuration.MISC _misc;
@@ -59,16 +63,19 @@ namespace ELS.Board
             get; set;
         }
 
-        public Dictionary<string, object> GetData()
+        public ArrowBoardFSData GetData()
         {
-            Dictionary<string, object> dic = new Dictionary<string, object>();
-            dic.Add("raised", RaiseBoardNow);
-            return dic;
+            //Dictionary<string, object> dic = new Dictionary<string, object>();
+            //dic.Add("raised", RaiseBoardNow);
+            return new ArrowBoardFSData()
+            {
+                Raised = RaiseBoardNow
+            };
         }
 
-        public void SetData(IDictionary<string, object> data)
+        public void SetData(ArrowBoardFSData data)
         {
-            BoardRaised = (bool.Parse(data["raised"].ToString()));
+            BoardRaised = data.Raised;
         }
 
         internal ArrowBoard(ILight light, configuration.MISC misc)

@@ -8,7 +8,7 @@ namespace ELS.Siren
 {
     partial class Siren : IManagerEntry
     {
-        internal partial class MainSiren : IFullSyncComponent
+        internal partial class MainSiren 
         {
             internal bool _enable { get; private set; }
             internal bool interupted = false;
