@@ -1,9 +1,4 @@
-﻿using CitizenFX.Core;
-using CitizenFX.Core.Native;
-using ELS.configuration;
-using ELS.NUI;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ELS.Light.Patterns
 {

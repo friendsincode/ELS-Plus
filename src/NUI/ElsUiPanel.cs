@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CitizenFX.Core;
-using System.Dynamic;
+﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
-using System.Threading;
-using System.IO;
-
 using ELS.configuration;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace ELS.NUI
 {

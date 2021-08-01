@@ -1,20 +1,12 @@
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
-using CitizenFX.Core.UI;
-using System.Drawing;
-using System.Collections;
-using System.Threading.Tasks;
-using ELS.configuration;
 using ELS.Light;
-using static ELS.RemoteEventManager;
-using System.Dynamic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using static ELS.RemoteEventManager;
 
 namespace ELS.Manager
 {

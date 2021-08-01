@@ -1,5 +1,4 @@
-﻿using System;
-using CitizenFX.Core;
+﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using System.Threading.Tasks;
 

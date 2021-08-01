@@ -1,7 +1,6 @@
 ﻿using CitizenFX.Core.Native;
 using ELS.FullSync;
 using ELS.Light;
-using System.Collections.Generic;
 
 namespace ELS.Board
 {

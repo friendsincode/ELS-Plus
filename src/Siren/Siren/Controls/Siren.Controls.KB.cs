@@ -1,7 +1,6 @@
-﻿using System;
-using CitizenFX.Core;
+﻿using CitizenFX.Core;
 using ELS.configuration;
-using ELS.TrafficControl;
+using System;
 
 namespace ELS.Siren
 {

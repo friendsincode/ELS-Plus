@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CitizenFX.Core;
+﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using ELS.configuration;
-using ELS.NUI;
-using ELS.Light.Patterns;
 using ELS.Light;
+using ELS.NUI;
+using System;
+using System.Collections.Generic;
 
 namespace ELS.Extra
 {

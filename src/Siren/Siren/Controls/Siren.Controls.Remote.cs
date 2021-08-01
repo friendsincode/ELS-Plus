@@ -1,6 +1,5 @@
-﻿using System;
-using CitizenFX.Core;
-using System.Collections.Generic;
+﻿using CitizenFX.Core;
+using System;
 
 namespace ELS.Siren
 {

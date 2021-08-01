@@ -1,12 +1,9 @@
 ﻿using CitizenFX.Core;
-using ELS.configuration;
 using ELS.Light.Patterns;
 using ELS.NUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ELS.Light
 {

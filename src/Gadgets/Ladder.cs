@@ -4,12 +4,6 @@ using CitizenFX.Core.Native;
 using ELS.FullSync;
 using ELS.Light;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ELS.Gadgets
 {
     public struct LadderFSData

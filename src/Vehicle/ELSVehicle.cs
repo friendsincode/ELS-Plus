@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using CitizenFX.Core;
-using ELS.configuration;
 using CitizenFX.Core.Native;
-using ELS.Manager;
-using System.Threading.Tasks;
-using ELS.NUI;
-using Newtonsoft.Json.Linq;
-using ELS.Siren;
+using ELS.configuration;
 using ELS.Light;
+using ELS.Manager;
+using ELS.Siren;
 using Newtonsoft.Json;
+using System;
+using System.Runtime.InteropServices;
 
 namespace ELS
 {

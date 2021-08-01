@@ -1,8 +1,6 @@
 ﻿using CitizenFX.Core;
-using System;
-using System.Collections.Generic;
-using ELS.FullSync;
 using ELS.NUI;
+using System.Collections.Generic;
 
 namespace ELS.Siren
 {

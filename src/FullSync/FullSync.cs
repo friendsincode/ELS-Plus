@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using CitizenFX.Core;
-
-namespace ELS.FullSync
+﻿namespace ELS.FullSync
 {
     public class FullSync
     {

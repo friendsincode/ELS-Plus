@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using CitizenFX.Core;
-using ELS.FullSync;
+﻿using ELS.FullSync;
 
 
 namespace ELS.Siren

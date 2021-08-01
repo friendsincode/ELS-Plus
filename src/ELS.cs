@@ -16,21 +16,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System.Threading.Tasks;
 using CitizenFX.Core;
-using CitizenFX.Core.UI;
-using Control = CitizenFX.Core.Control;
 using CitizenFX.Core.Native;
-using System;
+using CitizenFX.Core.UI;
+using ELS.configuration;
 using ELS.Light;
-using System.Collections.Generic;
 using ELS.Manager;
 using ELS.NUI;
+using System;
+using System.Collections.Generic;
 using System.Dynamic;
-using ELS.configuration;
-using System.Reflection;
-
 using System.IO;
+using System.Reflection;
+using System.Threading.Tasks;
+using Control = CitizenFX.Core.Control;
 
 namespace ELS
 {

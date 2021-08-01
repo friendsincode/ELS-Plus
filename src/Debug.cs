@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CitizenFX.Core;
-using CitizenFX.Core.UI;
+﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using CitizenFX.Core.UI;
 using System.Drawing;
-using ELS.Light;
-using ELS.NUI;
-using ELS.Manager;
-using ELS.configuration;
+using System.Threading.Tasks;
 
 namespace ELS
 {

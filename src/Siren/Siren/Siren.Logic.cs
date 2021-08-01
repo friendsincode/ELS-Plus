@@ -1,10 +1,7 @@
 using CitizenFX.Core;
-using CitizenFX.Core.UI;
 using ELS.configuration;
-using Control = CitizenFX.Core.Control;
-using ELS.Light;
 using ELS.NUI;
-using ELS.TrafficControl;
+using Control = CitizenFX.Core.Control;
 
 namespace ELS.Siren
 {
