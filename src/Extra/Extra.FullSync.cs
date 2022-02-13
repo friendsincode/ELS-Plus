@@ -1,33 +1,32 @@
 ﻿using ELS.FullSync;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ELS.Extra
 {
-    internal partial class Extra : IFullSyncComponent
+    public struct ExtraFSData
+    {
+        public bool PatternRunning { get; set; }
+        public bool TurnedOn { get; set; }
+        public int Pattern { get; set; }
+    }
+
+    internal partial class Extra : IFullSyncComponent<ExtraFSData>
     {
 
-        public Dictionary<string, object> GetData()
+        public ExtraFSData GetData()
         {
+
             
-            Dictionary<string, object> dic = new Dictionary<string, object>();
-           
-            dic.Add("patternrunning", IsPatternRunning);
-            dic.Add("on", TurnedOn);
-            return dic;
+
+            return new ExtraFSData() { PatternRunning = IsPatternRunning, TurnedOn = TurnedOn, Pattern = PatternNum };
         }
 
-        public void SetData(IDictionary<string, object> data)
+        public void SetData(ExtraFSData data)
         {
-#if DEBUG
-            CitizenFX.Core.Debug.WriteLine($"Got data for {_Id} setting data");
-#endif
-            //PatternNum = int.Parse(data["pattern"].ToString());
-            IsPatternRunning = bool.Parse(data["patternrunning"].ToString());
-            TurnedOn = bool.Parse(data["on"].ToString());
+            Utils.DebugWriteLine($"Got data for extra {_Id} setting data");
+            PatternNum = data.Pattern;
+
+            IsPatternRunning = data.PatternRunning;
+            TurnedOn = data.TurnedOn;
         }
 
     }

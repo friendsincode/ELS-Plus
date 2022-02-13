@@ -1,7 +1,6 @@
-﻿using System;
-using CitizenFX.Core;
+﻿using CitizenFX.Core;
 using ELS.configuration;
-using ELS.TrafficControl;
+using System;
 
 namespace ELS.Siren
 {
@@ -73,9 +72,9 @@ namespace ELS.Siren
 
         void MainSirenToggleControlsKB()
         {
-            if ((Game.IsControlJustPressed(0, ElsConfiguration.KBBindings.Toggle_SIRN) 
+            if ((Game.IsControlJustReleased(0, ElsConfiguration.KBBindings.Toggle_SIRN) 
                 && Game.CurrentInputMode == InputMode.MouseAndKeyboard) || (Global.AllowController 
-                && Game.IsControlJustPressed(2, ElsConfiguration.GPBindings.Toggle_SIRN) 
+                && Game.IsControlJustReleased(2, ElsConfiguration.GPBindings.Toggle_SIRN) 
                 && Game.CurrentInputMode == InputMode.GamePad))
             {
 #if !REMOTETEST
@@ -112,7 +111,7 @@ namespace ELS.Siren
                 DualSirenLogic(true, true);
 #endif
                 System.Collections.Generic.Dictionary<String, object> dic = new System.Collections.Generic.Dictionary<string, object>();
-               // Manager.VehicleManager.SyncRequestReply(_vehicle.GetNetworkId());
+               // Manager.VehicleManager.SyncRequestReply(_vehicle.Plate());
                 RemoteEventManager.SendEvent(RemoteEventManager.Commands.DualSiren, _vehicle, true, Game.Player.ServerId);
             }
         }

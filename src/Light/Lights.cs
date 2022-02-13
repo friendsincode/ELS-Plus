@@ -19,6 +19,7 @@ using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using ELS.configuration;
 using ELS.NUI;
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -57,9 +58,9 @@ namespace ELS.Light
         internal Stage _stage;
         public Scene scene { get; set; }
         public SpotLight spotLight { get; set; }
-       
 
-        internal Lights(Vehicle vehicle, Vcfroot vcfroot, [Optional]IDictionary<string, object> data)
+
+        internal Lights(Vehicle vehicle, Vcfroot vcfroot, [Optional] LightFSData data)
         {
             _vcfroot = vcfroot;
             _vehicle = vehicle;
@@ -68,11 +69,15 @@ namespace ELS.Light
             SetupPatternsPrm();
             SetupSecPatterns();
             SetupWrnPatterns();
+            if (!data.Equals(null))
+            {
+                SetData(data);
+            }
         }
 
         private void LightStagesSetup()
         {
-            _stage = new Stage(_vcfroot.PRML, _vcfroot.SECL, _vcfroot.WRNL, _vehicle.GetNetworkId(), _vcfroot.INTERFACE.LstgActivationType);
+            _stage = new Stage(_vcfroot.PRML, _vcfroot.SECL, _vcfroot.WRNL, _vehicle.GetElsId(), _vcfroot.INTERFACE.LstgActivationType);
         }
 
         internal void SyncUi()
@@ -103,7 +108,8 @@ namespace ELS.Light
             }
         }
 
-        internal void SetGTASirens(bool state) {
+        internal void SetGTASirens(bool state)
+        {
             _vehicle.IsSirenActive = state;
         }
 
@@ -254,12 +260,12 @@ namespace ELS.Light
 
         public void CleanUP()
         {
-            foreach(Extra.Extra e in _extras.PRML.Values)
+            foreach (Extra.Extra e in _extras.PRML.Values)
             {
                 e.CleanUp();
             }
             foreach (Extra.Extra e in _extras.SECL.Values)
-            { 
+            {
                 e.CleanUp();
             }
             foreach (Extra.Extra e in _extras.WRNL.Values)
@@ -272,14 +278,14 @@ namespace ELS.Light
             }
             if (_extras.TDL != null)
             {
-               _extras.TDL.CleanUp();
+                _extras.TDL.CleanUp();
             }
             if (_extras.SCL != null)
             {
-               _extras.SCL.CleanUp();
+                _extras.SCL.CleanUp();
             }
-            
-            
+
+
         }
 
         public void LightsControlsRemote()

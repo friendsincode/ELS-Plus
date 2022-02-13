@@ -1,0 +1,18 @@
+{
+    "Light": {
+        "PRM": null,
+        "SEC": null,
+        "WRN": null,
+        "SCL": { "PatternRunning": false, "TurnedOn": false, "Pattern": 0 },
+        "TKDN": { "PatternRunning": false, "TurnedOn": false, "Pattern": 0 },
+        "STDYBRN": { "PatternRunning": false, "TurnedOn": false, "Pattern": 0 },
+        "Spotlight": { "Horizontal": 0.0, "Vertical": 0.0, "TurnedOn": false },
+        "Stage": 0,
+        "PrmPattern": 0,
+        "SecPattern": 0,
+        "WrnPattern": 0,
+        "BRD": { "Raised": false },
+        "Scene": { "TurnedOn": false }
+    },
+    "Siren": {}
+}

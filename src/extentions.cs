@@ -1,5 +1,4 @@
-﻿using System;
-using CitizenFX.Core;
+﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using System.Threading.Tasks;
 
@@ -15,6 +14,16 @@ namespace ELS
         public static bool IsSittingInELSVehicle(this Ped ped)
         {
             return (ped.IsSittingInVehicle() && ped.CurrentVehicle.IsEls()) ? true : false ; 
+        }
+
+        public static int GetElsId(this Vehicle vehicle)
+        {
+            return API.DecorGetInt(vehicle.Handle, "elsplus_id");
+        }
+
+        public static bool IsRegistering(this Vehicle vehicle)
+        {
+            return API.DecorGetBool(vehicle.Handle, "elsplus_registering");
         }
 
         async public static Task<bool> RequestCollision(this Vehicle vehicle)

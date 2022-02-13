@@ -1,15 +1,16 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using ELS.configuration;
+using ELS.FullSync;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ELS.Light
 {
-    internal class Scene
+    public struct SceneFSData
+    {
+        public bool TurnedOn { get; set; }
+    }
+    internal class Scene : IFullSyncComponent<SceneFSData>
     {
         ILight iLight;
         private Vector3 ldirVector;
@@ -35,23 +36,21 @@ namespace ELS.Light
             TurnedOn = false;
         }
 
-        public Dictionary<string, object> GetData()
+        public SceneFSData GetData()
         {
 
-            Dictionary<string, object> dic = new Dictionary<string, object>();
-
-
-            dic.Add("TurnedOn", TurnedOn);
-            return dic;
+            
+            return new SceneFSData() { TurnedOn = TurnedOn };
         }
 
-        public void SetData(IDictionary<string, object> data)
+        public void SetData(SceneFSData data)
         {
 
-            TurnedOn = bool.Parse(data["TurnedOn"].ToString());
-            Utils.DebugWriteLine($"Got scene data for {iLight._vehicle.GetNetworkId()}");
+            TurnedOn = data.TurnedOn;
+            Utils.DebugWriteLine($"Got scene data for {iLight._vehicle.GetElsId()}");
 
         }
+
 
         public void RunTick()
         {
@@ -70,9 +69,9 @@ namespace ELS.Light
             var roff = iLight._vehicle.GetPositionOffset(iLight._vehicle.Bones[$"window_rf"].Position);
             var rspotoffset = iLight._vehicle.GetOffsetPosition(roff + new Vector3(0.5f, -0.5f, 0.5f));
 
-            float rhx = (float)((double)rspotoffset.X + 5 * - Math.Cos(((double)180 + iLight._vehicle.Rotation.Z) * Math.PI / 180.0));
-            float rhy = (float)((double)rspotoffset.Y + 5 * - Math.Sin(((double)180 + iLight._vehicle.Rotation.Z) * Math.PI / 180.0));
-            float rvz = (float)((double)rspotoffset.Z + 5 * - Math.Sin((double)180 * Math.PI / 180.0));
+            float rhx = (float)((double)rspotoffset.X + 5 * -Math.Cos(((double)180 + iLight._vehicle.Rotation.Z) * Math.PI / 180.0));
+            float rhy = (float)((double)rspotoffset.Y + 5 * -Math.Sin(((double)180 + iLight._vehicle.Rotation.Z) * Math.PI / 180.0));
+            float rvz = (float)((double)rspotoffset.Z + 5 * -Math.Sin((double)180 * Math.PI / 180.0));
 
             Vector3 rdestinationCoords = (new Vector3(rhx, rhy, rvz));
 

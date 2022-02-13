@@ -1,4 +1,4 @@
-﻿/*
+/*
     ELS FiveM - A ELS implementation for FiveM
     Copyright (C) 2017  E.J. Bevenour
 
@@ -15,11 +15,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ELS.configuration
 {
@@ -41,7 +37,9 @@ namespace ELS.configuration
         internal static bool BtnClicksBtwnHrnTones { get; set; }
         internal static bool BtnClicksBtwnSrnTones { get; set; }
         internal static bool BtnClicksIndicators { get; set; }
-
+        internal static int RegistrationDelay { get; set; }
+        internal static List<string> RegisteredSoundBanks { get; set; }
+        internal static bool NonElsOnly { get; set; }
 
         public Global()
         {

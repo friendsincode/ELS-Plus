@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace ELS_Server
 {
-  /// <summary>
-  /// Base class containing usefull features for all XML classes
-  /// </summary>
-  class NanoXMLBase
+    /// <summary>
+    /// Base class containing usefull features for all XML classes
+    /// </summary>
+    class NanoXMLBase
   {
     protected static bool IsSpace(char c)
     {

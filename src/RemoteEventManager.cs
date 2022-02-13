@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using CitizenFX.Core;
-using CitizenFX.Core.Native;
 
 namespace ELS
 {
@@ -49,10 +48,7 @@ namespace ELS
             ToggleLstg,
             ChgPattPrmL,
             ChgPattWrnL,
-            MoveSpotlightUp,
-            MoveSpotlightDown,
-            MoveSpotlightLeft,
-            MoveSpotlightRight,
+            MoveSpotlight,
             MoveLadderUp,
             MoveLadderDown,
             MoveLadderLeft,
@@ -72,8 +68,9 @@ namespace ELS
 
         internal static void SendEvent(Commands type, Vehicle vehicle, bool state, int playerID)
         {
-            CitizenFX.Core.Debug.WriteLine($"sendding data for netID {vehicle.GetNetworkId()}");
-            Manager.VehicleManager.SyncRequestReply(type, vehicle.GetNetworkId(),playerID);
+            int id = vehicle.GetElsId();
+            Utils.DebugWriteLine($"sending data for elsid {id}");
+            Manager.VehicleManager.SyncRequestReply(type, id, playerID);
 
             //var netId = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);
             //var ped = vehicle.GetPedOnSeat(VehicleSeat.Driver);

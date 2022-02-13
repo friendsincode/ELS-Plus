@@ -54,7 +54,7 @@ namespace ELS
             //});
         }
 
-        internal void FullSync(string dataType, IDictionary<string, object> dataDic, int playerId)
+        internal void FullSync(string dataType, Dictionary<string, object> dataDic, int playerId)
         {
             RunGC();
             var randVehicle = new PlayerList()[playerId].Character.CurrentVehicle;

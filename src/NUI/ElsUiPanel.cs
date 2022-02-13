@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CitizenFX.Core;
-using System.Dynamic;
+﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
-using System.Threading;
-using System.IO;
-using Newtonsoft.Json.Linq;
 using ELS.configuration;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace ELS.NUI
 {
@@ -24,16 +18,22 @@ namespace ELS.NUI
             string name = API.GetCurrentResourceName();
             Utils.DebugWriteLine($"Sending Current resouce name {name}");
             //API.SendNuiMessage($"{{\"type\":\"initdata\", \"name\":\"{name}\"}}");
-            JObject message = new JObject();
-            message["type"] = "initdata";
-            message["name"] = name;
-            message["currentUI"] = ELS.userSettings.uiSettings.currentUI.ToString().ToLower();
-            API.SendNuiMessage(message.ToString());
+            JObject obj = new JObject();
+            
+            obj.Add("type", "initdata");
+            obj.Add("name", name);
+            obj.Add("currentUI", ELS.userSettings.uiSettings.currentUI.ToString().ToLower());
+            //JObject message = new JObject();
+            //message["type"] = "initdata";
+            //message["name"] = name;
+            //message["currentUI"] = ELS.userSettings.uiSettings.currentUI.ToString().ToLower();
+            API.SendNuiMessage(obj.ToString());
         }
 
         internal static async void ReloadUI()
         {
             JObject message = new JObject();
+
             message["type"] = "reload";
             API.SendNuiMessage(message.ToString());
             await ELS.Delay(10000);

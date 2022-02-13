@@ -1,4 +1,4 @@
-﻿/*
+/*
     ELS FiveM - A ELS implementation for FiveM
     Copyright (C) 2017  E.J. Bevenour
 
@@ -16,12 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using CitizenFX.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace ELS.configuration
 {
@@ -133,6 +127,8 @@ namespace ELS.configuration
                 //ControlsUpdated?.Invoke(KeyBindings);
                 Global.EnabeTrafficControl = u["GENERAL"]["ElsTrafCtrlOn"].BoolValue;
                 Global.DisableSirenOnExit = u["GENERAL"]["ElsSirenOffonExit"].BoolValue;
+                Global.NonElsOnly = u["GENERAL"]["NonElsOnly"].BoolValue;
+                Global.RegistrationDelay = u["GENERAL"]["ElsRegistrationDelay"].IntValue;
                 Global.ResetTakedownSpotlight = u["GENERAL"]["ResetTakeDownSpotlight"].BoolValue;
                 Global.PrimDelay = u["LIGHTING"]["LightFlashDelayMainLts"].IntValue;
                 Global.DeleteInterval = u["Admin"]["VehicleDeleteInterval"].FloatValue * 60 * 1000;

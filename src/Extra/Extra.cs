@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CitizenFX.Core;
+﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using ELS.configuration;
-using ELS.NUI;
-using ELS.Light.Patterns;
 using ELS.Light;
+using ELS.NUI;
+using System;
+using System.Collections.Generic;
 
 namespace ELS.Extra
 {
@@ -189,7 +185,7 @@ namespace ELS.Extra
         private void SetTrue()
         {
             API.SetVehicleExtra(lights._vehicle.Handle, _Id, false);
-            if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())
+            if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetElsId() == lights._vehicle.GetElsId())
             {
                 ElsUiPanel.SendLightData(true, $"#extra{_Id}", _extraInfo.Color);
             }
@@ -198,7 +194,7 @@ namespace ELS.Extra
         private void SetFalse()
         {
             API.SetVehicleExtra(lights._vehicle.Handle, _Id, true);
-            if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetNetworkId() == lights._vehicle.GetNetworkId())
+            if (Game.PlayerPed.IsInPoliceVehicle && Game.PlayerPed.CurrentVehicle.GetElsId() == lights._vehicle.GetElsId())
             {
                 ElsUiPanel.SendLightData(false, $"#extra{_Id}", _extraInfo.Color);
             }
@@ -274,8 +270,8 @@ namespace ELS.Extra
         }
 
         private Vector3 dirVector;
-        private float anglehorizontal = 0f;
-        private float anngleVirtical = 0f;
+        private float anglehorizontal = 90f;
+        private float angleVertical = 0f;
 
         internal void DrawEnvLight()
         {
@@ -295,7 +291,11 @@ namespace ELS.Extra
                 return;
             }
             var extraoffset = lights._vehicle.GetOffsetPosition(off + new Vector3(_extraInfo.OffsetX, _extraInfo.OffsetY, _extraInfo.OffsetZ));
-            API.DrawLightWithRangeAndShadow(extraoffset.X, extraoffset.Y, extraoffset.Z, Color['r'], Color['g'], Color['b'], Global.EnvLightRng, Global.EnvLightInt, 0.01f);
+
+            float hx = (float)((double)extraoffset.X + 5 * Math.Cos(((double)anglehorizontal + lights._vehicle.Rotation.Z) * Math.PI / 180.0));
+            float hy = (float)((double)extraoffset.Y + 5 * Math.Sin(((double)anglehorizontal + lights._vehicle.Rotation.Z) * Math.PI / 180.0));
+            float vz = (float)((double)extraoffset.Z + 5 * Math.Sin((double)angleVertical * Math.PI / 180.0));
+            API.DrawLightWithRangeAndShadow(hx, hy, vz, Color['r'], Color['g'], Color['b'], Global.EnvLightRng, Global.EnvLightInt, 0.05f);
         }
 
         internal Dictionary<char, int> Color;
@@ -404,7 +404,7 @@ namespace ELS.Extra
 
         internal void CleanUp()
         {
-            SetState(false);
+            //SetState(false);
         }
     }
 }

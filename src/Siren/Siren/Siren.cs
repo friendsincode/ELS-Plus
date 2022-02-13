@@ -1,14 +1,10 @@
-﻿using CitizenFX.Core;
+using CitizenFX.Core;
 using CitizenFX.Core.Native;
-using System;
-using System.Linq;
-using System.Runtime.InteropServices;
-using CitizenFX.Core.UI;
 using ELS.configuration;
-using System.Collections;
-using System.Collections.Generic;
-using ELS.NUI;
 using ELS.Light;
+using ELS.NUI;
+using System.Runtime.InteropServices;
+
 
 namespace ELS.Siren
 {
@@ -25,7 +21,7 @@ namespace ELS.Siren
         public MainSiren _mainSiren;
         IPatterns _patternController;
         internal Tones _tones;
-        public Siren(Vehicle vehicle,Vcfroot vcfroot,[Optional]IDictionary<string,object> data, IPatterns patt)
+        public Siren(Vehicle vehicle, Vcfroot vcfroot,  IPatterns patt, [Optional] SirenFSData data)
         {
             _vcf = vcfroot;
             _vehicle = vehicle;
@@ -35,20 +31,20 @@ namespace ELS.Siren
 
             _tones = new Tones
             {
-                horn = new Tone(vcfroot.SOUNDS.MainHorn.AudioString, _vehicle, ToneType.Horn, true),
-                tone1 = new Tone(vcfroot.SOUNDS.SrnTone1.AudioString, _vehicle, ToneType.SrnTon1,vcfroot.SOUNDS.SrnTone1.AllowUse),
-                tone2 = new Tone(vcfroot.SOUNDS.SrnTone2.AudioString, _vehicle, ToneType.SrnTon2, vcfroot.SOUNDS.SrnTone2.AllowUse),
-                tone3 = new Tone(vcfroot.SOUNDS.SrnTone3.AudioString, _vehicle, ToneType.SrnTon3, vcfroot.SOUNDS.SrnTone3.AllowUse),
-                tone4 = new Tone(vcfroot.SOUNDS.SrnTone4.AudioString, _vehicle, ToneType.SrnTon4, vcfroot.SOUNDS.SrnTone4.AllowUse),
-                panicAlarm = new Tone(vcfroot.SOUNDS.PanicMde.AudioString, _vehicle, ToneType.SrnPnic, vcfroot.SOUNDS.PanicMde.AllowUse)
+                horn = new Tone(vcfroot.SOUNDS.MainHorn.AudioString, _vehicle, ToneType.Horn, true, vcfroot.SOUNDS.MainHorn.SoundBank, vcfroot.SOUNDS.MainHorn.SoundSet),
+                tone1 = new Tone(vcfroot.SOUNDS.SrnTone1.AudioString, _vehicle, ToneType.SrnTon1, vcfroot.SOUNDS.SrnTone1.AllowUse, vcfroot.SOUNDS.SrnTone1.SoundBank, vcfroot.SOUNDS.SrnTone1.SoundSet),
+                tone2 = new Tone(vcfroot.SOUNDS.SrnTone2.AudioString, _vehicle, ToneType.SrnTon2, vcfroot.SOUNDS.SrnTone2.AllowUse, vcfroot.SOUNDS.SrnTone2.SoundBank, vcfroot.SOUNDS.SrnTone2.SoundSet),
+                tone3 = new Tone(vcfroot.SOUNDS.SrnTone3.AudioString, _vehicle, ToneType.SrnTon3, vcfroot.SOUNDS.SrnTone3.AllowUse, vcfroot.SOUNDS.SrnTone3.SoundBank, vcfroot.SOUNDS.SrnTone3.SoundSet),
+                tone4 = new Tone(vcfroot.SOUNDS.SrnTone4.AudioString, _vehicle, ToneType.SrnTon4, vcfroot.SOUNDS.SrnTone4.AllowUse, vcfroot.SOUNDS.SrnTone4.SoundBank, vcfroot.SOUNDS.SrnTone4.SoundSet),
+                panicAlarm = new Tone(vcfroot.SOUNDS.PanicMde.AudioString, _vehicle, ToneType.SrnPnic, vcfroot.SOUNDS.PanicMde.AllowUse, vcfroot.SOUNDS.PanicMde.SoundBank, vcfroot.SOUNDS.PanicMde.SoundSet)
             };
 
             dual_siren = false;
 
             _mainSiren = new MainSiren(ref _tones);
 
-            if (data != null) SetData(data);
-            ElsUiPanel.SetUiDesc(_mainSiren.currentTone.Type, "SRN");
+            if (!data.Equals(null)) SetData(data);
+            ElsUiPanel.SetUiDesc(_mainSiren.MainTones[_mainSiren.currentTone].Type, "SRN");
             ElsUiPanel.SetUiDesc("--", "HRN");
         }
 
@@ -64,7 +60,7 @@ namespace ELS.Siren
 
         internal void SyncUi()
         {
-            
+
         }
     }
 }

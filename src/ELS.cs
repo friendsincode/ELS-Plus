@@ -1,4 +1,4 @@
-﻿/*
+/*
     ELS FiveM - A ELS implementation for FiveM
     Copyright (C) 2017  E.J. Bevenour
 
@@ -16,19 +16,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System.Threading.Tasks;
 using CitizenFX.Core;
-using CitizenFX.Core.UI;
-using Control = CitizenFX.Core.Control;
 using CitizenFX.Core.Native;
-using System;
+using CitizenFX.Core.UI;
+using ELS.configuration;
 using ELS.Light;
-using System.Collections.Generic;
 using ELS.Manager;
 using ELS.NUI;
+using System;
+using System.Collections.Generic;
 using System.Dynamic;
-using ELS.configuration;
+using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
+using Control = CitizenFX.Core.Control;
 
 namespace ELS
 {
@@ -48,6 +49,8 @@ namespace ELS
             _controlConfiguration = new ElsConfiguration();
             _FileLoader = new FileLoader(this);
             _vehicleManager = new VehicleManager();
+            API.DecorRegister("elsplus_id", 3);
+            API.DecorRegister("elsplus_registering", 3);
             EventHandlers["onClientResourceStart"] += new Action<string>((string obj) =>
                 {
                     //TODO rewrite loader so that it 
@@ -55,9 +58,9 @@ namespace ELS
                     {
                         try
                         {
-
                             ServerId = API.GetConvar("ElsServerId", null);
                             userSettings = new UserSettings();
+                            Global.RegisteredSoundBanks = new List<string>();
                             Task settingsTask = new Task(() => userSettings.LoadUserSettings());
                             Utils.ReleaseWriteLine($"Welcome to ELS Plus on {ServerId} using version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
                             settingsTask.Start();
@@ -68,8 +71,11 @@ namespace ELS
                             SetupExports();
                             Tick -= Class1_Tick;
                             Tick += Class1_Tick;
-                            Function.Call((Hash)3520272001, "car.defaultlight.night.emissive.on", Global.NightLtBrightness);
-                            Function.Call((Hash)3520272001, "car.defaultlight.day.emissive.on", Global.DayLtBrightness);
+                            //Function.Call((Hash)3520272001, "car.defaultlight.night.emissive.on", Global.NightLtBrightness);
+                            //Function.Call((Hash)3520272001, "car.defaultlight.day.emissive.on", Global.DayLtBrightness);
+                            API.SetVisualSettingFloat("car.defaultlight.night.emissive.on", Global.NightLtBrightness);
+                            API.SetVisualSettingFloat("car.defaultlight.day.emissive.on", Global.DayLtBrightness);
+
                         }
                         catch (Exception e)
                         {
@@ -110,11 +116,23 @@ namespace ELS
 
                 VCF.ParsePatterns(patterns);
             }));
-            EventHandlers["ELS:FullSync:NewSpawnWithData"] += new Action<System.Dynamic.ExpandoObject>((a) =>
-            {
-                _vehicleManager.SyncAllVehiclesOnFirstSpawn(a);
+            //EventHandlers["ELS:FullSync:NewSpawnWithData"] += new Action<dynamic>((a) =>
+            //{
+            //    //dynamic data = a;
+            //    _vehicleManager.SyncAllVehiclesOnFirstSpawn(a);
+            //});
 
+            EventHandlers["ELS:serverNetworkId"] += new Action<int, int, int, int>((servernetid, serverentityid, sententid, sentnetid) =>
+            {
+                Utils.DebugWrite($"Got Server net id of {servernetid} for server entity {serverentityid} for client entity {sententid} with net id of {sentnetid}");
             });
+
+            EventHandlers["ELS:FullSync:Unicast"] += new Action<int, dynamic>((vehid, data) =>
+            {
+                Utils.DebugWriteLine($"Got single vehicle of {vehid} adding vehicle");
+                _vehicleManager.AddVehicle(vehid, data);
+            });
+
             EventHandlers["ELS:FullSync:NewSpawn"] += new Action(() =>
             {
                 Tick -= Class1_Tick;
@@ -122,41 +140,49 @@ namespace ELS
             });
 
             EventHandlers.Add("playerSpawned", new Action(() => { TriggerServerEvent("ELS:FullSync:Request:All", Game.Player.ServerId); }));
+
             EventHandlers["ELS:VehicleEntered"] += new Action<int>((veh) =>
             {
                 Utils.DebugWriteLine("Vehicle entered checking list");
                 Vehicle vehicle = new Vehicle(veh);
-                Delay(1000);                
+                Delay(2000);
                 try
                 {
                     if (vehicle.Exists() && vehicle.IsEls())
                     {
-                        if ((vehicle.GetNetworkId() == LocalPlayer.Character.CurrentVehicle.GetNetworkId()))
+                        if (!API.DecorExistOn(vehicle.Handle, "elsplus_id"))
+                        {
+                            Delay(Global.RegistrationDelay);
+                        }
+                        int vehid = vehicle.GetElsId();
+                        
+                        int currVehId = LocalPlayer.Character.CurrentVehicle.GetElsId();
+                        if (vehid == currVehId)
                         {
                             Utils.DebugWriteLine("Vehicle is in list moving on");
                             Utils.DebugWriteLine("ELS Vehicle entered syncing UI");
-                            lastVehicle = vehicle.GetNetworkId();
+                            lastVehicle = vehid;
                             if (userSettings.uiSettings.enabled)
                             {
                                 ElsUiPanel.ShowUI();
                             }
-                            VehicleManager.SyncUI(vehicle.GetNetworkId());
+                            VehicleManager.SyncUI(vehid);
 
                             UserSettings.ELSUserVehicle usrVeh = userSettings.savedVehicles.Find(uveh => uveh.Model == vehicle.Model.Hash && uveh.ServerId == ServerId);
                             Utils.DebugWriteLine($"got usrveh of {usrVeh.Model} on server {usrVeh.ServerId}m");
                             if (ServerId.Equals(usrVeh.ServerId))
                             {
                                 Utils.DebugWrite("Got Saved Vehicle Settings applying");
-                                VehicleManager.vehicleList[vehicle.GetNetworkId()].SetSaveSettings(usrVeh);
+                                VehicleManager.vehicleList[vehid].SetSaveSettings(usrVeh);
                             }
-                            VehicleManager.vehicleList[vehicle.GetNetworkId()].SetInofVeh();
+                            VehicleManager.vehicleList[vehid].SetInofVeh();
                         }
-                        Utils.DebugWriteLine($"Vehicle {vehicle.GetNetworkId()}({Game.PlayerPed.CurrentVehicle.GetNetworkId()}) entered");
+                        Utils.DebugWriteLine($"Vehicle {vehid}({currVehId}) entered");
                     }
                 }
                 catch (Exception e)
                 {
-                    Utils.ReleaseWriteLine("Exception caught via vehicle entered");
+                    Utils.ReleaseWriteLine($"Exception {e.Message} caught via vehicle entered");
                 }
 
             });
@@ -167,27 +193,40 @@ namespace ELS
                 {
                     if (vehicle.Exists() && vehicle.IsEls())
                     {
-                        if (VehicleManager.vehicleList.ContainsKey(vehicle.GetNetworkId()) && (vehicle.GetNetworkId() == lastVehicle))
+                        int vehid = vehicle.GetElsId();
+                        lastVehicle = vehid;
+                        //int currVehId = LocalPlayer.Character.CurrentVehicle?.GetElsId();
+                        if (VehicleManager.vehicleList.ContainsKey(vehid) && (vehid == lastVehicle))
                         {
                             if (Global.DisableSirenOnExit)
                             {
-                                VehicleManager.vehicleList[vehicle.GetNetworkId()].DisableSiren();
+                                VehicleManager.vehicleList[vehid].DisableSiren();
                             }
                             Utils.DebugWriteLine("save settings for vehicle it");
-                            VehicleManager.vehicleList[vehicle.GetNetworkId()].GetSaveSettings();
-                            VehicleManager.vehicleList[vehicle.GetNetworkId()].SetOutofVeh();
+                            VehicleManager.vehicleList[vehid].GetSaveSettings();
+                            VehicleManager.vehicleList[vehid].SetOutofVeh();
                         }
-                        Utils.DebugWriteLine($"Vehicle {vehicle.GetNetworkId()}({Game.PlayerPed.LastVehicle.GetNetworkId()}) exited");
+                        Utils.DebugWriteLine($"Vehicle {vehid}({lastVehicle}) exited");
                     }
                 }
                 catch (Exception e)
                 {
-                    Utils.ReleaseWriteLine("Exception caught via vehicle exited");
+                    Utils.ReleaseWriteLine($"Exception {e.Message} caught via vehicle exited");
                 }
 
             });
             //Take in data and apply it
-            EventHandlers["ELS:NewFullSyncData"] += new Action<IDictionary<string, object>, int>(_vehicleManager.SetVehicleSyncData);
+            EventHandlers["ELS:NewFullSyncData"] += new Action<string, int>(_vehicleManager.SetVehicleSyncData);
+
+            EventHandlers["ELS:removeStaleFromList"] += new Action<int>((id) =>
+            {
+                VehicleManager.vehicleList.Remove(id);
+            });
+
+            EventHandlers["ELS:clearVehicleList"] += new Action(() =>
+            {
+                VehicleManager.vehicleList.Clear();
+            });
 
 
             API.RegisterCommand("vcfsync", new Action<int, List<object>, string>((source, arguments, raw) =>
@@ -234,10 +273,10 @@ namespace ELS
                 {
                     if (entry.modelHash.IsValid)
                     {
-                        listString += $"{System.IO.Path.GetFileNameWithoutExtension(entry.filename)}\n";
+                        listString += $"{Path.GetFileNameWithoutExtension(entry.filename)}\n";
                     }
                 }
-                CitizenFX.Core.Debug.WriteLine(listString);
+                Utils.DebugWriteLine(listString);
             }), false);
         }
 
@@ -258,9 +297,9 @@ namespace ELS
             {
                 if (Game.PlayerPed.CurrentVehicle.IsEls())
                 {
-                    if (VehicleManager.vehicleList.ContainsKey(Game.PlayerPed.CurrentVehicle.GetNetworkId()))
+                    if (VehicleManager.vehicleList.ContainsKey(Game.PlayerPed.CurrentVehicle.GetElsId()))
                     {
-                        VehicleManager.vehicleList[Game.PlayerPed.CurrentVehicle.GetNetworkId()].Delete();
+                        VehicleManager.vehicleList[Game.PlayerPed.CurrentVehicle.GetElsId()].Delete();
                     }
                     else
                     {
@@ -300,7 +339,7 @@ namespace ELS
             {
                 if (Game.PlayerPed.CurrentVehicle.IsEls())
                 {
-                    VehicleManager.vehicleList[Game.PlayerPed.CurrentVehicle.GetNetworkId()].Delete();
+                    VehicleManager.vehicleList[Game.PlayerPed.CurrentVehicle.GetElsId()].Delete();
                 }
                 else
                 {
@@ -368,8 +407,13 @@ namespace ELS
                     RegisterNUICallback("togglePrimary", ElsUiPanel.TooglePrimary);
                     RegisterNUICallback("keyPress", ElsUiPanel.KeyPress);
                     _firstTick = true;
+                    Tick += _vehicleManager.RegistrationTick;
+                    Tick += _vehicleManager.RunTickAsync;
+                    Tick += _vehicleManager.ControlTickAsync;
+                    Tick += _vehicleManager.ElsIDSetTick;
+                    Tick += _vehicleManager.SoundCleanUpTick;
                 }
-                _vehicleManager.RunTickAsync();
+                
                 //Function.Call((Hash)3520272001, "car.defaultlight.night.emissive.on", 1100.0f);
                 //Function.Call((Hash)3520272001, "car.defaultlight.day.emissive.on", 1700.0f);
                 if (Game.PlayerPed.IsInVehicle() && Game.PlayerPed.CurrentVehicle.IsEls())

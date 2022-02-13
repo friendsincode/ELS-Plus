@@ -1,35 +1,45 @@
-﻿using System.Collections.Generic;
-using CitizenFX.Core;
-using ELS.FullSync;
+﻿using ELS.FullSync;
+
 
 namespace ELS.Siren
 {
-    partial class Siren : IManagerEntry, IFullSyncComponent
+    public struct SirenFSData
     {
-        public void SetData(IDictionary<string, object> data)
+        public bool Dual { get; set; }
+        public MainSirenFSData MainSiren { get; set; }
+        public TonesFSData Tones { get; set; }
+    }
+
+    partial class Siren : IManagerEntry, IFullSyncComponent<SirenFSData>
+    {
+        public void SetData(SirenFSData data)
         {
-            if (data.ContainsKey("_mainSiren"))
+            if (data.Equals(null))
             {
-                _mainSiren.SetData((IDictionary<string, object>)data["_mainSiren"]);
+                return;
             }
-            if (data.ContainsKey("_tones")) {
-                _tones.SetData((IDictionary<string,object>)data["_tones"]);
-            }
-            if(data.TryGetValue("dual_siren", out object res))
-            {
-                dual_siren = (bool)res;
-            }
+            Utils.DebugWriteLine("Setting data for sirens");
+
+
+            _mainSiren.SetData(data.MainSiren);
+
+
+            _tones.SetData(data.Tones);
+
+            dual_siren = data.Dual;
+
         }
 
-        public Dictionary<string, object> GetData()
+        public SirenFSData GetData()
         {
-            var dic = new Dictionary<string, object>
-            {
-                {"_mainSiren",_mainSiren.GetData() },
-                { "_tones",_tones.GetData()},
-                {"dual_siren",dual_siren }
-            };
-            return dic;
+            //var dic = new Dictionary<string, object>
+            //{
+            //    {"_mainSiren",_mainSiren.GetData() },
+            //    { "_tones",_tones.GetData()},
+            //    {"dual_siren",dual_siren }
+            //};
+            return new SirenFSData() { Dual = dual_siren, Tones = _tones.GetData(), MainSiren = _mainSiren.GetData() };
         }
+
     }
 }

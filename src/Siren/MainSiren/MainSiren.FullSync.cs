@@ -1,29 +1,37 @@
-﻿using System.Collections.Generic;
-using CitizenFX.Core;
-using ELS.FullSync;
+﻿using ELS.FullSync;
+
 
 namespace ELS.Siren
 {
+    public struct MainSirenFSData
+    {
+        public bool Interrupted { get; set; }
+        public int CurrentTone { get; set; }
+        public bool State { get; set; }
+    }
+
     partial class Siren
     {
-        internal partial class MainSiren
+        internal partial class MainSiren : IFullSyncComponent<MainSirenFSData>
         {
 
 
-            public Dictionary<string, object> GetData()
+            public MainSirenFSData GetData()
             {
-                Dictionary<string, object> dic = new Dictionary<string, object>();
-                dic.Add("interupted", this.interupted.ToString());
-                dic.Add("currentTone", this.MainTones.IndexOf(currentTone).ToString());
-                dic.Add("state", this._enable.ToString());
-                return dic;
+                //Dictionary<string, object> dic = new Dictionary<string, object>();
+                ////JObject dic = new JObject();
+                //dic.Add("interupted", interupted);
+                //dic.Add("currentTone", currentTone);
+                //dic.Add("state", _enable);
+                ////dynamic dic = JSON.Serialize(new { interupted = interupted, currentTone = currentTone, state = _enable });
+                return new MainSirenFSData() { Interrupted = interupted, CurrentTone = currentTone, State = _enable };
             }
 
-            public void SetData(IDictionary<string, object> data)
+            public void SetData(MainSirenFSData data)
             {
-                currentTone = MainTones[int.Parse(data["currentTone"].ToString())];
-                interupted = bool.Parse(data["interupted"].ToString());
-                _enable = (bool.Parse(data["state"].ToString()));
+                currentTone = data.CurrentTone;
+                interupted = data.Interrupted;
+                _enable = data.State;
             }
         }
     }

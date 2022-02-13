@@ -16,11 +16,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
-using System.IO;
-using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using ELS.configuration;
+using System;
 
 namespace ELS
 {
