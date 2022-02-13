@@ -8,14 +8,14 @@ jobs:
     runs-on: windows-latest
  
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v2
       name: Checkout Code
      
     - name: Setup MSBuild Path
-      uses: microsoft/setup-msbuild
+      uses: microsoft/setup-msbuild@v1.1
        
     - name: Setup NuGet
-      uses: NuGet/setup-nuget
+      uses: nuget/setup-nuget@v1
      
     - name: Restore NuGet Packages
       run: nuget restore .\src\elsplus.sln
