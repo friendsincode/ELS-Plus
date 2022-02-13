@@ -60,7 +60,7 @@ namespace ELS
                         {
                             ServerId = API.GetConvar("ElsServerId", null);
                             userSettings = new UserSettings();
-                            Global.RegisterdSoundBanks = new List<string>();
+                            Global.RegisteredSoundBanks = new List<string>();
                             Task settingsTask = new Task(() => userSettings.LoadUserSettings());
                             Utils.ReleaseWriteLine($"Welcome to ELS Plus on {ServerId} using version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
                             settingsTask.Start();
@@ -116,11 +116,11 @@ namespace ELS
 
                 VCF.ParsePatterns(patterns);
             }));
-            EventHandlers["ELS:FullSync:NewSpawnWithData"] += new Action<dynamic>((a) =>
-            {
-                //dynamic data = a;
-                _vehicleManager.SyncAllVehiclesOnFirstSpawn(a);
-            });
+            //EventHandlers["ELS:FullSync:NewSpawnWithData"] += new Action<dynamic>((a) =>
+            //{
+            //    //dynamic data = a;
+            //    _vehicleManager.SyncAllVehiclesOnFirstSpawn(a);
+            //});
 
             EventHandlers["ELS:serverNetworkId"] += new Action<int, int, int, int>((servernetid, serverentityid, sententid, sentnetid) =>
             {
@@ -145,12 +145,17 @@ namespace ELS
             {
                 Utils.DebugWriteLine("Vehicle entered checking list");
                 Vehicle vehicle = new Vehicle(veh);
-                Delay(1000);
+                Delay(2000);
                 try
                 {
                     if (vehicle.Exists() && vehicle.IsEls())
                     {
+                        if (!API.DecorExistOn(vehicle.Handle, "elsplus_id"))
+                        {
+                            Delay(Global.RegistrationDelay);
+                        }
                         int vehid = vehicle.GetElsId();
+                        
                         int currVehId = LocalPlayer.Character.CurrentVehicle.GetElsId();
                         if (vehid == currVehId)
                         {
@@ -177,7 +182,7 @@ namespace ELS
                 }
                 catch (Exception e)
                 {
-                    Utils.ReleaseWriteLine("Exception caught via vehicle entered");
+                    Utils.ReleaseWriteLine($"Exception {e.Message} caught via vehicle entered");
                 }
 
             });
@@ -189,7 +194,8 @@ namespace ELS
                     if (vehicle.Exists() && vehicle.IsEls())
                     {
                         int vehid = vehicle.GetElsId();
-                        int currVehId = LocalPlayer.Character.CurrentVehicle.GetElsId();
+                        lastVehicle = vehid;
+                        //int currVehId = LocalPlayer.Character.CurrentVehicle?.GetElsId();
                         if (VehicleManager.vehicleList.ContainsKey(vehid) && (vehid == lastVehicle))
                         {
                             if (Global.DisableSirenOnExit)
@@ -200,12 +206,12 @@ namespace ELS
                             VehicleManager.vehicleList[vehid].GetSaveSettings();
                             VehicleManager.vehicleList[vehid].SetOutofVeh();
                         }
-                        Utils.DebugWriteLine($"Vehicle {vehid}({currVehId}) exited");
+                        Utils.DebugWriteLine($"Vehicle {vehid}({lastVehicle}) exited");
                     }
                 }
                 catch (Exception e)
                 {
-                    Utils.ReleaseWriteLine("Exception caught via vehicle exited");
+                    Utils.ReleaseWriteLine($"Exception {e.Message} caught via vehicle exited");
                 }
 
             });
@@ -403,6 +409,9 @@ namespace ELS
                     _firstTick = true;
                     Tick += _vehicleManager.RegistrationTick;
                     Tick += _vehicleManager.RunTickAsync;
+                    Tick += _vehicleManager.ControlTickAsync;
+                    Tick += _vehicleManager.ElsIDSetTick;
+                    Tick += _vehicleManager.SoundCleanUpTick;
                 }
                 
                 //Function.Call((Hash)3520272001, "car.defaultlight.night.emissive.on", 1100.0f);

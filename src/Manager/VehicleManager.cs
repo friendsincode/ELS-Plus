@@ -59,17 +59,9 @@ namespace ELS.Manager
             }
         }
 
-
-        internal async Task RegistrationTick()
+        internal async Task ElsIDSetTick()
         {
-            int count = 0;
-            do
-            {
-                Utils.DebugWriteLine($"Delay {count} at {Game.GameTime}");
-                await ELS.Delay(1000);
-                count++;
-            } while (count < 10);
-
+            await ELS.Delay(1000);
             List<Vehicle> vehicles = new List<Vehicle>(World.GetAllVehicles());
             for (int i = 0; i < vehicles.Count; i++)
             {
@@ -79,9 +71,44 @@ namespace ELS.Manager
                     int rnd = rnd1.Next(Game.GameTime);
                     Utils.DebugWriteLine($"Registering Decor Int of {rnd} for vehicle elsplus id");
                     API.DecorSetInt(vehicles[i].Handle, "elsplus_id", rnd);
-                    vehicleList.Add(vehicles[i].Handle);
                 }
-                else if (vehicles[i].IsEls() && API.DecorExistOn(vehicles[i].Handle, "elsplus_id"))
+            }
+           
+        }
+
+        internal async Task SoundCleanUpTick()
+        {
+            ELS.Delay(400);
+           foreach(KeyValuePair<int,ELSVehicle> veh in vehicleList)
+            {
+                veh.Value.CleanUP();
+            }
+        }
+
+
+        internal async Task RegistrationTick()
+        {
+            int count = 0;
+            do
+            {
+                //Utils.DebugWriteLine($"Delay {count} at {Game.GameTime}");
+                await ELS.Delay(1000);
+                count++;
+            } while (count < Global.RegistrationDelay);
+
+            List<Vehicle> vehicles = new List<Vehicle>(World.GetAllVehicles());
+            for (int i = 0; i < vehicles.Count; i++)
+            {
+                //if (vehicles[i].IsEls() && !API.DecorExistOn(vehicles[i].Handle, "elsplus_id") && vehicles[i].GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed)
+                //{
+                //    Random rnd1 = new Random();
+                //    int rnd = rnd1.Next(Game.GameTime);
+                //    Utils.DebugWriteLine($"Registering Decor Int of {rnd} for vehicle elsplus id");
+                //    API.DecorSetInt(vehicles[i].Handle, "elsplus_id", rnd);
+                //    vehicleList.Add(vehicles[i].Handle);
+                //}
+                /*else*/ 
+                if (vehicles[i].IsEls() && API.DecorExistOn(vehicles[i].Handle, "elsplus_id"))
                 {
                     int id = vehicles[i].GetElsId();
                     int currVeh = 0;
@@ -110,11 +137,36 @@ namespace ELS.Manager
                         {
                             Utils.DebugWriteLine($"Veh not in client list nor server list registering vehicle");
                             vehicleList.Add(vehicles[i].Handle);
-                        } 
-                        else if (vehicleList.ContainsKey(id) && currVeh != id)
-                        {
-                            vehicleList.Add(vehicles[i].Handle, vehicleList[id].GetData());
                         }
+                        else if (vehicleList.ContainsKey(id) && !vehlist.ContainsKey(id))
+                        {
+                            Utils.DebugWriteLine($"Veh not in client list nor server list registering vehicle");
+                            vehicleList.Add(vehicles[i].Handle);
+                        }
+                        else if (vehicleList.ContainsKey(id) && currVeh > 0 && currVeh != id)
+                        {
+                            Utils.DebugWriteLine($"Vehicle in list but curr != id setting data from convar");
+                            vehicleList[id].SetData(JsonConvert.DeserializeObject<ELSVehicleFSData>(vehlist[id]));
+;                       } 
+                        else if (vehicleList.ContainsKey(id) && !vehlist.ContainsKey(id))
+                        {
+                            vehicleList.Remove(id);
+                        }
+                    }
+                }
+            }
+        }
+
+        internal async Task ControlTickAsync()
+        {
+            if (Game.PlayerPed.CurrentVehicle != null && Game.PlayerPed.CurrentVehicle.IsEls())
+            {
+                if (Game.PlayerPed.CurrentVehicle.Driver == Game.PlayerPed || Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Passenger) == Game.PlayerPed)
+                {
+                    int id = Game.PlayerPed.CurrentVehicle.GetElsId();
+                    if (vehicleList.ContainsKey(id))
+                    {
+                        vehicleList[id].RunControlTick();
                     }
                 }
             }
@@ -133,11 +185,7 @@ namespace ELS.Manager
                     if (vehicleList.ContainsKey(id) && vehicles[i].Exists())
                     {
                         //Utils.DebugWriteLine($"We have found {id} in the list running tick");
-                        if ((vehicles[i].GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed
-                                   || vehicles[i].GetPedOnSeat(VehicleSeat.Passenger) == Game.PlayerPed) && Game.PlayerPed.CurrentVehicle.GetElsId() == id)
-                        {
-                            vehicleList[id].RunControlTick();
-                        }
+                       
                         vehicleList[id].RunExternalTick();
                         vehicleList[id].RunTick();
                     }
@@ -241,7 +289,8 @@ namespace ELS.Manager
                 try
                 {
                     vehicleList[id].SetData(data);
-                }catch (KeyNotFoundException e)
+                }
+                catch (KeyNotFoundException e)
                 {
                     Utils.DebugWriteLine("Key not found for some dumbass reason lets just regiseter it");
                     json = API.GetConvar("elsplus_data", "");
@@ -333,16 +382,16 @@ namespace ELS.Manager
             }
             switch (command)
             {
-                //case Commands.ToggleInd:
-                    
-                         
-                //    Dictionary<string, object> dict = new Dictionary<string, object>
-                //    {
-                //        {"IndState", Indicator.CurrentIndicatorState(Game.PlayerPed.CurrentVehicle) }
-                //    };
-                //    Utils.DebugWriteLine($"Sending sync data for is {dict["IndState"]}");
-                //    FullSync.FullSyncManager.SendDataBroadcast(dict, PlayerId);
-                //    break;
+                case Commands.ToggleInd:
+
+
+                    Dictionary<string, object> dict = new Dictionary<string, object>
+                    {
+                        {"IndState", Indicator.CurrentIndicatorState(Game.PlayerPed.CurrentVehicle) }
+                    };
+                    Utils.DebugWriteLine($"Sending sync data for is {dict["IndState"]}");
+                    //FullSync.FullSyncManager.SendDataBroadcast(dict, PlayerId);
+                    break;
                 default:
                     string data = JsonConvert.SerializeObject(vehicleList[id].GetData());
                     FullSync.FullSyncManager.SendDataBroadcast(data, PlayerId) ;

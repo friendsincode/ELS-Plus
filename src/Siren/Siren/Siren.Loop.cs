@@ -16,7 +16,6 @@ namespace ELS.Siren
                 ManualSoundControlsKB();
                 MainSirenToggleControlsKB();
                 DualSirenControlsKB();
-           
         }
         public void ExternalTicker()
         {

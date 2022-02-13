@@ -48,10 +48,7 @@ namespace ELS
             ToggleLstg,
             ChgPattPrmL,
             ChgPattWrnL,
-            MoveSpotlightUp,
-            MoveSpotlightDown,
-            MoveSpotlightLeft,
-            MoveSpotlightRight,
+            MoveSpotlight,
             MoveLadderUp,
             MoveLadderDown,
             MoveLadderLeft,
@@ -72,7 +69,7 @@ namespace ELS
         internal static void SendEvent(Commands type, Vehicle vehicle, bool state, int playerID)
         {
             int id = vehicle.GetElsId();
-            Utils.DebugWriteLine($"sending data for netID {id}");
+            Utils.DebugWriteLine($"sending data for elsid {id}");
             Manager.VehicleManager.SyncRequestReply(type, id, playerID);
 
             //var netId = Function.Call<int>(Hash.VEH_TO_NET, vehicle.Handle);

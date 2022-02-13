@@ -104,7 +104,7 @@ namespace ELS
         {
             _siren.CleanUP();
             _light.CleanUP();
-            Utils.DebugWriteLine("ELSVehicle.cs:running vehicle deconstructor");
+            Utils.DebugWriteLine("ELSVehicle.cs:running vehicle cleanup");
         }
 
         internal Vehicle GetVehicle { get { return _vehicle; } }
@@ -123,12 +123,12 @@ namespace ELS
 
         internal void RunTick()
         {
-            //if (_vehicle.IsDead)
-            //{
-            //   // VehicleManager.vehicleList.Remove(plate);
-            //    ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", plate);
-            //    return;
-            //}
+            if (_vehicle.IsDead)
+            {
+                VehicleManager.vehicleList.Remove(cachedElsID);
+                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", cachedElsID);
+                return;
+            }
             _light.Ticker();
 
             if (_siren._mainSiren._enable && _light._stage.CurrentStage != 3)
@@ -140,12 +140,12 @@ namespace ELS
 
         internal void RunExternalTick()
         {
-            //if (_vehicle.IsDead)
-            //{
-            //   // VehicleManager.vehicleList.Remove(cachedNetId);
-            //    ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", plate);
-            //    return;
-            //}            
+            if (_vehicle.IsDead)
+            {
+                VehicleManager.vehicleList.Remove(cachedElsID);
+                ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", cachedElsID);
+                return;
+            }
             _siren.ExternalTicker();
         }
 

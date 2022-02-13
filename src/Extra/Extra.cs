@@ -270,7 +270,7 @@ namespace ELS.Extra
         }
 
         private Vector3 dirVector;
-        private float anglehorizontal = 0f;
+        private float anglehorizontal = 90f;
         private float angleVertical = 0f;
 
         internal void DrawEnvLight()
@@ -295,7 +295,7 @@ namespace ELS.Extra
             float hx = (float)((double)extraoffset.X + 5 * Math.Cos(((double)anglehorizontal + lights._vehicle.Rotation.Z) * Math.PI / 180.0));
             float hy = (float)((double)extraoffset.Y + 5 * Math.Sin(((double)anglehorizontal + lights._vehicle.Rotation.Z) * Math.PI / 180.0));
             float vz = (float)((double)extraoffset.Z + 5 * Math.Sin((double)angleVertical * Math.PI / 180.0));
-            API.DrawLightWithRangeAndShadow(hx, hy, vz, Color['r'], Color['g'], Color['b'], Global.EnvLightRng, Global.EnvLightInt, 0.01f);
+            API.DrawLightWithRangeAndShadow(hx, hy, vz, Color['r'], Color['g'], Color['b'], Global.EnvLightRng, Global.EnvLightInt, 0.05f);
         }
 
         internal Dictionary<char, int> Color;
@@ -404,7 +404,7 @@ namespace ELS.Extra
 
         internal void CleanUp()
         {
-            SetState(false);
+            //SetState(false);
         }
     }
 }

@@ -37,7 +37,9 @@ namespace ELS.configuration
         internal static bool BtnClicksBtwnHrnTones { get; set; }
         internal static bool BtnClicksBtwnSrnTones { get; set; }
         internal static bool BtnClicksIndicators { get; set; }
-        internal static List<string> RegisterdSoundBanks { get; set; }
+        internal static int RegistrationDelay { get; set; }
+        internal static List<string> RegisteredSoundBanks { get; set; }
+        internal static bool NonElsOnly { get; set; }
 
         public Global()
         {

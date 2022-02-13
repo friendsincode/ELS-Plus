@@ -50,7 +50,7 @@ namespace ELS.Light
                 if (!value && Global.ResetTakedownSpotlight)
                 {
                     SpotLightReset();
-                }
+                } 
             }
         }
         public SpotLight(ILight light)
@@ -67,8 +67,6 @@ namespace ELS.Light
 
         public SpotLightFSData GetData()
         {
-
-            
             return new SpotLightFSData() { Vertical = angleVertical, Horizontal = anglehorizontal, TurnedOn = TurnedOn };
         }
 
@@ -81,34 +79,43 @@ namespace ELS.Light
 
         }
 
+        long update = Game.GameTime;
+        public void RunControlTick()
+        {
+            
+            if (Game.IsControlPressed(0, Control.PhoneLeft) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetElsId() == lights._vehicle.GetElsId())
+            {
+                anglehorizontal++;
+                
+                //RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightLeft, lights._vehicle, true, Game.Player.ServerId);
+            }
+            if (Game.IsControlPressed(0, Control.PhoneRight) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetElsId() == lights._vehicle.GetElsId())
+            {
+                anglehorizontal--;
+                //RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightRight, lights._vehicle, true, Game.Player.ServerId);
+            }
+            if (Game.IsControlPressed(0, Control.PhoneUp) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetElsId() == lights._vehicle.GetElsId())
+            {
+                angleVertical++;
+                //RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightUp, lights._vehicle, true, Game.Player.ServerId);
+            }
+            if (Game.IsControlPressed(0, Control.PhoneDown) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetElsId() == lights._vehicle.GetElsId())
+            {
+                angleVertical--;
+                //RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightDown, lights._vehicle, true, Game.Player.ServerId);
+            }
+            if (Game.GameTime >= update + 1000)
+            {
+                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlight, lights._vehicle, true, Game.Player.ServerId);
+                update = Game.GameTime;
+            }
+        }
+
 
         public void RunTick()
         {
             Utils.DebugWriteLine($"Spotlight veh handle of {lights._vehicle.Handle}");
-            if (Game.IsControlPressed(0, Control.PhoneLeft) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetElsId() == lights._vehicle.GetElsId())
-            {
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightLeft, lights._vehicle, true, Game.Player.ServerId);
-                anglehorizontal++;
-
-            }
-            if (Game.IsControlPressed(0, Control.PhoneRight) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetElsId() == lights._vehicle.GetElsId())
-            {
-
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightRight, lights._vehicle, true, Game.Player.ServerId);
-                anglehorizontal--;
-            }
-            if (Game.IsControlPressed(0, Control.PhoneUp) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetElsId() == lights._vehicle.GetElsId())
-            {
-
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightUp, lights._vehicle, true, Game.Player.ServerId);
-                angleVertical++;
-            }
-            if (Game.IsControlPressed(0, Control.PhoneDown) && Game.PlayerPed.IsSittingInELSVehicle() && Game.PlayerPed.CurrentVehicle.GetElsId() == lights._vehicle.GetElsId())
-            {
-
-                RemoteEventManager.SendEvent(RemoteEventManager.Commands.MoveSpotlightDown, lights._vehicle, true, Game.Player.ServerId);
-                angleVertical--;
-            }
+            
 
             //var spotoffset = Game.Player.Character.CurrentVehicle.GetOffsetPosition(new Vector3(-0.9f, 1.15f, 0.5f));
 
@@ -122,7 +129,6 @@ namespace ELS.Light
             float vz = (float)((double)spotoffset.Z + 5 * Math.Sin((double)angleVertical * Math.PI / 180.0));
 
             Vector3 destinationCoords = (new Vector3(hx, hy, vz));
-
             dirVector = destinationCoords - spotoffset;
             dirVector.Normalize();
             //Function.Call(Hash.DRAW_SPOT_LIGHT, spotoffset.X, spotoffset.Y, spotoffset.Z, dirVector.X, dirVector.Y, dirVector.Z, 255, 255, 255, 100.0f, 1f, 0.0f, 13.0f, 1f,100f);

@@ -19,6 +19,7 @@ namespace ELS.Siren
 
         private readonly string _file;
         private int soundId;
+        private int oldSoundId;
         private Vehicle _entity;
         private readonly ToneType _type;
         internal string Type;
@@ -50,11 +51,12 @@ namespace ELS.Siren
                     break;
             }
             soundId = -1;
-            if (!String.IsNullOrEmpty(soundbank) && !Global.RegisterdSoundBanks.Contains(soundbank))
+            oldSoundId = -1;
+            if (!String.IsNullOrEmpty(soundbank) && !Global.RegisteredSoundBanks.Contains(soundbank))
             {
                 Utils.DebugWriteLine($"Registering sound bank {soundset}");
                 API.RequestScriptAudioBank(soundbank, false);
-                Global.RegisterdSoundBanks.Add(soundbank);
+                Global.RegisteredSoundBanks.Add(soundbank);
             }
             if (!String.IsNullOrEmpty(soundset))
             {
@@ -65,10 +67,10 @@ namespace ELS.Siren
 
         internal void SetState(bool state)
         {
-            int id = _entity.GetElsId();
-            if (id != elsid)
+
+            if (_entity.Handle <= 0 || (Game.PlayerPed.CurrentVehicle != null && Game.PlayerPed.CurrentVehicle.Handle == _entity.Handle))
             {
-                Utils.DebugWriteLine($"{id} and {elsid} do not match not setting state for this tone");
+                Utils.DebugWriteLine($"Entity handle is 0 or less do not set state for this tone");
                 return;
             }
             Utils.DebugWriteLine($"Setting state to {state} for {Type}");
@@ -95,9 +97,9 @@ namespace ELS.Siren
                         Utils.DebugWriteLine($"DLC disabled sound using file  {_file}");
                         //API.PlaySoundFromEntity(soundId, _file, _entity.Handle, "0", false, 0);
                     }
-                    //Utils.DebugWriteLine($"2. Sound id of {soundId} with networkid of {((Vehicle)_entity).Plate()} with network sound id of {API.GetSoundIdFromNetworkId(_entity.Plate())}");
+                    Utils.DebugWriteLine($"2. Sound id of {soundId} with networkid of {((Vehicle)_entity).GetElsId()} with network sound id of {API.GetSoundIdFromNetworkId(_entity.GetNetworkId())}");
                     //API.PlaySoundFromEntity(soundId, _file, _entity.Handle, "0", false, 0);
-                    Utils.DebugWriteLine($"Started sound with id of {soundId}");
+                    //Utils.DebugWriteLine($"Started sound with id of {soundId}");
                 }
                 else
                 {
@@ -117,19 +119,29 @@ namespace ELS.Siren
             else
             {
                 //Utils.DebugWriteLine($"Stopping sound {soundId} and setting to -1 for {Type} with networkid of {((Vehicle)_entity).Plate()} and network sound if of {API.GetNetworkIdFromSoundId(soundId)}");
-                Audio.StopSound(soundId);
-                Audio.ReleaseSound(soundId);
+ 
                 Utils.DebugWriteLine($"Stopped and released sound with id of {soundId}");
-                soundId = -1;
+                CleanUp();
             }
         }
 
         internal void CleanUp()
         {
-
-            Utils.DebugWriteLine("Tone deconstructor ran");
-            Audio.StopSound(soundId);
-            Audio.ReleaseSound(soundId);
+            if (!_state)
+            {
+                if (soundId != -1)
+                {
+                    Utils.DebugWriteLine("Tone clean up ran");
+                    Audio.StopSound(soundId);
+                    Audio.ReleaseSound(soundId);
+                    oldSoundId = soundId;
+                    soundId = -1;
+                } else
+                {
+                    Audio.StopSound(oldSoundId);
+                    Audio.ReleaseSound(oldSoundId);
+                }
+            }
         }
     }
 }

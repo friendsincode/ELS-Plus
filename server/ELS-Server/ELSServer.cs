@@ -72,15 +72,15 @@ namespace ELS_Server
                 Utils.DebugWriteLine($"Stale vehicle {id} removed from cache");
             });
 
-            EventHandlers["ELS:getServerNetworkId"] += new Action<int,int, int>(async (int player, int entity, int netid) =>
-            {
-                int veh = API.GetVehiclePedIsIn(player, false);
-                int srvnetid = API.NetworkGetNetworkIdFromEntity(veh);
-               
-                Utils.DebugWriteLine($"Server network id for {entity} ({veh}) is {srvnetid}");
-                
-                
-            });
+            EventHandlers["ELS:getServerNetworkId"] += new Action<int, int, int>(async (int player, int entity, int netid) =>
+             {
+                 int veh = API.GetVehiclePedIsIn(player, false);
+                 int srvnetid = API.NetworkGetNetworkIdFromEntity(veh);
+
+                 Utils.DebugWriteLine($"Server network id for {entity} ({veh}) is {srvnetid}");
+
+
+             });
 
             EventHandlers["baseevents:enteredVehicle"] += new Action<int, int, string>((veh, seat, name) =>
               {
@@ -96,7 +96,7 @@ namespace ELS_Server
             //EventHandlers["ELS:FullSync:Broadcast"] += new Action<ExpandoObject, int>(BroadcastMessage);
             EventHandlers["ELS:FullSync:Broadcast"] += new Action<string, Int16>((dataDic, playerID) =>
             {
-            var dd = JsonConvert.DeserializeObject<JObject>(dataDic);
+                var dd = JsonConvert.DeserializeObject<JObject>(dataDic);
                 if (dd.ContainsKey("Id"))
                 {
                     Utils.DebugWriteLine($"Got Broadcaset from ELS Plus ID: {dd["Id"]}");
@@ -109,7 +109,7 @@ namespace ELS_Server
                         _cachedData.Add((int)dd["Id"], dataDic);
                     }
                 }
-                
+
                 API.SetConvarReplicated("elsplus_data", JsonConvert.SerializeObject(_cachedData));
                 BroadcastMessage(dataDic, playerID);
             });
@@ -137,12 +137,13 @@ namespace ELS_Server
             try
             {
                 API.SetConvarReplicated("ELSServerId", serverId);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Utils.ReleaseWriteLine("Please update your CitizenFX server to the latest artifact version to enable update check and server tracking");
             }
             Task updateCheck = new Task(() => CheckForUpdates());
-            //updateCheck.Start();
+            updateCheck.Start();
         }
 
         async Task PreloadSyncData()
@@ -153,60 +154,60 @@ namespace ELS_Server
 
         async Task CheckForUpdates()
         {
-            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 5");
-            await ELSServer.Delay(1000);
-            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 4");
-            await ELSServer.Delay(1000);
-            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 3");
-            await ELSServer.Delay(1000);
-            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 2");
-            await ELSServer.Delay(1000);
-            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 1");
-            await ELSServer.Delay(1000);
-#if DEBUG 
-            string updateUrl = "http://localhost";
-#else
-            string updateUrl = "https://els-stats.friendsincode.com";
-#endif
-            Request request = new Request();
-            JObject data = new JObject();
-            data["serverId"] = serverId;
-            data["serverName"] = Uri.EscapeDataString(API.GetConvar("sv_hostname", $"ELS Plus Server {serverId}"));
-            try
-            {
-                RequestResponse result = await request.Http(updateUrl, "POST",
-                                data.ToString());
-                switch (result.status)
-                {
-                    case HttpStatusCode.NotFound:
-                        Utils.ReleaseWriteLine("ELS Update page not found please try again");
-                        break;
-                    case HttpStatusCode.OK:
-                        JObject res = JObject.Parse(result.content);
-                        if (((string)res["current"]).Equals(currentVersion))
-                        {
-                            Utils.ReleaseWriteLine("Thank you for using ELS Plus, currently running latest stable version");
-                        }
-                        else if (((string)res["dev"]).Equals(currentVersion))
-                        {
-                            Utils.ReleaseWriteLine("Thank you for using ELS Plus, currently running latest development version");
-                        }
-                        else
-                        {
-                            Utils.ReleaseWriteLine($"ELS Plus is not up to date please update please update from version {currentVersion} to {(string)res["current"]}");
-                        }
-                        break;
-                    case HttpStatusCode.RequestTimeout:
-                        Utils.ReleaseWriteLine("ELS Connection timed out please try again");
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                Utils.ReleaseWriteLine($"ELS threw an exception checking for a new version of ELS+" +
-                    $"\nERROR:{ex.Message}" +
-                    $"\nERROR:{ex.StackTrace}");
-            }
+//            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 5");
+//            await ELSServer.Delay(1000);
+//            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 4");
+//            await ELSServer.Delay(1000);
+//            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 3");
+//            await ELSServer.Delay(1000);
+//            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 2");
+//            await ELSServer.Delay(1000);
+//            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 1");
+//            await ELSServer.Delay(1000);
+//#if DEBUG 
+//            string updateUrl = "http://localhost";
+//#else
+//            string updateUrl = "https://els-stats.friendsincode.com";
+//#endif
+//            Request request = new Request();
+//            JObject data = new JObject();
+//            data["serverId"] = serverId;
+//            data["serverName"] = Uri.EscapeDataString(API.GetConvar("sv_hostname", $"ELS Plus Server {serverId}"));
+//            try
+//            {
+//                RequestResponse result = await request.Http(updateUrl, "POST",
+//                                data.ToString());
+//                switch (result.status)
+//                {
+//                    case HttpStatusCode.NotFound:
+//                        Utils.ReleaseWriteLine("ELS Update page not found please try again");
+//                        break;
+//                    case HttpStatusCode.OK:
+//                        JObject res = JObject.Parse(result.content);
+//                        if (((string)res["current"]).Equals(currentVersion))
+//                        {
+//                            Utils.ReleaseWriteLine("Thank you for using ELS Plus, currently running latest stable version");
+//                        }
+//                        else if (((string)res["dev"]).Equals(currentVersion))
+//                        {
+//                            Utils.ReleaseWriteLine("Thank you for using ELS Plus, currently running latest development version");
+//                        }
+//                        else
+//                        {
+//                            Utils.ReleaseWriteLine($"ELS Plus is not up to date please update please update from version {currentVersion} to {(string)res["current"]}");
+//                        }
+//                        break;
+//                    case HttpStatusCode.RequestTimeout:
+//                        Utils.ReleaseWriteLine("ELS Connection timed out please try again");
+//                        break;
+//                }
+//            }
+//            catch (Exception ex)
+//            {
+//                Utils.ReleaseWriteLine($"ELS threw an exception checking for a new version of ELS+" +
+//                    $"\nERROR:{ex.Message}" +
+//                    $"\nERROR:{ex.StackTrace}");
+//            }
         }
 
         //void BroadcastMessage(ExpandoObject dataDic, int SourcePlayerID)
