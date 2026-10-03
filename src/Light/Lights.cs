@@ -60,7 +60,7 @@ namespace ELS.Light
         public SpotLight spotLight { get; set; }
 
 
-        internal Lights(Vehicle vehicle, Vcfroot vcfroot, [Optional] LightFSData data)
+        internal Lights(Vehicle vehicle, Vcfroot vcfroot, LightFSData? data = null)
         {
             _vcfroot = vcfroot;
             _vehicle = vehicle;
@@ -69,9 +69,9 @@ namespace ELS.Light
             SetupPatternsPrm();
             SetupSecPatterns();
             SetupWrnPatterns();
-            if (!data.Equals(null))
+            if (data.HasValue)
             {
-                SetData(data);
+                SetData(data.Value);
             }
         }
 

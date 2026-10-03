@@ -21,7 +21,7 @@ namespace ELS.Siren
         public MainSiren _mainSiren;
         IPatterns _patternController;
         internal Tones _tones;
-        public Siren(Vehicle vehicle, Vcfroot vcfroot,  IPatterns patt, [Optional] SirenFSData data)
+        public Siren(Vehicle vehicle, Vcfroot vcfroot,  IPatterns patt, SirenFSData? data = null)
         {
             _vcf = vcfroot;
             _vehicle = vehicle;
@@ -43,9 +43,19 @@ namespace ELS.Siren
 
             _mainSiren = new MainSiren(ref _tones);
 
-            if (!data.Equals(null)) SetData(data);
+            if (data.HasValue) SetData(data.Value);
             ElsUiPanel.SetUiDesc(_mainSiren.MainTones[_mainSiren.currentTone].Type, "SRN");
             ElsUiPanel.SetUiDesc("--", "HRN");
+        }
+
+        internal void StopAll()
+        {
+            _tones.horn.SetState(false);
+            _tones.tone1.SetState(false);
+            _tones.tone2.SetState(false);
+            _tones.tone3.SetState(false);
+            _tones.tone4.SetState(false);
+            _tones.panicAlarm.SetState(false);
         }
 
         public void CleanUP()
@@ -60,7 +70,11 @@ namespace ELS.Siren
 
         internal void SyncUi()
         {
-
+            ElsUiPanel.SetUiDesc(_mainSiren.MainTones[_mainSiren.currentTone].Type, "SRN");
+            ElsUiPanel.ToggleUiBtnState(_mainSiren._enable, "SRN");
+            ElsUiPanel.ToggleUiBtnState(_tones.horn._state, "HRN");
+            ElsUiPanel.SetUiDesc(_tones.horn._state ? "AH" : "--", "HRN");
+            ElsUiPanel.ToggleUiBtnState(dual_siren, "DUAL");
         }
     }
 }

@@ -15,6 +15,7 @@ namespace ELS
         public LightFSData Light { get; set; }
         public SirenFSData Siren { get; set; }
         public int Id { get; set; }
+        public int NetworkId { get; set; }
     }
 
 
@@ -28,7 +29,7 @@ namespace ELS
         int cachedElsID;
 
 
-        public ELSVehicle(int handle, [Optional] ELSVehicleFSData data) : base(handle)
+        public ELSVehicle(int handle, ELSVehicleFSData? data = null) : base(handle)
         {
 
             _vehicle = new Vehicle(handle);
@@ -56,9 +57,9 @@ namespace ELS
             else
             {
                 Utils.ReleaseWriteLine("ELSVehicle.cs: Vehicle is being created without a els id attempting to set now");
-                if (data.Id > 0)
+                if (data.HasValue && data.Value.Id > 0)
                 {
-                    cachedElsID = data.Id;
+                    cachedElsID = data.Value.Id;
                     API.DecorSetInt(_vehicle.Handle, "elsplus_id", cachedElsID);
                 }
             }
@@ -71,15 +72,15 @@ namespace ELS
                 Utils.ReleaseWriteLine("ELSVehicle.cs: Repair Fix is not enabled on this client");
             }
             Utils.DebugWriteLine($"ELS Vehicle Data: {JsonConvert.SerializeObject(data)}");
-            if (data.Id.Equals(null))
+            if (!data.HasValue)
             {
                 _light = new Light.Lights(_vehicle, _vcf);
                 _siren = new Siren.Siren(_vehicle, _vcf, _light);
             }
             else
             {
-                _light = new Light.Lights(_vehicle, _vcf, data.Light);
-                _siren = new Siren.Siren(_vehicle, _vcf,  _light, data.Siren);
+                _light = new Light.Lights(_vehicle, _vcf, data.Value.Light);
+                _siren = new Siren.Siren(_vehicle, _vcf,  _light, data.Value.Siren);
             }
             
             _light.SetGTASirens(false);
@@ -89,7 +90,8 @@ namespace ELS
             Utils.DebugWriteLine($"ELSVehicle.cs:registering \n" +
                 $"Does entity belong to this script:{API.DoesEntityBelongToThisScript(_vehicle.Handle, false)}");
             Utils.DebugWriteLine($"ELSVehicle.cs:created vehicle");
-            FullSync.FullSyncManager.SendDataBroadcast(JsonConvert.SerializeObject(GetData()), Game.Player.ServerId);
+            if (_vehicle.Driver == Game.PlayerPed)
+                FullSync.FullSyncManager.SendDataBroadcast(JsonConvert.SerializeObject(GetData()), Game.Player.ServerId);
         }
 
         private async void ModelLoaded()
@@ -102,9 +104,15 @@ namespace ELS
 
         internal void CleanUP()
         {
-            _siren.CleanUP();
-            _light.CleanUP();
+            _siren?.CleanUP();
+            _light?.CleanUP();
             Utils.DebugWriteLine("ELSVehicle.cs:running vehicle cleanup");
+        }
+
+        internal void Dispose()
+        {
+            _siren?.StopAll();
+            _light?.CleanUP();
         }
 
         internal Vehicle GetVehicle { get { return _vehicle; } }
@@ -125,6 +133,7 @@ namespace ELS
         {
             if (_vehicle.IsDead)
             {
+                Dispose();
                 VehicleManager.vehicleList.Remove(cachedElsID);
                 ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", cachedElsID);
                 return;
@@ -142,6 +151,7 @@ namespace ELS
         {
             if (_vehicle.IsDead)
             {
+                Dispose();
                 VehicleManager.vehicleList.Remove(cachedElsID);
                 ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", cachedElsID);
                 return;
@@ -164,7 +174,7 @@ namespace ELS
 
         public override bool Exists()
         {
-            return Function.Call<bool>(Hash.DOES_ENTITY_EXIST, _vehicle);
+            return _vehicle != null && _vehicle.Exists();
         }
 
         public void DisableSiren()
@@ -189,8 +199,7 @@ namespace ELS
             try
             {
 
-                _light.CleanUP();
-                _siren.CleanUP();
+                Dispose();
                 _vehicle.SetExistOnAllMachines(false);
                 ELS.TriggerServerEvent("ELS:FullSync:RemoveStale", _vehicle.GetElsId());
                 API.SetEntityAsMissionEntity(_vehicle.Handle, true, true);
@@ -220,12 +229,12 @@ namespace ELS
         public void SetData(ELSVehicleFSData data)
         {
             int id = _vehicle.GetElsId();
-            if (!data.Siren.Equals(null) && cachedElsID == data.Id && data.Id == id)
+            if (cachedElsID == data.Id && data.Id == id)
             {
                 Utils.DebugWriteLine($"ELSVehicle.cs: Got siren data for vehicle {_vehicle.Handle} with cached id of {cachedElsID} and decor {id} with dict id {data.Id}");
                 _siren.SetData(data.Siren);
             }
-            if (!data.Light.Equals(null) && cachedElsID == data.Id && data.Id == id)
+            if (cachedElsID == data.Id && data.Id == id)
             {
                 Utils.DebugWriteLine($"ELSVehicle.cs: Got light data for vehicle {_vehicle.Handle} with cached id of {cachedElsID} and decor {id} with dict id {data.Id}");
                 _light.SetData(data.Light);
@@ -238,6 +247,7 @@ namespace ELS
             {
                 Siren = _siren.GetData(),
                 Light = _light.GetData(),
+                NetworkId = API.NetworkGetNetworkIdFromEntity(_vehicle.Handle),
                 Id = _vehicle.GetElsId()
             };
         }

@@ -190,6 +190,7 @@ namespace ELS.Light
 
         internal void ToggleBrdKB()
         {
+            if (_extras.BRD == null || !_extras.BRD.HasBoard) return;
             //Game.DisableControlThisFrame(0, Control.CharacterWheel);
             if (Game.IsControlJustPressed(0, ElsConfiguration.KBBindings.ToggleBoard) && Game.IsControlPressed(0, Control.CharacterWheel) && Game.CurrentInputMode == InputMode.MouseAndKeyboard)
             {

@@ -123,7 +123,7 @@ namespace ELS.Light
             {
                 spotLight.TurnedOn = !spotLight.TurnedOn;
             }
-            ElsUiPanel.ToggleUiBtnState(spotLight.TurnedOn, "TDL");
+            ElsUiPanel.ToggleUiBtnState(_extras.TDL?.TurnedOn ?? spotLight?.TurnedOn ?? false, "TDL");
             ElsUiPanel.PlayUiSound("sirenclickoff");
         }
 
@@ -137,7 +137,7 @@ namespace ELS.Light
             {
                 scene.TurnedOn = !scene.TurnedOn;
             }
-            ElsUiPanel.ToggleUiBtnState(scene.TurnedOn, "SCL");
+            ElsUiPanel.ToggleUiBtnState(_extras.SCL?.TurnedOn ?? scene?.TurnedOn ?? false, "SCL");
             ElsUiPanel.PlayUiSound("sirenclickoff");
         }
 
