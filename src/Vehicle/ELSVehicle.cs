@@ -33,23 +33,15 @@ namespace ELS
         {
 
             _vehicle = new Vehicle(handle);
-            if (!_vehicle.Exists())
-            {
-                return;
-            }
-            ModelLoaded();
+            if (!_vehicle.Exists()) throw new InvalidOperationException("ELS vehicle is not in scope");
+            VCFEntry entry;
+            if (!VCF.ELSVehicle.TryGetValue(_vehicle.Model, out entry))
+                throw new InvalidOperationException("ELS vehicle configuration is not loaded");
+            _vcf = entry.root;
             lastdrivetime = Game.GameTime;
             API.SetVehRadioStation(_vehicle.Handle, "OFF");
             API.SetVehicleRadioEnabled(_vehicle.Handle, false);
 
-            if (_vehicle.DisplayName == "CARNOTFOUND")
-            {
-                throw new Exception("ELSVehicle.cs: Vehicle not found");
-            }
-            else if (VCF.ELSVehicle.ContainsKey(_vehicle.Model))
-            {
-                _vcf = VCF.ELSVehicle[_vehicle.Model].root;
-            }
             if (API.DecorExistOn(_vehicle.Handle, "elsplus_id"))
             {
                 cachedElsID = _vehicle.GetElsId();
@@ -83,7 +75,7 @@ namespace ELS
                 _siren = new Siren.Siren(_vehicle, _vcf,  _light, data.Value.Siren);
             }
             
-            _light.SetGTASirens(false);
+            if (!data.HasValue) _light.SetGTASirens(false);
 
 
             Utils.DebugWriteLine(API.IsEntityAMissionEntity(_vehicle.Handle).ToString());
@@ -92,14 +84,6 @@ namespace ELS
             Utils.DebugWriteLine($"ELSVehicle.cs:created vehicle");
             if (_vehicle.Driver == Game.PlayerPed)
                 FullSync.FullSyncManager.SendDataBroadcast(JsonConvert.SerializeObject(GetData()), Game.Player.ServerId);
-        }
-
-        private async void ModelLoaded()
-        {
-            while (_vehicle.DisplayName == "CARNOTFOUND")
-            {
-                await CitizenFX.Core.BaseScript.Delay(0);
-            }
         }
 
         internal void CleanUP()

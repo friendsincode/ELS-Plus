@@ -24,10 +24,10 @@ namespace ELS_Server
                 var siren = data["Siren"] as JObject;
                 return Fields(data, "Id", "NetworkId", "Light", "Siren") &&
                     Integer(data["Id"], 1, int.MaxValue) && Integer(data["NetworkId"], 1, 65535) &&
-                    Fields(light, "PRM", "SEC", "WRN", "SCL", "TKDN", "STDYBRN", "Spotlight", "Stage", "PrmPattern", "SecPattern", "WrnPattern", "BRD", "Scene") &&
+                    Fields(light, "PRM", "SEC", "WRN", "SCL", "TKDN", "STDYBRN", "Spotlight", "Stage", "GtaSirens", "PrmPattern", "SecPattern", "WrnPattern", "BRD", "Scene") &&
                     Extras(light["PRM"]) && Extras(light["SEC"]) && Extras(light["WRN"]) &&
                     Extra(light["SCL"]) && Extra(light["TKDN"]) && Extra(light["STDYBRN"]) &&
-                    Integer(light["Stage"], 0, 3) && Integer(light["PrmPattern"], 0, 4096) &&
+                    Integer(light["Stage"], 0, 3) && Boolean(light["GtaSirens"]) && Integer(light["PrmPattern"], 0, 4096) &&
                     Integer(light["SecPattern"], 0, 4096) && Integer(light["WrnPattern"], 0, 4096) &&
                     Flags(light["BRD"], "Raised") && Flags(light["Scene"], "TurnedOn") &&
                     Spotlight(light["Spotlight"]) && Fields(siren, "Dual", "MainSiren", "Tones") &&

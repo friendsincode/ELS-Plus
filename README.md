@@ -101,6 +101,12 @@ resolve streamed vehicles by the ELS decorator and retain pending state while an
 entity is outside their scope. Network IDs are used only for server-side entity
 lookup and authorization. Switching driver or network owner must preserve the
 ELS decorator. A deleted/recreated vehicle should receive a new ELS identity.
+The controlling driver asks the server to recover or allocate that identity and
+waits for existing state before initializing an unfamiliar car. Visible vehicles
+are reconciled every 250 ms; `ElsRegistrationDelay` controls only owner state
+refreshes. Client scope loss releases local effects while retaining cached state;
+the server's entity deletion event clears the identity and state on actual deletion.
+Native GTA siren-light state is included in snapshots.
 
 The administrative commands now require their respective ACE permissions. For
 example, grant your administrator group:
@@ -120,6 +126,7 @@ access, and the repository's existing referenced DLLs:
 ```sh
 python3 utils/check-build.py
 dotnet run --project tests/RegressionChecks
+dotnet run --project tests/StreamingChecks
 ```
 
 The compile helper reads the existing project source lists and creates temporary
@@ -128,7 +135,16 @@ versioning/deployment hooks and prints the location of its logs. Its output is
 not a packaged resource. Regression checks require .NET 10 and execute the real
 sync validation, server handlers, tone playback logic, and light serialization
 with simulated CitizenFX calls. They do not verify GTA rendering, audio, or
-network replication.
+network replication. The streaming suite executes the production vehicle manager
+and list against simulated entity creation/removal, handle and network-ID reuse,
+delayed decorators, driver handoffs, and state-before-clone delivery.
+
+Streaming behavior was cross-checked against the supplied GTA sources
+(`NetObjDynamicEntity.cpp`, `DynamicEntitySyncNodes.cpp`) and FiveM commit
+`e34d12cd9a39cc223548a5be1ab09f60e9183051` (`CloneManager.cpp`,
+`ServerGameState.cpp`, `EventHandlerDictionary.cs`). GTA replicates decorators
+with entity state; FiveM distinguishes a client's scope loss from entity deletion.
+These source checks establish the intended lifecycle, not an in-game test result.
 
 Before deploying to a live server, test with two clients:
 

@@ -31,6 +31,8 @@ namespace ELS_Server
                 API.ExecuteCommand($"add_ace group.{group} command.elscar allow");
 
             EventHandlers["ELS:VcfSync:Server"] += new Action<Player>(SendVcf);
+            EventHandlers["ELS:FullSync:Resolve"] += new Action<Player, int, int>(ResolveIdentity);
+            EventHandlers["entityRemoved"] += new Action<string, int>(EntityRemoved);
             EventHandlers["ELS:FullSync:Request:All"] += new Action<Player>(SendSnapshot);
             EventHandlers["ELS:FullSync:Broadcast"] += new Action<Player, string>(ReceiveState);
             EventHandlers["ELS:FullSync:RemoveStale"] += new Action<Player, int>(RemoveStale);
@@ -113,6 +115,35 @@ namespace ELS_Server
             int vehicle = API.GetVehiclePedIsIn(ped, false);
             if (vehicle == 0 || !API.DoesEntityExist(vehicle)) return 0;
             return API.GetPedInVehicleSeat(vehicle, -1) == ped || API.GetPedInVehicleSeat(vehicle, 0) == ped ? vehicle : 0;
+        }
+
+        private void ResolveIdentity([FromSource] Player player, int networkId, int requestHandle)
+        {
+            if (!AllowRequest(player, "identity", 2)) return;
+            int entity = API.NetworkGetEntityFromNetworkId(networkId);
+            if (entity == 0 || ControlledVehicle(player) != entity) return;
+            int id = 0;
+            foreach (var entry in _entities)
+                if (entry.Value == entity) { id = entry.Key; break; }
+            if (id == 0)
+            {
+                do { id = BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0) & int.MaxValue; }
+                while (id == 0 || _entities.ContainsKey(id));
+                _entities[id] = entity;
+            }
+            string state;
+            _cachedData.TryGetValue(id, out state);
+            TriggerClientEvent(player, "ELS:FullSync:Identity", requestHandle, networkId, id, state);
+        }
+
+        private void EntityRemoved([FromSource] string source, int entity)
+        {
+            // C# also exposes event handlers over the network. Accept only the engine's local event.
+            if (!String.IsNullOrEmpty(source)) return;
+            foreach (var entry in new List<KeyValuePair<int, int>>(_entities))
+                if (entry.Value == entity) RemoveVehicle(entry.Key);
+            foreach (var entry in new List<KeyValuePair<string, Tuple<int, int>>>(_recentControls))
+                if (entry.Value.Item1 == entity) _recentControls.Remove(entry.Key);
         }
 
         private void ReceiveState([FromSource] Player player, string json)

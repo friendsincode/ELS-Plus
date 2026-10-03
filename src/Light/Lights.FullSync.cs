@@ -17,6 +17,7 @@ namespace ELS.Light
         public ExtraFSData STDYBRN { get; set; }
         public SpotLightFSData Spotlight { get; set; }
         public int Stage { get; set; }
+        public bool GtaSirens { get; set; }
         public int PrmPattern { get; set; }
         public int SecPattern { get; set; }
         public int WrnPattern { get; set; }
@@ -39,6 +40,7 @@ namespace ELS.Light
                 Scene = scene?.GetData() ?? default(SceneFSData),
                 Spotlight = spotLight?.GetData() ?? default(SpotLightFSData),
                 Stage = _stage.CurrentStage,
+                GtaSirens = _vehicle.IsSirenActive,
                 PrmPattern = CurrentPrmPattern,
                 SecPattern = CurrentSecPattern,
                 WrnPattern = CurrentWrnPattern
@@ -65,6 +67,7 @@ namespace ELS.Light
         public void SetData(LightFSData data)
         {
             _stage.SetStage(data.Stage);
+            SetGTASirens(data.GtaSirens);
             CurrentPrmPattern = data.PrmPattern;
             CurrentSecPattern = data.SecPattern;
             CurrentWrnPattern = data.WrnPattern;

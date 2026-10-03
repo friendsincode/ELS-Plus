@@ -47,6 +47,10 @@ class Program
 
         var lights = new Lights();
         Check(lights.GetData().SEC.Count == 0, "Missing optional equipment must serialize");
+        lights._vehicle.IsSirenActive = true;
+        var restoredLights = new Lights();
+        restoredLights.SetData(lights.GetData());
+        Check(restoredLights._vehicle.IsSirenActive, "Streamed-in lights lost native siren activation");
         var secondary = new ELS.Extra.Extra { Id = 7 };
         lights._extras.SECL[7] = secondary;
         lights.SetData(new LightFSData { SEC = new System.Collections.Generic.Dictionary<int, ELS.Extra.ExtraFSData>
@@ -111,6 +115,21 @@ class Program
         BaseScript.Sent.Clear(); API.Now = 10000;
         for (int i = 0; i < 45; i++) Send(server, owner, Payload(id: 100003, networkId: 43));
         Check(BaseScript.Sent.Count == 40, "State rate limit did not cap flooding");
+        API.Now = 12000; BaseScript.Sent.Clear();
+        server.EventHandlers["ELS:FullSync:Resolve"].DynamicInvoke(owner, 43, 7000);
+        Check((int)BaseScript.Sent.Single().Args[2] == 100003, "Missing decorator recovery changed ELS identity");
+        Check(BaseScript.Sent[0].Target == "1", "Identity response was not targeted to driver");
+        BaseScript.Sent.Clear();
+        server.EventHandlers["ELS:FullSync:Resolve"].DynamicInvoke(other, 43, 7000);
+        Check(BaseScript.Sent.Count == 0, "Nonoccupant resolved another vehicle's identity");
+        server.EventHandlers["entityRemoved"].DynamicInvoke("net:2", 600);
+        server.EventHandlers["ELS:FullSync:Request:All"].DynamicInvoke(owner);
+        Check(JObject.Parse((string)BaseScript.Sent.Last().Args[0])["100003"] != null,
+            "Spoofed entityRemoved erased a live car");
+        BaseScript.Sent.Clear();
+        // Engine removal is emitted before the native entity disappears; it must still invalidate state.
+        server.EventHandlers["entityRemoved"].DynamicInvoke(null, 600);
+        Check(BaseScript.Sent.Any(e => e.Event == "ELS:removeStaleFromList"), "Engine deletion did not clear cache immediately");
         Check(API.Restricted["clearcache"] && API.Restricted["resync"] && API.Restricted["vcfrefresh"], "Admin commands unrestricted");
         Check(server.EventHandlers["ELS:FullSync:Broadcast"].Method.GetParameters()[0]
             .IsDefined(typeof(FromSourceAttribute), false), "Sender parameter is not marked FromSource");

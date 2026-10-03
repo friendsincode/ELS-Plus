@@ -16,6 +16,10 @@ namespace ELS.Manager
         internal static VehicleList vehicleList;
         private readonly Dictionary<int, ELSVehicleFSData> _pendingSync = new Dictionary<int, ELSVehicleFSData>();
 
+        private readonly HashSet<int> _confirmedNew = new HashSet<int>();
+        private int _lastStateBroadcast;
+        private int _lastSnapshotRequest = -1000;
+
         public VehicleManager()
         {
             vehicleList = new VehicleList();
@@ -43,59 +47,90 @@ namespace ELS.Manager
         internal async Task ElsIDSetTick()
         {
             await ELS.Delay(1000);
-            foreach (Vehicle vehicle in World.GetAllVehicles())
+            Vehicle vehicle = Game.PlayerPed.CurrentVehicle;
+            if (vehicle == null || !vehicle.Exists() || !vehicle.IsEls() || vehicle.Driver != Game.PlayerPed ||
+                !API.NetworkGetEntityIsNetworked(vehicle.Handle) || !API.NetworkHasControlOfEntity(vehicle.Handle)) return;
+            int id = vehicle.GetElsId();
+            if (id <= 0 || (!vehicleList.ContainsKey(id) && !_pendingSync.ContainsKey(id) && !_confirmedNew.Contains(id)))
             {
-                if (!vehicle.IsEls() || vehicle.Driver != Game.PlayerPed || !API.NetworkGetEntityIsNetworked(vehicle.Handle))
-                    continue;
-                // ELS identity survives ownership changes; network IDs only locate entities.
-                if (vehicle.GetElsId() <= 0)
-                {
-                    int id;
-                    do { id = BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0) & int.MaxValue; }
-                    while (id == 0 || vehicleList.ContainsKey(id));
-                    API.DecorSetInt(vehicle.Handle, "elsplus_id", id);
-                }
+                // The server recovers the same identity after decorator/owner replication delays.
+                // Echo the local handle only to match the reply to this exact client-side instance.
+                ELS.TriggerServerEvent("ELS:FullSync:Resolve", API.NetworkGetNetworkIdFromEntity(vehicle.Handle), vehicle.Handle);
             }
+        }
+
+        internal void AcceptIdentity(int handle, int networkId, int id, string json)
+        {
+            Vehicle vehicle = Game.PlayerPed.CurrentVehicle;
+            if (id <= 0 || vehicle == null || !vehicle.Exists() || vehicle.Handle != handle ||
+                !vehicle.IsEls() || vehicle.Driver != Game.PlayerPed || !API.NetworkHasControlOfEntity(handle) ||
+                API.NetworkGetNetworkIdFromEntity(handle) != networkId) return;
+            if (!String.IsNullOrEmpty(json)) SetVehicleSyncData(json, Game.Player.ServerId);
+            else _confirmedNew.Add(id);
+            API.DecorSetInt(handle, "elsplus_id", id);
+        }
+
+        private static bool IsBound(int id, ELSVehicle vehicle)
+        {
+            return vehicle.Exists() && vehicle.GetVehicle.GetElsId() == id;
         }
 
         internal async Task SoundCleanUpTick()
         {
             await ELS.Delay(400);
-            foreach (ELSVehicle vehicle in vehicleList.Values)
-                vehicle.CleanUP();
+            foreach (int id in new List<int>(vehicleList.Keys))
+            {
+                if (!IsBound(id, vehicleList[id])) RemoveVehicle(id, false);
+                else vehicleList[id].CleanUP();
+            }
         }
 
         internal async Task RegistrationTick()
         {
-            await ELS.Delay(Math.Max(1, Global.RegistrationDelay) * 1000);
+            // Entity visibility must not wait for the slower state-refresh interval.
+            await ELS.Delay(250);
+            ReconcileVisibleVehicles();
+            Vehicle current = Game.PlayerPed.CurrentVehicle;
+            if (unchecked(Game.GameTime - _lastStateBroadcast) >= Math.Max(1, Global.RegistrationDelay) * 1000 &&
+                current != null && current.Driver == Game.PlayerPed && vehicleList.ContainsKey(current.GetElsId()))
+            {
+                _lastStateBroadcast = Game.GameTime;
+                SyncRequestReply(Commands.MainSiren, current.GetElsId(), Game.Player.ServerId);
+            }
+        }
+
+        private void ReconcileVisibleVehicles()
+        {
             foreach (int id in new List<int>(vehicleList.Keys))
             {
-                if (!vehicleList[id].Exists() || vehicleList[id].GetVehicle.GetElsId() != id)
-                    RemoveVehicle(id, false);
+                if (!IsBound(id, vehicleList[id])) RemoveVehicle(id, false);
             }
+            bool needsSnapshot = false;
             foreach (Vehicle vehicle in World.GetAllVehicles())
             {
+                if (!vehicle.Exists() || !vehicle.IsEls()) continue;
                 int id = vehicle.GetElsId();
-                if (!vehicle.IsEls() || id <= 0)
-                    continue;
-                if (vehicleList.ContainsKey(id)) continue;
+                if (id <= 0 || vehicleList.ContainsKey(id)) continue;
                 try
                 {
                     ELSVehicleFSData data;
                     if (_pendingSync.TryGetValue(id, out data))
                         vehicleList.Add(vehicle.Handle, data);
-                    else
+                    else if (vehicle.Driver == Game.PlayerPed && _confirmedNew.Contains(id))
                         vehicleList.Add(vehicle.Handle);
+                    else
+                        needsSnapshot = true; // An observer must never initialize an unknown car to "off".
                 }
                 catch (Exception ex)
                 {
                     Utils.ReleaseWriteLine($"Could not register ELS vehicle {id}: {ex.Message}");
                 }
             }
-            // Retry the owner's initial state after server-side entity replication catches up.
-            Vehicle current = Game.PlayerPed.CurrentVehicle;
-            if (current != null && current.Driver == Game.PlayerPed && vehicleList.ContainsKey(current.GetElsId()))
-                SyncRequestReply(Commands.MainSiren, current.GetElsId(), Game.Player.ServerId);
+            if (needsSnapshot && unchecked(Game.GameTime - _lastSnapshotRequest) >= 1000)
+            {
+                _lastSnapshotRequest = Game.GameTime;
+                ELS.TriggerServerEvent("ELS:FullSync:Request:All");
+            }
         }
 
         internal async Task ControlTickAsync()
@@ -105,10 +140,10 @@ namespace ELS.Manager
                 if (Game.PlayerPed.CurrentVehicle.Driver == Game.PlayerPed || Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Passenger) == Game.PlayerPed)
                 {
                     int id = Game.PlayerPed.CurrentVehicle.GetElsId();
-                    if (vehicleList.ContainsKey(id))
-                    {
-                        vehicleList[id].RunControlTick();
-                    }
+                    ELSVehicle managed;
+                    if (vehicleList.TryGetValue(id, out managed) && IsBound(id, managed) &&
+                        managed.GetVehicle.Handle == Game.PlayerPed.CurrentVehicle.Handle)
+                        managed.RunControlTick();
                 }
             }
         }
@@ -117,17 +152,17 @@ namespace ELS.Manager
 
         internal async Task RunTickAsync()
         {
-            foreach (Vehicle vehicle in World.GetAllVehicles())
+            foreach (int id in new List<int>(vehicleList.Keys))
             {
-                int id = vehicle.GetElsId();
-                ELSVehicle managed;
-                if (vehicle.IsEls() && vehicleList.TryGetValue(id, out managed))
+                ELSVehicle managed = vehicleList[id];
+                if (!IsBound(id, managed))
                 {
-                    // A streamed-in entity can have a different local handle.
-                    if (!managed.Exists() || managed.GetVehicle.Handle != vehicle.Handle) continue;
-                    managed.RunExternalTick();
-                    if (vehicleList.ContainsKey(id)) managed.RunTick();
+                    // Client scope loss only releases local effects. Keep accepted state for re-entry.
+                    RemoveVehicle(id, false);
+                    continue;
                 }
+                managed.RunExternalTick();
+                if (vehicleList.ContainsKey(id)) managed.RunTick();
             }
             Vehicle current = Game.PlayerPed.CurrentVehicle;
             if (current != null && current.Driver == Game.PlayerPed &&
@@ -160,7 +195,11 @@ namespace ELS.Manager
 
         internal void RemoveVehicle(int id, bool forgetState = true)
         {
-            if (forgetState) _pendingSync.Remove(id);
+            if (forgetState)
+            {
+                _pendingSync.Remove(id);
+                _confirmedNew.Remove(id);
+            }
             ELSVehicle vehicle;
             if (vehicleList.TryGetValue(id, out vehicle))
             {
@@ -173,17 +212,18 @@ namespace ELS.Manager
         {
             foreach (int id in new List<int>(vehicleList.Keys)) RemoveVehicle(id);
             _pendingSync.Clear();
+            _confirmedNew.Clear();
         }
 
         internal static void SyncUI(int id)
         {
             ELSVehicle vehicle;
-            if (vehicleList.TryGetValue(id, out vehicle)) vehicle.SyncUi();
+            if (vehicleList.TryGetValue(id, out vehicle) && IsBound(id, vehicle)) vehicle.SyncUi();
         }
 
         internal static void SyncRequestReply(Commands command, int id, int PlayerId)
         {
-            if (id <= 0 || !vehicleList.ContainsKey(id))
+            if (id <= 0 || !vehicleList.ContainsKey(id) || !IsBound(id, vehicleList[id]))
             {
                 Utils.DebugWriteLine("ERROR sending vehicle data plate is null\n");
                 return;

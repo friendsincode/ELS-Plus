@@ -34,6 +34,7 @@ namespace CitizenFX.Core
     public class Vehicle
     {
         public int Handle;
+        public bool IsSirenActive;
         public bool Alive = true;
         public Vehicle(int handle) { Handle = handle; }
         public bool Exists() => Alive;
@@ -132,6 +133,8 @@ namespace ELS.Light
     }
     internal partial class Lights
     {
+        internal CitizenFX.Core.Vehicle _vehicle = new CitizenFX.Core.Vehicle(1);
+        internal void SetGTASirens(bool enabled) => _vehicle.IsSirenActive = enabled;
         internal Extras _extras = new Extras();
         internal Stage _stage = new Stage();
         internal Scene scene;

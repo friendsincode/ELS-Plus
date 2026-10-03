@@ -116,6 +116,7 @@ namespace ELS
 
                 VCF.ParsePatterns(patterns);
             }));
+            EventHandlers["ELS:FullSync:Identity"] += new Action<int, int, int, string>(_vehicleManager.AcceptIdentity);
             EventHandlers["ELS:FullSync:NewSpawnWithData"] += new Action<string>(_vehicleManager.SyncAllVehiclesOnFirstSpawn);
             TriggerServerEvent("ELS:FullSync:Request:All");
 
