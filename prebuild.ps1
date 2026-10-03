@@ -12,7 +12,11 @@ function SetVersion ($file, $version) {
     $content = $sr.ReadToEnd()
     $sr.Close()
  
-    $content = [Regex]::Replace($content, "(\d+)\.(\d+)\.(\d+)[\.(\d+)]*", $version);
+    if ([System.IO.Path]::GetExtension($file) -eq ".lua") {
+        $content = [Regex]::Replace($content, '(?m)^(version\s+")[^"]+("\s*)$', ('${1}' + $version + '${2}'))
+    } else {
+        $content = [Regex]::Replace($content, '(Assembly(?:File)?Version\(")[^"]+("\))', ('${1}' + $version + '${2}'))
+    }
  
     $sw = new-object System.IO.StreamWriter( $file, $false, [System.Text.Encoding]::GetEncoding("utf-8") )
     $sw.Write( $content )

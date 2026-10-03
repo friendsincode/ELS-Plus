@@ -103,7 +103,7 @@
   <ItemGroup>
     <Compile Include="Board\ArrowBoard.cs" />
     <Compile Include="configuration\ElsConfiguration.cs" />
-    <Compile Include="configuration\Global.cs" />
+    <Compile Include="configuration\global.cs" />
     <Compile Include="configuration\NanoXMLParser.cs" />
     <Compile Include="configuration\SettingsType.cs" />
     <Compile Include="configuration\UserSettings.cs" />
@@ -136,6 +136,7 @@
     <Compile Include="Vehicle\ELSVehicle.cs" />
     <Compile Include="extentions.cs" />
     <Compile Include="FileLoader.cs" />
+    <Compile Include="FullSync\FullSync.cs" />
     <Compile Include="Light\Lights.cs" />
     <Compile Include="Light\LightArray.cs" />
     <Compile Include="Light\Patterns\Leds.cs" />
@@ -291,7 +292,9 @@
     <None Include="ELS.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="fxmanifest.lua" />
+    <Content Include="fxmanifest.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libs\SharpConfig-master\SharpConfig\SharpConfig.csproj">

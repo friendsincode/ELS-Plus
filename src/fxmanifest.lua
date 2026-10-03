@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     ELS Plus - A ELS implementation for FiveM
     Copyright (C) 2017  E.J. Bevenour
 
@@ -48,7 +48,6 @@ if NUIEnabled then
             "NUI/app/js/sirenclickoff.ogg",
             "NUI/app/js/indon.ogg",
             "NUI/app/js/indoff.ogg",
-            "NUI/app/js/jquery-0.3.2.222min.js",
             -- New Hotness
             "NUI/app/newhotness/index.html",
             "NUI/app/newhotness/js/popper.js",
@@ -95,10 +94,10 @@ server_script "els-server.net.dll"
 
 files(
     {
-        "ELS.ini"
+        "ELS.ini",
         "SharpConfig.net.dll",
         "Newtonsoft.Json.dll"
     }
 )
 
-dependencies {"baseevents"}
+dependencies {"baseevents", "/onesync"}
