@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ELSServer.cs" />
+    <Compile Include="SyncPayload.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="CustomPatterns.cs" />
     <Compile Include="HttpHelper.cs" />

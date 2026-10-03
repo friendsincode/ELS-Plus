@@ -2,6 +2,7 @@
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using ELS.Light;
+using ELS.configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,148 +14,88 @@ namespace ELS.Manager
     class VehicleManager
     {
         internal static VehicleList vehicleList;
-        static bool notified = false;
-        long lastServerSync;
+        private readonly Dictionary<int, ELSVehicleFSData> _pendingSync = new Dictionary<int, ELSVehicleFSData>();
+
         public VehicleManager()
         {
             vehicleList = new VehicleList();
-            lastServerSync = Game.GameTime;
         }
 
-        internal static void makenetworked(Vehicle veh)
+        internal static async Task<bool> makenetworked(Vehicle veh)
         {
-            //////////
-            ///
-            ///  THANKS to Antivirus-chan in the FiveM community for supplying this code
-            ///
-            //////////
-            //if (!veh.Model.IsLoaded) veh.Model.Request(-1);
-            var net1 = API.VehToNet(veh.Handle);
-            var attempts = 0;
-
-            do
+            for (int attempt = 0; attempt < 20 && veh.Exists(); attempt++)
             {
-                Utils.DebugWriteLine($"Attempt {attempts} of {veh.Handle} driven by {veh.GetPedOnSeat(VehicleSeat.Driver).Handle}");
-                //BaseScript.Delay(500);
-                var netid = API.NetworkGetNetworkIdFromEntity(veh.Handle);
-                API.NetworkRegisterEntityAsNetworked(veh.Handle);
-                API.SetEntityAsMissionEntity(veh.Handle, false, false);
-                API.SetNetworkIdCanMigrate(netid, true);
-                API.SetNetworkIdExistsOnAllMachines(netid, true);
-                API.NetworkRequestControlOfEntity(veh.Handle);
-                attempts++;
-
+                if (!API.NetworkGetEntityIsNetworked(veh.Handle))
+                    API.NetworkRegisterEntityAsNetworked(veh.Handle);
+                int netId = API.NetworkGetNetworkIdFromEntity(veh.Handle);
+                if (netId > 0 && API.NetworkDoesEntityExistWithNetworkId(netId))
+                {
+                    API.SetEntityAsMissionEntity(veh.Handle, false, false);
+                    API.SetNetworkIdCanMigrate(netId, true);
+                    return true;
+                }
+                await ELS.Delay(100);
             }
-            while (!API.NetworkDoesEntityExistWithNetworkId(veh.Handle) && attempts < 20);
-            if (attempts == 20 && !notified)
-            {
-                CitizenFX.Core.Debug.WriteLine("Failed to register entity on net");
-                notified = true;
-            }
-            else if (!notified)
-            {
-                CitizenFX.Core.Debug.WriteLine($"Registered {veh.Handle} on net as {net1}");
-                ELS.TriggerEvent("ELS:VehicleEntered");
-                notified = true;
-            }
+            Utils.ReleaseWriteLine("Failed to register ELS vehicle on the network");
+            return false;
         }
 
         internal async Task ElsIDSetTick()
         {
             await ELS.Delay(1000);
-            List<Vehicle> vehicles = new List<Vehicle>(World.GetAllVehicles());
-            for (int i = 0; i < vehicles.Count; i++)
+            foreach (Vehicle vehicle in World.GetAllVehicles())
             {
-                if (vehicles[i].IsEls() && !API.DecorExistOn(vehicles[i].Handle, "elsplus_id") && vehicles[i].GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed)
+                if (!vehicle.IsEls() || vehicle.Driver != Game.PlayerPed || !API.NetworkGetEntityIsNetworked(vehicle.Handle))
+                    continue;
+                // ELS identity survives ownership changes; network IDs only locate entities.
+                if (vehicle.GetElsId() <= 0)
                 {
-                    Random rnd1 = new Random();
-                    int rnd = rnd1.Next(Game.GameTime);
-                    Utils.DebugWriteLine($"Registering Decor Int of {rnd} for vehicle elsplus id");
-                    API.DecorSetInt(vehicles[i].Handle, "elsplus_id", rnd);
+                    int id;
+                    do { id = BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0) & int.MaxValue; }
+                    while (id == 0 || vehicleList.ContainsKey(id));
+                    API.DecorSetInt(vehicle.Handle, "elsplus_id", id);
                 }
             }
-           
         }
 
         internal async Task SoundCleanUpTick()
         {
-            ELS.Delay(400);
-           foreach(KeyValuePair<int,ELSVehicle> veh in vehicleList)
-            {
-                veh.Value.CleanUP();
-            }
+            await ELS.Delay(400);
+            foreach (ELSVehicle vehicle in vehicleList.Values)
+                vehicle.CleanUP();
         }
-
 
         internal async Task RegistrationTick()
         {
-            int count = 0;
-            do
+            await ELS.Delay(Math.Max(1, Global.RegistrationDelay) * 1000);
+            foreach (int id in new List<int>(vehicleList.Keys))
             {
-                //Utils.DebugWriteLine($"Delay {count} at {Game.GameTime}");
-                await ELS.Delay(1000);
-                count++;
-            } while (count < Global.RegistrationDelay);
-
-            List<Vehicle> vehicles = new List<Vehicle>(World.GetAllVehicles());
-            for (int i = 0; i < vehicles.Count; i++)
+                if (!vehicleList[id].Exists() || vehicleList[id].GetVehicle.GetElsId() != id)
+                    RemoveVehicle(id, false);
+            }
+            foreach (Vehicle vehicle in World.GetAllVehicles())
             {
-                //if (vehicles[i].IsEls() && !API.DecorExistOn(vehicles[i].Handle, "elsplus_id") && vehicles[i].GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed)
-                //{
-                //    Random rnd1 = new Random();
-                //    int rnd = rnd1.Next(Game.GameTime);
-                //    Utils.DebugWriteLine($"Registering Decor Int of {rnd} for vehicle elsplus id");
-                //    API.DecorSetInt(vehicles[i].Handle, "elsplus_id", rnd);
-                //    vehicleList.Add(vehicles[i].Handle);
-                //}
-                /*else*/ 
-                if (vehicles[i].IsEls() && API.DecorExistOn(vehicles[i].Handle, "elsplus_id"))
+                int id = vehicle.GetElsId();
+                if (!vehicle.IsEls() || id <= 0)
+                    continue;
+                if (vehicleList.ContainsKey(id)) continue;
+                try
                 {
-                    int id = vehicles[i].GetElsId();
-                    int currVeh = 0;
-                    if (Game.PlayerPed.CurrentVehicle != null)
-                    {
-                        currVeh = Game.PlayerPed.CurrentVehicle.GetElsId();
-                    }
-                    Utils.DebugWriteLine($"Got ELS Id for this vehicle of {id}");
-                    //if (!vehicleList.ContainsKey(id))
-                    //{
-                    //    Utils.DebugWriteLine($"ELS Vehicle found with id of {id} attempting to get data from server");
-                    //    //ELS.TriggerServerEvent("ELS:FullSync:UniCast", Game.Player.ServerId, id);
-                    //    //await ELS.Delay(5000);
-                    //}
-                    string json = API.GetConvar("elsplus_data", "");
-                    //Utils.DebugWriteLine($"Got Registration Json of: {json}");
-                    if (!String.IsNullOrEmpty(json))
-                    {
-                        Dictionary<int, string> vehlist = JsonConvert.DeserializeObject<Dictionary<int, string>>(json);
-                        if (!vehicleList.ContainsKey(id) && vehlist.ContainsKey(id))
-                        {
-                            Utils.DebugWriteLine($"Veh not in client list registering new vehicle for id {id}");
-                            vehicleList.Add(vehicles[i].Handle, JsonConvert.DeserializeObject<ELSVehicleFSData>(vehlist[id]));
-                        }
-                        else if (!vehicleList.ContainsKey(id) && !vehlist.ContainsKey(id))
-                        {
-                            Utils.DebugWriteLine($"Veh not in client list nor server list registering vehicle");
-                            vehicleList.Add(vehicles[i].Handle);
-                        }
-                        else if (vehicleList.ContainsKey(id) && !vehlist.ContainsKey(id))
-                        {
-                            Utils.DebugWriteLine($"Veh not in client list nor server list registering vehicle");
-                            vehicleList.Add(vehicles[i].Handle);
-                        }
-                        else if (vehicleList.ContainsKey(id) && currVeh > 0 && currVeh != id)
-                        {
-                            Utils.DebugWriteLine($"Vehicle in list but curr != id setting data from convar");
-                            vehicleList[id].SetData(JsonConvert.DeserializeObject<ELSVehicleFSData>(vehlist[id]));
-;                       } 
-                        else if (vehicleList.ContainsKey(id) && !vehlist.ContainsKey(id))
-                        {
-                            vehicleList.Remove(id);
-                        }
-                    }
+                    ELSVehicleFSData data;
+                    if (_pendingSync.TryGetValue(id, out data))
+                        vehicleList.Add(vehicle.Handle, data);
+                    else
+                        vehicleList.Add(vehicle.Handle);
+                }
+                catch (Exception ex)
+                {
+                    Utils.ReleaseWriteLine($"Could not register ELS vehicle {id}: {ex.Message}");
                 }
             }
+            // Retry the owner's initial state after server-side entity replication catches up.
+            Vehicle current = Game.PlayerPed.CurrentVehicle;
+            if (current != null && current.Driver == Game.PlayerPed && vehicleList.ContainsKey(current.GetElsId()))
+                SyncRequestReply(Commands.MainSiren, current.GetElsId(), Game.Player.ServerId);
         }
 
         internal async Task ControlTickAsync()
@@ -176,94 +117,25 @@ namespace ELS.Manager
 
         internal async Task RunTickAsync()
         {
-            List<Vehicle> vehicles = new List<Vehicle>(World.GetAllVehicles());
-            for (int i = 0; i < vehicles.Count; i++)
+            foreach (Vehicle vehicle in World.GetAllVehicles())
             {
-                if (vehicles[i].IsEls() && API.DecorExistOn(vehicles[i].Handle, "elsplus_id"))
+                int id = vehicle.GetElsId();
+                ELSVehicle managed;
+                if (vehicle.IsEls() && vehicleList.TryGetValue(id, out managed))
                 {
-                    int id = API.DecorGetInt(vehicles[i].Handle, "elsplus_id");
-                    if (vehicleList.ContainsKey(id) && vehicles[i].Exists())
-                    {
-                        //Utils.DebugWriteLine($"We have found {id} in the list running tick");
-                       
-                        vehicleList[id].RunExternalTick();
-                        vehicleList[id].RunTick();
-                    }
-                    //else if (vehicles[i].Exists())
-                    //{
-                    //    //Utils.DebugWriteLine($"We have not found {plate} in the list adding and running tick");
-                    //    vehicleList.Add(vehicles[i].Handle);
-                    //    vehicleList[plate].RunExternalTick();
-                    //    vehicleList[plate].RunTick();
-                    //}
+                    // A streamed-in entity can have a different local handle.
+                    if (!managed.Exists() || managed.GetVehicle.Handle != vehicle.Handle) continue;
+                    managed.RunExternalTick();
+                    if (vehicleList.ContainsKey(id)) managed.RunTick();
                 }
             }
-            //            try
-            //            {
-            //                if (Game.PlayerPed.IsSittingInELSVehicle() &&
-            //                        (Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed
-            //                        || Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Passenger) == Game.PlayerPed))
-            //                {
-            //                    //ELS.TriggerServerEvent("ELS:getServerNetworkId", Game.PlayerPed.CurrentVehicle.Handle, Game.PlayerPed.CurrentVehicle.GetNetworkId());
-            //                    if (vehicleList.ContainsKey(Game.PlayerPed.CurrentVehicle.GetNetworkId()))
-            //                    {
-            //                        //Utils.DebugWriteLine("Vehicle is in the list running ticks");
-            //                        ELSVehicle _currentVehicle = vehicleList[Game.PlayerPed.CurrentVehicle.GetNetworkId()];
-            //                        _currentVehicle?.RunControlTick();
-            //                        //vehicleList.RunExternalTick(_currentVehicle);
-            //                        Game.PlayerPed.CurrentVehicle.SetExistOnAllMachines(true);
-            //                    }
-            //                    else
-            //                    {
-            //                        if (!vehicleList.VehRegAttempts.ContainsKey(Game.PlayerPed.CurrentVehicle.GetNetworkId()) || Game.GameTime - vehicleList.VehRegAttempts[Game.PlayerPed.CurrentVehicle.GetNetworkId()].Item2 >= 15000 && vehicleList.VehRegAttempts[Game.PlayerPed.CurrentVehicle.GetNetworkId()].Item1 < 5)
-            //                        {
-            //                            if (vehicleList.MakeSureItExists(API.VehToNet(Game.PlayerPed.CurrentVehicle.Handle), vehicle: out ELSVehicle _currentVehicle))
-            //                            {
-            //                                _currentVehicle?.RunControlTick();
-            //                                // vehicleList.RunExternalTick(_currentVehicle);
-            //                                Game.PlayerPed.CurrentVehicle.SetExistOnAllMachines(true);
-            //                            }
-            //                        }
-            //                    }
-            //                    vehicleList.RunTick();
-            //                    vehicleList.RunExternalTick();
-            //                    Indicator.RunAsync(Game.PlayerPed.CurrentVehicle);
-            //#if DEBUG
-            //                    //if (Game.IsControlJustPressed(0, Control.Cover))
-            //                    //{
-            //                    //    FullSync.FullSyncManager.SendDataBroadcast(
-            //                    //        _currentVehicle.GetData(),
-            //                    //        Game.Player.ServerId
-            //                    //    );
-            //                    //    CitizenFX.Core.UI.Screen.ShowNotification("FullSync™ ran");
-            //                    //    CitizenFX.Core.Debug.WriteLine("FullSync™ ran");
-            //                    //}
-            //                    //Debug.DebugText();
-            //#endif
-            //                }
-            if (Game.PlayerPed.IsInVehicle() && (Game.PlayerPed.CurrentVehicle.GetPedOnSeat(VehicleSeat.Driver) == Game.PlayerPed)
-               && (VehicleClass.Boats != Game.PlayerPed.CurrentVehicle.ClassType || VehicleClass.Trains != Game.PlayerPed.CurrentVehicle.ClassType
-               || VehicleClass.Planes != Game.PlayerPed.CurrentVehicle.ClassType || VehicleClass.Helicopters != Game.PlayerPed.CurrentVehicle.ClassType))
-            {
-                Indicator.RunAsync(Game.PlayerPed.CurrentVehicle);
-            }
-
-            //            }
-            //            catch (Exception e)
-            //            {
-            //                CitizenFX.Core.Debug.WriteLine($"VehicleManager Error: {e.Message} \n Stacktrace: {e.StackTrace}");
-            //            }
-            //if (Game.GameTime - lastServerSync >= 5000)
-            //{
-            //    lastServerSync = Game.GameTime;
-            //    ELS.TriggerServerEvent("ELS:FullSync:Request:All");
-            //    Utils.DebugWriteLine("Requested Sync Data from server");
-            //}
-            //TODO Chnage how I check for the panic alarm
+            Vehicle current = Game.PlayerPed.CurrentVehicle;
+            if (current != null && current.Driver == Game.PlayerPed &&
+                current.ClassType != VehicleClass.Boats && current.ClassType != VehicleClass.Trains &&
+                current.ClassType != VehicleClass.Planes && current.ClassType != VehicleClass.Helicopters)
+                Indicator.RunAsync(current);
 #if DEBUG
-            
-                Debug.DebugText();
-            
+            Debug.DebugText();
 #endif
         }
 
@@ -271,111 +143,47 @@ namespace ELS.Manager
         /// Proxies the sync data to a certain vehicle
         /// </summary>
         /// <param name="dataDic">data</param>
-        async internal void SetVehicleSyncData(string json, int PlayerId)
+        internal void SetVehicleSyncData(string json, int playerId)
         {
-            ELSVehicleFSData data = JsonConvert.DeserializeObject<ELSVehicleFSData>(json);
-            if (Game.Player.ServerId == PlayerId)
+            try
             {
-                Utils.DebugWriteLine("We are player exiting set sync data");
-                return;
+                ELSVehicleFSData data = JsonConvert.DeserializeObject<ELSVehicleFSData>(json);
+                if (data.Id <= 0) return;
+                _pendingSync[data.Id] = data;
+                if (Game.Player.ServerId != playerId) AddVehicle(data.Id, data);
             }
-            //dynamic dataDic = JsonConvert.Deserialize<>(data);
-            int id = data.Id;
-            Utils.DebugWriteLine($"{PlayerId} has sent us data for {id} parsing");
-            
-            if (vehicleList.ContainsKey(id) && !data.Siren.Equals(null) || !data.Light.Equals(null))
+            catch (Exception ex)
             {
-                Utils.DebugWriteLine($" Applying vehicle data with els id of of {id}");
-                try
-                {
-                    vehicleList[id].SetData(data);
-                }
-                catch (KeyNotFoundException e)
-                {
-                    Utils.DebugWriteLine("Key not found for some dumbass reason lets just regiseter it");
-                    json = API.GetConvar("elsplus_data", "");
-                    if (!String.IsNullOrEmpty(json))
-                    {
-
-                        Dictionary<int, string> vehlist = JsonConvert.DeserializeObject<Dictionary<int, string>>(json);
-                        List<Vehicle> vehicles = new List<Vehicle>(World.GetAllVehicles());
-                        for (int i = 0; i < vehicles.Count; i++)
-                        {
-                            if (API.DecorExistOn(vehicles[i].Handle, "elsplus_id"))
-                            {
-                                int vehId = vehicles[i].GetElsId();
-                                if (id == vehId)
-                                {
-                                    vehicleList.Add(vehicles[i].Handle, JsonConvert.DeserializeObject<ELSVehicleFSData>(vehlist[id]));
-                                }
-                            }
-                        }
-                    }
-                }
-                return;
+                Utils.ReleaseWriteLine($"Ignoring invalid ELS sync: {ex.Message}");
             }
-            else
+        }
+
+        internal void RemoveVehicle(int id, bool forgetState = true)
+        {
+            if (forgetState) _pendingSync.Remove(id);
+            ELSVehicle vehicle;
+            if (vehicleList.TryGetValue(id, out vehicle))
             {
-                json = API.GetConvar("elsplus_data", "");
-                if (!String.IsNullOrEmpty(json))
-                {
-
-                    Dictionary<int, string> vehlist = JsonConvert.DeserializeObject<Dictionary<int, string>>(json);
-                    List<Vehicle> vehicles = new List<Vehicle>(World.GetAllVehicles());
-                    for (int i = 0; i < vehicles.Count; i++)
-                    {
-                        if (API.DecorExistOn(vehicles[i].Handle, "elsplus_id"))
-                        {
-                            int vehId = vehicles[i].GetElsId();
-                            if (id == vehId)
-                            {
-                                vehicleList.Add(vehicles[i].Handle, JsonConvert.DeserializeObject<ELSVehicleFSData>(vehlist[id]));
-                            }
-                        }
-                    }
-                }
+                vehicle.Dispose();
+                vehicleList.Remove(id);
             }
-            //if (!vehicleList.VehRegAttempts.ContainsKey(plate) || Game.GameTime - vehicleList.VehRegAttempts[plate].Item2 >= 15000 && vehicleList.VehRegAttempts[plate].Item1 < 5)
-            //{
-            //    if (!vehicleList.MakeSureItExists(netid, dataDic, out ELSVehicle veh1, PlayerId))
-            //    {
-            //        Utils.DebugWriteLine("Failed to register other clients vehicle");
-            //        return;
-            //    }
-            //    //veh1.SetData(dataDic);
-            //}
-            //else
-            //{
-            //    Utils.DebugWriteLine("Attempting to register be patient");
-            //}
+        }
 
-            //if (!data..Equals(null) && !data.ContainsKey("siren") && !data.ContainsKey("lights"))
-            //{
-            //    List<Vehicle> vehicles = new List<Vehicle>(World.GetAllVehicles());
-            //    for (int i = 0; i < vehicles.Count; i++)
-            //    {
-            //        if (vehicles[i].GetPedOnSeat(VehicleSeat.Driver).Handle == API.GetPlayerFromServerId(PlayerId))
-            //        {
-            //            Indicator.ToggleInicatorState(vehicles[i], Indicator.IndStateLib[data["IndState"].ToString()]);
-            //        }
-            //    }
-
-            //}
+        internal void ClearVehicles()
+        {
+            foreach (int id in new List<int>(vehicleList.Keys)) RemoveVehicle(id);
+            _pendingSync.Clear();
         }
 
         internal static void SyncUI(int id)
         {
-            if (id != -1)
-            {
-                Utils.DebugWriteLine("Vehicle plate is empty");
-                return;
-            }
-            vehicleList[id].SyncUi();
+            ELSVehicle vehicle;
+            if (vehicleList.TryGetValue(id, out vehicle)) vehicle.SyncUi();
         }
 
         internal static void SyncRequestReply(Commands command, int id, int PlayerId)
         {
-            if (id == -1)
+            if (id <= 0 || !vehicleList.ContainsKey(id))
             {
                 Utils.DebugWriteLine("ERROR sending vehicle data plate is null\n");
                 return;
@@ -401,73 +209,49 @@ namespace ELS.Manager
             }
         }
 
-        internal void SyncAllVehiclesOnFirstSpawn(Dictionary<int, ELSVehicleFSData> data)
+        internal void SyncAllVehiclesOnFirstSpawn(string json)
         {
-            Utils.DebugWriteLine("Got broadcast to sync all data");
-            List<Vehicle> vehicles = new List<Vehicle>(World.GetAllVehicles());
-            foreach (object struct1 in data)
+            try
             {
-                Dictionary<string, object> parsed = (Dictionary<string, object>)struct1;
-               
-                Utils.DebugWriteLine(parsed.ToString());
-
-                //int id = parsed["id"];
-                ////Utils.DebugWriteLine("2");
-                //var vehData = (Dictionary<string, object>)struct1.Value;
-                ////Utils.DebugWriteLine("3");
-                //Utils.DebugWriteLine($"Setting data for els id {id}");
-                //Vehicle veh = vehicles.Find(v => v.GetElsId() == id);
-                //if (!vehicleList.ContainsKey(id))
-                //{
-                //    vehicleList.Add(id, vehData);
-                //}
+                var snapshot = JsonConvert.DeserializeObject<Dictionary<int, string>>(json);
+                if (snapshot == null) return;
+                _pendingSync.Clear();
+                foreach (var entry in snapshot) SetVehicleSyncData(entry.Value, -1);
+            }
+            catch (JsonException ex)
+            {
+                Utils.ReleaseWriteLine($"Ignoring invalid ELS snapshot: {ex.Message}");
             }
         }
 
         internal void AddVehicle(int id, ELSVehicleFSData data)
         {
-            Utils.DebugWriteLine("AddVehicle:Start vehicle add");
-            List<Vehicle> vehicles = new List<Vehicle>(World.GetAllVehicles());
-            Utils.DebugWriteLine("AddVehicle:converted to dynamic");
-            int idKey = data.Id;
-            Vehicle veh = vehicles.Find(v => v.GetElsId() == id);
-            Utils.DebugWriteLine($"AddVehicle:Attempting to register vehicle with id of {idKey}");
-            if (idKey != id)
+            if (id <= 0 || data.Id != id) return;
+            ELSVehicle existing;
+            if (vehicleList.TryGetValue(id, out existing))
             {
-                Utils.DebugWriteLine("AddVehicle:IDs do not match lets try again");
-                return;
+                if (existing.Exists() && existing.GetVehicle.GetElsId() == id)
+                {
+                    existing.SetData(data);
+                    return;
+                }
+                RemoveVehicle(id, false);
             }
-
-            if (!vehicleList.ContainsKey(id))
+            // Resolve by stable ELS identity, never assume a stored handle or net ID is current.
+            foreach (Vehicle vehicle in World.GetAllVehicles())
             {
-                vehicleList.Add(veh.Handle, data);
-                Utils.DebugWriteLine("AddVehicle:Vehicle added");
+                if (vehicle.Exists() && vehicle.IsEls() && vehicle.GetElsId() == id)
+                {
+                    vehicleList.Add(vehicle.Handle, data);
+                    break;
+                }
             }
-            else
-            {
-                vehicleList[id].SetData(data);
-                Utils.DebugWriteLine("AddVehicle:Vehicle in listed sent new data");
-            }
-        }
-
-        void GetAllVehicles()
-        {
-
-        }
-
-        void RemoveStallVehicles()
-        {
-
         }
 
         internal void CleanUP()
         {
-            vehicleList.CleanUP();
+            ClearVehicles();
         }
 
-        ~VehicleManager()
-        {
-            CleanUP();
-        }
     }
 }

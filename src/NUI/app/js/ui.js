@@ -4,10 +4,18 @@ function ChangeUi(uiname) {
     console.log(`Changing ui to ${uiname}`);  
     $.get(`${uiname}/index.html`, function(data) {
         $("#elsui").html(data);
+        $.post(`http://${resourceName}/uiLoaded`, JSON.stringify({}));
     }).fail(function(){console.log("we has fail")});   
 }
 
 $(function () {
+    resourceName = GetParentResourceName();
+    function ready() {
+        $.post(`http://${resourceName}/ready`, JSON.stringify({})).fail(function () {
+            setTimeout(ready, 500);
+        });
+    }
+    ready();
     window.addEventListener('message', function (event) {
         if (event.data.type == "initdata") {
             console.log("Setting up ELS UI");

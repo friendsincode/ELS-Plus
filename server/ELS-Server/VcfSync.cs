@@ -29,6 +29,8 @@ namespace ELS_Server
 
         public static async Task CheckResources()
         {
+            ElsResources.Clear();
+            VcfData.Clear();
             var numResources = Function.Call<int>(Hash.GET_NUM_RESOURCES);
             for (int x = 0; x < numResources; x++)
             {
@@ -45,22 +47,18 @@ namespace ELS_Server
             Utils.ReleaseWriteLine($"Total ELS Resources: {ElsResources.Count}");
         }
 
-        internal static async void LoadFilesPromScript(string name)
+        internal static void LoadFilesPromScript(string name)
         {
-            int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "file");
-            Utils.DebugWriteLine($"{num} files for {name}");
-
-            for (int i = 0; i < num; i++)
+            VcfData.RemoveAll(entry => entry.Item1 == name);
+            string path = API.GetResourcePath(name);
+            if (String.IsNullOrEmpty(path) || !Directory.Exists(path)) return;
+            try
             {
-                //var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
-                DirectoryInfo info = new DirectoryInfo(API.GetResourcePath(name));
-                foreach(DirectoryInfo d in info.GetDirectories())
-                {
-                    checkFiles(name, d.GetFiles());
-                }
-                checkFiles(name, info.GetFiles());
+                // Scan once per resource, regardless of the number of manifest file entries.
+                checkFiles(name, new DirectoryInfo(path).GetFiles("*.xml", SearchOption.AllDirectories));
             }
-            
+            catch (IOException ex) { Utils.ReleaseWriteLine($"Cannot read VCFs in {name}: {ex.Message}"); }
+            catch (UnauthorizedAccessException ex) { Utils.ReleaseWriteLine($"Cannot read VCFs in {name}: {ex.Message}"); }
         }
 
         internal static void checkFiles(string name, FileInfo[] files)
@@ -70,9 +68,9 @@ namespace ELS_Server
                 Utils.DebugWriteLine($"Checking {f.FullName}");
                 if (Path.GetExtension(f.Name).ToLower() == ".xml")
                 {
-                    string data = File.ReadAllText(f.FullName);
                     try
                     {
+                        string data = File.ReadAllText(f.FullName);
                         if (VCF.isValidData(data))
                         {
                             VcfData.Add(new Tuple<string, string, string>(name, f.Name, data));

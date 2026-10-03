@@ -1,11 +1,9 @@
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
-using GHMatti.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -13,229 +11,185 @@ namespace ELS_Server
 {
     public class ELSServer : BaseScript
     {
-        Dictionary<int, string> _cachedData = new Dictionary<int, string>();
-        long GameTimer;
-        string serverId;
-        string currentVersion;
+        private readonly Dictionary<int, string> _cachedData = new Dictionary<int, string>();
+        // Bind stable ELS identity to a server entity, not to its owner or client-local handle.
+        private readonly Dictionary<int, int> _entities = new Dictionary<int, int>();
+        private readonly Dictionary<string, Tuple<int, int>> _recentControls = new Dictionary<string, Tuple<int, int>>();
+        private readonly Dictionary<string, Tuple<int, int>> _rates = new Dictionary<string, Tuple<int, int>>();
+
         public ELSServer()
         {
-#if DEBUG
-            API.SetConvarReplicated("elsplus_debug", "true");
-#endif
-            currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            Utils.ReleaseWriteLine($"Welcome to ELS+ {currentVersion} for FiveM");
-            GameTimer = API.GetGameTimer();
-            Utils.ReleaseWriteLine($"Setting Game time is {GameTimer}");
-            serverId = API.LoadResourceFile(API.GetCurrentResourceName(), "ELSId");
+            Utils.ReleaseWriteLine($"Welcome to ELS+ {Assembly.GetExecutingAssembly().GetName().Version} for FiveM");
+            string serverId = API.LoadResourceFile(API.GetCurrentResourceName(), "ELSId");
             if (String.IsNullOrEmpty(serverId))
             {
-                Guid uuid = Guid.NewGuid();
-                API.SaveResourceFile(API.GetCurrentResourceName(), "ELSId", uuid.ToString(), -1);
-                serverId = uuid.ToString();
+                serverId = Guid.NewGuid().ToString();
+                API.SaveResourceFile(API.GetCurrentResourceName(), "ELSId", serverId, -1);
             }
-            foreach (string s in Configuration.ElsVehicleGroups)
-            {
-                API.ExecuteCommand($"add_ace group.{s} command.elscar allow");
-            }
-            API.RegisterCommand("vcfrefresh", new Action<int, List<object>, string>((source, arguments, raw) =>
-            {
-                Utils.ReleaseWriteLine($"{Players[source].Name} has activated a VCF Refresh");
-                foreach (Player p in Players)
-                {
-                    TriggerEvent("ELS:VcfSync:Server", p.Handle);
-                }
-            }), false);
+            API.SetConvarReplicated("ELSServerId", serverId);
+            foreach (string group in Configuration.ElsVehicleGroups)
+                API.ExecuteCommand($"add_ace group.{group} command.elscar allow");
 
-            API.RegisterCommand("elscar", new Action<int, List<object>, string>(async (source, arguments, raw) =>
+            EventHandlers["ELS:VcfSync:Server"] += new Action<Player>(SendVcf);
+            EventHandlers["ELS:FullSync:Request:All"] += new Action<Player>(SendSnapshot);
+            EventHandlers["ELS:FullSync:Broadcast"] += new Action<Player, string>(ReceiveState);
+            EventHandlers["ELS:FullSync:RemoveStale"] += new Action<Player, int>(RemoveStale);
+            EventHandlers["baseevents:enteredVehicle"] += new Action<Player, int, int, string, int>(VehicleEntered);
+            EventHandlers["baseevents:leftVehicle"] += new Action<Player, int, int, string, int>(VehicleExited);
+            EventHandlers["playerDropped"] += new Action<Player, string>(PlayerDropped);
+
+            API.RegisterCommand("elscar", new Action<int, List<object>, string>((source, args, raw) =>
             {
-                if (arguments.Count < 1 || String.IsNullOrEmpty(arguments[0].ToString()))
-                {
-                    Utils.ReleaseWriteLine("No vehicle specified please try again");
-                    return;
-                }
-                Utils.ReleaseWriteLine($"{Players[source].Name} has attempted to spawn {arguments[0]}");
-                TriggerClientEvent(Players[source], "ELS:SpawnCar", arguments[0]);
+                if (source <= 0 || args.Count == 0) return;
+                TriggerClientEvent(Players[source], "ELS:SpawnCar", args[0].ToString());
             }), Configuration.ElsCarAdminOnly);
-
-            EventHandlers["ELS:VcfSync:Server"] += new Action<int>(async (int source) =>
+            API.RegisterCommand("vcfrefresh", new Action<int, List<object>, string>(async (source, args, raw) =>
             {
-                Utils.DebugWriteLine($"Sending Data to {Players[source].Name}");
-                TriggerClientEvent(Players[source], "ELS:VcfSync:Client", VcfSync.VcfData);
-                TriggerClientEvent(Players[source], "ELS:PatternSync:Client", CustomPatterns.Patterns);
-
-            });
-
-            EventHandlers["ELS:FullSync:RemoveStale"] += new Action<int>(async (int id) =>
+                await PreloadSyncData();
+                foreach (Player player in Players) SendVcfData(player);
+            }), true);
+            API.RegisterCommand("resync", new Action<int, List<object>, string>((source, args, raw) =>
             {
-                _cachedData.Remove(id);
-                TriggerClientEvent("ELS:removeStaleFromList", id);
-                Utils.DebugWriteLine($"Stale vehicle {id} removed from cache");
-            });
-
-            EventHandlers["ELS:getServerNetworkId"] += new Action<int, int, int>(async (int player, int entity, int netid) =>
-             {
-                 int veh = API.GetVehiclePedIsIn(player, false);
-                 int srvnetid = API.NetworkGetNetworkIdFromEntity(veh);
-
-                 Utils.DebugWriteLine($"Server network id for {entity} ({veh}) is {srvnetid}");
-
-
-             });
-
-            EventHandlers["baseevents:enteredVehicle"] += new Action<int, int, string>((veh, seat, name) =>
-              {
-                  Utils.DebugWriteLine("Vehicle Entered");
-                  TriggerClientEvent("ELS:VehicleEntered", veh);
-              });
-            EventHandlers["baseevents:leftVehicle"] += new Action<int, int, string>((veh, seat, name) =>
-            {
-                Utils.DebugWriteLine("Vehicle Entered");
-                TriggerClientEvent("ELS:VehicleExited", veh);
-            });
-            EventHandlers["ELS:FullSync:Unicast"] += new Action(() => { });
-            //EventHandlers["ELS:FullSync:Broadcast"] += new Action<ExpandoObject, int>(BroadcastMessage);
-            EventHandlers["ELS:FullSync:Broadcast"] += new Action<string, Int16>((dataDic, playerID) =>
-            {
-                var dd = JsonConvert.DeserializeObject<JObject>(dataDic);
-                if (dd.ContainsKey("Id"))
-                {
-                    Utils.DebugWriteLine($"Got Broadcaset from ELS Plus ID: {dd["Id"]}");
-                    if (_cachedData.ContainsKey((int)dd["Id"]))
-                    {
-                        _cachedData[int.Parse(dd["Id"].ToString())] = dataDic;
-                    }
-                    else
-                    {
-                        _cachedData.Add((int)dd["Id"], dataDic);
-                    }
-                }
-
-                API.SetConvarReplicated("elsplus_data", JsonConvert.SerializeObject(_cachedData));
-                BroadcastMessage(dataDic, playerID);
-            });
-
-            EventHandlers["ELS:FullSync:Request:All"] += new Action<int>((int source) =>
-            {
-                Utils.DebugWriteLine($"{source} is requesting Sync Data");
-                TriggerClientEvent(Players[source], "ELS:FullSync:NewSpawnWithData", _cachedData);
-            });
-            API.RegisterCommand("resync", new Action<int, System.Collections.IList, string>((a, b, c) =>
-            {
-                Utils.DebugWriteLine($"{a}, {b}, {c}");
-                TriggerClientEvent(Players[(int.Parse((string)b[0]))], "ELS:FullSync:NewSpawnWithData", _cachedData);
-            }), false);
-            API.RegisterCommand("clearcache", new Action<int, System.Collections.IList, string>((a, b, c) =>
+                int target = source;
+                if (args.Count > 0 && !int.TryParse(args[0].ToString(), out target)) return;
+                if (target > 0 && Players[target] != null) SendSnapshotData(Players[target]);
+            }), true);
+            API.RegisterCommand("clearcache", new Action<int, List<object>, string>((source, args, raw) =>
             {
                 _cachedData.Clear();
+                _entities.Clear();
+                _recentControls.Clear();
                 TriggerClientEvent("ELS:clearVehicleList");
-                Utils.ReleaseWriteLine("ELS Cache cleared");
-            }), false);
-
-            Task task = new Task(() => PreloadSyncData());
-            task.Start();
-            //Tick += Server_Tick;
-            try
-            {
-                API.SetConvarReplicated("ELSServerId", serverId);
-            }
-            catch (Exception e)
-            {
-                Utils.ReleaseWriteLine("Please update your CitizenFX server to the latest artifact version to enable update check and server tracking");
-            }
-            Task updateCheck = new Task(() => CheckForUpdates());
-            updateCheck.Start();
+            }), true);
+            Tick += MaintainVehicles;
+            // These loaders complete synchronously; finish before serving player requests.
+            PreloadSyncData().GetAwaiter().GetResult();
         }
 
-        async Task PreloadSyncData()
+        private async Task PreloadSyncData()
         {
             await VcfSync.CheckResources();
             await CustomPatterns.CheckCustomPatterns();
         }
 
-        async Task CheckForUpdates()
+        private bool AllowRequest(Player player, string kind, int limit)
         {
-//            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 5");
-//            await ELSServer.Delay(1000);
-//            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 4");
-//            await ELSServer.Delay(1000);
-//            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 3");
-//            await ELSServer.Delay(1000);
-//            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 2");
-//            await ELSServer.Delay(1000);
-//            Utils.ReleaseWriteLine("Checking for ELS+ Updates in 1");
-//            await ELSServer.Delay(1000);
-//#if DEBUG 
-//            string updateUrl = "http://localhost";
-//#else
-//            string updateUrl = "https://els-stats.friendsincode.com";
-//#endif
-//            Request request = new Request();
-//            JObject data = new JObject();
-//            data["serverId"] = serverId;
-//            data["serverName"] = Uri.EscapeDataString(API.GetConvar("sv_hostname", $"ELS Plus Server {serverId}"));
-//            try
-//            {
-//                RequestResponse result = await request.Http(updateUrl, "POST",
-//                                data.ToString());
-//                switch (result.status)
-//                {
-//                    case HttpStatusCode.NotFound:
-//                        Utils.ReleaseWriteLine("ELS Update page not found please try again");
-//                        break;
-//                    case HttpStatusCode.OK:
-//                        JObject res = JObject.Parse(result.content);
-//                        if (((string)res["current"]).Equals(currentVersion))
-//                        {
-//                            Utils.ReleaseWriteLine("Thank you for using ELS Plus, currently running latest stable version");
-//                        }
-//                        else if (((string)res["dev"]).Equals(currentVersion))
-//                        {
-//                            Utils.ReleaseWriteLine("Thank you for using ELS Plus, currently running latest development version");
-//                        }
-//                        else
-//                        {
-//                            Utils.ReleaseWriteLine($"ELS Plus is not up to date please update please update from version {currentVersion} to {(string)res["current"]}");
-//                        }
-//                        break;
-//                    case HttpStatusCode.RequestTimeout:
-//                        Utils.ReleaseWriteLine("ELS Connection timed out please try again");
-//                        break;
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                Utils.ReleaseWriteLine($"ELS threw an exception checking for a new version of ELS+" +
-//                    $"\nERROR:{ex.Message}" +
-//                    $"\nERROR:{ex.StackTrace}");
-//            }
+            if (player == null || String.IsNullOrEmpty(player.Handle)) return false;
+            string key = player.Handle + ":" + kind;
+            int now = unchecked((int)API.GetGameTimer());
+            Tuple<int, int> rate;
+            if (!_rates.TryGetValue(key, out rate) || unchecked(now - rate.Item1) >= 1000)
+                rate = Tuple.Create(now, 0);
+            if (rate.Item2 >= limit) return false;
+            _rates[key] = Tuple.Create(rate.Item1, rate.Item2 + 1);
+            return true;
         }
 
-        //void BroadcastMessage(ExpandoObject dataDic, int SourcePlayerID)
-        //{
-            
-        //    var dd = (IDictionary<string, object>)dataDic;
-
-        //    Utils.DebugWriteLine($"elsid {dd["id"]}");
-        //    _cachedData[int.Parse(dd["id"].ToString())] = dd;
-        //    API.SetConvarReplicated("elsplus_data", JsonConvert.SerializeObject(_cachedData));
-
-        //    TriggerClientEvent("ELS:NewFullSyncData", dataDic, SourcePlayerID);
-        //}
-
-        void BroadcastMessage(string dataDic, int SourcePlayerID)
+        private void SendVcf([FromSource] Player player)
         {
-            TriggerClientEvent("ELS:NewFullSyncData", dataDic, SourcePlayerID);
+            if (AllowRequest(player, "vcf", 1)) SendVcfData(player);
         }
 
-
-        private async Task Server_Tick()
+        private void SendVcfData(Player player)
         {
-            //if (API.GetGameTimer() >= GameTimer + Configuration.CacheClear)
-            //{
-            //    _cachedData.Clear();
-            //    GameTimer = API.GetGameTimer();
-            //    await Delay(10000);
-            //}
+            TriggerClientEvent(player, "ELS:VcfSync:Client", VcfSync.VcfData);
+            TriggerClientEvent(player, "ELS:PatternSync:Client", CustomPatterns.Patterns);
+        }
+
+        private void SendSnapshot([FromSource] Player player)
+        {
+            if (AllowRequest(player, "snapshot", 2)) SendSnapshotData(player);
+        }
+
+        private void SendSnapshotData(Player player)
+        {
+            TriggerClientEvent(player, "ELS:FullSync:NewSpawnWithData", JsonConvert.SerializeObject(_cachedData));
+        }
+
+        private int ControlledVehicle(Player player)
+        {
+            int ped = API.GetPlayerPed(player.Handle);
+            if (ped == 0) return 0;
+            int vehicle = API.GetVehiclePedIsIn(ped, false);
+            if (vehicle == 0 || !API.DoesEntityExist(vehicle)) return 0;
+            return API.GetPedInVehicleSeat(vehicle, -1) == ped || API.GetPedInVehicleSeat(vehicle, 0) == ped ? vehicle : 0;
+        }
+
+        private void ReceiveState([FromSource] Player player, string json)
+        {
+            if (!AllowRequest(player, "state", 40)) return;
+            JObject data;
+            if (!SyncPayload.TryParse(json, out data)) return;
+            int id = (int)data["Id"];
+            int entity = API.NetworkGetEntityFromNetworkId((int)data["NetworkId"]);
+            if (entity == 0 || !API.DoesEntityExist(entity) || API.GetEntityType(entity) != 2) return;
+            int now = unchecked((int)API.GetGameTimer());
+            if (ControlledVehicle(player) == entity)
+                _recentControls[player.Handle] = Tuple.Create(entity, now);
+            else
+            {
+                // Permit the authenticated previous occupant's immediate siren-off/exit update.
+                Tuple<int, int> recent;
+                if (!_recentControls.TryGetValue(player.Handle, out recent) || recent.Item1 != entity ||
+                    unchecked(now - recent.Item2) > 3000) return;
+            }
+            int previous;
+            if (_entities.TryGetValue(id, out previous) && previous != entity && API.DoesEntityExist(previous)) return;
+            foreach (var entry in _entities)
+                if (entry.Value == entity && entry.Key != id) return;
+            _entities[id] = entity;
+            _cachedData[id] = json;
+            TriggerClientEvent("ELS:NewFullSyncData", json, int.Parse(player.Handle));
+        }
+
+        private void RemoveStale([FromSource] Player player, int id)
+        {
+            if (!AllowRequest(player, "remove", 10)) return;
+            int entity;
+            // Clients cannot delete another car's cached state while that car is alive.
+            if (_entities.TryGetValue(id, out entity) && (!API.DoesEntityExist(entity) || API.GetEntityHealth(entity) <= 0))
+                RemoveVehicle(id);
+        }
+
+        private void RemoveVehicle(int id)
+        {
+            _entities.Remove(id);
+            _cachedData.Remove(id);
+            TriggerClientEvent("ELS:removeStaleFromList", id);
+        }
+
+        private void VehicleEntered([FromSource] Player player, int handle, int seat, string name, int netId)
+        {
+            if ((seat != -1 && seat != 0) || !AllowRequest(player, "entry", 4)) return;
+            int entity = ControlledVehicle(player);
+            if (entity != 0) _recentControls[player.Handle] = Tuple.Create(entity, unchecked((int)API.GetGameTimer()));
+            // The handle came from this client, so only send it back to that client.
+            TriggerClientEvent(player, "ELS:VehicleEntered", handle);
+        }
+
+        private void VehicleExited([FromSource] Player player, int handle, int seat, string name, int netId)
+        {
+            if ((seat == -1 || seat == 0) && AllowRequest(player, "exit", 4))
+                TriggerClientEvent(player, "ELS:VehicleExited", handle);
+        }
+
+        private void PlayerDropped([FromSource] Player player, string reason)
+        {
+            _recentControls.Remove(player.Handle);
+            foreach (string key in new List<string>(_rates.Keys))
+                if (key.StartsWith(player.Handle + ":", StringComparison.Ordinal)) _rates.Remove(key);
+        }
+
+        private async Task MaintainVehicles()
+        {
+            await Delay(500);
+            foreach (Player player in Players)
+            {
+                int entity = ControlledVehicle(player);
+                if (entity != 0) _recentControls[player.Handle] = Tuple.Create(entity, unchecked((int)API.GetGameTimer()));
+            }
+            foreach (var entry in new List<KeyValuePair<int, int>>(_entities))
+                if (!API.DoesEntityExist(entry.Value) || API.GetEntityHealth(entry.Value) <= 0) RemoveVehicle(entry.Key);
         }
     }
 }

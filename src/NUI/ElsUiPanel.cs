@@ -30,23 +30,10 @@ namespace ELS.NUI
             API.SendNuiMessage(obj.ToString());
         }
 
-        internal static async void ReloadUI()
+        internal static void ReloadUI()
         {
-            JObject message = new JObject();
-
-            message["type"] = "reload";
-            API.SendNuiMessage(message.ToString());
-            await ELS.Delay(10000);
-            Utils.ReleaseWriteLine("Reloaded UI");
-            InitData();
-            if (ELS.userSettings.uiSettings.enabled)
-            {
-                ShowUI();
-            }
-            else
-            {
-                DisableUI();
-            }
+            API.SendNuiMessage("{\"type\":\"reload\"}");
+            // The browser's ready callback restores its settings after navigation.
         }
 
         //Enable full ui control and cursor
@@ -127,18 +114,21 @@ namespace ELS.NUI
         {
             Utils.DebugWriteLine("Escape Executed");
             ShowUI();
+            cb(new { ok = true });
             return cb;
         }
 
         internal static CallbackDelegate TooglePrimary(IDictionary<string, Object> data, CallbackDelegate cb)
         {
             Utils.DebugWriteLine("Toggle Primary Executed");
+            cb(new { ok = true });
             return cb;
         }
 
         internal static CallbackDelegate KeyPress(IDictionary<string, Object> data, CallbackDelegate cb)
         {
             Utils.DebugWriteLine("J key pressed");
+            cb(new { ok = true });
             return cb;
         }
     }

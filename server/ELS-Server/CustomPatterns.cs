@@ -20,7 +20,7 @@ namespace ELS_Server
 
         public async static Task CheckCustomPatterns()
         {
-            var numResources = API.GetNumResources();
+            Patterns.Clear();
             foreach (string name in VcfSync.ElsResources)
             {
                 ParsePatterns(name);
@@ -30,38 +30,15 @@ namespace ELS_Server
 
         internal static void ParsePatterns(string name)
         {
-            int num = Function.Call<int>(Hash.GET_NUM_RESOURCE_METADATA, name, "file");
-            string isElsResource = API.GetResourceMetadata(name, "is_els", 0);
-            for (int i = 0; i < num; i++)
+            Patterns.RemoveAll(entry => entry.Item1 == name);
+            string path = API.GetResourcePath(name);
+            if (String.IsNullOrEmpty(path) || !Directory.Exists(path)) return;
+            try
             {
-                DirectoryInfo info = new DirectoryInfo(API.GetResourcePath(name));
-                foreach (DirectoryInfo d in info.GetDirectories())
-                {
-                    checkFiles(name, d.GetFiles());
-                }
-                checkFiles(name, info.GetFiles());
-                //var filename = Function.Call<string>(Hash.GET_RESOURCE_METADATA, name, "file", i);
-                //var data = Function.Call<string>(Hash.LOAD_RESOURCE_FILE, name, filename);
-                //Utils.DebugWriteLine($"Checking {filename}");
-                //if (Path.GetExtension(filename).ToLower() == ".xml")
-                //{
-                //    try
-                //    {
-                //        if (CustomPatterns.IsValidPatternData(data))
-                //        {
-                //            Patterns.Add(new Tuple<string, string, string>(name, filename, data));
-                //        }
-                //        else
-                //        {
-                //            Utils.DebugWriteLine($"XML Pattern data for {filename} is not valid");
-                //        }
-                //    }
-                //    catch (Exception e)
-                //    {
-                //        Utils.DebugWriteLine($"There was a parsing error in {filename} please validate this XML and try again.");
-                //    }
-                //}
+                checkFiles(name, new DirectoryInfo(path).GetFiles("*.xml", SearchOption.AllDirectories));
             }
+            catch (IOException ex) { Utils.ReleaseWriteLine($"Cannot read patterns in {name}: {ex.Message}"); }
+            catch (UnauthorizedAccessException ex) { Utils.ReleaseWriteLine($"Cannot read patterns in {name}: {ex.Message}"); }
         }
 
          internal static void checkFiles(string name, FileInfo[] files)

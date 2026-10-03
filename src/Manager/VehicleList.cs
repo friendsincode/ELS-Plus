@@ -254,10 +254,6 @@ namespace ELS.Manager
                 this.ElementAt(i).Value.CleanUP();
             }
         }
-        ~VehicleList()
-        {
-            CleanUP();
-            Clear();
-        }
+
     }
 }

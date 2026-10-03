@@ -58,16 +58,16 @@ namespace ELS
                     {
                         try
                         {
-                            ServerId = API.GetConvar("ElsServerId", null);
+                            ServerId = API.GetConvar("ELSServerId", "");
                             userSettings = new UserSettings();
                             Global.RegisteredSoundBanks = new List<string>();
-                            Task settingsTask = new Task(() => userSettings.LoadUserSettings());
+
                             Utils.ReleaseWriteLine($"Welcome to ELS Plus on {ServerId} using version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
-                            settingsTask.Start();
+                            userSettings.LoadUserSettings();
                             _FileLoader.RunLoader(obj);
                             //Screen.ShowNotification($"Welcome {LocalPlayer.Name}\n ELS Plus\n\n ELS Plus is Licensed under LGPL 3.0\n\nMore inforomation can be found at http://els.friendsincode.com");
                             SetupConnections();
-                            TriggerServerEvent("ELS:VcfSync:Server", Game.Player.ServerId);
+                            TriggerServerEvent("ELS:VcfSync:Server");
                             SetupExports();
                             Tick -= Class1_Tick;
                             Tick += Class1_Tick;
@@ -103,9 +103,9 @@ namespace ELS
             //command that siren state has changed.
             //recieves a command
             //EventHandlers["ELS:SirenUpdated"] += new Action<string, int, int, bool>(_vehicleManager.UpdateRemoteSirens);
-            EventHandlers["ELS:SpawnCar"] += new Action<string>((veh) =>
+            EventHandlers["ELS:SpawnCar"] += new Action<string>(async (veh) =>
             {
-                SpawnCar(veh);
+                await SpawnCar(veh);
             });
             EventHandlers["ELS:VcfSync:Client"] += new Action<List<dynamic>>((vcfs) =>
               {
@@ -116,11 +116,8 @@ namespace ELS
 
                 VCF.ParsePatterns(patterns);
             }));
-            //EventHandlers["ELS:FullSync:NewSpawnWithData"] += new Action<dynamic>((a) =>
-            //{
-            //    //dynamic data = a;
-            //    _vehicleManager.SyncAllVehiclesOnFirstSpawn(a);
-            //});
+            EventHandlers["ELS:FullSync:NewSpawnWithData"] += new Action<string>(_vehicleManager.SyncAllVehiclesOnFirstSpawn);
+            TriggerServerEvent("ELS:FullSync:Request:All");
 
             EventHandlers["ELS:serverNetworkId"] += new Action<int, int, int, int>((servernetid, serverentityid, sententid, sentnetid) =>
             {
@@ -139,21 +136,25 @@ namespace ELS
                 Tick += Class1_Tick;
             });
 
-            EventHandlers.Add("playerSpawned", new Action(() => { TriggerServerEvent("ELS:FullSync:Request:All", Game.Player.ServerId); }));
+            EventHandlers.Add("playerSpawned", new Action(() => { TriggerServerEvent("ELS:FullSync:Request:All"); }));
 
-            EventHandlers["ELS:VehicleEntered"] += new Action<int>((veh) =>
+            EventHandlers["ELS:VehicleEntered"] += new Action<int>(async (veh) =>
             {
                 Utils.DebugWriteLine("Vehicle entered checking list");
                 Vehicle vehicle = new Vehicle(veh);
-                Delay(2000);
+                await Delay(2000);
                 try
                 {
                     if (vehicle.Exists() && vehicle.IsEls())
                     {
-                        if (!API.DecorExistOn(vehicle.Handle, "elsplus_id"))
+                        for (int attempt = 0; attempt < Math.Max(5, Global.RegistrationDelay + 2); attempt++)
                         {
-                            Delay(Global.RegistrationDelay);
+                            if (LocalPlayer.Character.CurrentVehicle != vehicle) return;
+                            if (VehicleManager.vehicleList.ContainsKey(vehicle.GetElsId())) break;
+                            await Delay(1000);
                         }
+                        if (!vehicle.Exists() || LocalPlayer.Character.CurrentVehicle != vehicle ||
+                            !VehicleManager.vehicleList.ContainsKey(vehicle.GetElsId())) return;
                         int vehid = vehicle.GetElsId();
                         
                         int currVehId = LocalPlayer.Character.CurrentVehicle.GetElsId();
@@ -170,7 +171,7 @@ namespace ELS
 
                             UserSettings.ELSUserVehicle usrVeh = userSettings.savedVehicles.Find(uveh => uveh.Model == vehicle.Model.Hash && uveh.ServerId == ServerId);
                             Utils.DebugWriteLine($"got usrveh of {usrVeh.Model} on server {usrVeh.ServerId}m");
-                            if (ServerId.Equals(usrVeh.ServerId))
+                            if (!String.IsNullOrEmpty(ServerId) && ServerId == usrVeh.ServerId)
                             {
                                 Utils.DebugWrite("Got Saved Vehicle Settings applying");
                                 VehicleManager.vehicleList[vehid].SetSaveSettings(usrVeh);
@@ -220,28 +221,30 @@ namespace ELS
 
             EventHandlers["ELS:removeStaleFromList"] += new Action<int>((id) =>
             {
-                VehicleManager.vehicleList.Remove(id);
+                _vehicleManager.RemoveVehicle(id);
             });
 
             EventHandlers["ELS:clearVehicleList"] += new Action(() =>
             {
-                VehicleManager.vehicleList.Clear();
+                _vehicleManager.ClearVehicles();
             });
 
 
             API.RegisterCommand("vcfsync", new Action<int, List<object>, string>((source, arguments, raw) =>
             {
-                TriggerServerEvent("ELS:VcfSync:Server", Game.Player.ServerId);
+                TriggerServerEvent("ELS:VcfSync:Server");
             }), false);
 
             API.RegisterCommand("elsui", new Action<int, List<object>, string>((source, arguments, raw) =>
             {
-                Task task = new Task(() => userSettings.SaveUI(true));
+
                 if (arguments.Count != 1) return;
+                bool reload = false;
                 switch (arguments[0].ToString().ToLower())
                 {
                     case "enable":
                         ElsUiPanel.EnableUI();
+                        userSettings.uiSettings.enabled = true;
                         break;
                     case "disable":
                         ElsUiPanel.DisableUI();
@@ -253,15 +256,18 @@ namespace ELS
                         break;
                     case "whelen":
                         userSettings.uiSettings.currentUI = UserSettings.ElsUi.Whelen;
+                        reload = true;
                         break;
                     case "new":
                         userSettings.uiSettings.currentUI = UserSettings.ElsUi.NewHotness;
+                        reload = true;
                         break;
                     case "old":
                         userSettings.uiSettings.currentUI = UserSettings.ElsUi.OldandBusted;
+                        reload = true;
                         break;
                 }
-                task.Start();
+                userSettings.SaveUI(reload);
             }), false);
 
             API.RegisterCommand("elslist", new Action<int, List<object>, string>((source, args, raw) =>
@@ -316,7 +322,12 @@ namespace ELS
             var polModel = new Model((VehicleHash)hash);
             await polModel.Request(-1);
             Vehicle _veh = new Vehicle(API.CreateVehicle((uint)polModel.Hash, Game.PlayerPed.Position.X, Game.PlayerPed.Position.Y + 5f, Game.PlayerPed.Position.Z, Game.PlayerPed.Heading, true, false));
-            VehicleManager.makenetworked(_veh);
+            if (!await VehicleManager.makenetworked(_veh))
+            {
+                _veh.Delete();
+                polModel.MarkAsNoLongerNeeded();
+                return null;
+            }
             Game.PlayerPed.SetIntoVehicle(_veh, VehicleSeat.Driver);
             polModel.MarkAsNoLongerNeeded();
             return _veh;
@@ -351,7 +362,12 @@ namespace ELS
             await polModel.Request(-1);
 
             Vehicle _veh = new Vehicle(API.CreateVehicle((uint)Game.GenerateHash(veh), coords.x, coords.y + 5f, coords.z, Game.PlayerPed.Heading, true, false));
-            VehicleManager.makenetworked(_veh);
+            if (!await VehicleManager.makenetworked(_veh))
+            {
+                _veh.Delete();
+                polModel.MarkAsNoLongerNeeded();
+                return null;
+            }
             polModel.MarkAsNoLongerNeeded();
             _veh.PlaceOnGround();
             Game.PlayerPed.SetIntoVehicle(_veh, VehicleSeat.Driver);
@@ -386,12 +402,14 @@ namespace ELS
             EventHandlers[$"__cfx_nui:{msg}"] += new Action<ExpandoObject, CallbackDelegate>((body, resultCallback) =>
             {
                 Console.WriteLine("We has event" + body);
-                callback.Invoke(body, resultCallback);
+                try { callback.Invoke(body, resultCallback); }
+                catch (Exception ex) { resultCallback(new { error = ex.Message }); }
             });
             EventHandlers[$"{msg}"] += new Action<ExpandoObject, CallbackDelegate>((body, resultCallback) =>
             {
                 Console.WriteLine("We has event without __cfx_nui" + body);
-                callback.Invoke(body, resultCallback);
+                try { callback.Invoke(body, resultCallback); }
+                catch (Exception ex) { resultCallback(new { error = ex.Message }); }
             });
 
         }
@@ -403,6 +421,23 @@ namespace ELS
             {
                 if (!_firstTick)
                 {
+                    RegisterNUICallback("ready", (data, cb) =>
+                    {
+                        ElsUiPanel.InitData();
+                        if (userSettings.uiSettings.enabled && Game.PlayerPed.CurrentVehicle != null && Game.PlayerPed.CurrentVehicle.IsEls())
+                            ElsUiPanel.ShowUI();
+                        else
+                            ElsUiPanel.DisableUI();
+                        cb(new { ok = true });
+                        return cb;
+                    });
+                    RegisterNUICallback("uiLoaded", (data, cb) =>
+                    {
+                        Vehicle current = Game.PlayerPed.CurrentVehicle;
+                        if (current != null) VehicleManager.SyncUI(current.GetElsId());
+                        cb(new { ok = true });
+                        return cb;
+                    });
                     RegisterNUICallback("escape", ElsUiPanel.EscapeUI);
                     RegisterNUICallback("togglePrimary", ElsUiPanel.TooglePrimary);
                     RegisterNUICallback("keyPress", ElsUiPanel.KeyPress);
@@ -432,8 +467,7 @@ namespace ELS
                             ElsUiPanel.DisableUI();
                             userSettings.uiSettings.enabled = false;
                         }
-                        Task task = new Task(() => userSettings.SaveUI(false));
-                        task.Start();
+                        userSettings.SaveUI(false);
                     }
                 }
                 else

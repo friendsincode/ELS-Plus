@@ -23,7 +23,7 @@
         internal static void SendDataBroadcast(string dic, int PlayerId)
         {
             Utils.DebugWriteLine($"ELS FS Dic is {dic.GetType()}");
-            ELS.TriggerServerEvent("ELS:FullSync:Broadcast", dic, PlayerId);
+            ELS.TriggerServerEvent("ELS:FullSync:Broadcast", dic);
         }
         internal static void SendDataUnicast(string dic, int PlayerID)
         {
