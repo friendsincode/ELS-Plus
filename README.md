@@ -88,3 +88,62 @@ The contribution guide can be found [here](CONTRIBUTING.md).
 6. Copy all the files from `ELS-Plus\src\bin\Release` to your server resources folder as `els-plus`
 
 7. Add `start els-plus` to `server.cfg`
+
+### AI fixes branch: compatibility and verification
+
+This branch requires **OneSync** for server-side checks of vehicle occupants and
+entity lifetime. The manifest declares that requirement. Deploy the client and
+server assemblies together and restart the resource; the sync payload now carries
+both the stable `elsplus_id` decorator and the current `NetworkId`.
+
+ELS identity is not derived from the network ID or the current owner. Clients
+resolve streamed vehicles by the ELS decorator and retain pending state while an
+entity is outside their scope. Network IDs are used only for server-side entity
+lookup and authorization. Switching driver or network owner must preserve the
+ELS decorator. A deleted/recreated vehicle should receive a new ELS identity.
+
+The administrative commands now require their respective ACE permissions. For
+example, grant your administrator group:
+
+```cfg
+add_ace group.admin command.vcfrefresh allow
+add_ace group.admin command.resync allow
+add_ace group.admin command.clearcache allow
+```
+
+`ElsCarAdminOnly` continues to control `/elscar`. `/vcfrefresh` now reloads the
+VCFs and custom patterns before sending them to connected clients.
+
+Compile checks can run on macOS or Linux with Python 3.9+, the .NET SDK, NuGet
+access, and the repository's existing referenced DLLs:
+
+```sh
+python3 utils/check-build.py
+dotnet run --project tests/RegressionChecks
+```
+
+The compile helper reads the existing project source lists and creates temporary
+.NET Framework 4.5.2 compilation projects. It skips the Windows PowerShell
+versioning/deployment hooks and prints the location of its logs. Its output is
+not a packaged resource. Regression checks require .NET 10 and execute the real
+sync validation, server handlers, tone playback logic, and light serialization
+with simulated CitizenFX calls. They do not verify GTA rendering, audio, or
+network replication.
+
+Before deploying to a live server, test with two clients:
+
+1. Fresh server start with an empty ELS cache: spawn an ELS car and check controls.
+2. Vehicles with no arrowboard, no scene lights, extra-based scene lights, and
+   secondary-only or warning-only lights: verify registration and all stages.
+3. Driver and front passenger: check horn/siren start, stop, tone changes, and
+   immediate exit behavior; rear passengers should not control these functions.
+4. Swap drivers and network owners; stream the car out and back in on the other
+   client. Confirm its ELS identity and light/siren state survive.
+5. Join late with lights/siren already active; verify the initial snapshot.
+6. Delete a vehicle, spawn replacements, and confirm old state does not attach to
+   a new vehicle when network IDs are reused.
+7. Restart ELS, run `/clearcache` and `/resync`, refresh VCFs, and switch/reload the
+   UI. Confirm recovery, no stuck sounds, and the correct current UI state.
+8. From a non-administrator, verify admin commands are denied. In a development
+   harness, send malformed sync and updates for another player's vehicle; verify
+   no state is relayed.

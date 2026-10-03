@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Fakes.cs" />
+    <Compile Include="../../server/ELS-Server/SyncPayload.cs" Link="SyncPayload.cs" />
+    <Compile Include="../../server/ELS-Server/ELSServer.cs" Link="ELSServer.cs" />
+    <Compile Include="../../src/Siren/Tone/Tone.cs" Link="Tone.cs" />
+    <Compile Include="../../src/Light/Lights.FullSync.cs" Link="Lights.FullSync.cs" />
+    <Compile Include="../../src/Extra/Extra.FullSync.cs" Link="Extra.FullSync.cs" />
+  </ItemGroup>
+</Project>
